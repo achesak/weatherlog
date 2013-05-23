@@ -1,6 +1,15 @@
-# Define the UI variables.
+# -*- coding: utf-8 -*-
+
+
+# This file defines variables used by the UI.
+
+
+# Define the version and title. These are used in the About dialog.
 VERSION = "0.1"
 TITLE = "Weather Or Not"
+
+
+# Define the menu and toolbar XML. I really wish there was a simpler way to do this.
 MENU_DATA = """
 <ui>
   <menubar name="menubar">

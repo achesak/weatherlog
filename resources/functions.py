@@ -1,6 +1,9 @@
 # -*- coding: utf-8 -*-
 
 
+# This file defines functions used for getting the data.
+
+
 # Import the math module.
 import math
 
@@ -28,4 +31,3 @@ def median(numbers):
     # If the lsit has an even number of items:
     else:
         return (numbers[len(numbers) / 2] + numbers[(len(numbers) / 2) - 1]) / 2;
-
