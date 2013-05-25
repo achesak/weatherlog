@@ -31,10 +31,13 @@ MENU_DATA = """
         <menuitem action="cloud_cover" />
       </menu>
       <separator />
+      <menuitem action="clear_data" />
+      <separator />
       <menuitem action="exit" />
     </menu>
     <menu action="help_menu">
       <menuitem action="about" />
+      <menuitem action="help" />
     </menu>
   </menubar>
   <toolbar name="toolbar">

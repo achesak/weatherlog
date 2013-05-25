@@ -37,8 +37,8 @@ THE SOFTWARE.
 # Import any needed modules.
 # Import Gtk for the interface.
 from gi.repository import Gtk
-# Import pickle for loading and saving the data.
-import pickle
+# Import json for loading and saving the data.
+import json
 # Import os for creating a directory.
 import os
 # Import os.path for seeing if a directory exists.
@@ -64,19 +64,19 @@ else:
     try:
         # This should be ~/.weatherornot/data.weather on Linux.
         data_file = open("%s/data.weather" % main_dir, "rb")
-        data = pickle.load(data_file)
+        data = json.load(data_file)
         data_file.close()
     
     except IOError:
         # Show the error message, and close the application.
         # This one shows if there was a problem reading the file.
-        print("Error importing data (file could not be read).")
+        print("Error importing data (IOError).")
         sys.exit()
     
-    except PickleError:
+    except (TypeError, ValueError):
         # Show the error message, and close the application.
-        # This one shows if there was a problem unpickling the data.
-        print("Error importing data (data could not be unpickled).")
+        # This one shows if there was a problem with the data type.
+        print("Error importing data (TypeError or ValueError).")
         sys.exit()
 
 
@@ -273,6 +273,7 @@ class Weather(Gtk.Window):
         
         # Create the ScrolledWindow for displaying the list with a scrollbar.
         scrolled_win = Gtk.ScrolledWindow()
+        # The container should scroll both horizontally and vertically.
         scrolled_win.set_hexpand(True)
         scrolled_win.set_vexpand(True)
         # Display the TreeView.
@@ -301,13 +302,15 @@ class Weather(Gtk.Window):
             ("humidity", None, "_Humidity...", None, None, None),
             ("air_pressure", None, "_Air Pressure...", None, None, None),
             ("cloud_cover", None, "_Cloud Cover...", None, None, None),
+            ("clear_data", None, "Clear _Data...", None, None, None),
             ("exit", Gtk.STOCK_QUIT, "E_xit...", None, "Close the application", lambda x: self.exit("ignore", "this"))
         ])
         
         # Create the Help menu.
         action_group.add_actions([
             ("help_menu", None, "Help"),
-            ("about", Gtk.STOCK_ABOUT, "_About...", "F1", None, self.about)
+            ("about", Gtk.STOCK_ABOUT, "_About...", None, None, self.about),
+            ("help", Gtk.STOCK_HELP, "_Help...", None, None, None)
         ])
         
         # Create the UI manager.
@@ -416,18 +419,18 @@ class Weather(Gtk.Window):
             try:
                 # Read from the specified file. 
                 data_file = open(filename, "rb")
-                data = pickle.load(data_file)
+                data = json.load(data_file)
                 data_file.close()
                 
             except IOError:
                 # Show the error message, and don't add the data.
                 # This one shows if there was a problem reading the file.
-                print("Error importing data (file could not be read).")
+                print("Error importing data (IOError).")
             
-            except PickleError:
+            except (TypeError, ValueError):
                 # Show the error message, and don't add the data.
-                # This one shows if there was a problem unpickling the data.
-                print("Error importing data (data could not be unpickled).")
+                # This one shows if there was a problem with the data type.
+                print("Error importing data (TypeError or ValueError).")
             
             else:
                 # Add the new data.
@@ -452,22 +455,22 @@ class Weather(Gtk.Window):
             # Get the filename.
             filename = export_dlg.get_filename()
             
-            # Save the data.
-            try:
-                # Write to the specified file.
-                data_file = open(filename, "wb")
-                pickle.dump(data, data_file)
-                data_file.close()
+        # Save to the file.
+        try:
+            # This should save to ~/.weatherornot/data.weather on Linux.
+            data_file = open("%s/data.weather" % main_dir, "wb")
+            json.dump(data, data_file, indent = 4)
+            data_file.close()
             
-            except IOError:
-                # Show the error message.
-                # This one shows if there was a problem writing to the file.
-                print("Error importing data (file could not be written).")
-            
-            except PickleError:
-                # Show the error message.
-                # This one shows if there was a problem pickling the data.
-                print("Error importing data (data could not be pickled).")
+        except IOError:
+            # Show the error message if something happened, but continue.
+            # This one is shown if there was an error writing to the file.
+            print("Error saving data file (IOError).")
+        
+        except (TypeError, ValueError):
+            # Show the error message if something happened, but continue.
+            # This one is shown if there was an error with the data type.
+            print("Error saving data file (TypeError or ValueError).")
             
         # Close the dialog.
         export_dlg.destroy()
@@ -509,7 +512,7 @@ class Weather(Gtk.Window):
 <td>%s</td>
 <td>%s</td>
 <td>%s</td>
-</tr>""" % (i[0],i[1],i[2],i[3],i[4],i[5],i[6],i[7])
+</tr>""" % (i[0], i[1], i[2], i[3], i[4], i[5], i[6], i[7])
         
         html += """
 </table>
@@ -537,7 +540,7 @@ class Weather(Gtk.Window):
             except IOError:
                 # Show the error message.
                 # This only shows if the error occurred when writing to the file.
-                print("Error exporting data to HTML (file could not be written).")
+                print("Error exporting data to HTML (IOError).")
             
         # Close the dialog.
         export_html_dlg.destroy()
@@ -575,7 +578,7 @@ class Weather(Gtk.Window):
             except IOError:
                 # Show the error.
                 # This only shows if the error occurred when writing to the file.
-                print("Error exporting data to CSV.")
+                print("Error exporting data to CSV (IOError).")
             
         # Close the dialog.
         export_csv_dlg.destroy()
@@ -590,9 +593,9 @@ class Weather(Gtk.Window):
         # Set the title.
         about_dlg.set_title("About Weather Or Not")
         # Set the program name.
-        about_dlg.set_program_name("Weather Or Not")
+        about_dlg.set_program_name(TITLE)
         # Set the program version.
-        about_dlg.set_version("0.1")
+        about_dlg.set_version(VERSION)
         # Set the comments. Maybe come up with something better later?
         about_dlg.set_comments("Weather Or Not is an application for keeping track of the weather.")
         # Set the copyright notice. Legal stuff, bleh.
@@ -622,14 +625,20 @@ class Weather(Gtk.Window):
         try:
             # This should save to ~/.weatherornot/data.weather on Linux.
             data_file = open("%s/data.weather" % main_dir, "wb")
-            pickle.dump(data, data_file)
+            json.dump(data, data_file, indent = 4)
             data_file.close()
             
-        except:
+        except IOError:
             # Show the error message if something happened, but continue.
-            print("Error saving data file.")
+            # This one is shown if there was an error writing to the file.
+            print("Error saving data file (IOError).")
         
-        # Close the application.
+        except (TypeError, ValueError):
+            # Show the error message if something happened, but continue.
+            # This one is shown if there was an error with the data type.
+            print("Error saving data file (TypeError or ValueError).")
+        
+        # Close the  application.
         Gtk.main_quit()
 
 
