@@ -52,7 +52,8 @@ from resources.ui import *
 # Import the functions for getting the data.
 import resources.functions as functions
 # Import the dialogs.
-from resources.dialogs import *
+from resources.dialogs.new_dialog import *
+from resources.dialogs.info_dialog import *
 
 
 # Check to see if the directory exists, and create it if it doesn't.
