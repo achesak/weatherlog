@@ -302,7 +302,7 @@ class Weather(Gtk.Window):
             ("humidity", None, "_Humidity...", None, None, None),
             ("air_pressure", None, "_Air Pressure...", None, None, None),
             ("cloud_cover", None, "_Cloud Cover...", None, None, None),
-            ("clear_data", None, "Clear _Data...", None, None, None),
+            ("clear_data", None, "Clear _Data...", None, None, self.clear),
             ("exit", Gtk.STOCK_QUIT, "E_xit...", None, "Close the application", lambda x: self.exit("ignore", "this"))
         ])
         
@@ -582,6 +582,30 @@ class Weather(Gtk.Window):
             
         # Close the dialog.
         export_csv_dlg.destroy()
+    
+    
+    def clear(self, event):
+        """Clears the data."""
+        
+        # Confirm that the user wants to clear the data.
+        clear_dlg = Gtk.MessageDialog(self, 0, Gtk.MessageType.QUESTION, Gtk.ButtonsType.OK_CANCEL, "Confirm Clear")
+        clear_dlg.format_secondary_text("Are you sure you want to clear the data?")
+        
+        # Get the response.
+        response = clear_dlg.run()
+        
+        # If the user confirms the clear:
+        if response == Gtk.ResponseType.OK:
+            
+            # Clear the data.
+            global data
+            data[:] = []
+            
+            # Clear the ListStore.
+            self.liststore.clear()
+        
+        # Close the dialog.
+        clear_dlg.destroy()
     
     
     def about(self, event):
