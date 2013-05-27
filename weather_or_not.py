@@ -89,11 +89,10 @@ class Weather(Gtk.Window):
         """Create the application."""
         # Create the window.
         Gtk.Window.__init__(self, title = TITLE)
-        # Set the default size. This should be a good value on all except
-        # very tiny screens.
+        # Set the default size. This should be a good value on all except very tiny screens.
         self.set_default_size(900, 500)
         # Set the icon.
-        self.set_icon_from_file("resources/icon.png")
+        self.set_icon_from_file("resources/images/icon.png")
         
         # Create the ListStore for storing the data.
         self.liststore = Gtk.ListStore(str, str, str, str, str, str, str, str)
@@ -161,20 +160,20 @@ class Weather(Gtk.Window):
         action_weather_info_group = Gtk.Action("info_menu", "_More Info...", None, None)
         action_group.add_action(action_weather_info_group)
         action_group.add_actions([
-            ("temperature", None, "_Temperature...", None, None, None),
-            ("precipitation", None, "_Precipitation...", None, None, None),
-            ("wind", None, "_Wind...", None, None, None),
-            ("humidity", None, "_Humidity...", None, None, None),
-            ("air_pressure", None, "_Air Pressure...", None, None, None),
-            ("cloud_cover", None, "_Cloud Cover...", None, None, None),
-            ("clear_data", None, "Clear _Data...", None, None, self.clear),
+            ("temperature", None, "_Temperature...", "<Control>t", None, None),
+            ("precipitation", None, "_Precipitation...", "<Control>p", None, None),
+            ("wind", None, "_Wind...", "<Control>w", None, None),
+            ("humidity", None, "_Humidity...", "<Control>h", None, None),
+            ("air_pressure", None, "_Air Pressure...", "<Control>a", None, None),
+            ("cloud_cover", None, "_Cloud Cover...", "<Control>c", None, None),
+            ("clear_data", None, "Clear _Data...", "<Control>d", None, self.clear),
             ("exit", Gtk.STOCK_QUIT, "E_xit...", None, "Close the application", lambda x: self.exit("ignore", "this"))
         ])
         
         # Create the Help menu.
         action_group.add_actions([
             ("help_menu", None, "Help"),
-            ("about", Gtk.STOCK_ABOUT, "_About...", None, None, self.about),
+            ("about", Gtk.STOCK_ABOUT, "_About...", "<Shift>F1", None, self.about),
             ("help", Gtk.STOCK_HELP, "_Help...", None, None, None)
         ])
         
