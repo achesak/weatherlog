@@ -58,7 +58,7 @@ from resources.dialogs.info_dialog import *
 
 # Check to see if the directory exists, and create it if it doesn't.
 main_dir = "%s/.weatherornot" % os.path.expanduser("~")
-if not os.path.exists(main_dir):
+if not os.path.exists(main_dir) or not os.path.isdir(main_dir):
     # Create the directory.
     os.makedirs(main_dir)
     data = []
