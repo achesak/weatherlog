@@ -46,6 +46,8 @@ import os.path
 # Import sys for sys.exit().
 import sys
 
+# Tell Python not to create bytecode files.
+sys.dont_write_bytecode = True
 
 # Import the application's UI data.
 from resources.ui import *
