@@ -51,6 +51,8 @@ import sys
 from resources.ui import *
 # Import the functions for getting the data.
 import resources.functions as functions
+# Import the functions for exporting the data.
+import resources.export as export
 # Import the dialogs.
 from resources.dialogs.new_dialog import *
 from resources.dialogs.info_dialog import *
@@ -250,6 +252,7 @@ class Weather(Gtk.Window):
                 # Close the dialog.
                 new_dlg.destroy()
     
+    
     def show_info(self, event):
         """Shows info about the data."""
         
@@ -259,6 +262,7 @@ class Weather(Gtk.Window):
         
         # Close the dialog. The response can be ignored.
         info_dlg.destroy()
+    
     
     def import_file(self, event):
         """Imports data from a file."""
@@ -343,45 +347,8 @@ class Weather(Gtk.Window):
     def export_file_html(self, event):
         """Formats the data into a HTML table, then exports it to a file."""
         
-        # Build the string.
-        html = """
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<title>Data exported from Weather Or Not</title>
-<meta charset="utf-8" />
-</head>
-<body>
-<table>
-<tr>
-<th>Date</th>
-<th>Temperature (°C)</th>
-<th>Precipitation (cm)</th>
-<th>Wind (kph)</th>
-<th>Humidity (%)</th>
-<th>Air Pressure (mbar)</th>
-<th>Cloud Cover</th>
-<th>Notes</th>
-</tr>"""
-        
-        # Add the data. Loop through each list, and add it as a table row.
-        for i in data:
-            html += """
-<tr>
-<td>%s</td>
-<td>%s</td>
-<td>%s</td>
-<td>%s</td>
-<td>%s</td>
-<td>%s</td>
-<td>%s</td>
-<td>%s</td>
-</tr>""" % (i[0], i[1], i[2], i[3], i[4], i[5], i[6], i[7])
-        
-        html += """
-</table>
-</body>
-</html>"""
+        # Convert to data to HTML.
+        html = export.html(data)
         
         # Create the dialog.
         export_html_dlg = Gtk.FileChooserDialog("Export to HTML", self, Gtk.FileChooserAction.SAVE, (Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL, Gtk.STOCK_OPEN, Gtk.ResponseType.OK))
@@ -398,7 +365,7 @@ class Weather(Gtk.Window):
             try:
                 # Write to the specified file.
                 data_file = open(filename, "w")
-                data_file.write(html.lstrip().rstrip())
+                data_file.write(html)
                 data_file.close()
                 
             except IOError:
@@ -413,13 +380,8 @@ class Weather(Gtk.Window):
     def export_file_csv(self, event):
         """Formats the data into CSV, then exports it to a file."""
         
-        # Build the string.
-        csv = ""
-        for i in data:
-            csv += """"%s","%s","%s","%s","%s","%s","%s","%s"\n""" % (i[0], i[1], i[2], i[3], i[4], i[5], i[6], i[7])
-        
-        # Remove the last newline character.
-        csv = csv[:-1]
+        # Convert the data to CSV.
+        csv = export.csv(data)
         
         # Create the dialog.
         export_csv_dlg = Gtk.FileChooserDialog("Export to CSV", self, Gtk.FileChooserAction.SAVE, (Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL, Gtk.STOCK_OPEN, Gtk.ResponseType.OK))

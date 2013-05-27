@@ -4,7 +4,7 @@
 # This file defines the Info dialog.
 
 
-# Import GTK for the dialogs.
+# Import GTK for the dialog.
 from gi.repository import Gtk
 
 

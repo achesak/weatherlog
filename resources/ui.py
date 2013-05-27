@@ -9,7 +9,7 @@ VERSION = "0.1"
 TITLE = "Weather Or Not"
 
 
-# Define the menu and toolbar XML. I really wish there was a simpler way to do this.
+# Define the menu and toolbar XML.
 MENU_DATA = """
 <ui>
   <menubar name="menubar">
