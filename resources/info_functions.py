@@ -12,19 +12,16 @@ import collections
 
 def mean(numbers):
     """Finds the mean of a list of numbers."""
-    # Convert the numbers to floats and then add them.
+    # Add the numbers
     total = 0
     for i in numbers:
-        total += float(i)
+        total += i
     # Divide by the length of the list.
     return total / len(numbers)
 
 
 def median(numbers):
     """Finds the median of a list of numbers."""
-    # Convert all the numbers to floats.
-    for i in range(0, len(numbers)):
-        numbers[i] = float(numbers[i])
     # Sort the list.
     numbers.sort()
     # If the list has an odd number of items:
@@ -37,18 +34,12 @@ def median(numbers):
 
 def range(numbers):
     """Finds the range of a list of numbers."""
-    # Convert all the numbers to floats.
-    for i in range(0, len(numbers)):
-        numbers[i] = float(numbers[i])
     # Range is maximum - minimum.
     return max(numbers) - min(numbers)
 
 
 def mode(numbers):
     """Finds the mode of a list of numbers."""
-    # Convert all the numbers to floats.
-    for i in range(0, len(numbers)):
-        numbers[i] = float(numbers[i])
     # Put the numbers in a collection.
     collect = collection.Counter(numbers)
     # Get the mode of the numbers.
