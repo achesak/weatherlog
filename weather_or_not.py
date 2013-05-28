@@ -52,7 +52,7 @@ sys.dont_write_bytecode = True
 # Import the application's UI data.
 from resources.ui import *
 # Import the functions for getting the data.
-import resources.functions as functions
+import resources.info_functions as info_functions
 # Import the functions for exporting the data.
 import resources.export as export
 # Import the dialogs.
