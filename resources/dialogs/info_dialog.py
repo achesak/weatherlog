@@ -6,11 +6,15 @@
 
 # Import GTK for the dialog.
 from gi.repository import Gtk
+# Import the functions for various tasks.
+from .. import utility_functions
+# Import the functions for getting the data.
+from .. import info_functions
 
 
 class InfoDialog(Gtk.Dialog):
     """Shows the "Info" dialog."""
-    def __init__(self, parent):
+    def __init__(self, parent, data):
         """Create the dialog."""
         # This window should be modal.
         Gtk.Dialog.__init__(self, "Info", parent, Gtk.DialogFlags.MODAL)

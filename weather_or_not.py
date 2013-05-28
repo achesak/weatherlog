@@ -51,7 +51,7 @@ sys.dont_write_bytecode = True
 
 # Import the application's UI data.
 from resources.ui import *
-# Import the functions for varios tasks.
+# Import the functions for various tasks.
 import resources.utility_functions as utility_functions
 # Import the functions for getting the data.
 import resources.info_functions as info_functions
@@ -261,7 +261,7 @@ class Weather(Gtk.Window):
         """Shows info about the data."""
         
         # Show the dialog.
-        info_dlg = InfoDialog(self)
+        info_dlg = InfoDialog(self, data)
         info_dlg.run()
         
         # Close the dialog. The response can be ignored.
