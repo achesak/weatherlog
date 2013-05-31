@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 
-# This file defines the Info dialog.
+# This file defines the generic info dialog.
 
 
 # Import GTK for the dialog.
@@ -12,12 +12,12 @@ from .. import utility_functions
 from .. import info_functions
 
 
-class InfoDialog(Gtk.Dialog):
-    """Shows the "Info" dialog."""
-    def __init__(self, parent, data):
+class GenericInfoDialog(Gtk.Dialog):
+    """Shows the info dialog."""
+    def __init__(self, parent, title, data):
         """Create the dialog."""
         # This window should be modal.
-        Gtk.Dialog.__init__(self, "Info", parent, Gtk.DialogFlags.MODAL)
+        Gtk.Dialog.__init__(self, title, parent, Gtk.DialogFlags.MODAL)
         self.set_default_size(300, 300)
         
         # Add the button.
@@ -46,24 +46,8 @@ class InfoDialog(Gtk.Dialog):
         self.get_content_area().add(scrolled_win)
         
         # Add the data.
-        ####### ADD THE STUFF TO CALCULATE THIS!
-        self.liststore.append(["First day", "5/13/13"])
-        self.liststore.append(["Last day", "5/14/13"])
-        self.liststore.append(["Number of days", "1"])
-        self.liststore.append(["Average temperature", "40 °C"])
-        self.liststore.append(["Lowest temperature", "30 °C"])
-        self.liststore.append(["Highest temperature", "50 °C"])
-        self.liststore.append(["Average precipitation", "3.45 cm"])
-        self.liststore.append(["Total precipitation", "56.42 cm"])
-        self.liststore.append(["Average wind speed", "45 kph"])
-        self.liststore.append(["Lowest wind speed", "0 kph"])
-        self.liststore.append(["Highest wind speed", "99861 kph"])
-        self.liststore.append(["Average humidity", "45%"])
-        self.liststore.append(["Lowest humidity", "1%"])
-        self.liststore.append(["Highest humidity", "99.8%"])
-        self.liststore.append(["Average air pressure", "45 mbar"])
-        self.liststore.append(["Lowest air pressure", "2 mbar"])
-        self.liststore.append(["Highest air pressure", "100 mbar"])
+        for i in data:
+            self.liststore.append(i)
         
         # Show the dialog. There's no need to get the response.
         self.show_all()

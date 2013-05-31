@@ -260,8 +260,15 @@ class Weather(Gtk.Window):
     def show_info(self, event):
         """Shows info about the data."""
         
+        # Get the info.
+        ### ADD CODE TO CALCULATE THESE LATER!!
+        data = [["First day", "5/13/13"], ["Last day", "5/14/13"], ["Number of days", "1"], ["Average temperature", "40 °C"], ["Lowest temperature", "30 °C"], 
+            ["Highest temperature", "50 °C"], ["Average precipitation", "3.45 cm"], ["Total precipitation", "56.42 cm"], ["Average wind speed", "45 kph"],
+            ["Lowest wind speed", "0 kph"], ["Highest wind speed", "99861 kph"], ["Average humidity", "45%"], ["Lowest humidity", "1%"], 
+            ["Highest humidity", "99.8%"], ["Average air pressure", "45 mbar"], ["Lowest air pressure", "2 mbar"], ["Highest air pressure", "100 mbar"]]        
+        
         # Show the dialog.
-        info_dlg = InfoDialog(self, data)
+        info_dlg = GenericInfoDialog(self, "Info", data)
         info_dlg.run()
         
         # Close the dialog. The response can be ignored.
