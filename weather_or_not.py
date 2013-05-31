@@ -166,12 +166,12 @@ class Weather(Gtk.Window):
         action_weather_info_group = Gtk.Action("info_menu", "_More Info...", None, None)
         action_group.add_action(action_weather_info_group)
         action_group.add_actions([
-            ("temperature", None, "_Temperature...", "<Control>t", None, None),
-            ("precipitation", None, "_Precipitation...", "<Control>p", None, None),
-            ("wind", None, "_Wind...", "<Control>w", None, None),
-            ("humidity", None, "_Humidity...", "<Control>h", None, None),
-            ("air_pressure", None, "_Air Pressure...", "<Control>a", None, None),
-            ("cloud_cover", None, "_Cloud Cover...", "<Control>c", None, None),
+            ("temperature", None, "_Temperature...", "<Control>t", None, self.show_info_temp),
+            ("precipitation", None, "_Precipitation...", "<Control>p", None, self.show_info_prec),
+            ("wind", None, "_Wind...", "<Control>w", None, self.show_info_wind),
+            ("humidity", None, "_Humidity...", "<Control>h", None, self.show_info_humi),
+            ("air_pressure", None, "_Air Pressure...", "<Control>a", None, self.show_info_airp),
+            ("cloud_cover", None, "_Cloud Cover...", "<Control>c", None, self.show_info_clou),
             ("clear_data", None, "Clear _Data...", "<Control>d", None, self.clear),
             ("exit", Gtk.STOCK_QUIT, "E_xit...", None, "Close the application", lambda x: self.exit("ignore", "this"))
         ])
@@ -262,17 +262,148 @@ class Weather(Gtk.Window):
         
         # Get the info.
         ### ADD CODE TO CALCULATE THESE LATER!!
-        data = [["First day", "5/13/13"], ["Last day", "5/14/13"], ["Number of days", "1"], ["Average temperature", "40 °C"], ["Lowest temperature", "30 °C"], 
+        data2 = [["First day", "5/13/13"], ["Last day", "5/14/13"], ["Number of days", "1"], ["Average temperature", "40 °C"], ["Lowest temperature", "30 °C"], 
             ["Highest temperature", "50 °C"], ["Average precipitation", "3.45 cm"], ["Total precipitation", "56.42 cm"], ["Average wind speed", "45 kph"],
             ["Lowest wind speed", "0 kph"], ["Highest wind speed", "99861 kph"], ["Average humidity", "45%"], ["Lowest humidity", "1%"], 
             ["Highest humidity", "99.8%"], ["Average air pressure", "45 mbar"], ["Lowest air pressure", "2 mbar"], ["Highest air pressure", "100 mbar"]]        
         
         # Show the dialog.
-        info_dlg = GenericInfoDialog(self, "Info", data)
+        info_dlg = GenericInfoDialog(self, "General Info", data2)
         info_dlg.run()
         
         # Close the dialog. The response can be ignored.
         info_dlg.destroy()
+    
+    
+    def show_info_temp(self, event):
+        """Shows info about the temperature data."""
+        
+        # Get the info.
+        ### ADD CODE TO CALCULATE THESE LATER!!
+        data2 = [
+            ["Lowest", "30 °C"],
+            ["Highest", "50 °C"],
+            ["Average", "40 °C"],
+            ["Median", "40 °C"],
+            ["Range", "20 °C"],
+            ["Most common", "40 °C"]
+        ]
+        
+        # Show the dialog.
+        temp_dlg = GenericInfoDialog(self, "Temperature Info", data2)
+        temp_dlg.run()
+        
+        # Close the dialog. The response can be ignored.
+        temp_dlg.destroy()
+    
+    
+    def show_info_prec(self, event):
+        """Shows info about the precipitation data."""
+        
+        # Get the info.
+        ### ADD CODE TO CALCULATE THESE LATER!!
+        data2 = [
+            ["Lowest", "0 cm"],
+            ["Highest", "60 cm"],
+            ["Average", "30 cm"],
+            ["Median", "30 cm"],
+            ["Range", "60 cm"],
+            ["Most common type", "Rain"]
+        ]
+        
+        # Show the dialog.
+        prec_dlg = GenericInfoDialog(self, "Precipitation Info", data2)
+        prec_dlg.run()
+        
+        # Close the dialog. The response can be ignored.
+        prec_dlg.destroy()
+    
+    
+    def show_info_wind(self, event):
+        """Shows info about the wind data."""
+        
+        # Get the info.
+        ### ADD CODE TO CALCULATE THESE LATER!!
+        data2 = [
+            ["Lowest", "0 kph"],
+            ["Highest", "100 kph"],
+            ["Average", "50 kph"],
+            ["Median", "50 kph"],
+            ["Range", "100 kph"],
+            ["Most common direction", "NW"]
+        ]
+        
+        # Show the dialog.
+        wind_dlg = GenericInfoDialog(self, "Wind Info", data2)
+        wind_dlg.run()
+        
+        # Close the dialog. The response can be ignored.
+        wind_dlg.destroy()
+    
+    
+    def show_info_humi(self, event):
+        """Shows info about the humidity data."""
+        
+        # Get the info.
+        ### ADD CODE TO CALCULATE THESE LATER!!
+        data2 = [
+            ["Lowest", "20%"],
+            ["Highest", "80%"],
+            ["Average", "50%"],
+            ["Median", "50%"],
+            ["Range", "60%"],
+            ["Most common", "50%"]
+        ]
+        
+        # Show the dialog.
+        humi_dlg = GenericInfoDialog(self, "Humidity Info", data2)
+        humi_dlg.run()
+        
+        # Close the dialog. The response can be ignored.
+        humi_dlg.destroy()
+    
+    
+    def show_info_airp(self, event):
+        """Shows info about the air pressure data."""
+        
+        # Get the info.
+        ### ADD CODE TO CALCULATE THESE LATER!!
+        data2 = [
+            ["Lowest", "40 mbar"],
+            ["Highest", "42 mbar"],
+            ["Average", "41 mbar"],
+            ["Median", "41 mbar"],
+            ["Range", "2 mbar"],
+            ["Most common", "41 mbar"]
+        ]
+        
+        # Show the dialog.
+        airp_dlg = GenericInfoDialog(self, "Air Pressure Info", data2)
+        airp_dlg.run()
+        
+        # Close the dialog. The response can be ignored.
+        airp_dlg.destroy()
+    
+    
+    def show_info_clou(self, event):
+        """Shows info about the cloud cover data."""
+        
+        # Get the info.
+        ### ADD CODE TO CALCULATE THESE LATER!!
+        data2 = [
+            ["Sunny", "4 days"],
+            ["Mostly Sunny", "7 days"],
+            ["Partly Cloudy", "14 days"],
+            ["Mostly Cloudy", "3 days"],
+            ["Cloudy", "17 days"]
+        ]
+        
+        # Show the dialog.
+        clou_dlg = GenericInfoDialog(self, "Cloud Cover Info", data2)
+        clou_dlg.run()
+        
+        # Close the dialog. The response can be ignored.
+        clou_dlg.destroy()
     
     
     def import_file(self, event):
