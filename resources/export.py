@@ -8,8 +8,11 @@
 import utility_functions
 
 
-def html(data):
+def html(data2):
     """Converts the data to HTML."""
+    
+    # Create a copy of the data
+    data = data2[:]
     
     # Build the string.
     html = """
@@ -34,6 +37,12 @@ def html(data):
     
     # Add the data. Loop through each list, and add it as a table row.
     for i in data:
+        
+        # Convert the data to utf-8. This will cause an error otherwise,
+        # for reasons I don't quite understand.
+        for j in range(0, len(i)):
+            i[j] = i[j].encode("utf-8")
+        
         html += """
 <tr>
 <td>%s</td>
@@ -53,7 +62,7 @@ def html(data):
 </html>"""
     
     # Return the HTML.
-    return html
+    return html.lstrip()
 
 
 def csv(data):
