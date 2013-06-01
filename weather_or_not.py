@@ -39,6 +39,8 @@ THE SOFTWARE.
 from gi.repository import Gtk
 # Import json for loading and saving the data.
 import json
+# Import collections.Counter for getting how often items appear.
+from collections import Counter
 # Import os for creating a directory.
 import os
 # Import os.path for seeing if a directory exists.
@@ -389,13 +391,33 @@ class Weather(Gtk.Window):
         """Shows info about the cloud cover data."""
         
         # Get the info.
-        ### ADD CODE TO CALCULATE THESE LATER!!
+        # Put the items into a collection.
+        dlg_data = Counter(utility_functions.get_column(data, 6))
+        # Find how many times the items appear.
+        m_list = dlg_data.most_common()
+        # Convert the list to a dictionary.
+        m_dict = {}
+        for i in m_list:
+            m_dict[i[0]] = i[1]
+        # If any of the items don't appear, add dict items for them, with the values set to 0.
+        if not "Sunny" in m_dict:
+            m_dict["Sunny"] = 0
+        if not "Mostly Sunny" in m_dict:
+            m_dict["Mostly Sunny"] = 0
+        if not "Partly Cloudy" in m_dict:
+            m_dict["Partly Cloudy"] = 0
+        if not "Mostly Cloudy" in m_dict:
+            m_dict["Mostly Cloudy"] = 0
+        if not "Cloudy" in m_dict:
+            m_dict["Cloudy"] = 0
+        
+        # Create the data list.
         data2 = [
-            ["Sunny", "4 days"],
-            ["Mostly Sunny", "7 days"],
-            ["Partly Cloudy", "14 days"],
-            ["Mostly Cloudy", "3 days"],
-            ["Cloudy", "17 days"]
+            ["Sunny", "%s day(s)" % m_dict["Sunny"]],
+            ["Mostly Sunny", "%s day(s)" % m_dict["Mostly Sunny"]],
+            ["Partly Cloudy", "%s day(s)" % m_dict["Partly Cloudy"]],
+            ["Mostly Cloudy", "%s day(s)" % m_dict["Mostly Cloudy"]],
+            ["Cloudy", "%s day(s)" % m_dict["Cloudy"]]
         ]
         
         # Show the dialog.
