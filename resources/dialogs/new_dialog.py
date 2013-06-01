@@ -64,7 +64,7 @@ class AddNewDialog(Gtk.Dialog):
         self.humi_ent = Gtk.Entry()
         new_grid.attach_next_to(self.humi_ent, humi_lbl, Gtk.PositionType.RIGHT, 2, 1)
         # Create the Air Pressure label and entry.
-        airp_lbl = Gtk.Label("Air Pressure (mbar): ")
+        airp_lbl = Gtk.Label("Air Pressure (Pa): ")
         airp_lbl.set_alignment(0, 0.5)
         new_grid.attach_next_to(airp_lbl, humi_lbl, Gtk.PositionType.BOTTOM, 1, 1)
         self.airp_ent = Gtk.Entry()

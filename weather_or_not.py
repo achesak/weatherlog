@@ -130,7 +130,7 @@ class Weather(Gtk.Window):
         self.treeview.append_column(humi_col)
         # Create the Air Pressure column.
         airp_text = Gtk.CellRendererText()
-        airp_col = Gtk.TreeViewColumn("Air Pressure (mbar)", airp_text, text = 5)
+        airp_col = Gtk.TreeViewColumn("Air Pressure (Pa)", airp_text, text = 5)
         self.treeview.append_column(airp_col)
         # Create the Cloud Cover column.
         clou_text = Gtk.CellRendererText()
@@ -265,7 +265,7 @@ class Weather(Gtk.Window):
         data2 = [["First day", "5/13/13"], ["Last day", "5/14/13"], ["Number of days", "1"], ["Average temperature", "40 °C"], ["Lowest temperature", "30 °C"], 
             ["Highest temperature", "50 °C"], ["Average precipitation", "3.45 cm"], ["Total precipitation", "56.42 cm"], ["Average wind speed", "45 kph"],
             ["Lowest wind speed", "0 kph"], ["Highest wind speed", "99861 kph"], ["Average humidity", "45%"], ["Lowest humidity", "1%"], 
-            ["Highest humidity", "99.8%"], ["Average air pressure", "45 mbar"], ["Lowest air pressure", "2 mbar"], ["Highest air pressure", "100 mbar"]]        
+            ["Highest humidity", "99.8%"], ["Average air pressure", "45 Pa"], ["Lowest air pressure", "2 Pa"], ["Highest air pressure", "100 Pa"]]        
         
         # Show the dialog.
         info_dlg = GenericInfoDialog(self, "General Info", data2)
@@ -369,12 +369,12 @@ class Weather(Gtk.Window):
         # Get the info.
         ### ADD CODE TO CALCULATE THESE LATER!!
         data2 = [
-            ["Lowest", "40 mbar"],
-            ["Highest", "42 mbar"],
-            ["Average", "41 mbar"],
-            ["Median", "41 mbar"],
-            ["Range", "2 mbar"],
-            ["Most common", "41 mbar"]
+            ["Lowest", "40 Pa"],
+            ["Highest", "42 Pa"],
+            ["Average", "41 Pa"],
+            ["Median", "41 Pa"],
+            ["Range", "2 Pa"],
+            ["Most common", "41 Pa"]
         ]
         
         # Show the dialog.
