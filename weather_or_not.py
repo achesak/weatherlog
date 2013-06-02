@@ -41,6 +41,8 @@ from gi.repository import Gtk
 import json
 # Import collections.Counter for getting how often items appear.
 from collections import Counter
+# Import webbrowser for opening websites in the user's browser.
+import webbrowser
 # Import os for creating a directory.
 import os
 # Import os.path for seeing if a directory exists.
@@ -181,8 +183,8 @@ class Weather(Gtk.Window):
         # Create the Help menu.
         action_group.add_actions([
             ("help_menu", None, "Help"),
-            ("about", Gtk.STOCK_ABOUT, "_About...", "<Shift>F1", None, self.about),
-            ("help", Gtk.STOCK_HELP, "_Help...", None, None, None)
+            ("about", Gtk.STOCK_ABOUT, "_About...", "<Shift>F1", None, self.show_about),
+            ("help", Gtk.STOCK_HELP, "_Help...", None, None, self.show_help)
         ])
         
         # Create the UI manager.
@@ -598,7 +600,7 @@ class Weather(Gtk.Window):
         clear_dlg.destroy()
     
     
-    def about(self, event):
+    def show_about(self, event):
         """Shows the About dialog."""
         
         # Create the dialog.
@@ -631,6 +633,13 @@ class Weather(Gtk.Window):
         about_dlg.run()
         about_dlg.destroy()
 
+    
+    def show_help(self, event):
+        """Shows the help in a web browser."""
+        
+        # Open the website.
+        webbrowser.open("http://poultryandprogramming.wordpress.com/programming/weather-or-not-help/")    
+    
 
     def exit(self, x, y):
         """Saves data and closes the application."""
