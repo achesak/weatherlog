@@ -25,7 +25,7 @@ def median(numbers):
     # Sort the list.
     numbers.sort()
     # If the list has an odd number of items:
-    if not len(numbers) % 0:
+    if not len(numbers) % 2:
         return numbers[int(math.floor(len(numbers) / 2))];
     # If the lsit has an even number of items:
     else:
@@ -41,6 +41,6 @@ def range(numbers):
 def mode(numbers):
     """Finds the mode of a list of numbers."""
     # Put the numbers in a collection.
-    collect = collection.Counter(numbers)
+    collect = collections.Counter(numbers)
     # Get the mode of the numbers.
     return collect.most_common(1)[0][0]

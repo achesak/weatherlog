@@ -282,15 +282,24 @@ class Weather(Gtk.Window):
     def show_info_temp(self, event):
         """Shows info about the temperature data."""
         
+        # Get the data.
+        temp_data = utility_functions.convert_float(utility_functions.get_column(data, 1))
+        temp_low = min(temp_data)
+        temp_high = max(temp_data)
+        temp_avg = info_functions.mean(temp_data)
+        temp_median = info_functions.median(temp_data)
+        temp_range = info_functions.range(temp_data)
+        temp_mode = info_functions.mode(temp_data)
+        
         # Get the info.
         ### ADD CODE TO CALCULATE THESE LATER!!
         data2 = [
-            ["Lowest", "30 °C"],
-            ["Highest", "50 °C"],
-            ["Average", "40 °C"],
-            ["Median", "40 °C"],
-            ["Range", "20 °C"],
-            ["Most common", "40 °C"]
+            ["Lowest", "%.2f °C" % temp_low],
+            ["Highest", "%.2f °C" % temp_high],
+            ["Average", "%.2f °C" % temp_avg],
+            ["Median", "%.2f °C" % temp_median],
+            ["Range", "%.2f °C" % temp_range],
+            ["Most common", "%.2f °C" % temp_mode]
         ]
         
         # Show the dialog.
@@ -394,9 +403,9 @@ class Weather(Gtk.Window):
         
         # Get the info.
         # Put the items into a collection.
-        dlg_data = Counter(utility_functions.get_column(data, 6))
+        clou_data = Counter(utility_functions.get_column(data, 6))
         # Find how many times the items appear.
-        m_list = dlg_data.most_common()
+        m_list = clou_data.most_common()
         # Convert the list to a dictionary.
         m_dict = {}
         for i in m_list:

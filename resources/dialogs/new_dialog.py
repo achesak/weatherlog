@@ -30,6 +30,7 @@ class AddNewDialog(Gtk.Dialog):
         date_lbl.set_alignment(0, 0.5)
         new_grid.add(date_lbl)
         self.date_ent = Gtk.Entry()
+        self.date_ent.set_text("DD/MM/YY")
         new_grid.attach_next_to(self.date_ent, date_lbl, Gtk.PositionType.RIGHT, 2, 1)
         # Create the Temperature label and entry.
         temp_lbl = Gtk.Label("Temperature (°C): ")
