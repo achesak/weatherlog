@@ -291,8 +291,7 @@ class Weather(Gtk.Window):
         temp_range = info_functions.range(temp_data)
         temp_mode = info_functions.mode(temp_data)
         
-        # Get the info.
-        ### ADD CODE TO CALCULATE THESE LATER!!
+        # Create the data list.
         data2 = [
             ["Lowest", "%.2f °C" % temp_low],
             ["Highest", "%.2f °C" % temp_high],
@@ -357,15 +356,23 @@ class Weather(Gtk.Window):
     def show_info_humi(self, event):
         """Shows info about the humidity data."""
         
-        # Get the info.
-        ### ADD CODE TO CALCULATE THESE LATER!!
+        # Get the data.
+        humi_data = utility_functions.convert_float(utility_functions.get_column(data, 4))
+        humi_low = min(humi_data)
+        humi_high = max(humi_data)
+        humi_avg = info_functions.mean(humi_data)
+        humi_median = info_functions.median(humi_data)
+        humi_range = info_functions.range(humi_data)
+        humi_mode = info_functions.mode(humi_data)
+        
+        # Create the data list.
         data2 = [
-            ["Lowest", "20%"],
-            ["Highest", "80%"],
-            ["Average", "50%"],
-            ["Median", "50%"],
-            ["Range", "60%"],
-            ["Most common", "50%"]
+            ["Lowest", "%.2f%%" % humi_low],
+            ["Highest", "%.2f%%" % humi_high],
+            ["Average", "%.2f%%" % humi_avg],
+            ["Median", "%.2f%%" % humi_median],
+            ["Range", "%.2f%%" % humi_range],
+            ["Most common", "%.2f%%" % humi_mode]
         ]
         
         # Show the dialog.
