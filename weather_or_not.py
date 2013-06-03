@@ -43,6 +43,8 @@ import json
 from collections import Counter
 # Import webbrowser for opening websites in the user's browser.
 import webbrowser
+# Import datetime for getting the difference between two dates.
+import datetime
 # Import os for creating a directory.
 import os
 # Import os.path for seeing if a directory exists.
@@ -264,12 +266,72 @@ class Weather(Gtk.Window):
     def show_info(self, event):
         """Shows info about the data."""
         
-        # Get the info.
-        ### ADD CODE TO CALCULATE THESE LATER!!
-        data2 = [["First day", "5/13/13"], ["Last day", "5/14/13"], ["Number of days", "1"], ["Average temperature", "40 °C"], ["Lowest temperature", "30 °C"], 
-            ["Highest temperature", "50 °C"], ["Average precipitation", "3.45 cm"], ["Total precipitation", "56.42 cm"], ["Average wind speed", "45 kph"],
-            ["Lowest wind speed", "0 kph"], ["Highest wind speed", "99861 kph"], ["Average humidity", "45%"], ["Lowest humidity", "1%"], 
-            ["Highest humidity", "99.8%"], ["Average air pressure", "45 Pa"], ["Lowest air pressure", "2 Pa"], ["Highest air pressure", "100 Pa"]]        
+        # Get the date data.
+        date_data = utility_functions.get_column(data, 0)
+        date_first = date_data[0]
+        date_last = date_data[len(date_data) - 1]
+        date_first2 = datetime.datetime.strptime(date_first, "%d/%m/%y")
+        date_last2 = datetime.datetime.strptime(date_last, "%d/%m/%y")
+        date_num = (date_last2 - date_first2).days + 1
+        
+        # Get the temperature data.
+        temp_data = utility_functions.convert_float(utility_functions.get_column(data, 1))
+        temp_low = min(temp_data)
+        temp_high = max(temp_data)
+        temp_avg = info_functions.mean(temp_data)
+        
+        # Get the precipitation data.
+        prec_data1, prec_data2 = utility_functions.split_list(utility_functions.get_column(data, 2))
+        prec_data1 = utility_functions.convert_float(prec_data1)
+        prec_low = min(prec_data1)
+        prec_high = max(prec_data1)
+        prec_avg = info_functions.mean(prec_data1)
+        
+        # Get the wind data.
+        wind_data1, wind_data2 = utility_functions.split_list(utility_functions.get_column(data, 3))
+        wind_data1 = utility_functions.convert_float(wind_data1)
+        wind_low = min(wind_data1)
+        wind_high = max(wind_data1)
+        wind_avg = info_functions.mean(wind_data1)
+        
+        # Get the humidity data.
+        humi_data = utility_functions.convert_float(utility_functions.get_column(data, 4))
+        humi_low = min(humi_data)
+        humi_high = max(humi_data)
+        humi_avg = info_functions.mean(humi_data)
+        
+        # Get the air pressure data.
+        airp_data = utility_functions.convert_float(utility_functions.get_column(data, 5))
+        airp_low = min(airp_data)
+        airp_high = max(airp_data)
+        airp_avg = info_functions.mean(airp_data)
+        
+        # Get the cloud cover data.
+        clou_data = Counter(utility_functions.get_column(data, 6))
+        clou_mode = clou_data.most_common(1)[0][0]
+        
+        # Create the data list.
+        data2 = [
+            ["First day", "%s" % date_first],
+            ["Last day", "%s" % date_last],
+            ["Number of days", "%d" % date_num],
+            ["Lowest temperature", "%.2f °C" % temp_low], 
+            ["Highest temperature", "%.2f °C" % temp_high],
+            ["Average temperature", "%.2f °C" % temp_avg],
+            ["Lowest precipitation", "%.2f cm" % prec_low],
+            ["Highest precipitation", "%.2f cm" % prec_high],
+            ["Average precipitation", "%.2f cm" % prec_avg],
+            ["Lowest wind speed", "%.2f kph" % wind_low],
+            ["Highest wind speed", "%.2f kph" % wind_high],
+            ["Average wind speed", "%.2f kph" % wind_avg],
+            ["Lowest humidity", "%.2f%%" % humi_low], 
+            ["Highest humidity", "%.2f%%" % humi_high],
+            ["Average humidity", "%.2f%%" % humi_avg],
+            ["Lowest air pressure", "%.2f Pa" % airp_low],
+            ["Highest air pressure", "%.2f Pa" % airp_high],
+            ["Average air pressure", "%.2f Pa" % airp_avg],
+            ["Most common cloud cover", "%s" % clou_mode]
+        ]        
         
         # Show the dialog.
         info_dlg = GenericInfoDialog(self, "General Info", data2)
@@ -320,6 +382,9 @@ class Weather(Gtk.Window):
         prec_avg = info_functions.mean(prec_data1)
         prec_median = info_functions.median(prec_data1)
         prec_range = info_functions.range(prec_data1)
+        prec_total = 0
+        for i in prec_data1:
+            prec_total += i
         prec_mode = info_functions.mode(prec_data2)
         
         # Create the data list.
@@ -329,6 +394,7 @@ class Weather(Gtk.Window):
             ["Average", "%.2f cm" % prec_avg],
             ["Median", "%.2f cm" % prec_median],
             ["Range", "%.2f cm" % prec_range],
+            ["Total", "%.2f cm" % prec_total],
             ["Most common type", "%s" % prec_mode]
         ]
         
@@ -434,7 +500,7 @@ class Weather(Gtk.Window):
     def show_info_clou(self, event):
         """Shows info about the cloud cover data."""
         
-        # Get the info.
+        # Get the data.
         # Put the items into a collection.
         clou_data = Counter(utility_functions.get_column(data, 6))
         # Find how many times the items appear.
