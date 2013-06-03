@@ -312,15 +312,24 @@ class Weather(Gtk.Window):
     def show_info_prec(self, event):
         """Shows info about the precipitation data."""
         
-        # Get the info.
-        ### ADD CODE TO CALCULATE THESE LATER!!
+        # Get the data.
+        prec_data1, prec_data2 = utility_functions.split_list(utility_functions.get_column(data, 2))
+        prec_data1 = utility_functions.convert_float(prec_data1)
+        prec_low = min(prec_data1)
+        prec_high = max(prec_data1)
+        prec_avg = info_functions.mean(prec_data1)
+        prec_median = info_functions.median(prec_data1)
+        prec_range = info_functions.range(prec_data1)
+        prec_mode = info_functions.mode(prec_data2)
+        
+        # Create the data list.
         data2 = [
-            ["Lowest", "0 cm"],
-            ["Highest", "60 cm"],
-            ["Average", "30 cm"],
-            ["Median", "30 cm"],
-            ["Range", "60 cm"],
-            ["Most common type", "Rain"]
+            ["Lowest", "%.2f cm" % prec_low],
+            ["Highest", "%.2f cm" % prec_high],
+            ["Average", "%.2f cm" % prec_avg],
+            ["Median", "%.2f cm" % prec_median],
+            ["Range", "%.2f cm" % prec_range],
+            ["Most common type", "%s" % prec_mode]
         ]
         
         # Show the dialog.
@@ -334,15 +343,24 @@ class Weather(Gtk.Window):
     def show_info_wind(self, event):
         """Shows info about the wind data."""
         
-        # Get the info.
-        ### ADD CODE TO CALCULATE THESE LATER!!
+        # Get the data.
+        wind_data1, wind_data2 = utility_functions.split_list(utility_functions.get_column(data, 3))
+        wind_data1 = utility_functions.convert_float(wind_data1)
+        wind_low = min(wind_data1)
+        wind_high = max(wind_data1)
+        wind_avg = info_functions.mean(wind_data1)
+        wind_median = info_functions.median(wind_data1)
+        wind_range = info_functions.range(wind_data1)
+        wind_mode = info_functions.mode(wind_data2)
+        
+        # Create the data list.
         data2 = [
-            ["Lowest", "0 kph"],
-            ["Highest", "100 kph"],
-            ["Average", "50 kph"],
-            ["Median", "50 kph"],
-            ["Range", "100 kph"],
-            ["Most common direction", "NW"]
+            ["Lowest", "%.2f kph" % wind_low],
+            ["Highest", "%.2f kph" % wind_high],
+            ["Average", "%.2f kph" % wind_avg],
+            ["Median", "%.2f kph" % wind_median],
+            ["Range", "%.2f kph" % wind_range],
+            ["Most common direction", "%s" % wind_mode]
         ]
         
         # Show the dialog.
@@ -386,15 +404,23 @@ class Weather(Gtk.Window):
     def show_info_airp(self, event):
         """Shows info about the air pressure data."""
         
-        # Get the info.
-        ### ADD CODE TO CALCULATE THESE LATER!!
+        # Get the data.
+        airp_data = utility_functions.convert_float(utility_functions.get_column(data, 5))
+        airp_low = min(airp_data)
+        airp_high = max(airp_data)
+        airp_avg = info_functions.mean(airp_data)
+        airp_median = info_functions.median(airp_data)
+        airp_range = info_functions.range(airp_data)
+        airp_mode = info_functions.mode(airp_data)
+        
+        # Create the data list.
         data2 = [
-            ["Lowest", "40 Pa"],
-            ["Highest", "42 Pa"],
-            ["Average", "41 Pa"],
-            ["Median", "41 Pa"],
-            ["Range", "2 Pa"],
-            ["Most common", "41 Pa"]
+            ["Lowest", "%.2f Pa" % airp_low],
+            ["Highest", "%.2f Pa" % airp_high],
+            ["Average", "%.2f Pa" % airp_avg],
+            ["Median", "%.2f Pa" % airp_median],
+            ["Range", "%.2f Pa" % airp_range],
+            ["Most common", "%.2f Pa" % airp_mode]
         ]
         
         # Show the dialog.

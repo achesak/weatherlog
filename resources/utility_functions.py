@@ -46,7 +46,7 @@ def split_list(data):
     # Loop through the list, splitting the items and adding them to the new lists.
     for i in data2:
         i_split = i.split(" ")
-        n_list.append(i_split[0])
-        n_list.append(i_split[1])
+        n_list1.append(i_split[0])
+        n_list2.append(i_split[1])
     # Return the new lists.
     return [n_list1, n_list2]
