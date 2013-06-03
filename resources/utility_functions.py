@@ -34,3 +34,19 @@ def get_column(data, col):
         column.append(i[col])
     # Return the column.
     return column
+ 
+
+def split_list(data):
+    """Splits the list items, and returns them as two lists."""
+    # Make a copy of the data. The original list should be unmodified.
+    data2 = data[:]
+    # Create the new lists.
+    n_list1 = []
+    n_list2 = []
+    # Loop through the list, splitting the items and adding them to the new lists.
+    for i in data2:
+        i_split = i.split(" ")
+        n_list.append(i_split[0])
+        n_list.append(i_split[1])
+    # Return the new lists.
+    return [n_list1, n_list2]
