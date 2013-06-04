@@ -136,7 +136,7 @@ class Weather(Gtk.Window):
         self.treeview.append_column(humi_col)
         # Create the Air Pressure column.
         airp_text = Gtk.CellRendererText()
-        airp_col = Gtk.TreeViewColumn("Air Pressure (Pa)", airp_text, text = 5)
+        airp_col = Gtk.TreeViewColumn("Air Pressure (hPa)", airp_text, text = 5)
         self.treeview.append_column(airp_col)
         # Create the Cloud Cover column.
         clou_text = Gtk.CellRendererText()
@@ -327,9 +327,9 @@ class Weather(Gtk.Window):
             ["Lowest humidity", "%.2f%%" % humi_low], 
             ["Highest humidity", "%.2f%%" % humi_high],
             ["Average humidity", "%.2f%%" % humi_avg],
-            ["Lowest air pressure", "%.2f Pa" % airp_low],
-            ["Highest air pressure", "%.2f Pa" % airp_high],
-            ["Average air pressure", "%.2f Pa" % airp_avg],
+            ["Lowest air pressure", "%.2f hPa" % airp_low],
+            ["Highest air pressure", "%.2f hPa" % airp_high],
+            ["Average air pressure", "%.2f hPa" % airp_avg],
             ["Most common cloud cover", "%s" % clou_mode]
         ]        
         
@@ -481,12 +481,12 @@ class Weather(Gtk.Window):
         
         # Create the data list.
         data2 = [
-            ["Lowest", "%.2f Pa" % airp_low],
-            ["Highest", "%.2f Pa" % airp_high],
-            ["Average", "%.2f Pa" % airp_avg],
-            ["Median", "%.2f Pa" % airp_median],
-            ["Range", "%.2f Pa" % airp_range],
-            ["Most common", "%.2f Pa" % airp_mode]
+            ["Lowest", "%.2f hPa" % airp_low],
+            ["Highest", "%.2f hPa" % airp_high],
+            ["Average", "%.2f hPa" % airp_avg],
+            ["Median", "%.2f hPa" % airp_median],
+            ["Range", "%.2f hPa" % airp_range],
+            ["Most common", "%.2f hPa" % airp_mode]
         ]
         
         # Show the dialog.
