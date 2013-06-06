@@ -66,6 +66,7 @@ import resources.export as export
 # Import the dialogs.
 from resources.dialogs.new_dialog import *
 from resources.dialogs.info_dialog import *
+from resources.dialogs.data_dialog import *
 
 
 # Check to see if the directory exists, and create it if it doesn't.
@@ -242,16 +243,20 @@ class Weather(Gtk.Window):
             
             # If anything required was missing, cancel this action. Everything is required except for the notes.
             if not date or not temp or not prec or not prec_type or not wind or not wind_dir or not humi or not airp or not clou:
+                
                 # Create the error dialog.
                 err_miss_dlg = Gtk.MessageDialog(new_dlg, 0, Gtk.MessageType.WARNING, Gtk.ButtonsType.OK, "Add New")
                 err_miss_dlg.format_secondary_text("One or more fields was left blank.")
+                
                 # Show the error dialog.
                 err_miss_dlg.run()
+                
                 # Close the error dialog and the "Add New" dialog. The second one
                 # is needed because of a bug where the window will stop responding
                 # to events, making it useless. Fix later!
                 err_miss_dlg.destroy()
                 new_dlg.destroy()
+                
             else:
                 
                 # Add the data to the list
@@ -265,6 +270,13 @@ class Weather(Gtk.Window):
     
     def show_info(self, event):
         """Shows info about the data."""
+        
+        # If there is no data, tell the user and don't show the info dialog.
+        if len(data) == 0:
+            
+            # Show the dialog.
+            show_no_data_dialog(self, "General Info")
+            return
         
         # Get the date data.
         date_data = utility_functions.get_column(data, 0)
@@ -344,6 +356,13 @@ class Weather(Gtk.Window):
     def show_info_temp(self, event):
         """Shows info about the temperature data."""
         
+        # If there is no data, tell the user and don't show the info dialog.
+        if len(data) == 0:
+            
+            # Show the dialog.
+            show_no_data_dialog(self, "Temperature Info")
+            return
+        
         # Get the data.
         temp_data = utility_functions.convert_float(utility_functions.get_column(data, 1))
         temp_low = min(temp_data)
@@ -373,6 +392,13 @@ class Weather(Gtk.Window):
     
     def show_info_prec(self, event):
         """Shows info about the precipitation data."""
+        
+        # If there is no data, tell the user and don't show the info dialog.
+        if len(data) == 0:
+            
+            # Show the dialog.
+            show_no_data_dialog(self, "Precipitation Info")
+            return
         
         # Get the data.
         prec_data1, prec_data2 = utility_functions.split_list(utility_functions.get_column(data, 2))
@@ -409,6 +435,13 @@ class Weather(Gtk.Window):
     def show_info_wind(self, event):
         """Shows info about the wind data."""
         
+        # If there is no data, tell the user and don't show the info dialog.
+        if len(data) == 0:
+            
+            # Show the dialog.
+            show_no_data_dialog(self, "Wind Info")
+            return
+        
         # Get the data.
         wind_data1, wind_data2 = utility_functions.split_list(utility_functions.get_column(data, 3))
         wind_data1 = utility_functions.convert_float(wind_data1)
@@ -440,6 +473,13 @@ class Weather(Gtk.Window):
     def show_info_humi(self, event):
         """Shows info about the humidity data."""
         
+        # If there is no data, tell the user and don't show the info dialog.
+        if len(data) == 0:
+            
+            # Show the dialog.
+            show_no_data_dialog(self, "Humidity Info")
+            return
+        
         # Get the data.
         humi_data = utility_functions.convert_float(utility_functions.get_column(data, 4))
         humi_low = min(humi_data)
@@ -470,6 +510,13 @@ class Weather(Gtk.Window):
     def show_info_airp(self, event):
         """Shows info about the air pressure data."""
         
+        # If there is no data, tell the user and don't show the info dialog.
+        if len(data) == 0:
+            
+            # Show the dialog.
+            show_no_data_dialog(self, "Air Pressure Info")
+            return
+        
         # Get the data.
         airp_data = utility_functions.convert_float(utility_functions.get_column(data, 5))
         airp_low = min(airp_data)
@@ -499,6 +546,13 @@ class Weather(Gtk.Window):
     
     def show_info_clou(self, event):
         """Shows info about the cloud cover data."""
+        
+        # If there is no data, tell the user and don't show the info dialog.
+        if len(data) == 0:
+            
+            # Show the dialog.
+            show_no_data_dialog(self, "Cloud Cover Info")
+            return
         
         # Get the data.
         # Put the items into a collection.
