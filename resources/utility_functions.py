@@ -50,3 +50,16 @@ def split_list(data):
         n_list2.append(i_split[1])
     # Return the new lists.
     return [n_list1, n_list2]
+
+
+def split_list2(data):
+    """Splits the list items, and returns them as lists within the main one."""
+    # Make a copy of the data. The original list should be unmodified.
+    data2 = data[:]
+    # Create the new list.
+    n_list = []
+    # Loop through the list, splitting the items and adding them to the new list.
+    for i in data2:
+        n_list.append(i.split(" "))
+    # Return the new list.
+    return n_list
