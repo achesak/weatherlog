@@ -402,6 +402,7 @@ class Weather(Gtk.Window):
         
         # Get the data.
         prec_data1, prec_data2 = utility_functions.split_list(utility_functions.get_column(data, 2))
+        prec_split = utility_functions.split_list2(utility_functions.get_column(data, 2))
         prec_data1 = utility_functions.convert_float(prec_data1)
         prec_low = min(prec_data1)
         prec_high = max(prec_data1)
@@ -409,8 +410,28 @@ class Weather(Gtk.Window):
         prec_median = info_functions.median(prec_data1)
         prec_range = info_functions.range(prec_data1)
         prec_total = 0
-        for i in prec_data1:
-            prec_total += i
+        prec_total_rain = 0
+        prec_total_snow = 0
+        prec_total_hail = 0
+        prec_total_sleet = 0
+        prec_rain = 0
+        prec_snow = 0
+        prec_hail = 0
+        prec_sleet = 0
+        for i in prec_split:
+            prec_total += float(i[0])
+            if i[1] == "Rain":
+                prec_total_rain += float(i[0])
+                prec_rain += 1
+            elif i[1] == "Snow":
+                prec_total_snow += float(i[0])
+                prec_snow += 1
+            elif i[1] == "Hail":
+                prec_total_hail += float(i[0])
+                prec_hail += 1
+            elif i[1] == "Sleet":
+                prec_total_sleet += float(i[0])
+                prec_hail += 1
         prec_mode = info_functions.mode(prec_data2)
         
         # Create the data list.
@@ -420,7 +441,15 @@ class Weather(Gtk.Window):
             ["Average", "%.2f cm" % prec_avg],
             ["Median", "%.2f cm" % prec_median],
             ["Range", "%.2f cm" % prec_range],
-            ["Total", "%.2f cm" % prec_total],
+            ["Total (all)", "%.2f cm" % prec_total],
+            ["Total (rain)", "%.2f cm" % prec_total_rain],
+            ["Total (snow)", "%.2f cm" % prec_total_snow],
+            ["Total (hail)", "%.2f cm" % prec_total_hail],
+            ["Total (sleet)", "%.2f cm" % prec_total_sleet],
+            ["Rain", "%d day(s)" % prec_rain],
+            ["Snow", "%d day(s)" % prec_snow],
+            ["Hail", "%d day(s)" % prec_hail],
+            ["Sleet", "%d day(s)" % prec_sleet],
             ["Most common type", "%s" % prec_mode]
         ]
         
@@ -563,6 +592,7 @@ class Weather(Gtk.Window):
         m_dict = {}
         for i in m_list:
             m_dict[i[0]] = i[1]
+        
         # If any of the items don't appear, add dict items for them, with the values set to 0.
         if not "Sunny" in m_dict:
             m_dict["Sunny"] = 0
