@@ -32,12 +32,14 @@ class AddNewDialog(Gtk.Dialog):
         self.date_ent = Gtk.Entry()
         self.date_ent.set_text("DD/MM/YY")
         new_grid.attach_next_to(self.date_ent, date_lbl, Gtk.PositionType.RIGHT, 2, 1)
+        
         # Create the Temperature label and entry.
         temp_lbl = Gtk.Label("Temperature (°C): ")
         temp_lbl.set_alignment(0, 0.5)
         new_grid.attach_next_to(temp_lbl, date_lbl, Gtk.PositionType.BOTTOM, 1, 1)
         self.temp_ent = Gtk.Entry()
         new_grid.attach_next_to(self.temp_ent, temp_lbl, Gtk.PositionType.RIGHT, 2, 1)
+        
         # Create the Precipitation label, entry, and combobox.
         prec_lbl = Gtk.Label("Precipitation (cm): ")
         prec_lbl.set_alignment(0, 0.5)
@@ -48,6 +50,7 @@ class AddNewDialog(Gtk.Dialog):
         for i in ["Rain", "Snow", "Hail", "Sleet"]:
             self.prec_com.append_text(i)
         new_grid.attach_next_to(self.prec_com, self.prec_ent, Gtk.PositionType.RIGHT, 1, 1)
+        
         # Create the Wind label, entry, and combobox.
         wind_lbl = Gtk.Label("Wind (kph): ")
         wind_lbl.set_alignment(0, 0.5)
@@ -58,18 +61,21 @@ class AddNewDialog(Gtk.Dialog):
         for i in ["N", "NNE", "NE", "ENE", "E", "ESE", "SE", "SSE", "S", "SSW", "SW", "WSW", "W", "WNW", "NW", "NNW"]:
             self.wind_com.append_text(i)
         new_grid.attach_next_to(self.wind_com, self.wind_ent, Gtk.PositionType.RIGHT, 1, 1)
+        
         # Create the Humidity label and entry.
         humi_lbl = Gtk.Label("Humidity (%): ")
         humi_lbl.set_alignment(0, 0.5)
         new_grid.attach_next_to(humi_lbl, wind_lbl, Gtk.PositionType.BOTTOM, 1, 1)
         self.humi_ent = Gtk.Entry()
         new_grid.attach_next_to(self.humi_ent, humi_lbl, Gtk.PositionType.RIGHT, 2, 1)
+        
         # Create the Air Pressure label and entry.
         airp_lbl = Gtk.Label("Air Pressure (hPa): ")
         airp_lbl.set_alignment(0, 0.5)
         new_grid.attach_next_to(airp_lbl, humi_lbl, Gtk.PositionType.BOTTOM, 1, 1)
         self.airp_ent = Gtk.Entry()
         new_grid.attach_next_to(self.airp_ent, airp_lbl, Gtk.PositionType.RIGHT, 2, 1)
+        
         # Create the Cloud Cover label and combobox.
         clou_lbl = Gtk.Label("Cloud Cover: ")
         clou_lbl.set_alignment(0, 0.5)
@@ -78,6 +84,7 @@ class AddNewDialog(Gtk.Dialog):
         for i in ["Sunny", "Mostly Sunny", "Partly Cloudy", "Mostly Cloudy", "Cloudy"]:
             self.clou_com.append_text(i)
         new_grid.attach_next_to(self.clou_com, clou_lbl, Gtk.PositionType.RIGHT, 2, 1)
+        
         # Create the Notes label and entry.
         note_lbl = Gtk.Label("Notes: ")
         note_lbl.set_alignment(0, 0.5)
