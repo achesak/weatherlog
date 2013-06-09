@@ -33,6 +33,8 @@ MENU_DATA = """
       <separator />
       <menuitem action="clear_data" />
       <separator />
+      <menuitem action="fullscreen" />
+      <separator />
       <menuitem action="exit" />
     </menu>
     <menu action="help_menu">
@@ -46,6 +48,8 @@ MENU_DATA = """
     <separator />
     <toolitem action="import" />
     <toolitem action="export" />
+    <separator />
+    <toolitem action="fullscreen" />
     <separator />
     <toolitem action="exit" />
   </toolbar>

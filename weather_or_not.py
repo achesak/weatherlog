@@ -108,6 +108,8 @@ class Weather(Gtk.Window):
         self.set_default_size(900, 500)
         # Set the icon.
         self.set_icon_from_file("resources/images/icon.png")
+        # Use this variable to store the fullscreen state.
+        self.fullscreen_state = False
         
         # Create the ListStore for storing the data.
         self.liststore = Gtk.ListStore(str, str, str, str, str, str, str, str)
@@ -182,6 +184,7 @@ class Weather(Gtk.Window):
             ("air_pressure", None, "_Air Pressure...", "<Control>a", None, self.show_info_airp),
             ("cloud_cover", None, "_Cloud Cover...", "<Control>c", None, self.show_info_clou),
             ("clear_data", None, "Clear _Data...", "<Control>d", None, self.clear),
+            ("fullscreen", Gtk.STOCK_FULLSCREEN, "Toggle _Fullscreen", "F11", "Toggle fullscreen window", self.toggle_fullscreen),
             ("exit", Gtk.STOCK_QUIT, "E_xit...", None, "Close the application", lambda x: self.exit("ignore", "this"))
         ])
         
@@ -796,6 +799,20 @@ class Weather(Gtk.Window):
         
         # Close the dialog.
         clear_dlg.destroy()
+    
+    
+    def toggle_fullscreen(self, event):
+        """Toggles fullscreen window."""
+        
+        # Turn fullscreen off:
+        if self.fullscreen_state:
+            self.unfullscreen()
+            self.fullscreen_state = False
+        
+        # Turn fullscreen on:
+        else:
+            self.fullscreen()
+            self.fullscreen_state = True
     
     
     def show_about(self, event):
