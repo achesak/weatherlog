@@ -166,8 +166,8 @@ class Weather(Gtk.Window):
             ("add_new", Gtk.STOCK_NEW, "Add _New...", None, "Add a new day to the list", self.add_new),
             ("import", Gtk.STOCK_OPEN, "_Import...", None, "Import data from a file", self.import_file),
             ("export", Gtk.STOCK_SAVE, "_Export...", None, "Export data to a file", self.export_file),
-            ("export_html", None, "Export to _HTML...", None, None, self.export_file_html),
-            ("export_csv", None, "Export to _CSV...", None, None, self.export_file_csv),
+            ("export_html", None, "Export to _HTML...", "<Control><Shift>h", None, self.export_file_html),
+            ("export_csv", None, "Export to _CSV...", "<Control><Shift>c", None, self.export_file_csv),
             ("info", Gtk.STOCK_INFO, "_Info...", "<Control>i", "Show info about the data", self.show_info)
         ])
         
