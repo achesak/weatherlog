@@ -273,8 +273,8 @@ class Weather(Gtk.Window):
                 self.liststore.append(new_data)
                 data.append(new_data)
                 
-                # Close the dialog.
-                new_dlg.destroy()
+        # Close the dialog.
+        new_dlg.destroy()
     
     
     def show_info(self, event):
