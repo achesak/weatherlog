@@ -49,6 +49,8 @@ MENU_DATA = """
     <toolitem action="import" />
     <toolitem action="export" />
     <separator />
+    <toolitem action="clear_data" />
+    <separator />
     <toolitem action="fullscreen" />
     <separator />
     <toolitem action="exit" />

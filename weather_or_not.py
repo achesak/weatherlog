@@ -165,7 +165,7 @@ class Weather(Gtk.Window):
         # Create the Weather menu.
         action_group.add_actions([
             ("weather_menu", None, "Weather"),
-            ("add_new", Gtk.STOCK_NEW, "Add _New...", None, "Add a new day to the list", self.add_new),
+            ("add_new", Gtk.STOCK_ADD, "Add _New...", "<Control>n", "Add a new day to the list", self.add_new),
             ("import", Gtk.STOCK_OPEN, "_Import...", None, "Import data from a file", self.import_file),
             ("export", Gtk.STOCK_SAVE, "_Export...", None, "Export data to a file", self.export_file),
             ("export_html", None, "Export to _HTML...", "<Control><Shift>h", None, self.export_file_html),
@@ -183,7 +183,7 @@ class Weather(Gtk.Window):
             ("humidity", None, "_Humidity...", "<Control>h", None, self.show_info_humi),
             ("air_pressure", None, "_Air Pressure...", "<Control>a", None, self.show_info_airp),
             ("cloud_cover", None, "_Cloud Cover...", "<Control>c", None, self.show_info_clou),
-            ("clear_data", None, "Clear _Data...", "<Control>d", None, self.clear),
+            ("clear_data", Gtk.STOCK_CLEAR, "Clear _Data...", "<Control>d", "Clear the data", self.clear),
             ("fullscreen", Gtk.STOCK_FULLSCREEN, "Toggle _Fullscreen", "F11", "Toggle fullscreen", self.toggle_fullscreen),
             ("exit", Gtk.STOCK_QUIT, "E_xit...", None, "Close the application", lambda x: self.exit("ignore", "this"))
         ])
@@ -616,11 +616,11 @@ class Weather(Gtk.Window):
         
         # Create the data list.
         data2 = [
-            ["Sunny", "%s day(s)" % m_dict["Sunny"]],
-            ["Mostly Sunny", "%s day(s)" % m_dict["Mostly Sunny"]],
-            ["Partly Cloudy", "%s day(s)" % m_dict["Partly Cloudy"]],
-            ["Mostly Cloudy", "%s day(s)" % m_dict["Mostly Cloudy"]],
-            ["Cloudy", "%s day(s)" % m_dict["Cloudy"]]
+            ["Sunny", "%s day%s" % (m_dict["Sunny"], "" if m_dict["Sunny"] == 1 else "s")],
+            ["Mostly Sunny", "%s day%s" % (m_dict["Mostly Sunny"], "" if m_dict["Mostly Sunny"] == 1 else "s")],
+            ["Partly Cloudy", "%s day%s" % (m_dict["Partly Cloudy"], "" if m_dict["Partly Cloudy"] == 1 else "s")],
+            ["Mostly Cloudy", "%s day%s" % (m_dict["Mostly Cloudy"], "" if m_dict["Mostly Cloudy"] == 1 else "s")],
+            ["Cloudy", "%s day%s" % (m_dict["Cloudy"], "" if m_dict["Cloudy"] == 1 else "s")]
         ]
         
         # Show the dialog.
