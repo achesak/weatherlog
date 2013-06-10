@@ -79,3 +79,18 @@ def split_list2(data):
     
     # Return the new list.
     return n_list
+
+
+def filter_none(data1, data2):
+    """Filters items out of the first list when the corrosponding value in the second list is None."""
+    
+    # Create the new list.
+    n_list = []
+    
+    # Loop through the list, only appending items if the second item isn't None.
+    for i in range(0, len(data1)):
+        if data2[i] != "None":
+            n_list.append(data1[i])
+    
+    # Return the new list.
+    return n_list

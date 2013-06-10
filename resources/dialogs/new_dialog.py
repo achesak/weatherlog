@@ -47,7 +47,7 @@ class AddNewDialog(Gtk.Dialog):
         self.prec_ent = Gtk.Entry()
         new_grid.attach_next_to(self.prec_ent, prec_lbl, Gtk.PositionType.RIGHT, 1, 1)
         self.prec_com = Gtk.ComboBoxText()
-        for i in ["Rain", "Snow", "Hail", "Sleet"]:
+        for i in ["None", "Rain", "Snow", "Hail", "Sleet"]:
             self.prec_com.append_text(i)
         new_grid.attach_next_to(self.prec_com, self.prec_ent, Gtk.PositionType.RIGHT, 1, 1)
         
@@ -58,7 +58,7 @@ class AddNewDialog(Gtk.Dialog):
         self.wind_ent = Gtk.Entry()
         new_grid.attach_next_to(self.wind_ent, wind_lbl, Gtk.PositionType.RIGHT, 1, 1)
         self.wind_com = Gtk.ComboBoxText()
-        for i in ["N", "NNE", "NE", "ENE", "E", "ESE", "SE", "SSE", "S", "SSW", "SW", "WSW", "W", "WNW", "NW", "NNW"]:
+        for i in ["None", "N", "NNE", "NE", "ENE", "E", "ESE", "SE", "SSE", "S", "SSW", "SW", "WSW", "W", "WNW", "NW", "NNW"]:
             self.wind_com.append_text(i)
         new_grid.attach_next_to(self.wind_com, self.wind_ent, Gtk.PositionType.RIGHT, 1, 1)
         

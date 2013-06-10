@@ -412,6 +412,7 @@ class Weather(Gtk.Window):
         # Get the data.
         prec_data1, prec_data2 = utility_functions.split_list(utility_functions.get_column(data, 2))
         prec_split = utility_functions.split_list2(utility_functions.get_column(data, 2))
+        prec_data1 = utility_functions.filter_none(prec_data1, prec_data2)
         prec_data1 = utility_functions.convert_float(prec_data1)
         prec_low = min(prec_data1)
         prec_high = max(prec_data1)
@@ -423,13 +424,17 @@ class Weather(Gtk.Window):
         prec_total_snow = 0
         prec_total_hail = 0
         prec_total_sleet = 0
+        prec_none = 0
         prec_rain = 0
         prec_snow = 0
         prec_hail = 0
         prec_sleet = 0
         for i in prec_split:
-            prec_total += float(i[0])
-            if i[1] == "Rain":
+            if i[1] != "None":
+                prec_total += float(i[0])
+            if i[1] == "None":
+                prec_none += 1
+            elif i[1] == "Rain":
                 prec_total_rain += float(i[0])
                 prec_rain += 1
             elif i[1] == "Snow":
@@ -455,10 +460,11 @@ class Weather(Gtk.Window):
             ["Total (snow)", "%.2f cm" % prec_total_snow],
             ["Total (hail)", "%.2f cm" % prec_total_hail],
             ["Total (sleet)", "%.2f cm" % prec_total_sleet],
-            ["Rain", "%d day(s)" % prec_rain],
-            ["Snow", "%d day(s)" % prec_snow],
-            ["Hail", "%d day(s)" % prec_hail],
-            ["Sleet", "%d day(s)" % prec_sleet],
+            ["None", "%d day%s" % (prec_none, "" if prec_none == 1 else "s")],
+            ["Rain", "%d day%s" % (prec_rain, "" if prec_rain == 1 else "s")],
+            ["Snow", "%d day%s" % (prec_snow, "" if prec_snow == 1 else "s")],
+            ["Hail", "%d day%s" % (prec_hail, "" if prec_hail == 1 else "s")],
+            ["Sleet", "%d day%s" % (prec_sleet, "" if prec_sleet == 1 else "s")],
             ["Most common type", "%s" % prec_mode]
         ]
         
@@ -482,6 +488,7 @@ class Weather(Gtk.Window):
         
         # Get the data.
         wind_data1, wind_data2 = utility_functions.split_list(utility_functions.get_column(data, 3))
+        wind_data1 = utility_functions.filter_none(wind_data1, wind_data2)
         wind_data1 = utility_functions.convert_float(wind_data1)
         wind_low = min(wind_data1)
         wind_high = max(wind_data1)
