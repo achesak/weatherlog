@@ -184,7 +184,7 @@ class Weather(Gtk.Window):
             ("air_pressure", None, "_Air Pressure...", "<Control>a", None, self.show_info_airp),
             ("cloud_cover", None, "_Cloud Cover...", "<Control>c", None, self.show_info_clou),
             ("clear_data", None, "Clear _Data...", "<Control>d", None, self.clear),
-            ("fullscreen", Gtk.STOCK_FULLSCREEN, "Toggle _Fullscreen", "F11", "Toggle fullscreen window", self.toggle_fullscreen),
+            ("fullscreen", Gtk.STOCK_FULLSCREEN, "Toggle _Fullscreen", "F11", "Toggle fullscreen", self.toggle_fullscreen),
             ("exit", Gtk.STOCK_QUIT, "E_xit...", None, "Close the application", lambda x: self.exit("ignore", "this"))
         ])
         
