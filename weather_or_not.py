@@ -280,7 +280,7 @@ class Weather(Gtk.Window):
                 new_data = [date, temp, "%s %s" % (prec, prec_type), "%s %s" % (wind, wind_dir), humi, airp, clou, note]
                 self.liststore.append(new_data)
                 data.append(new_data)
-                
+        
         # Close the dialog.
         new_dlg.destroy()
     
@@ -648,6 +648,18 @@ class Weather(Gtk.Window):
     
     def import_file(self, event):
         """Imports data from a file."""
+        
+        # Confirm that the user wants to overwrite the data.
+        over_dlg = Gtk.MessageDialog(self, 0, Gtk.MessageType.QUESTION, Gtk.ButtonsType.OK_CANCEL, "Confirm Import")
+        over_dlg.format_secondary_text("Are you sure you want to import the data?\n\nCurrent data will be overwritten.")
+        
+        # Get the response.
+        response = over_dlg.run()
+        over_dlg.destroy()
+        
+        # If the user doesn't want to overwrite, cancel the action.
+        if response != Gtk.ResponseType.OK:
+            return
         
         # Create the dialog.
         import_dlg = Gtk.FileChooserDialog("Import", self, Gtk.FileChooserAction.OPEN, (Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL, Gtk.STOCK_OPEN, Gtk.ResponseType.OK))
