@@ -188,6 +188,14 @@ class Weather(Gtk.Window):
             ("exit", Gtk.STOCK_QUIT, "E_xit...", None, "Close the application", lambda x: self.exit("ignore", "this"))
         ])
         
+        # Create the Profiles menu.
+        action_group.add_actions([
+            ("profiles_menu", None, "Profiles"),
+            ("switch_profile", None, "_Switch Profile...", "<Control><Shift>s", None),
+            ("add_profile", None, "_Add Profile...", "<Control><Shift>n", None),
+            ("remove_profile", None, "_Remove Profile...", "<Control><Shift>d", None)
+        ])
+        
         # Create the Help menu.
         action_group.add_actions([
             ("help_menu", None, "Help"),

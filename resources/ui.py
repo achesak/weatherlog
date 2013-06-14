@@ -37,6 +37,12 @@ MENU_DATA = """
       <separator />
       <menuitem action="exit" />
     </menu>
+    <menu action="profiles_menu">
+      <menuitem action="switch_profile" />
+      <separator />
+      <menuitem action="add_profile" />
+      <menuitem action="remove_profile" />
+    </menu>
     <menu action="help_menu">
       <menuitem action="about" />
       <menuitem action="help" />
