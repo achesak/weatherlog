@@ -69,6 +69,8 @@ import resources.validate as validate
 from resources.dialogs.new_dialog import *
 from resources.dialogs.info_dialog import *
 from resources.dialogs.data_dialog import *
+from resources.dialogs.add_profile_dialog import *
+from resources.dialogs.switch_profile_dialog import *
 
 
 # Check to see if the directory exists, and create it if it doesn't.
@@ -191,9 +193,9 @@ class Weather(Gtk.Window):
         # Create the Profiles menu.
         action_group.add_actions([
             ("profiles_menu", None, "Profiles"),
-            ("switch_profile", None, "_Switch Profile...", "<Control><Shift>s", None),
-            ("add_profile", None, "_Add Profile...", "<Control><Shift>n", None),
-            ("remove_profile", None, "_Remove Profile...", "<Control><Shift>d", None)
+            ("switch_profile", None, "_Switch Profile...", "<Control><Shift>s", None, self.switch_profile),
+            ("add_profile", None, "_Add Profile...", "<Control><Shift>n", None, self.add_new_profile),
+            ("remove_profile", None, "_Remove Profile...", "<Control><Shift>d", None, None)
         ])
         
         # Create the Help menu.
@@ -826,6 +828,34 @@ class Weather(Gtk.Window):
         
         # Close the dialog.
         clear_dlg.destroy()
+    
+    
+    def switch_profile(self, event):
+        """Switches profiles."""
+        
+        # Show the dialog.
+        swi_dlg = SwitchProfileDialog(self, ["ADD", "THIS", "LATER"])
+        # Get the response.
+        response = swi_dlg.run()
+        
+        ######## FINISH THIS!!
+        
+        # Close the dialog.
+        swi_dlg.destroy()
+    
+    
+    def add_new_profile(self, event):
+        """Adds a new profile."""
+        
+        # Show the dialog.
+        new_dlg = AddProfileDialog(self)
+        # Get the response.
+        response = new_dlg.run()
+        
+        ######## FINISH THIS!!
+        
+        # Close the dialog.
+        new_dlg.destroy()
     
     
     def toggle_fullscreen(self, event):
