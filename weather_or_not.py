@@ -71,6 +71,7 @@ from resources.dialogs.info_dialog import *
 from resources.dialogs.data_dialog import *
 from resources.dialogs.add_profile_dialog import *
 from resources.dialogs.switch_profile_dialog import *
+from resources.dialogs.remove_profile_dialog import *
 
 
 # Check to see if the directory exists, and create it if it doesn't.
@@ -195,7 +196,7 @@ class Weather(Gtk.Window):
             ("profiles_menu", None, "Profiles"),
             ("switch_profile", None, "_Switch Profile...", "<Control><Shift>s", None, self.switch_profile),
             ("add_profile", None, "_Add Profile...", "<Control><Shift>n", None, self.add_new_profile),
-            ("remove_profile", None, "_Remove Profile...", "<Control><Shift>d", None, None)
+            ("remove_profile", None, "_Remove Profile...", "<Control><Shift>d", None, self.remove_profile)
         ])
         
         # Create the Help menu.
@@ -856,6 +857,20 @@ class Weather(Gtk.Window):
         
         # Close the dialog.
         new_dlg.destroy()
+    
+    
+    def remove_profile(self, event):
+        """Removes a profile."""
+        
+        # Show the dialog.
+        rem_dlg = RemoveProfileDialog(self, ["ADD", "THIS", "LATER"])
+        # Get the response.
+        response = rem_dlg.run()
+        
+        ######## FINISH THIS!!
+        
+        # Close the dialog.
+        rem_dlg.destroy()
     
     
     def toggle_fullscreen(self, event):
