@@ -74,31 +74,56 @@ from resources.dialogs.switch_profile_dialog import *
 from resources.dialogs.remove_profile_dialog import *
 
 
-# Check to see if the directory exists, and create it if it doesn't.
+# Get the main directory.
 main_dir = "%s/.weatherornot" % os.path.expanduser("~")
+
+# Check to see if the directory exists, and create it if it doesn't.
+dir_exists = True
 if not os.path.exists(main_dir) or not os.path.isdir(main_dir):
     # Create the directory.
     os.makedirs(main_dir)
-    data = []
-else:
-    # If the directory exists, load the data.
-    try:
-        # This should be ~/.weatherornot/data.weather on Linux.
-        data_file = open("%s/data.weather" % main_dir, "rb")
-        data = json.load(data_file)
-        data_file.close()
+    # Create the last profile file.
+    last_prof = open("%s/lastprofile" % main_dir, "w")
+    last_prof.write("Main Profile")
+    last_prof.close()
+    # Create the Main Profile directory and data file.
+    os.makedirs("%s/Main Profile" % main_dir)
+    last_prof_data = open("%s/Main Profile/weather.json" % main_dir, "w")
+    last_prof_data.write("[]")
+    last_prof.close()
+    dir_exists = False
+
+# Get the last profile
+try:
+    # Load the last profile file.
+    prof_file = open("%s/lastprofile" % main_dir, "r")
+    last_profile = prof_file.read()
+    prof_file.close()
+
+except IOError:
+    # Show the error message, and close the application.
+    # This one shows if there was a problem reading the file.
+    print("Error reading last profile (IOError).")
+    sys.exit()
+ 
+# Load the data.   
+try:
+    # This should be ~/.weatherornot/[profile name]/weather.json on Linux.
+    data_file = open("%s/%s/weather.json" % (main_dir, last_profile), "r")
+    data = json.load(data_file)
+    data_file.close()
     
-    except IOError:
-        # Show the error message, and close the application.
-        # This one shows if there was a problem reading the file.
-        print("Error importing data (IOError).")
-        sys.exit()
+except IOError:
+    # Show the error message, and close the application.
+    # This one shows if there was a problem reading the file.
+    print("Error importing data (IOError).")
+    sys.exit()
     
-    except (TypeError, ValueError):
-        # Show the error message, and close the application.
-        # This one shows if there was a problem with the data type.
-        print("Error importing data (TypeError or ValueError).")
-        sys.exit()
+except (TypeError, ValueError):
+    # Show the error message, and close the application.
+    # This one shows if there was a problem with the data type.
+    print("Error importing data (TypeError or ValueError).")
+    sys.exit()
 
 
 class Weather(Gtk.Window):
@@ -722,8 +747,8 @@ class Weather(Gtk.Window):
             
         # Save to the file.
         try:
-            # This should save to ~/.weatherornot/data.weather on Linux.
-            data_file = open("%s/data.weather" % main_dir, "wb")
+            # This should save to ~/.weatherornot/weather.json on Linux.
+            data_file = open("%s/weather.json" % main_dir, "w")
             json.dump(data, data_file, indent = 4)
             data_file.close()
             
@@ -933,8 +958,8 @@ class Weather(Gtk.Window):
         
         # Save to the file.
         try:
-            # This should save to ~/.weatherornot/data.weather on Linux.
-            data_file = open("%s/data.weather" % main_dir, "wb")
+            # This should save to ~/.weatherornot/[profile name]/weather.json on Linux.
+            data_file = open("%s/%s/weather.json" % (main_dir, last_profile), "w")
             json.dump(data, data_file, indent = 4)
             data_file.close()
             
