@@ -45,6 +45,8 @@ from collections import Counter
 import webbrowser
 # Import datetime for getting the difference between two dates.
 import datetime
+# Import re for validating the data.
+import re
 # Import os for creating a directory.
 import os
 # Import os.path for seeing if a directory exists.
@@ -97,13 +99,13 @@ if not os.path.exists(main_dir) or not os.path.isdir(main_dir):
 try:
     # Load the last profile file.
     prof_file = open("%s/lastprofile" % main_dir, "r")
-    last_profile = prof_file.read()
+    last_profile = prof_file.read().rstrip()
     prof_file.close()
 
 except IOError:
     # Show the error message, and close the application.
     # This one shows if there was a problem reading the file.
-    print("Error reading last profile (IOError).")
+    print("Error reading profile file (IOError).")
     sys.exit()
  
 # Load the data.   
@@ -873,12 +875,69 @@ class Weather(Gtk.Window):
     def add_new_profile(self, event):
         """Adds a new profile."""
         
+        global last_profile
+        global data
+        
         # Show the dialog.
         new_dlg = AddProfileDialog(self)
         # Get the response.
         response = new_dlg.run()
+        name = new_dlg.add_ent.get_text()
         
-        ######## FINISH THIS!!
+        # If the OK button was pressed:
+        if response == Gtk.ResponseType.OK:
+            
+            # Validate the name. If it contains a non-alphanumeric character or is just space,
+            # show a dialog and cancel the action.
+            if re.compile("[^a-zA-Z1-90 \.\-\+\(\)\?\!]").match(name) or not name or name.lstrip().rstrip() == "" or name.startswith("."):
+                
+                # Create the error dialog.
+                err_new_dlg = Gtk.MessageDialog(new_dlg, 0, Gtk.MessageType.WARNING, Gtk.ButtonsType.OK, "Add New Profile")
+                err_new_dlg.format_secondary_text("The profile name \"%s\" is not valid.\n\n1. Profile names may not be blank.\n2. Profile names may not be all spaces.\n3. Profile names may only be letters, numbers, and spaces.\n4. Profile names may not start with a period (\".\")." % name)
+                
+                # Show then close the error dialog.
+                err_new_dlg.run()
+                err_new_dlg.destroy()
+            
+            # If the profile name is already in use, show a dialog and cancel the action.
+            elif os.path.isdir("%s/%s" % (main_dir, name)):
+                
+                # Create the error dialog.
+                err_new_dlg = Gtk.MessageDialog(new_dlg, 0, Gtk.MessageType.WARNING, Gtk.ButtonsType.OK, "Add New Profile")
+                err_new_dlg.format_secondary_text("The profile name \"%s\" is already in use." % name)
+                
+                # Show then close the error dialog.
+                err_new_dlg.run()
+                err_new_dlg.destroy()
+            
+            # Otherwise if there are no problems with the name, add the profile.
+            else:
+                
+                # Save the current data.
+                try:
+                    # This should save to ~/.weatherornot/[profile name]/weather.json on Linux.
+                    data_file = open("%s/%s/weather.json" % (main_dir, last_profile), "w")
+                    json.dump(data, data_file, indent = 4)
+                    data_file.close()
+                    
+                except IOError:
+                    # Show the error message if something happened, but continue.
+                    # This one is shown if there was an error writing to the file.
+                    print("Error saving data file (IOError).")
+                
+                except (TypeError, ValueError):
+                    # Show the error message if something happened, but continue.
+                    # This one is shown if there was an error with the data type.
+                    print("Error saving data file (TypeError or ValueError).")
+                
+                # Create the directory and file.
+                last_profile = name
+                os.makedirs("%s/%s" % (main_dir, name))
+                open("%s/%s/weather.json" % (main_dir, name), "w").close()
+                
+                # Clear the old data.
+                data[:] = []
+                self.liststore.clear()
         
         # Close the dialog.
         new_dlg.destroy()
@@ -972,6 +1031,18 @@ class Weather(Gtk.Window):
             # Show the error message if something happened, but continue.
             # This one is shown if there was an error with the data type.
             print("Error saving data file (TypeError or ValueError).")
+            
+        # Save the last profile
+        try:
+            # This should save to ~/.weatherornot/lastprofile on Linux.
+            prof_file = open("%s/lastprofile" % main_dir, "w")
+            prof_file.write(last_profile)
+            prof_file.close()
+            
+        except IOError:
+            # Show the error message if something happened, but continue.
+            # This one is shown if there was an error writing to the file.
+            print("Error saving profile file (IOError).")
         
         # Close the  application.
         Gtk.main_quit()
