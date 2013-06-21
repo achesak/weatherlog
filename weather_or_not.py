@@ -123,11 +123,11 @@ except IOError:
     print("Error importing data (IOError).")
     sys.exit()
     
-#except (TypeError, ValueError):
+except (TypeError, ValueError):
     # Show the error message, and close the application.
     # This one shows if there was a problem with the data type.
-  ##  print("Error importing data (TypeError or ValueError).")
-  #  sys.exit()
+    print("Error importing data (TypeError or ValueError).")
+    sys.exit()
 
 
 class Weather(Gtk.Window):
@@ -135,7 +135,7 @@ class Weather(Gtk.Window):
     def __init__(self):
         """Create the application."""
         # Create the window.
-        Gtk.Window.__init__(self, title = TITLE)
+        Gtk.Window.__init__(self, title = "Weather Or Not")
         # Set the default size. This should be a good value on all except very tiny screens.
         self.set_default_size(900, 500)
         # Set the icon.
@@ -261,6 +261,9 @@ class Weather(Gtk.Window):
         # Add the grid to the main window.
         self.add(grid)
         self.show_all()
+        
+        # Set the new title.
+        self.set_title("Weather Or Not - %s" % last_profile)
     
     
     def add_new(self, event):
@@ -863,12 +866,90 @@ class Weather(Gtk.Window):
     def switch_profile(self, event):
         """Switches profiles."""
         
+        global last_profile
+        global data
+        
+        # Remember the currect directory and switch to where the profiles are stored.
+        current_dir = os.getcwd()
+        os.chdir("%s/profiles" % main_dir)
+        
+        # Get the list of profiles.
+        profiles = glob.glob("*")
+        profiles.sort()
+        
+        # Switch back to the previous directory.
+        os.chdir(current_dir)
+        
         # Show the dialog.
-        swi_dlg = SwitchProfileDialog(self, ["ADD", "THIS", "LATER"])
+        swi_dlg = SwitchProfileDialog(self, profiles)
         # Get the response.
         response = swi_dlg.run()
+        name = swi_dlg.swi_com.get_active_text()
         
-        ######## FINISH THIS!!
+        # If the OK button was pressed:
+        if response == Gtk.ResponseType.OK:
+            
+            # If nothing was selected, show a dialog and cancel the action.
+            if not name:
+                
+                # Create the error dialog.
+                err_swi_dlg = Gtk.MessageDialog(swi_dlg, 0, Gtk.MessageType.WARNING, Gtk.ButtonsType.OK, "Switch Profile")
+                err_swi_dlg.format_secondary_text("No profile was selected.")
+                
+                # Show then close the error dialog.
+                err_swi_dlg.run()
+                err_swi_dlg.destroy()
+            
+            # Otherwise if there are no problems with the name, switch to the profile.
+            else:
+                
+                # Save the current data.
+                try:
+                    # This should save to ~/.weatherornot/[profile name]/weather.json on Linux.
+                    data_file = open("%s/profiles/%s/weather.json" % (main_dir, last_profile), "w")
+                    json.dump(data, data_file, indent = 4)
+                    data_file.close()
+                    
+                except IOError:
+                    # Show the error message if something happened, but continue.
+                    # This one is shown if there was an error writing to the file.
+                    print("Error saving data file (IOError).")
+                
+                except (TypeError, ValueError):
+                    # Show the error message if something happened, but continue.
+                    # This one is shown if there was an error with the data type.
+                    print("Error saving data file (TypeError or ValueError).")
+                
+                # Clear the old data.
+                data[:] = []
+                self.liststore.clear()
+                
+                # Load the data.   
+                try:
+                    # This should be ~/.weatherornot/[profile name]/weather.json on Linux.
+                    data_file = open("%s/profiles/%s/weather.json" % (main_dir, name), "r")
+                    data = json.load(data_file)
+                    data_file.close()
+                    
+                except IOError:
+                    # Show the error message, and close the application.
+                    # This one shows if there was a problem reading the file.
+                    print("Error importing data (IOError).")
+                    sys.exit()
+                    
+                except (TypeError, ValueError):
+                    # Show the error message, and close the application.
+                    # This one shows if there was a problem with the data type.
+                    print("Error importing data (TypeError or ValueError).")
+                    sys.exit()
+                
+                # Switch to the new profile.
+                last_profile = name
+                for i in data:
+                    self.liststore.append(i)
+                
+                # Set the new title.
+                self.set_title("Weather Or Not - %s" % last_profile)
         
         # Close the dialog.
         swi_dlg.destroy()
@@ -894,7 +975,7 @@ class Weather(Gtk.Window):
             if re.compile("[^a-zA-Z1-90 \.\-\+\(\)\?\!]").match(name) or not name or name.lstrip().rstrip() == "" or name.startswith("."):
                 
                 # Create the error dialog.
-                err_new_dlg = Gtk.MessageDialog(new_dlg, 0, Gtk.MessageType.WARNING, Gtk.ButtonsType.OK, "Add New Profile")
+                err_new_dlg = Gtk.MessageDialog(new_dlg, 0, Gtk.MessageType.WARNING, Gtk.ButtonsType.OK, "Add Profile")
                 err_new_dlg.format_secondary_text("The profile name \"%s\" is not valid.\n\n1. Profile names may not be blank.\n2. Profile names may not be all spaces.\n3. Profile names may only be letters, numbers, and spaces.\n4. Profile names may not start with a period (\".\")." % name)
                 
                 # Show then close the error dialog.
@@ -905,7 +986,7 @@ class Weather(Gtk.Window):
             elif os.path.isdir("%s/profiles/%s" % (main_dir, name)):
                 
                 # Create the error dialog.
-                err_new_dlg = Gtk.MessageDialog(new_dlg, 0, Gtk.MessageType.WARNING, Gtk.ButtonsType.OK, "Add New Profile")
+                err_new_dlg = Gtk.MessageDialog(new_dlg, 0, Gtk.MessageType.WARNING, Gtk.ButtonsType.OK, "Add Profile")
                 err_new_dlg.format_secondary_text("The profile name \"%s\" is already in use." % name)
                 
                 # Show then close the error dialog.
@@ -940,6 +1021,9 @@ class Weather(Gtk.Window):
                 # Clear the old data.
                 data[:] = []
                 self.liststore.clear()
+                
+                # Set the new title.
+                self.set_title("Weather Or Not - %s" % last_profile)
         
         # Close the dialog.
         new_dlg.destroy()
