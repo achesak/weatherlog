@@ -47,6 +47,8 @@ import webbrowser
 import datetime
 # Import re for validating the data.
 import re
+# Import glob for getting a list of directories.
+import glob
 # Import os for creating a directory.
 import os
 # Import os.path for seeing if a directory exists.
@@ -89,10 +91,10 @@ if not os.path.exists(main_dir) or not os.path.isdir(main_dir):
     last_prof.write("Main Profile")
     last_prof.close()
     # Create the Main Profile directory and data file.
-    os.makedirs("%s/Main Profile" % main_dir)
-    last_prof_data = open("%s/Main Profile/weather.json" % main_dir, "w")
+    os.makedirs("%s/profiles/Main Profile" % main_dir)
+    last_prof_data = open("%s/profiles/Main Profile/weather.json" % main_dir, "w")
     last_prof_data.write("[]")
-    last_prof.close()
+    last_prof_data.close()
     dir_exists = False
 
 # Get the last profile
@@ -111,7 +113,7 @@ except IOError:
 # Load the data.   
 try:
     # This should be ~/.weatherornot/[profile name]/weather.json on Linux.
-    data_file = open("%s/%s/weather.json" % (main_dir, last_profile), "r")
+    data_file = open("%s/profiles/%s/weather.json" % (main_dir, last_profile), "r")
     data = json.load(data_file)
     data_file.close()
     
@@ -121,11 +123,11 @@ except IOError:
     print("Error importing data (IOError).")
     sys.exit()
     
-except (TypeError, ValueError):
+#except (TypeError, ValueError):
     # Show the error message, and close the application.
     # This one shows if there was a problem with the data type.
-    print("Error importing data (TypeError or ValueError).")
-    sys.exit()
+  ##  print("Error importing data (TypeError or ValueError).")
+  #  sys.exit()
 
 
 class Weather(Gtk.Window):
@@ -900,7 +902,7 @@ class Weather(Gtk.Window):
                 err_new_dlg.destroy()
             
             # If the profile name is already in use, show a dialog and cancel the action.
-            elif os.path.isdir("%s/%s" % (main_dir, name)):
+            elif os.path.isdir("%s/profiles/%s" % (main_dir, name)):
                 
                 # Create the error dialog.
                 err_new_dlg = Gtk.MessageDialog(new_dlg, 0, Gtk.MessageType.WARNING, Gtk.ButtonsType.OK, "Add New Profile")
@@ -916,7 +918,7 @@ class Weather(Gtk.Window):
                 # Save the current data.
                 try:
                     # This should save to ~/.weatherornot/[profile name]/weather.json on Linux.
-                    data_file = open("%s/%s/weather.json" % (main_dir, last_profile), "w")
+                    data_file = open("%s/profiles/%s/weather.json" % (main_dir, last_profile), "w")
                     json.dump(data, data_file, indent = 4)
                     data_file.close()
                     
@@ -932,8 +934,8 @@ class Weather(Gtk.Window):
                 
                 # Create the directory and file.
                 last_profile = name
-                os.makedirs("%s/%s" % (main_dir, name))
-                open("%s/%s/weather.json" % (main_dir, name), "w").close()
+                os.makedirs("%s/profiles/%s" % (main_dir, name))
+                open("%s/profiles/%s/weather.json" % (main_dir, name), "w").close()
                 
                 # Clear the old data.
                 data[:] = []
@@ -1018,7 +1020,7 @@ class Weather(Gtk.Window):
         # Save to the file.
         try:
             # This should save to ~/.weatherornot/[profile name]/weather.json on Linux.
-            data_file = open("%s/%s/weather.json" % (main_dir, last_profile), "w")
+            data_file = open("%s/profiles/%s/weather.json" % (main_dir, last_profile), "w")
             json.dump(data, data_file, indent = 4)
             data_file.close()
             
