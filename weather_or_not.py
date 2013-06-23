@@ -201,6 +201,7 @@ class Weather(Gtk.Window):
             ("weather_menu", None, "Weather"),
             ("add_new", Gtk.STOCK_ADD, "Add _New...", "<Control>n", "Add a new day to the list", self.add_new),
             ("import", Gtk.STOCK_OPEN, "_Import...", None, "Import data from a file", self.import_file),
+            ("import_profile", None, "Import as New _Profile...", "<Control><Shift>o", None, self.import_new_profile),
             ("export", Gtk.STOCK_SAVE, "_Export...", None, "Export data to a file", self.export_file),
             ("export_html", None, "Export to _HTML...", "<Control><Shift>h", None, self.export_file_html),
             ("export_csv", None, "Export to _CSV...", "<Control><Shift>c", None, self.export_file_csv),
@@ -717,7 +718,7 @@ class Weather(Gtk.Window):
             # Read the data.
             try:
                 # Read from the specified file. 
-                data_file = open(filename, "rb")
+                data_file = open(filename, "r")
                 data = json.load(data_file)
                 data_file.close()
                 
@@ -739,6 +740,137 @@ class Weather(Gtk.Window):
         # Close the dialog.
         import_dlg.destroy()
     
+    
+    def import_new_profile(self, event):
+        """Imports data from a file in a new profile."""
+        
+        # THIS DOESN'T WORK IN THE MENU, FOR SOME REASON!!!
+        
+        global last_profile
+        global data
+        
+        # Show the dialog.
+        new_dlg = AddProfileDialog(self)
+        # Get the response.
+        response = new_dlg.run()
+        name = new_dlg.add_ent.get_text()
+        
+        # If the OK button was pressed:
+        if response == Gtk.ResponseType.OK:
+            
+            # Validate the name. If it contains a non-alphanumeric character or is just space,
+            # show a dialog and cancel the action.
+            if re.compile("[^a-zA-Z1-90 \.\-\+\(\)\?\!]").match(name) or not name or name.lstrip().rstrip() == "" or name.startswith("."):
+                
+                # Create the error dialog.
+                err_new_dlg = Gtk.MessageDialog(new_dlg, 0, Gtk.MessageType.WARNING, Gtk.ButtonsType.OK, "Add Profile")
+                err_new_dlg.format_secondary_text("The profile name \"%s\" is not valid.\n\n1. Profile names may not be blank.\n2. Profile names may not be all spaces.\n3. Profile names may only be letters, numbers, and spaces.\n4. Profile names may not start with a period (\".\")." % name)
+                
+                # Show then close the error dialog.
+                err_new_dlg.run()
+                err_new_dlg.destroy()
+                
+                new_dlg.destroy()
+                return
+            
+            # If the profile name is already in use, show a dialog and cancel the action.
+            elif os.path.isdir("%s/profiles/%s" % (main_dir, name)):
+                
+                # Create the error dialog.
+                err_new_dlg = Gtk.MessageDialog(new_dlg, 0, Gtk.MessageType.WARNING, Gtk.ButtonsType.OK, "Add Profile")
+                err_new_dlg.format_secondary_text("The profile name \"%s\" is already in use." % name)
+                
+                # Show then close the error dialog.
+                err_new_dlg.run()
+                err_new_dlg.destroy()
+                
+                new_dlg.destroy()
+                return
+            
+            # Otherwise if there are no problems with the name, add the profile.
+            else:
+                
+                # Save the current data.
+                try:
+                    # This should save to ~/.weatherornot/[profile name]/weather.json on Linux.
+                    data_file = open("%s/profiles/%s/weather.json" % (main_dir, last_profile), "w")
+                    json.dump(data, data_file, indent = 4)
+                    data_file.close()
+                    
+                except IOError:
+                    # Show the error message if something happened, but continue.
+                    # This one is shown if there was an error writing to the file.
+                    print("Error saving data file (IOError).")
+                
+                except (TypeError, ValueError):
+                    # Show the error message if something happened, but continue.
+                    # This one is shown if there was an error with the data type.
+                    print("Error saving data file (TypeError or ValueError).")
+                
+                # Create the directory and file.
+                last_profile = name
+                os.makedirs("%s/profiles/%s" % (main_dir, name))
+                open("%s/profiles/%s/weather.json" % (main_dir, name), "w").close()
+                
+                # Clear the old data.
+                data[:] = []
+                self.liststore.clear()
+                
+                # Set the new title.
+                self.set_title("Weather Or Not - %s" % last_profile)
+        
+            # Close the dialog.
+            new_dlg.destroy()
+        
+        # Otherwise, close the dialog and don't go any further.
+        else:
+            
+            new_dlg.destroy()
+            return
+            
+        
+        
+        
+        # Create the dialog.
+        import_dlg = Gtk.FileChooserDialog("Import", self, Gtk.FileChooserAction.OPEN, (Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL, Gtk.STOCK_OPEN, Gtk.ResponseType.OK))
+        
+        # Get the response.
+        response = import_dlg.run()
+        if response == Gtk.ResponseType.OK:
+            
+            # Get the filename.
+            filename = import_dlg.get_filename()
+            
+            # Clear the data.
+            data[:] = []
+            # Clear the ListStore.
+            self.liststore.clear()
+            
+            # Read the data.
+            try:
+                # Read from the specified file. 
+                data_file = open(filename, "rb")
+                data = json.load(data_file)
+                data_file.close()
+                
+            except IOError:
+                # Show the error message, and don't add the data.
+                # This one shows if there was a problem reading the file.
+                print("Error importing data (IOError).")
+            
+            except (TypeError, ValueError):
+                # Show the error message, and don't add the data.
+                # This one shows if there was a problem with the data type.
+                print("Error importing data (TypeError or ValueError).")
+            
+            else:
+                # Add the new data.
+                for i in data:
+                    self.liststore.append(i)
+            
+        # Close the dialog.
+        import_dlg.destroy()
+        
     
     def export_file(self, event):
         """Exports the data to a file."""

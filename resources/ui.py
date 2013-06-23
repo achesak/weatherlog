@@ -17,6 +17,7 @@ MENU_DATA = """
       <menuitem action="add_new" />
       <separator />
       <menuitem action="import" />
+      <menuitem action="import_profile" />
       <menuitem action="export" />
       <menuitem action="export_html" />
       <menuitem action="export_csv" />
