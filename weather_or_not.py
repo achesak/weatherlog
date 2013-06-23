@@ -49,6 +49,8 @@ import datetime
 import re
 # Import glob for getting a list of directories.
 import glob
+# Import shutil for removing a directory.
+import shutil
 # Import os for creating a directory.
 import os
 # Import os.path for seeing if a directory exists.
@@ -844,7 +846,7 @@ class Weather(Gtk.Window):
         
         # Confirm that the user wants to clear the data.
         clear_dlg = Gtk.MessageDialog(self, 0, Gtk.MessageType.QUESTION, Gtk.ButtonsType.OK_CANCEL, "Confirm Clear")
-        clear_dlg.format_secondary_text("Are you sure you want to clear the data?")
+        clear_dlg.format_secondary_text("Are you sure you want to clear the data?\n\nThis action cannot be undone.")
         
         # Get the response.
         response = clear_dlg.run()
@@ -1032,12 +1034,67 @@ class Weather(Gtk.Window):
     def remove_profile(self, event):
         """Removes a profile."""
         
+        global last_profile
+        
+        # Remember the currect directory and switch to where the profiles are stored.
+        current_dir = os.getcwd()
+        os.chdir("%s/profiles" % main_dir)
+        
+        # Get the list of profiles.
+        profiles = glob.glob("*")
+        profiles.sort()
+        
+        # Switch back to the previous directory.
+        os.chdir(current_dir)
+        
         # Show the dialog.
-        rem_dlg = RemoveProfileDialog(self, ["ADD", "THIS", "LATER"])
+        rem_dlg = RemoveProfileDialog(self, profiles)
         # Get the response.
         response = rem_dlg.run()
+        name = rem_dlg.rem_com.get_active_text()
         
-        ######## FINISH THIS!!
+        # If the OK button was pressed:
+        if response == Gtk.ResponseType.OK:
+            
+            # If nothing was selected, show a dialog and cancel the action.
+            if not name:
+                
+                # Create the error dialog.
+                err_rem_dlg = Gtk.MessageDialog(rem_dlg, 0, Gtk.MessageType.WARNING, Gtk.ButtonsType.OK, "Remove Profile")
+                err_rem_dlg.format_secondary_text("No profile was selected.")
+                
+                # Show then close the error dialog.
+                err_rem_dlg.run()
+                err_rem_dlg.destroy()
+            
+            # If the selected profile is the current one, show a 
+            # dialog and cancel the action.
+            elif name == last_profile:
+                
+                # Create the error dialog.
+                err_rem_dlg = Gtk.MessageDialog(rem_dlg, 0, Gtk.MessageType.WARNING, Gtk.ButtonsType.OK, "Remove Profile")
+                err_rem_dlg.format_secondary_text("The current profile cannot be deleted.")
+                
+                # Show then close the error dialog.
+                err_rem_dlg.run()
+                err_rem_dlg.destroy()
+            
+            # Otherwise remove the profile.
+            else:
+                
+                # Confirm that the user wants to delete the profile.
+                del_dlg = Gtk.MessageDialog(rem_dlg, 0, Gtk.MessageType.QUESTION, Gtk.ButtonsType.OK_CANCEL, "Confirm Delete")
+                del_dlg.format_secondary_text("Are you sure you want to delete the profile?\n\nThis action cannot be undone.")
+                
+                # Get the response.
+                response = del_dlg.run()
+                del_dlg.destroy()
+                
+                # If the user wants to continue:
+                if response == Gtk.ResponseType.OK:
+                    
+                    # Delete the directory.
+                    shutil.rmtree("%s/profiles/%s" % (main_dir, name))
         
         # Close the dialog.
         rem_dlg.destroy()
