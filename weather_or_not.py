@@ -702,6 +702,18 @@ class Weather(Gtk.Window):
         # Create the dialog.
         import_dlg = Gtk.FileChooserDialog("Import", self, Gtk.FileChooserAction.OPEN, (Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL, Gtk.STOCK_OPEN, Gtk.ResponseType.OK))
         
+        # Set the filters.
+        filter_all = Gtk.FileFilter()
+        filter_all.set_name("All files")
+        filter_all.add_pattern("*")
+        filter_json = Gtk.FileFilter()
+        filter_json.set_name("Weather Or Not data files")
+        filter_json.add_pattern("*.json")
+        
+        # Add the filters.
+        import_dlg.add_filter(filter_all)
+        import_dlg.add_filter(filter_json)
+        
         # Get the response.
         response = import_dlg.run()
         if response == Gtk.ResponseType.OK:
@@ -743,8 +755,6 @@ class Weather(Gtk.Window):
     
     def import_new_profile(self, event):
         """Imports data from a file in a new profile."""
-        
-        # THIS DOESN'T WORK IN THE MENU, FOR SOME REASON!!!
         
         global last_profile
         global data
@@ -827,12 +837,21 @@ class Weather(Gtk.Window):
             
             new_dlg.destroy()
             return
-            
-        
-        
         
         # Create the dialog.
         import_dlg = Gtk.FileChooserDialog("Import", self, Gtk.FileChooserAction.OPEN, (Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL, Gtk.STOCK_OPEN, Gtk.ResponseType.OK))
+        
+        # Set the filters.
+        filter_all = Gtk.FileFilter()
+        filter_all.set_name("All files")
+        filter_all.add_pattern("*")
+        filter_json = Gtk.FileFilter()
+        filter_json.set_name("Weather Or Not data files")
+        filter_json.add_pattern("*.json")
+        
+        # Add the filters.
+        import_dlg.add_filter(filter_all)
+        import_dlg.add_filter(filter_json)
         
         # Get the response.
         response = import_dlg.run()
@@ -886,22 +905,22 @@ class Weather(Gtk.Window):
             # Get the filename.
             filename = export_dlg.get_filename()
             
-        # Save to the file.
-        try:
-            # This should save to ~/.weatherornot/weather.json on Linux.
-            data_file = open("%s/weather.json" % main_dir, "w")
-            json.dump(data, data_file, indent = 4)
-            data_file.close()
+            # Save the data.
+            try:
+                # Write to the specified file.
+                data_file = open(filename, "w")
+                json.dump(data, data_file, indent = 4)
+                data_file.close()
+                
+            except IOError:
+                # Show the error message.
+                # This only shows if the error occurred when writing to the file.
+                print("Error exporting data (IOError).")
             
-        except IOError:
-            # Show the error message if something happened, but continue.
-            # This one is shown if there was an error writing to the file.
-            print("Error saving data file (IOError).")
-        
-        except (TypeError, ValueError):
-            # Show the error message if something happened, but continue.
-            # This one is shown if there was an error with the data type.
-            print("Error saving data file (TypeError or ValueError).")
+            except (TypeError, ValueError):
+                # Show the error message.
+                # This one is shown if there was an error with the data type.
+                print("Error exporting data (TypeError or ValueError).")
             
         # Close the dialog.
         export_dlg.destroy()
