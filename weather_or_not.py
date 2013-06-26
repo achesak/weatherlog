@@ -272,6 +272,8 @@ class Weather(Gtk.Window):
     def add_new(self, event):
         """Shows the dialog for input of new data."""
         
+        global data
+        
         # Show the dialog.
         new_dlg = AddNewDialog(self)
         # Get the response.
@@ -314,10 +316,17 @@ class Weather(Gtk.Window):
                 
             else:
                 
-                # Add the data to the list
+                # Add the data to the list.
                 new_data = [date, temp, "%s %s" % (prec, prec_type), "%s %s" % (wind, wind_dir), humi, airp, clou, note]
-                self.liststore.append(new_data)
                 data.append(new_data)
+                
+                # Sort the list.
+                data = sorted(data, key = lambda x: datetime.datetime.strptime(x[0], '%d/%m/%y'))
+                
+                # Update the ListStore.
+                self.liststore.clear()
+                for i in data:
+                    self.liststore.append(i)
         
         # Close the dialog.
         new_dlg.destroy()
