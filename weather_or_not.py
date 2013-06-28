@@ -1345,7 +1345,7 @@ class Weather(Gtk.Window):
             # This one is shown if there was an error with the data type.
             print("Error saving data file (TypeError or ValueError).")
             
-        # Save the last profile
+        # Save the last profile.
         try:
             # This should save to ~/.weatherornot/lastprofile on Linux.
             prof_file = open("%s/lastprofile" % main_dir, "w")
