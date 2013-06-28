@@ -317,7 +317,7 @@ class Weather(Gtk.Window):
             else:
                 
                 # Add the data to the list.
-                new_data = [date, temp, "%s %s" % (prec, prec_type), "%s %s" % (wind, wind_dir), humi, airp, clou, note]
+                new_data = [date, temp, "%s%s" % ((prec + " " if prec_type != "None" else ""), prec_type), "%s%s" % ((wind + " " if wind_dir != "None" else ""), wind_dir), humi, airp, clou, note]
                 data.append(new_data)
                 
                 # Sort the list.
@@ -520,7 +520,7 @@ class Weather(Gtk.Window):
             ["Snow", "%d day%s" % (prec_snow, "" if prec_snow == 1 else "s")],
             ["Hail", "%d day%s" % (prec_hail, "" if prec_hail == 1 else "s")],
             ["Sleet", "%d day%s" % (prec_sleet, "" if prec_sleet == 1 else "s")],
-            ["Most common type", "%s" % prec_mode]
+            ["Most common type", "%s" % (prec_mode if prec_mode != "" else "None")]
         ]
         
         # Show the dialog.
@@ -559,7 +559,7 @@ class Weather(Gtk.Window):
             ["Average", "%.2f kph" % wind_avg],
             ["Median", "%.2f kph" % wind_median],
             ["Range", "%.2f kph" % wind_range],
-            ["Most common direction", "%s" % wind_mode]
+            ["Most common direction", "%s" % (wind_mode if wind_mode != "" else "None")]
         ]
         
         # Show the dialog.

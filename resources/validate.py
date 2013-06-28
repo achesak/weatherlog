@@ -27,9 +27,9 @@ def validate(date, temp, prec, prec_type, wind, wind_dir, humi, airp, clou):
         missing_msg += "Temperature must be a number.\n"
     
     # If the precipitation amount is missing or of the wrong type:
-    if not prec:
+    if not prec and prec_type != "None":
         missing_msg += "Precipitation amount is missing.\n"
-    elif not re.compile("^\d+(\.\d+)?$").match(prec):
+    elif not re.compile("^\d+(\.\d+)?$").match(prec) and prec_type != "None":
         missing_msg += "Precipitation amount must be a number.\n"
     
     # If the precipitation type is missing or not a valid value:
@@ -39,9 +39,9 @@ def validate(date, temp, prec, prec_type, wind, wind_dir, humi, airp, clou):
         missing_msg += "Precipitation type is not a valid value. (This should never happen.)\n"
     
     # If the wind speed is missing or of the wrong type:
-    if not wind:
+    if not wind and wind_dir != "None":
         missing_msg += "Wind speed is missing.\n"
-    elif not re.compile("^\d+(\.\d+)?$").match(wind):
+    elif not re.compile("^\d+(\.\d+)?$").match(wind) and wind_dir != "None":
         missing_msg += "Wind speed must be a number.\n"
     
     # If the wind direction is missing or not a valid value:

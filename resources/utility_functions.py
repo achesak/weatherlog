@@ -21,12 +21,11 @@ def extract_numbers(data):
 def convert_float(data):
     """Converts the list items to floats."""
     
-    # Make a copy of the data. The original list should be unmodified.
-    numbers = data[:]
-    
     # Loop through the list, converting the items to floats.
-    for i in range(0, len(numbers)):
-        numbers[i] = float(numbers[i])
+    numbers = []
+    for i in range(0, len(data)):
+        if data[i] != "None":
+            numbers.append(float(data[i]))
     
     # Return the converted list.
     return numbers
@@ -58,7 +57,11 @@ def split_list(data):
     for i in data2:
         i_split = i.split(" ")
         n_list1.append(i_split[0])
-        n_list2.append(i_split[1])
+        
+        if i == "None":
+            n_list2.append("")
+        else:
+            n_list2.append(i_split[1])
     
     # Return the new lists.
     return [n_list1, n_list2]
@@ -75,7 +78,11 @@ def split_list2(data):
     
     # Loop through the list, splitting the items and adding them to the new list.
     for i in data2:
-        n_list.append(i.split(" "))
+        
+        if i == "None":
+            n_list.append(["", "None"])
+        else:
+            n_list.append(i.split(" "))
     
     # Return the new list.
     return n_list
@@ -89,7 +96,7 @@ def filter_none(data1, data2):
     
     # Loop through the list, only appending items if the second item isn't None.
     for i in range(0, len(data1)):
-        if data2[i] != "None":
+        if data1[i] != "None":
             n_list.append(data1[i])
     
     # Return the new list.

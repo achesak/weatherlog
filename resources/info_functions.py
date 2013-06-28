@@ -29,7 +29,7 @@ def median(numbers):
     numbers.sort()
     
     # If the list has an odd number of items:
-    if not len(numbers) % 2:
+    if len(numbers) % 2:
         return numbers[int(math.floor(len(numbers) / 2))];
     
     # If the list has an even number of items:
