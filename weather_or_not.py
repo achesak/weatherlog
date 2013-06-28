@@ -227,7 +227,7 @@ class Weather(Gtk.Window):
         action_group.add_actions([
             ("profiles_menu", None, "Profiles"),
             ("switch_profile", None, "_Switch Profile...", "<Control><Shift>s", None, self.switch_profile),
-            ("add_profile", None, "_Add Profile...", "<Control><Shift>n", None, self.add_new_profile),
+            ("add_profile", None, "_Add Profile...", "<Control><Shift>n", None, self.add_profile),
             ("remove_profile", None, "_Remove Profile...", "<Control><Shift>d", None, self.remove_profile)
         ])
         
@@ -1037,6 +1037,11 @@ class Weather(Gtk.Window):
         
         # Get the list of profiles.
         profiles = glob.glob("*")
+        
+        # Remove the current profile from the list.
+        profiles = list(set(profiles) - set([last_profile]))
+        
+        # Sort the profiles.
         profiles.sort()
         
         # Switch back to the previous directory.
@@ -1117,7 +1122,7 @@ class Weather(Gtk.Window):
         swi_dlg.destroy()
     
     
-    def add_new_profile(self, event):
+    def add_profile(self, event):
         """Adds a new profile."""
         
         global last_profile
@@ -1202,6 +1207,11 @@ class Weather(Gtk.Window):
         
         # Get the list of profiles.
         profiles = glob.glob("*")
+        
+        # Remove the current profile from the list.
+        profiles = list(set(profiles) - set([last_profile]))
+        
+        # Sort the profiles.
         profiles.sort()
         
         # Switch back to the previous directory.

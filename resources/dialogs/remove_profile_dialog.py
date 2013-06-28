@@ -32,6 +32,7 @@ class RemoveProfileDialog(Gtk.Dialog):
         self.rem_com = Gtk.ComboBoxText()
         for i in profiles:
             self.rem_com.append_text(i)
+        self.rem_com.set_active(0)
         rem_grid.attach_next_to(self.rem_com, rem_lbl, Gtk.PositionType.RIGHT, 1, 1)
         
         # Show the dialog. The response gets handled by the function
