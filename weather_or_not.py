@@ -251,7 +251,7 @@ class Weather(Gtk.Window):
         # Create the grid for the UI.
         grid = Gtk.Grid()
         
-        # Add the menubar
+        # Add the menubar.
         menubar = ui_manager.get_widget("/menubar")
         grid.add(menubar)
         
