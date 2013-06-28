@@ -15,6 +15,7 @@ MENU_DATA = """
   <menubar name="menubar">
     <menu action="weather_menu">
       <menuitem action="add_new" />
+      <menuitem action="remove" />
       <separator />
       <menuitem action="import" />
       <menuitem action="import_profile" />
@@ -51,6 +52,8 @@ MENU_DATA = """
   </menubar>
   <toolbar name="toolbar">
     <toolitem action="add_new" />
+    <toolitem action="remove" />
+    <separator />
     <toolitem action="info" />
     <separator />
     <toolitem action="import" />

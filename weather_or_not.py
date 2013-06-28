@@ -200,6 +200,7 @@ class Weather(Gtk.Window):
         action_group.add_actions([
             ("weather_menu", None, "Weather"),
             ("add_new", Gtk.STOCK_ADD, "Add _New...", "<Control>n", "Add a new day to the list", self.add_new),
+            ("remove", Gtk.STOCK_REMOVE, "_Remove...", "<Control>r", "Remove a day from the list", self.remove),
             ("import", Gtk.STOCK_OPEN, "_Import...", None, "Import data from a file", self.import_file),
             ("import_profile", None, "Import as New _Profile...", "<Control><Shift>o", None, self.import_new_profile),
             ("export", Gtk.STOCK_SAVE, "_Export...", None, "Export data to a file", self.export_file),
@@ -292,7 +293,7 @@ class Weather(Gtk.Window):
             humi = new_dlg.humi_ent.get_text()
             airp = new_dlg.airp_ent.get_text()
             clou = new_dlg.clou_com.get_active_text()
-            note = new_dlg.note_ent.get_text()
+            note = new_dlg.note_ent.get_text()                
             
             # If anything required was missing, cancel this action. Everything is required except for the notes.
             # Also check to make sure everything is of the correct type.
@@ -304,6 +305,22 @@ class Weather(Gtk.Window):
                 # Create the error dialog.
                 err_miss_dlg = Gtk.MessageDialog(new_dlg, 0, Gtk.MessageType.WARNING, Gtk.ButtonsType.OK, "Add New")
                 err_miss_dlg.format_secondary_text("There were one or more problems with the data entered.\n\n%s" % missing_msg.rstrip())
+                
+                # Show the error dialog.
+                err_miss_dlg.run()
+                
+                # Close the error dialog and the "Add New" dialog. The second one
+                # is needed because of a bug where the window will stop responding
+                # to events, making it useless. Fix later!
+                err_miss_dlg.destroy()
+                new_dlg.destroy()
+            
+            # If the date is already used, show the dialog.
+            elif date in utility_functions.get_column(data, 0):
+                
+                # Create the error dialog.
+                err_miss_dlg = Gtk.MessageDialog(new_dlg, 0, Gtk.MessageType.WARNING, Gtk.ButtonsType.OK, "Add New")
+                err_miss_dlg.format_secondary_text("The date %s has already been entered." % date)
                 
                 # Show the error dialog.
                 err_miss_dlg.run()
@@ -330,6 +347,43 @@ class Weather(Gtk.Window):
         
         # Close the dialog.
         new_dlg.destroy()
+    
+    
+    def remove(self, event):
+        """Removes a row of data from the list."""
+        
+        # Get the selected date.
+        try:
+            tree_sel = self.treeview.get_selection()
+            tm, ti = tree_sel.get_selected()
+            date = tm.get_value(ti, 0)
+        
+        except:
+            # If nothing was selected, don't continue.
+            return
+        
+        # Confirm that the user wants to delete the row.
+        rem_dlg = Gtk.MessageDialog(self, 0, Gtk.MessageType.QUESTION, Gtk.ButtonsType.OK_CANCEL, "Confirm Remove")
+        rem_dlg.format_secondary_text("Are you sure you want to delete the data for %s?\n\nThis action cannot be undone." % date)
+        
+        # Get the response.
+        response = rem_dlg.run()
+        rem_dlg.destroy()
+        
+        # If the user doesn't want to overwrite, cancel the action.
+        if response != Gtk.ResponseType.OK:
+            return
+        
+        # Get the index of the date.
+        index = utility_functions.get_column(data, 0).index(date)
+        
+        # Delete the index in the data.
+        del data[index]
+        
+        # Refresh the ListStore.
+        self.liststore.clear()
+        for i in data:
+            self.liststore.append(i)
     
     
     def show_info(self, event):
