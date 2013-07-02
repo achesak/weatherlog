@@ -44,7 +44,7 @@ def get_column(data, col):
  
 
 def split_list(data):
-    """Splits the list items, and returns them as two lists."""
+    """Splits the list items, and returns them as two lists. "None" is ignored."""
     
     # Make a copy of the data. The original list should be unmodified.
     data2 = data[:]
@@ -68,7 +68,7 @@ def split_list(data):
 
 
 def split_list2(data):
-    """Splits the list items, and returns them as lists within the main one."""
+    """Splits the list items, and returns them as lists within the main one. "None" is ignored."""
     
     # Make a copy of the data. The original list should be unmodified.
     data2 = data[:]
