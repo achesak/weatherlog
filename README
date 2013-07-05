@@ -2,6 +2,8 @@ Weather Or Not is an application for keeping track of the weather. It is written
 
 Weather Or Not requires the Python interpreter to run. Development is done using Python 2.7.x, but no testing has been done on other versions, so I can't guarantee it will work. GTK+ 3 is required as well.
 
+To run Weather Or Not, open a terminal in the directory containing the files and type "python weather_or_not.py".
+
 Currently Weather Or Not only works on Linux.
 
 Weather Or Not is released under the MIT open source license (http://opensource.org/licenses/mit-license.php).
