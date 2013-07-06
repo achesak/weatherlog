@@ -13,7 +13,7 @@ def show_no_data_dialog(master, title):
 
     # Create the dialog.
     err_miss_dlg = Gtk.MessageDialog(master, 0, Gtk.MessageType.INFO, Gtk.ButtonsType.OK, title)
-    err_miss_dlg.format_secondary_text("There is no data.")
+    err_miss_dlg.format_secondary_text("There is no data to display.")
     
     # Show the dialog, then close it.
     err_miss_dlg.run()

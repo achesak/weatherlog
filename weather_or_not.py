@@ -373,15 +373,15 @@ class Weather(Gtk.Window):
         if len(data) == 0:
             
             # Show the dialog.
-            show_no_data_dialog(self, "General Info")
+            show_no_data_dialog(self, "General Info - %s" % last_profile)
             return
         
         # Get the date data.
         date_data = utility_functions.get_column(data, 0)
         date_first = date_data[0]
         date_last = date_data[len(date_data) - 1]
-        date_first2 = datetime.datetime.strptime(date_first, "%d/%m/%y")
-        date_last2 = datetime.datetime.strptime(date_last, "%d/%m/%y")
+        date_first2 = datetime.datetime.strptime(date_first, "%d/%m/%Y")
+        date_last2 = datetime.datetime.strptime(date_last, "%d/%m/%Y")
         date_num = (date_last2 - date_first2).days + 1
         
         # Get the temperature data.
@@ -393,16 +393,26 @@ class Weather(Gtk.Window):
         # Get the precipitation data.
         prec_data1, prec_data2 = utility_functions.split_list(utility_functions.get_column(data, 2))
         prec_data1 = utility_functions.convert_float(prec_data1)
-        prec_low = min(prec_data1)
-        prec_high = max(prec_data1)
-        prec_avg = info_functions.mean(prec_data1)
+        try:
+            prec_low = min(prec_data1)
+            prec_high = max(prec_data1)
+            prec_avg = info_functions.mean(prec_data1)
+        except:
+			prec_low = "None"
+			prec_high = "None"
+			prec_avg = "None"
         
         # Get the wind data.
         wind_data1, wind_data2 = utility_functions.split_list(utility_functions.get_column(data, 3))
         wind_data1 = utility_functions.convert_float(wind_data1)
-        wind_low = min(wind_data1)
-        wind_high = max(wind_data1)
-        wind_avg = info_functions.mean(wind_data1)
+        try:
+            wind_low = min(wind_data1)
+            wind_high = max(wind_data1)
+            wind_avg = info_functions.mean(wind_data1)
+        except:
+			wind_low = "None"
+			wind_high = "None"
+			wind_avg = "None"
         
         # Get the humidity data.
         humi_data = utility_functions.convert_float(utility_functions.get_column(data, 4))
@@ -428,12 +438,12 @@ class Weather(Gtk.Window):
             ["Lowest temperature", "%.2f °C" % temp_low], 
             ["Highest temperature", "%.2f °C" % temp_high],
             ["Average temperature", "%.2f °C" % temp_avg],
-            ["Lowest precipitation", "%.2f cm" % prec_low],
-            ["Highest precipitation", "%.2f cm" % prec_high],
-            ["Average precipitation", "%.2f cm" % prec_avg],
-            ["Lowest wind speed", "%.2f kph" % wind_low],
-            ["Highest wind speed", "%.2f kph" % wind_high],
-            ["Average wind speed", "%.2f kph" % wind_avg],
+            ["Lowest precipitation", ("%.2f cm" % prec_low if prec_low != "None" else "None")],
+            ["Highest precipitation", ("%.2f cm" % prec_high if prec_high != "None" else "None")],
+            ["Average precipitation", ("%.2f cm" % prec_avg if prec_avg != "None" else "None")],
+            ["Lowest wind speed", ("%.2f kph" % wind_low if wind_low != "None" else "None")],
+            ["Highest wind speed", ("%.2f kph" % wind_high if wind_high != "None" else "None")],
+            ["Average wind speed", ("%.2f kph" % wind_avg if wind_avg != "None" else "None")],
             ["Lowest humidity", "%.2f%%" % humi_low], 
             ["Highest humidity", "%.2f%%" % humi_high],
             ["Average humidity", "%.2f%%" % humi_avg],
@@ -444,7 +454,7 @@ class Weather(Gtk.Window):
         ]        
         
         # Show the dialog.
-        info_dlg = GenericInfoDialog(self, "General Info", data2)
+        info_dlg = GenericInfoDialog(self, "General Info - %s" % last_profile, data2)
         info_dlg.run()
         
         # Close the dialog. The response can be ignored.
@@ -458,7 +468,7 @@ class Weather(Gtk.Window):
         if len(data) == 0:
             
             # Show the dialog.
-            show_no_data_dialog(self, "Temperature Info")
+            show_no_data_dialog(self, "Temperature Info - %s" % last_profile)
             return
         
         # Get the data.
@@ -481,7 +491,7 @@ class Weather(Gtk.Window):
         ]
         
         # Show the dialog.
-        temp_dlg = GenericInfoDialog(self, "Temperature Info", data2)
+        temp_dlg = GenericInfoDialog(self, "Temperature Info - %s" % last_profile, data2)
         temp_dlg.run()
         
         # Close the dialog. The response can be ignored.
@@ -495,7 +505,7 @@ class Weather(Gtk.Window):
         if len(data) == 0:
             
             # Show the dialog.
-            show_no_data_dialog(self, "Precipitation Info")
+            show_no_data_dialog(self, "Precipitation Info - %s" % last_profile)
             return
         
         # Get the data.
@@ -503,11 +513,18 @@ class Weather(Gtk.Window):
         prec_split = utility_functions.split_list2(utility_functions.get_column(data, 2))
         prec_data1 = utility_functions.filter_none(prec_data1, prec_data2)
         prec_data1 = utility_functions.convert_float(prec_data1)
-        prec_low = min(prec_data1)
-        prec_high = max(prec_data1)
-        prec_avg = info_functions.mean(prec_data1)
-        prec_median = info_functions.median(prec_data1)
-        prec_range = info_functions.range(prec_data1)
+        try:
+            prec_low = min(prec_data1)
+            prec_high = max(prec_data1)
+            prec_avg = info_functions.mean(prec_data1)
+            prec_median = info_functions.median(prec_data1)
+            prec_range = info_functions.range(prec_data1)
+        except:
+			prec_low = "None"
+			prec_high = "None"
+			prec_avg = "None"
+			prec_median = "None"
+			prec_range = "None"
         prec_total = 0
         prec_total_rain = 0
         prec_total_snow = 0
@@ -539,11 +556,11 @@ class Weather(Gtk.Window):
         
         # Create the data list.
         data2 = [
-            ["Lowest", "%.2f cm" % prec_low],
-            ["Highest", "%.2f cm" % prec_high],
-            ["Average", "%.2f cm" % prec_avg],
-            ["Median", "%.2f cm" % prec_median],
-            ["Range", "%.2f cm" % prec_range],
+            ["Lowest", ("%.2f cm" % prec_low if prec_low != "None" else "None")],
+            ["Highest", ("%.2f cm" % prec_high if prec_high != "None" else "None")],
+            ["Average", ("%.2f cm" % prec_avg if prec_avg != "None" else "None")],
+            ["Median", ("%.2f cm" % prec_median if prec_median != "None" else "None")],
+            ["Range", ("%.2f cm" % prec_range if prec_range != "None" else "None")],
             ["Total (all)", "%.2f cm" % prec_total],
             ["Total (rain)", "%.2f cm" % prec_total_rain],
             ["Total (snow)", "%.2f cm" % prec_total_snow],
@@ -558,7 +575,7 @@ class Weather(Gtk.Window):
         ]
         
         # Show the dialog.
-        prec_dlg = GenericInfoDialog(self, "Precipitation Info", data2)
+        prec_dlg = GenericInfoDialog(self, "Precipitation Info - %s" % last_profile, data2)
         prec_dlg.run()
         
         # Close the dialog. The response can be ignored.
@@ -572,32 +589,39 @@ class Weather(Gtk.Window):
         if len(data) == 0:
             
             # Show the dialog.
-            show_no_data_dialog(self, "Wind Info")
+            show_no_data_dialog(self, "Wind Info - %s" % last_profile)
             return
         
         # Get the data.
         wind_data1, wind_data2 = utility_functions.split_list(utility_functions.get_column(data, 3))
         wind_data1 = utility_functions.filter_none(wind_data1, wind_data2)
         wind_data1 = utility_functions.convert_float(wind_data1)
-        wind_low = min(wind_data1)
-        wind_high = max(wind_data1)
-        wind_avg = info_functions.mean(wind_data1)
-        wind_median = info_functions.median(wind_data1)
-        wind_range = info_functions.range(wind_data1)
+        try:
+            wind_low = min(wind_data1)
+            wind_high = max(wind_data1)
+            wind_avg = info_functions.mean(wind_data1)
+            wind_median = info_functions.median(wind_data1)
+            wind_range = info_functions.range(wind_data1)
+        except:
+			wind_low = "None"
+			wind_high = "None"
+			wind_avg = "None"
+			wind_median = "None"
+			wind_range = "None"
         wind_mode = info_functions.mode(wind_data2)
         
         # Create the data list.
         data2 = [
-            ["Lowest", "%.2f kph" % wind_low],
-            ["Highest", "%.2f kph" % wind_high],
-            ["Average", "%.2f kph" % wind_avg],
-            ["Median", "%.2f kph" % wind_median],
-            ["Range", "%.2f kph" % wind_range],
+            ["Lowest", ("%.2f kph" % wind_low if wind_low != "None" else "None")],
+            ["Highest", ("%.2f kph" % wind_high if wind_high != "None" else "None")],
+            ["Average", ("%.2f kph" % wind_avg if wind_avg != "None" else "None")],
+            ["Median", ("%.2f kph" % wind_median if wind_median != "None" else "None")],
+            ["Range", ("%.2f kph" % wind_range if wind_range != "None" else "None")],
             ["Most common direction", "%s" % (wind_mode if wind_mode != "" else "None")]
         ]
         
         # Show the dialog.
-        wind_dlg = GenericInfoDialog(self, "Wind Info", data2)
+        wind_dlg = GenericInfoDialog(self, "Wind Info - %s" % last_profile, data2)
         wind_dlg.run()
         
         # Close the dialog. The response can be ignored.
@@ -611,7 +635,7 @@ class Weather(Gtk.Window):
         if len(data) == 0:
             
             # Show the dialog.
-            show_no_data_dialog(self, "Humidity Info")
+            show_no_data_dialog(self, "Humidity Info - %s" % last_profile)
             return
         
         # Get the data.
@@ -634,7 +658,7 @@ class Weather(Gtk.Window):
         ]
         
         # Show the dialog.
-        humi_dlg = GenericInfoDialog(self, "Humidity Info", data2)
+        humi_dlg = GenericInfoDialog(self, "Humidity Info - %s" % last_profile, data2)
         humi_dlg.run()
         
         # Close the dialog. The response can be ignored.
@@ -648,7 +672,7 @@ class Weather(Gtk.Window):
         if len(data) == 0:
             
             # Show the dialog.
-            show_no_data_dialog(self, "Air Pressure Info")
+            show_no_data_dialog(self, "Air Pressure Info - %s" % last_profile)
             return
         
         # Get the data.
@@ -671,7 +695,7 @@ class Weather(Gtk.Window):
         ]
         
         # Show the dialog.
-        airp_dlg = GenericInfoDialog(self, "Air Pressure Info", data2)
+        airp_dlg = GenericInfoDialog(self, "Air Pressure Info - %s" % last_profile, data2)
         airp_dlg.run()
         
         # Close the dialog. The response can be ignored.
@@ -685,7 +709,7 @@ class Weather(Gtk.Window):
         if len(data) == 0:
             
             # Show the dialog.
-            show_no_data_dialog(self, "Cloud Cover Info")
+            show_no_data_dialog(self, "Cloud Cover Info - %s" % last_profile)
             return
         
         # Get the data.
@@ -720,7 +744,7 @@ class Weather(Gtk.Window):
         ]
         
         # Show the dialog.
-        clou_dlg = GenericInfoDialog(self, "Cloud Cover Info", data2)
+        clou_dlg = GenericInfoDialog(self, "Cloud Cover Info - %s" % last_profile, data2)
         clou_dlg.run()
         
         # Close the dialog. The response can be ignored.
