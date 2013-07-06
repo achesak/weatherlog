@@ -111,7 +111,36 @@ class AddNewDialog(Gtk.Dialog):
         self.note_ent = Gtk.Entry()
         new_grid.attach_next_to(self.note_ent, note_lbl, Gtk.PositionType.RIGHT, 2, 1)
         
+        # Bind the events for enabling the comboboxes.
+        self.prec_com.connect("changed", self.enable_prec)
+        self.wind_com.connect("changed", self.enable_wind)
+        
         # Show the dialog. The response gets handled by the function
         # in the main class.
         self.show_all()
         
+    def enable_prec(self, widget):
+		"""Enable or disable the precipitation spinbutton."""
+		
+		# If the value is None, disable the spinbutton.
+		if widget.get_active_text() == "None":
+			
+			self.prec_sbtn.set_sensitive(False)
+		
+		# Otherwise, enable the spinbutton.
+		else:
+			
+			self.prec_sbtn.set_sensitive(True)
+    
+    def enable_wind(self, widget):
+		"""Enable or disable the wind spinbutton."""
+		
+		# If the value is None, disable the spinbutton.
+		if widget.get_active_text() == "None":
+			
+			self.wind_sbtn.set_sensitive(False)
+		
+		# Otherwise, enable the spinbutton.
+		else:
+			
+			self.wind_sbtn.set_sensitive(True)
