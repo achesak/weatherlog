@@ -30,8 +30,8 @@ class AddNewDialog(Gtk.Dialog):
         date_lbl = Gtk.Label("Date: ")
         date_lbl.set_alignment(0, 0.5)
         new_grid.add(date_lbl)
-        self.date_ent = Gtk.Calendar()
-        new_grid.attach_next_to(self.date_ent, date_lbl, Gtk.PositionType.RIGHT, 2, 1)
+        self.date_cal = Gtk.Calendar()
+        new_grid.attach_next_to(self.date_cal, date_lbl, Gtk.PositionType.RIGHT, 2, 1)
         
         # Create the Temperature label and spinbutton.
         temp_lbl = Gtk.Label("Temperature (°C): ")
@@ -102,6 +102,7 @@ class AddNewDialog(Gtk.Dialog):
         self.clou_com = Gtk.ComboBoxText()
         for i in ["Sunny", "Mostly Sunny", "Partly Cloudy", "Mostly Cloudy", "Cloudy"]:
             self.clou_com.append_text(i)
+        self.clou_com.set_active(0)
         new_grid.attach_next_to(self.clou_com, clou_lbl, Gtk.PositionType.RIGHT, 2, 1)
         
         # Create the Notes label and entry.

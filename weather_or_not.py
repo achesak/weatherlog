@@ -69,8 +69,6 @@ import resources.utility_functions as utility_functions
 import resources.info_functions as info_functions
 # Import the functions for exporting the data.
 import resources.export as export
-# Import the function for validating the data.
-import resources.validate as validate
 # Import the dialogs.
 from resources.dialogs.new_dialog import *
 from resources.dialogs.info_dialog import *
@@ -284,39 +282,20 @@ class Weather(Gtk.Window):
         if response == Gtk.ResponseType.OK:
             
             # Get the data from the entries and comboboxes.
-            date = new_dlg.date_ent.get_text()
-            temp = new_dlg.temp_ent.get_text()
-            prec = new_dlg.prec_ent.get_text()
+            year, month, day = new_dlg.date_cal.get_date()
+            date = "%d/%d/%d" % (day, month + 1, year)
+            temp = new_dlg.temp_sbtn.get_value()
+            prec = new_dlg.prec_sbtn.get_value()
             prec_type = new_dlg.prec_com.get_active_text()
-            wind = new_dlg.wind_ent.get_text()
+            wind = new_dlg.wind_sbtn.get_value()
             wind_dir = new_dlg.wind_com.get_active_text()
-            humi = new_dlg.humi_ent.get_text()
-            airp = new_dlg.airp_ent.get_text()
+            humi = new_dlg.humi_sbtn.get_value()
+            airp = new_dlg.airp_sbtn.get_value()
             clou = new_dlg.clou_com.get_active_text()
-            note = new_dlg.note_ent.get_text()                
-            
-            # If anything required was missing, cancel this action. Everything is required except for the notes.
-            # Also check to make sure everything is of the correct type.
-            missing_msg = validate.validate(date, temp, prec, prec_type, wind, wind_dir, humi, airp, clou)
-            
-            # If the error message isn't blank, show the dialog.
-            if missing_msg:
-                
-                # Create the error dialog.
-                err_miss_dlg = Gtk.MessageDialog(new_dlg, 0, Gtk.MessageType.WARNING, Gtk.ButtonsType.OK, "Add New")
-                err_miss_dlg.format_secondary_text("There were one or more problems with the data entered.\n\n%s" % missing_msg.rstrip())
-                
-                # Show the error dialog.
-                err_miss_dlg.run()
-                
-                # Close the error dialog and the "Add New" dialog. The second one
-                # is needed because of a bug where the window will stop responding
-                # to events, making it useless. Fix later!
-                err_miss_dlg.destroy()
-                new_dlg.destroy()
+            note = new_dlg.note_ent.get_text()
             
             # If the date is already used, show the dialog.
-            elif date in utility_functions.get_column(data, 0):
+            if date in utility_functions.get_column(data, 0):
                 
                 # Create the error dialog.
                 err_miss_dlg = Gtk.MessageDialog(new_dlg, 0, Gtk.MessageType.WARNING, Gtk.ButtonsType.OK, "Add New")
@@ -334,11 +313,11 @@ class Weather(Gtk.Window):
             else:
                 
                 # Add the data to the list.
-                new_data = [date, temp, "%s%s" % ((prec + " " if prec_type != "None" else ""), prec_type), "%s%s" % ((wind + " " if wind_dir != "None" else ""), wind_dir), humi, airp, clou, note]
+                new_data = [date, ("%.2f" % temp), "%s%s" % ((("%.2f" % prec) + " " if prec_type != "None" else ""), prec_type), "%s%s" % ((("%.2f" % wind) + " " if wind_dir != "None" else ""), wind_dir), ("%.2f" % humi), ("%.2f" % humi), clou, note]
                 data.append(new_data)
                 
                 # Sort the list.
-                data = sorted(data, key = lambda x: datetime.datetime.strptime(x[0], '%d/%m/%y'))
+                data = sorted(data, key = lambda x: datetime.datetime.strptime(x[0], '%d/%m/%Y'))
                 
                 # Update the ListStore.
                 self.liststore.clear()
