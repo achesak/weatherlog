@@ -347,6 +347,7 @@ class Weather(Gtk.Window):
         
         # Close the dialog.
         new_dlg.destroy()
+        
     
     
     def remove(self, event):
