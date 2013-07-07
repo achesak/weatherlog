@@ -265,7 +265,7 @@ class Weather(Gtk.Window):
         self.show_all()
         
         # Set the new title.
-        self.set_title("Weather Or Not - %s" % last_profile)
+        self.set_title("Weather Or Not - %s - %s to %s" % (last_profile, (data[0][0] if len(data) != 0 else "None"), (data[len(data)-1][0] if len(data) != 0 else "None")))
     
     
     def add_new(self, event):
@@ -894,7 +894,7 @@ class Weather(Gtk.Window):
                 self.liststore.clear()
                 
                 # Set the new title.
-                self.set_title("Weather Or Not - %s" % last_profile)
+                self.set_title("Weather Or Not - %s - %s to %s" % (last_profile, (data[0][0] if len(data) != 0 else "None"), (data[len(data)-1][0] if len(data) != 0 else "None")))
         
             # Close the dialog.
             new_dlg.destroy()
@@ -1174,7 +1174,7 @@ class Weather(Gtk.Window):
                     self.liststore.append(i)
                 
                 # Set the new title.
-                self.set_title("Weather Or Not - %s" % last_profile)
+                self.set_title("Weather Or Not - %s - %s to %s" % (last_profile, (data[0][0] if len(data) != 0 else "None"), (data[len(data)-1][0] if len(data) != 0 else "None")))
         
         # Close the dialog.
         swi_dlg.destroy()
@@ -1248,7 +1248,7 @@ class Weather(Gtk.Window):
                 self.liststore.clear()
                 
                 # Set the new title.
-                self.set_title("Weather Or Not - %s" % last_profile)
+                self.set_title("Weather Or Not - %s - %s to %s" % (last_profile, (data[0][0] if len(data) != 0 else "None"), (data[len(data)-1][0] if len(data) != 0 else "None")))
         
         # Close the dialog.
         new_dlg.destroy()
