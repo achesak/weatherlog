@@ -274,7 +274,7 @@ class Weather(Gtk.Window):
         global data
         
         # Show the dialog.
-        new_dlg = AddNewDialog(self)
+        new_dlg = AddNewDialog(self, last_profile)
         # Get the response.
         response = new_dlg.run()
         
@@ -343,7 +343,7 @@ class Weather(Gtk.Window):
             return
         
         # Confirm that the user wants to delete the row.
-        rem_dlg = Gtk.MessageDialog(self, 0, Gtk.MessageType.QUESTION, Gtk.ButtonsType.OK_CANCEL, "Confirm Remove")
+        rem_dlg = Gtk.MessageDialog(self, 0, Gtk.MessageType.QUESTION, Gtk.ButtonsType.OK_CANCEL, "Confirm Remove - %s" % last_profile)
         rem_dlg.format_secondary_text("Are you sure you want to delete the data for %s?\n\nThis action cannot be undone." % date)
         
         # Get the response.
@@ -398,9 +398,9 @@ class Weather(Gtk.Window):
             prec_high = max(prec_data1)
             prec_avg = info_functions.mean(prec_data1)
         except:
-			prec_low = "None"
-			prec_high = "None"
-			prec_avg = "None"
+            prec_low = "None"
+            prec_high = "None"
+            prec_avg = "None"
         
         # Get the wind data.
         wind_data1, wind_data2 = utility_functions.split_list(utility_functions.get_column(data, 3))
@@ -410,9 +410,9 @@ class Weather(Gtk.Window):
             wind_high = max(wind_data1)
             wind_avg = info_functions.mean(wind_data1)
         except:
-			wind_low = "None"
-			wind_high = "None"
-			wind_avg = "None"
+            wind_low = "None"
+            wind_high = "None"
+            wind_avg = "None"
         
         # Get the humidity data.
         humi_data = utility_functions.convert_float(utility_functions.get_column(data, 4))
@@ -520,11 +520,11 @@ class Weather(Gtk.Window):
             prec_median = info_functions.median(prec_data1)
             prec_range = info_functions.range(prec_data1)
         except:
-			prec_low = "None"
-			prec_high = "None"
-			prec_avg = "None"
-			prec_median = "None"
-			prec_range = "None"
+            prec_low = "None"
+            prec_high = "None"
+            prec_avg = "None"
+            prec_median = "None"
+            prec_range = "None"
         prec_total = 0
         prec_total_rain = 0
         prec_total_snow = 0
@@ -603,11 +603,11 @@ class Weather(Gtk.Window):
             wind_median = info_functions.median(wind_data1)
             wind_range = info_functions.range(wind_data1)
         except:
-			wind_low = "None"
-			wind_high = "None"
-			wind_avg = "None"
-			wind_median = "None"
-			wind_range = "None"
+            wind_low = "None"
+            wind_high = "None"
+            wind_avg = "None"
+            wind_median = "None"
+            wind_range = "None"
         wind_mode = info_functions.mode(wind_data2)
         
         # Create the data list.
@@ -755,7 +755,7 @@ class Weather(Gtk.Window):
         """Imports data from a file."""
         
         # Confirm that the user wants to overwrite the data.
-        over_dlg = Gtk.MessageDialog(self, 0, Gtk.MessageType.QUESTION, Gtk.ButtonsType.OK_CANCEL, "Confirm Import")
+        over_dlg = Gtk.MessageDialog(self, 0, Gtk.MessageType.QUESTION, Gtk.ButtonsType.OK_CANCEL, "Confirm Import - %s" % last_profile)
         over_dlg.format_secondary_text("Are you sure you want to import the data?\n\nCurrent data will be overwritten.")
         
         # Get the response.
@@ -767,7 +767,7 @@ class Weather(Gtk.Window):
             return
         
         # Create the dialog.
-        import_dlg = Gtk.FileChooserDialog("Import", self, Gtk.FileChooserAction.OPEN, (Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL, Gtk.STOCK_OPEN, Gtk.ResponseType.OK))
+        import_dlg = Gtk.FileChooserDialog("Import - %s" % last_profile, self, Gtk.FileChooserAction.OPEN, (Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL, Gtk.STOCK_OPEN, Gtk.ResponseType.OK))
         
         # Set the filters.
         filter_all = Gtk.FileFilter()
@@ -906,7 +906,7 @@ class Weather(Gtk.Window):
             return
         
         # Create the dialog.
-        import_dlg = Gtk.FileChooserDialog("Import", self, Gtk.FileChooserAction.OPEN, (Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL, Gtk.STOCK_OPEN, Gtk.ResponseType.OK))
+        import_dlg = Gtk.FileChooserDialog("Import - %s" % last_profile, self, Gtk.FileChooserAction.OPEN, (Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL, Gtk.STOCK_OPEN, Gtk.ResponseType.OK))
         
         # Set the filters.
         filter_all = Gtk.FileFilter()
@@ -962,7 +962,7 @@ class Weather(Gtk.Window):
         """Exports the data to a file."""
         
         # Create the dialog.
-        export_dlg = Gtk.FileChooserDialog("Export", self, Gtk.FileChooserAction.SAVE, (Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL, Gtk.STOCK_OPEN, Gtk.ResponseType.OK))
+        export_dlg = Gtk.FileChooserDialog("Export - %s" % last_profile, self, Gtk.FileChooserAction.SAVE, (Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL, Gtk.STOCK_OPEN, Gtk.ResponseType.OK))
         export_dlg.set_do_overwrite_confirmation(True)
         
         # Get the response.
@@ -1000,7 +1000,7 @@ class Weather(Gtk.Window):
         html = export.html(data)
         
         # Create the dialog.
-        export_html_dlg = Gtk.FileChooserDialog("Export to HTML", self, Gtk.FileChooserAction.SAVE, (Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL, Gtk.STOCK_OPEN, Gtk.ResponseType.OK))
+        export_html_dlg = Gtk.FileChooserDialog("Export to HTML - %s" % last_profile, self, Gtk.FileChooserAction.SAVE, (Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL, Gtk.STOCK_OPEN, Gtk.ResponseType.OK))
         export_html_dlg.set_do_overwrite_confirmation(True)
         
         # Get the response.
@@ -1033,7 +1033,7 @@ class Weather(Gtk.Window):
         csv = export.csv(data)
         
         # Create the dialog.
-        export_csv_dlg = Gtk.FileChooserDialog("Export to CSV", self, Gtk.FileChooserAction.SAVE, (Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL, Gtk.STOCK_OPEN, Gtk.ResponseType.OK))
+        export_csv_dlg = Gtk.FileChooserDialog("Export to CSV - %s" % last_profile, self, Gtk.FileChooserAction.SAVE, (Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL, Gtk.STOCK_OPEN, Gtk.ResponseType.OK))
         export_csv_dlg.set_do_overwrite_confirmation(True)
         
         # Get the response.
@@ -1063,7 +1063,7 @@ class Weather(Gtk.Window):
         """Clears the data."""
         
         # Confirm that the user wants to clear the data.
-        clear_dlg = Gtk.MessageDialog(self, 0, Gtk.MessageType.QUESTION, Gtk.ButtonsType.OK_CANCEL, "Confirm Clear")
+        clear_dlg = Gtk.MessageDialog(self, 0, Gtk.MessageType.QUESTION, Gtk.ButtonsType.OK_CANCEL, "Confirm Clear - %s" % last_profile)
         clear_dlg.format_secondary_text("Are you sure you want to clear the data?\n\nThis action cannot be undone.")
         
         # Get the response.

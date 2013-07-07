@@ -10,11 +10,11 @@ from gi.repository import Gtk
 
 class AddNewDialog(Gtk.Dialog):
     """Shows the "Add New" dialog."""
-    def __init__(self, parent):
+    def __init__(self, parent, profile):
         """Create the dialog."""
         
         # This window should be modal.
-        Gtk.Dialog.__init__(self, "Add New", parent, Gtk.DialogFlags.MODAL)
+        Gtk.Dialog.__init__(self, "Add New - %s" % profile, parent, Gtk.DialogFlags.MODAL)
         
         # Add the buttons.
         self.add_button("OK", Gtk.ResponseType.OK)
@@ -121,27 +121,27 @@ class AddNewDialog(Gtk.Dialog):
         self.show_all()
         
     def enable_prec(self, widget):
-		"""Enable or disable the precipitation spinbutton."""
-		
-		# If the value is None, disable the spinbutton.
-		if widget.get_active_text() == "None":
-			
-			self.prec_sbtn.set_sensitive(False)
-		
+        """Enable or disable the precipitation spinbutton."""
+        
+        # If the value is None, disable the spinbutton.
+        if widget.get_active_text() == "None":
+        
+            self.prec_sbtn.set_sensitive(False)
+        
 		# Otherwise, enable the spinbutton.
-		else:
-			
-			self.prec_sbtn.set_sensitive(True)
+        else:
+        
+            self.prec_sbtn.set_sensitive(True)
     
     def enable_wind(self, widget):
-		"""Enable or disable the wind spinbutton."""
-		
-		# If the value is None, disable the spinbutton.
-		if widget.get_active_text() == "None":
-			
-			self.wind_sbtn.set_sensitive(False)
-		
-		# Otherwise, enable the spinbutton.
-		else:
-			
-			self.wind_sbtn.set_sensitive(True)
+        """Enable or disable the wind spinbutton."""
+        
+        # If the value is None, disable the spinbutton.
+        if widget.get_active_text() == "None":
+        
+            self.wind_sbtn.set_sensitive(False)
+        
+        # Otherwise, enable the spinbutton.
+        else:
+        
+            self.wind_sbtn.set_sensitive(True)
