@@ -59,7 +59,7 @@ class AddNewDialog(Gtk.Dialog):
         self.prec_com.set_active(0)
         new_grid.attach_next_to(self.prec_com, self.prec_sbtn, Gtk.PositionType.RIGHT, 1, 1)
         
-        # Create the Wind label, entry, and combobox.
+        # Create the Wind label, spinbutton, and combobox.
         wind_lbl = Gtk.Label("Wind (kph): ")
         wind_lbl.set_alignment(0, 0.5)
         new_grid.attach_next_to(wind_lbl, prec_lbl, Gtk.PositionType.BOTTOM, 1, 1)
@@ -75,7 +75,7 @@ class AddNewDialog(Gtk.Dialog):
         self.wind_com.set_active(0)
         new_grid.attach_next_to(self.wind_com, self.wind_sbtn, Gtk.PositionType.RIGHT, 1, 1)
         
-        # Create the Humidity label and entry.
+        # Create the Humidity label and spinbutton.
         humi_lbl = Gtk.Label("Humidity (%): ")
         humi_lbl.set_alignment(0, 0.5)
         new_grid.attach_next_to(humi_lbl, wind_lbl, Gtk.PositionType.BOTTOM, 1, 1)
@@ -85,7 +85,7 @@ class AddNewDialog(Gtk.Dialog):
         self.humi_sbtn.set_value(0)
         new_grid.attach_next_to(self.humi_sbtn, humi_lbl, Gtk.PositionType.RIGHT, 2, 1)
         
-        # Create the Air Pressure label and entry.
+        # Create the Air Pressure label, spinbutton, and combobox.
         airp_lbl = Gtk.Label("Air Pressure (hPa): ")
         airp_lbl.set_alignment(0, 0.5)
         new_grid.attach_next_to(airp_lbl, humi_lbl, Gtk.PositionType.BOTTOM, 1, 1)
@@ -93,7 +93,13 @@ class AddNewDialog(Gtk.Dialog):
         self.airp_sbtn = Gtk.SpinButton(digits = 2, adjustment = airp_adj)
         self.airp_sbtn.set_numeric(False)
         self.airp_sbtn.set_value(0)
-        new_grid.attach_next_to(self.airp_sbtn, airp_lbl, Gtk.PositionType.RIGHT, 2, 1)
+        new_grid.attach_next_to(self.airp_sbtn, airp_lbl, Gtk.PositionType.RIGHT, 1, 1)
+        self.airp_com = Gtk.ComboBoxText()
+        for i in ["Steady", "Rising", "Falling"]:
+            self.airp_com.append_text(i)
+        self.airp_com.set_active(0)
+        new_grid.attach_next_to(self.airp_com, self.airp_sbtn, Gtk.PositionType.RIGHT, 1, 1)
+        
         
         # Create the Cloud Cover label and combobox.
         clou_lbl = Gtk.Label("Cloud Cover: ")

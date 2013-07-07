@@ -291,6 +291,7 @@ class Weather(Gtk.Window):
             wind_dir = new_dlg.wind_com.get_active_text()
             humi = new_dlg.humi_sbtn.get_value()
             airp = new_dlg.airp_sbtn.get_value()
+            airp_read = new_dlg.airp_com.get_active_text()
             clou = new_dlg.clou_com.get_active_text()
             note = new_dlg.note_ent.get_text()
             
@@ -313,7 +314,7 @@ class Weather(Gtk.Window):
             else:
                 
                 # Add the data to the list.
-                new_data = [date, ("%.2f" % temp), "%s%s" % ((("%.2f" % prec) + " " if prec_type != "None" else ""), prec_type), "%s%s" % ((("%.2f" % wind) + " " if wind_dir != "None" else ""), wind_dir), ("%.2f" % humi), ("%.2f" % humi), clou, note]
+                new_data = [date, ("%.2f" % temp), "%s%s" % ((("%.2f" % prec) + " " if prec_type != "None" else ""), prec_type), "%s%s" % ((("%.2f" % wind) + " " if wind_dir != "None" else ""), wind_dir), ("%.2f" % humi), ("%.2f %s" % (airp, airp_read)), clou, note]
                 data.append(new_data)
                 
                 # Sort the list.
@@ -421,10 +422,11 @@ class Weather(Gtk.Window):
         humi_avg = info_functions.mean(humi_data)
         
         # Get the air pressure data.
-        airp_data = utility_functions.convert_float(utility_functions.get_column(data, 5))
-        airp_low = min(airp_data)
-        airp_high = max(airp_data)
-        airp_avg = info_functions.mean(airp_data)
+        airp_data1, airp_data2 = utility_functions.split_list(utility_functions.get_column(data, 5))
+        airp_data1 = utility_functions.convert_float(airp_data1)
+        airp_low = min(airp_data1)
+        airp_high = max(airp_data1)
+        airp_avg = info_functions.mean(airp_data1)
         
         # Get the cloud cover data.
         clou_data = Counter(utility_functions.get_column(data, 6))
@@ -676,13 +678,24 @@ class Weather(Gtk.Window):
             return
         
         # Get the data.
-        airp_data = utility_functions.convert_float(utility_functions.get_column(data, 5))
-        airp_low = min(airp_data)
-        airp_high = max(airp_data)
-        airp_avg = info_functions.mean(airp_data)
-        airp_median = info_functions.median(airp_data)
-        airp_range = info_functions.range(airp_data)
-        airp_mode = info_functions.mode(airp_data)
+        airp_data1, airp_data2 = utility_functions.split_list(utility_functions.get_column(data, 5))
+        airp_data1 = utility_functions.convert_float(airp_data1)
+        airp_low = min(airp_data1)
+        airp_high = max(airp_data1)
+        airp_avg = info_functions.mean(airp_data1)
+        airp_median = info_functions.median(airp_data1)
+        airp_range = info_functions.range(airp_data1)
+        airp_mode = info_functions.mode(airp_data1)
+        airp_steady = 0
+        airp_rising = 0
+        airp_falling = 0
+        for i in airp_data2:
+            if i == "Steady":
+                airp_steady += 1
+            elif i == "Rising":
+                airp_rising += 1
+            elif i == "Falling":
+                airp_falling += 1
         
         # Create the data list.
         data2 = [
@@ -691,7 +704,10 @@ class Weather(Gtk.Window):
             ["Average", "%.2f hPa" % airp_avg],
             ["Median", "%.2f hPa" % airp_median],
             ["Range", "%.2f hPa" % airp_range],
-            ["Most common", "%.2f hPa" % airp_mode]
+            ["Most common", "%.2f hPa" % airp_mode],
+            ["Steady", "%d day%s" % (airp_steady, "" if airp_steady == 1 else "s")],
+            ["Rising", "%d day%s" % (airp_rising, "" if airp_rising == 1 else "s")],
+            ["Falling", "%d day%s" % (airp_falling, "" if airp_falling == 1 else "s")]
         ]
         
         # Show the dialog.
