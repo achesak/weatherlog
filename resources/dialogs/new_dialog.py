@@ -7,12 +7,14 @@
 # Import GTK for the dialog.
 from gi.repository import Gtk
 # Import pywapi to pre-fill the fields.
-import ..pywapi.pywapi as pywapi
+import pywapi.pywapi as pywapi
+# Import function to convert degrees to a wind direction.
+from .. import directions
 
 
 class AddNewDialog(Gtk.Dialog):
     """Shows the "Add New" dialog."""
-    def __init__(self, parent, profile):
+    def __init__(self, parent, profile, user_location):
         """Create the dialog."""
         
         # This window should be modal.
@@ -124,10 +126,26 @@ class AddNewDialog(Gtk.Dialog):
         self.prec_com.connect("changed", self.enable_prec)
         self.wind_com.connect("changed", self.enable_wind)
         
+        # Pre-fill the fields, if the user wants that.
+        if user_location:
+            station = self.prefill(user_location)
+        
         # Show the dialog. The response gets handled by the function
         # in the main class.
         self.show_all()
         
+        # Show the dialog saying data has been prefilled.
+        if user_location:
+            
+            # Show the dialog.
+            pre_dlg = Gtk.MessageDialog(self, 0, Gtk.MessageType.INFO, Gtk.ButtonsType.OK, "Add New - %s" % profile)
+            pre_dlg.format_secondary_text("Temperature, wind, humidity, and air pressure have been prefilled using data from Yahoo! Weather.\n\nLocation is set to %s, at %s." % (user_location, station))
+            
+            # Run the dialog.
+            response = pre_dlg.run()
+            pre_dlg.destroy()
+    
+    
     def enable_prec(self, widget):
         """Enable or disable the precipitation spinbutton."""
         
@@ -141,6 +159,7 @@ class AddNewDialog(Gtk.Dialog):
         
             self.prec_sbtn.set_sensitive(True)
     
+    
     def enable_wind(self, widget):
         """Enable or disable the wind spinbutton."""
         
@@ -153,3 +172,28 @@ class AddNewDialog(Gtk.Dialog):
         else:
         
             self.wind_sbtn.set_sensitive(True)
+    
+    
+    def prefill(self, user_location):
+        """Pre-fill the fields."""
+        
+        # Get the data.
+        data = pywapi.get_weather_from_yahoo(user_location, units = "metric")
+        
+        # Set the temperature field.
+        self.temp_sbtn.set_value(float(data["condition"]["temp"]))
+        
+        # Set the wind fields.
+        self.wind_com.set_active(["None", "N", "NNE", "NE", "ENE", "E", "ESE", "SE", "SSE", "S", "SSW", "SW", "WSW", "W", "WNW", "NW", "NNW"].index(directions.degree_to_direction(float(data["wind"]["direction"]))))
+        self.wind_sbtn.set_value(float(data["wind"]["speed"]))
+        
+        # Set the humidity field.
+        self.humi_sbtn.set_value(float(data["atmosphere"]["humidity"]))
+        
+        # Set the air pressure fields.
+        self.airp_sbtn.set_value(float(data["atmosphere"]["pressure"]))
+        self.airp_com.set_active(int(data["atmosphere"]["rising"]))
+        
+        
+        # Return the location.
+        return "latitude %s and longitude %s" % (data["geo"]["lat"], data["geo"]["long"])

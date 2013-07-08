@@ -4,7 +4,7 @@
 ################################################################################
 
 # Weather Or Not
-# Version 0.1
+# Version 0.2
 
 # Weather Or Not is an application for keeping track of the weather.
 
@@ -118,9 +118,7 @@ try:
     loc_file.close()
 
 except IOError:
-    # Show the error message, and continue.
-    # This one shows if there was a problem reading the file.
-    print("Error reading location file (IOError). Continuing...")
+    # Continue.
     user_location = ""
  
 # Load the data.   
@@ -288,7 +286,7 @@ class Weather(Gtk.Window):
         global data
         
         # Show the dialog.
-        new_dlg = AddNewDialog(self, last_profile)
+        new_dlg = AddNewDialog(self, last_profile, user_location)
         # Get the response.
         response = new_dlg.run()
         
@@ -1435,9 +1433,9 @@ class Weather(Gtk.Window):
         about_dlg.set_copyright("Copyright (c) 2013 Adam Chesak")
         # Set the authors. This is, of course, only me. I feel special.
         about_dlg.set_authors(["Adam Chesak <achesak@yahoo.com>"])
-        # Set the license. I think this can be used with GTK3? (It's LGPL.)
+        # Set the license.
         about_dlg.set_license_type(Gtk.License.MIT_X11)
-        # Set the website. Change this to the site on github, when I get that up.
+        # Set the website.
         about_dlg.set_website("http://poultryandprogramming.wordpress.com/")
         about_dlg.set_website_label("http://poultryandprogramming.wordpress.com/")
         
