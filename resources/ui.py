@@ -33,6 +33,8 @@ MENU_DATA = """
         <menuitem action="cloud_cover" />
       </menu>
       <separator />
+      <menuitem action="set_location" />
+      <separator />
       <menuitem action="clear_data" />
       <separator />
       <menuitem action="fullscreen" />

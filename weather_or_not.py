@@ -97,7 +97,7 @@ if not os.path.exists(main_dir) or not os.path.isdir(main_dir):
     last_prof_data.close()
     dir_exists = False
 
-# Get the last profile
+# Get the last profile.
 try:
     # Load the last profile file.
     prof_file = open("%s/lastprofile" % main_dir, "r")
@@ -109,6 +109,19 @@ except IOError:
     # This one shows if there was a problem reading the file.
     print("Error reading profile file (IOError).")
     sys.exit()
+
+# Get the user's location.
+try:
+    # Load the location file.
+    loc_file = open("%s/location" % main_dir, "r")
+    user_location = loc_file.read().rstrip()
+    loc_file.close()
+
+except IOError:
+    # Show the error message, and continue.
+    # This one shows if there was a problem reading the file.
+    print("Error reading location file (IOError). Continuing...")
+    user_location = ""
  
 # Load the data.   
 try:
@@ -217,6 +230,7 @@ class Weather(Gtk.Window):
             ("humidity", None, "_Humidity...", "<Control>h", None, self.show_info_humi),
             ("air_pressure", None, "_Air Pressure...", "<Control>a", None, self.show_info_airp),
             ("cloud_cover", None, "_Cloud Cover...", "<Control>c", None, self.show_info_clou),
+            ("set_location", None, "Set _Location...", "<Control>l", None, self.set_location),
             ("clear_data", Gtk.STOCK_CLEAR, "Clear _Data...", "<Control>d", "Clear the data", self.clear),
             ("fullscreen", Gtk.STOCK_FULLSCREEN, "Toggle _Fullscreen", "F11", "Toggle fullscreen", self.toggle_fullscreen),
             ("exit", Gtk.STOCK_QUIT, "E_xit...", None, "Close the application", lambda x: self.exit("ignore", "this"))
@@ -1075,6 +1089,51 @@ class Weather(Gtk.Window):
         export_csv_dlg.destroy()
     
     
+    def set_location(self, event):
+        """Sets the user's location for pre-filling the Add New dialog."""
+        
+        global user_location
+        
+        # Create the dialog.
+        loc_dlg = Gtk.Dialog("Set Location", self, Gtk.DialogFlags.MODAL)
+        
+        # Add the buttons.
+        loc_dlg.add_button("OK", Gtk.ResponseType.OK)
+        loc_dlg.add_button("Cancel", Gtk.ResponseType.CANCEL)
+        
+        # Create the grid.
+        loc_box = loc_dlg.get_content_area()
+        loc_grid = Gtk.Grid()
+        # Add the grid to the dialog's content area.
+        loc_box.add(loc_grid)
+        
+        # Create the label.
+        loc_lbl = Gtk.Label("Enter five digit US zip code or location ID.\n(Enter nothing to disable prefilling data.)")
+        loc_lbl.set_alignment(0, 0.5)
+        loc_grid.add(loc_lbl)
+        
+        # Create the entry.
+        loc_ent = Gtk.Entry()
+        loc_ent.set_text(user_location)
+        loc_grid.attach_next_to(loc_ent, loc_lbl, Gtk.PositionType.BOTTOM, 1, 1)
+        
+        # Show the dialog.
+        loc_dlg.show_all()
+        
+        # Run the dialog and get the response.
+        response = loc_dlg.run()
+        
+        # If the user clicked OK:
+        if response == Gtk.ResponseType.OK:
+            
+            # Store the location.
+            user_location = loc_ent.get_text()
+            
+        
+        # Close the dialog.
+        loc_dlg.destroy()
+    
+    
     def clear(self, event):
         """Clears the data."""
         
@@ -1430,6 +1489,18 @@ class Weather(Gtk.Window):
             # Show the error message if something happened, but continue.
             # This one is shown if there was an error writing to the file.
             print("Error saving profile file (IOError).")
+        
+        # Save the location.
+        try:
+            # This should save to ~/.weatherornot/location on Linux.
+            loc_file = open("%s/location" % main_dir, "w")
+            loc_file.write(user_location)
+            loc_file.close()
+            
+        except IOError:
+            # Show the error message if something happened, but continue.
+            # This one is shown if there was an error writing to the file.
+            print("Error saving location file (IOError).")
         
         # Close the  application.
         Gtk.main_quit()

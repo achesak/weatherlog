@@ -6,4 +6,6 @@ To run Weather Or Not, open a terminal in the directory containing the files and
 
 Currently Weather Or Not only works on Linux.
 
-Weather Or Not is released under the MIT open source license (http://opensource.org/licenses/mit-license.php).
+Weather Or Not is released under the MIT open source license (http://opensource.org/licenses/mit-license.php). See the LICENSE file for more information.
+
+Weather Or Not uses pywapi (http://code.google.com/p/python-weather-api/) to get data from weather APIs. See the README and LICENSE files in resources/pywapi for more information.
