@@ -6,6 +6,8 @@
 
 # Import GTK for the dialog.
 from gi.repository import Gtk
+# Import pywapi to pre-fill the fields.
+import ..pywapi.pywapi as pywapi
 
 
 class AddNewDialog(Gtk.Dialog):
