@@ -230,6 +230,7 @@ class Weather(Gtk.Window):
             ("cloud_cover", None, "_Cloud Cover...", "<Control>c", None, self.show_info_clou),
             ("set_location", None, "Set _Location...", "<Control>l", None, self.set_location),
             ("clear_data", Gtk.STOCK_CLEAR, "Clear _Data...", "<Control>d", "Clear the data", self.clear),
+            ("clear_all", None, "Clear _All Data...", "<Control><Alt>d", None, self.clear_all),
             ("fullscreen", Gtk.STOCK_FULLSCREEN, "Toggle _Fullscreen", "F11", "Toggle fullscreen", self.toggle_fullscreen),
             ("exit", Gtk.STOCK_QUIT, "E_xit...", None, "Close the application", lambda x: self.exit("ignore", "this"))
         ])
@@ -337,6 +338,9 @@ class Weather(Gtk.Window):
                 for i in data:
                     self.liststore.append(i)
         
+        # Update the title.
+        self.set_title("Weather Or Not - %s - %s to %s" % (last_profile, (data[0][0] if len(data) != 0 else "None"), (data[len(data)-1][0] if len(data) != 0 else "None")))
+        
         # Close the dialog.
         new_dlg.destroy()
         
@@ -377,6 +381,9 @@ class Weather(Gtk.Window):
         self.liststore.clear()
         for i in data:
             self.liststore.append(i)
+        
+        # Update the title.
+        self.set_title("Weather Or Not - %s - %s to %s" % (last_profile, (data[0][0] if len(data) != 0 else "None"), (data[len(data)-1][0] if len(data) != 0 else "None")))
     
     
     def show_info(self, event):
@@ -1136,7 +1143,7 @@ class Weather(Gtk.Window):
         """Clears the data."""
         
         # Confirm that the user wants to clear the data.
-        clear_dlg = Gtk.MessageDialog(self, 0, Gtk.MessageType.QUESTION, Gtk.ButtonsType.OK_CANCEL, "Confirm Clear - %s" % last_profile)
+        clear_dlg = Gtk.MessageDialog(self, 0, Gtk.MessageType.QUESTION, Gtk.ButtonsType.OK_CANCEL, "Confirm Clear Data - %s" % last_profile)
         clear_dlg.format_secondary_text("Are you sure you want to clear the data?\n\nThis action cannot be undone.")
         
         # Get the response.
@@ -1154,6 +1161,47 @@ class Weather(Gtk.Window):
         
         # Close the dialog.
         clear_dlg.destroy()
+        
+        # Update the title.
+        self.set_title("Weather Or Not - %s - %s to %s" % (last_profile, (data[0][0] if len(data) != 0 else "None"), (data[len(data)-1][0] if len(data) != 0 else "None")))
+    
+    
+    def clear_all(self, event):
+        """Clears all data."""
+        
+        # Confirm that the user wants to clear the data.
+        clear_dlg = Gtk.MessageDialog(self, 0, Gtk.MessageType.QUESTION, Gtk.ButtonsType.OK_CANCEL, "Confirm Clear All Data- %s" % last_profile)
+        clear_dlg.format_secondary_text("Are you sure you want to clear all the data?\n\nThis action cannot be undone, and requires a restart.")
+        
+        # Get the response.
+        response = clear_dlg.run()
+        
+        # If the user confirms the clear:
+        if response == Gtk.ResponseType.OK:
+            
+            # Clear the data.
+            global data
+            data[:] = []
+            
+            # Clear the ListStore.
+            self.liststore.clear()
+            
+            # Delete all the files.
+            shutil.rmtree(main_dir)
+        
+        # Close the dialog.
+        clear_dlg.destroy()
+        
+        # Tell the user data has been cleared and that it will now close.
+        clear_dlg2 = Gtk.MessageDialog(self, 0, Gtk.MessageType.INFO, Gtk.ButtonsType.OK, "Clear All Data- %s" % last_profile)
+        clear_dlg2.format_secondary_text("All data has been cleared.\n\nWeather Or Not will now close...")
+        
+        # Run then close the dialog.
+        clear_dlg2.run()
+        clear_dlg2.destroy()
+        
+        # Close the dialog.
+        Gtk.main_quit()
     
     
     def switch_profile(self, event):

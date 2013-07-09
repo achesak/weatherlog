@@ -36,6 +36,7 @@ MENU_DATA = """
       <menuitem action="set_location" />
       <separator />
       <menuitem action="clear_data" />
+      <menuitem action="clear_all" />
       <separator />
       <menuitem action="fullscreen" />
       <separator />
