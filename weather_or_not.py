@@ -229,7 +229,7 @@ class Weather(Gtk.Window):
             ("air_pressure", None, "_Air Pressure...", "<Control>a", None, self.show_info_airp),
             ("cloud_cover", None, "_Cloud Cover...", "<Control>c", None, self.show_info_clou),
             ("set_location", None, "Set _Location...", "<Control>l", None, self.set_location),
-            ("clear_data", Gtk.STOCK_CLEAR, "Clear _Data...", "<Control>d", "Clear the data", self.clear),
+            ("clear_data", Gtk.STOCK_CLEAR, "Clear Current _Data...", "<Control>d", "Clear the data", self.clear),
             ("clear_all", None, "Clear _All Data...", "<Control><Alt>d", None, self.clear_all),
             ("fullscreen", Gtk.STOCK_FULLSCREEN, "Toggle _Fullscreen", "F11", "Toggle fullscreen", self.toggle_fullscreen),
             ("exit", Gtk.STOCK_QUIT, "E_xit...", None, "Close the application", lambda x: self.exit("ignore", "this"))
@@ -1143,7 +1143,7 @@ class Weather(Gtk.Window):
         """Clears the data."""
         
         # Confirm that the user wants to clear the data.
-        clear_dlg = Gtk.MessageDialog(self, 0, Gtk.MessageType.QUESTION, Gtk.ButtonsType.OK_CANCEL, "Confirm Clear Data - %s" % last_profile)
+        clear_dlg = Gtk.MessageDialog(self, 0, Gtk.MessageType.QUESTION, Gtk.ButtonsType.OK_CANCEL, "Confirm Clear Current Data - %s" % last_profile)
         clear_dlg.format_secondary_text("Are you sure you want to clear the data?\n\nThis action cannot be undone.")
         
         # Get the response.
@@ -1170,7 +1170,7 @@ class Weather(Gtk.Window):
         """Clears all data."""
         
         # Confirm that the user wants to clear the data.
-        clear_dlg = Gtk.MessageDialog(self, 0, Gtk.MessageType.QUESTION, Gtk.ButtonsType.OK_CANCEL, "Confirm Clear All Data- %s" % last_profile)
+        clear_dlg = Gtk.MessageDialog(self, 0, Gtk.MessageType.QUESTION, Gtk.ButtonsType.OK_CANCEL, "Confirm Clear All Data - %s" % last_profile)
         clear_dlg.format_secondary_text("Are you sure you want to clear all the data?\n\nThis action cannot be undone, and requires a restart.")
         
         # Get the response.
@@ -1193,7 +1193,7 @@ class Weather(Gtk.Window):
         clear_dlg.destroy()
         
         # Tell the user data has been cleared and that it will now close.
-        clear_dlg2 = Gtk.MessageDialog(self, 0, Gtk.MessageType.INFO, Gtk.ButtonsType.OK, "Clear All Data- %s" % last_profile)
+        clear_dlg2 = Gtk.MessageDialog(self, 0, Gtk.MessageType.INFO, Gtk.ButtonsType.OK, "Clear All Data - %s" % last_profile)
         clear_dlg2.format_secondary_text("All data has been cleared.\n\nWeather Or Not will now close...")
         
         # Run then close the dialog.
@@ -1225,6 +1225,20 @@ class Weather(Gtk.Window):
         
         # Switch back to the previous directory.
         os.chdir(current_dir)
+        
+        # If there are no other profiles, tell the user and cancel the action.
+        if len(profiles) == 0:
+            
+            # Tell the user data has been cleared and that it will now close.
+            prof_dlg = Gtk.MessageDialog(self, 0, Gtk.MessageType.INFO, Gtk.ButtonsType.OK, "Switch Profile")
+            prof_dlg.format_secondary_text("There are no other profiles.")
+            
+            # Run then close the dialog.
+            prof_dlg.run()
+            prof_dlg.destroy()
+            
+            return
+        
         
         # Show the dialog.
         swi_dlg = SwitchProfileDialog(self, profiles)
@@ -1395,6 +1409,19 @@ class Weather(Gtk.Window):
         
         # Switch back to the previous directory.
         os.chdir(current_dir)
+        
+        # If there are no other profiles, tell the user and cancel the action.
+        if len(profiles) == 0:
+            
+            # Tell the user data has been cleared and that it will now close.
+            prof_dlg = Gtk.MessageDialog(self, 0, Gtk.MessageType.INFO, Gtk.ButtonsType.OK, "Remove Profile")
+            prof_dlg.format_secondary_text("There are no other profiles.")
+            
+            # Run then close the dialog.
+            prof_dlg.run()
+            prof_dlg.destroy()
+            
+            return
         
         # Show the dialog.
         rem_dlg = RemoveProfileDialog(self, profiles)
