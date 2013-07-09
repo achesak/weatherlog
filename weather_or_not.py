@@ -906,7 +906,7 @@ class Weather(Gtk.Window):
                 try:
                     # This should save to ~/.weatherornot/[profile name]/weather.json on Linux.
                     data_file = open("%s/profiles/%s/weather.json" % (main_dir, last_profile), "w")
-                    json.dump(data, data_file, indent = 4)
+                    json.dump(data, data_file)
                     data_file.close()
                     
                 except IOError:
@@ -1239,7 +1239,6 @@ class Weather(Gtk.Window):
             
             return
         
-        
         # Show the dialog.
         swi_dlg = SwitchProfileDialog(self, profiles)
         # Get the response.
@@ -1360,7 +1359,7 @@ class Weather(Gtk.Window):
                 try:
                     # This should save to ~/.weatherornot/[profile name]/weather.json on Linux.
                     data_file = open("%s/profiles/%s/weather.json" % (main_dir, last_profile), "w")
-                    json.dump(data, data_file, indent = 4)
+                    json.dump(data, data_file)
                     data_file.close()
                     
                 except IOError:
@@ -1538,7 +1537,7 @@ class Weather(Gtk.Window):
         try:
             # This should save to ~/.weatherornot/[profile name]/weather.json on Linux.
             data_file = open("%s/profiles/%s/weather.json" % (main_dir, last_profile), "w")
-            json.dump(data, data_file, indent = 4)
+            json.dump(data, data_file)
             data_file.close()
             
         except IOError:
