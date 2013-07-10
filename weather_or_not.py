@@ -76,6 +76,7 @@ from resources.dialogs.data_dialog import *
 from resources.dialogs.add_profile_dialog import *
 from resources.dialogs.switch_profile_dialog import *
 from resources.dialogs.remove_profile_dialog import *
+from resources.dialogs.info_range_dialog import *
 
 
 # Get the main directory.
@@ -209,7 +210,7 @@ class Weather(Gtk.Window):
         action_group.add_actions([
             ("weather_menu", None, "Weather"),
             ("add_new", Gtk.STOCK_ADD, "Add _New...", "<Control>n", "Add a new day to the list", self.add_new),
-            ("remove", Gtk.STOCK_REMOVE, "_Remove...", "<Control>r", "Remove a day from the list", self.remove),
+            ("remove", Gtk.STOCK_REMOVE, "Remo_ve...", "<Control>r", "Remove a day from the list", self.remove),
             ("import", Gtk.STOCK_OPEN, "_Import...", None, "Import data from a file", self.import_file),
             ("import_profile", None, "Import as New _Profile...", "<Control><Shift>o", None, self.import_new_profile),
             ("export", Gtk.STOCK_SAVE, "_Export...", None, "Export data to a file", self.export_file),
@@ -219,7 +220,7 @@ class Weather(Gtk.Window):
         ])
         
         # Create the Weather -> More Info submenu.
-        action_weather_info_group = Gtk.Action("info_menu", "_More Info...", None, None)
+        action_weather_info_group = Gtk.Action("info_menu", "_More Info", None, None)
         action_group.add_action(action_weather_info_group)
         action_group.add_actions([
             ("temperature", None, "_Temperature...", "<Control>t", None, self.show_info_temp),
@@ -228,6 +229,19 @@ class Weather(Gtk.Window):
             ("humidity", None, "_Humidity...", "<Control>h", None, self.show_info_humi),
             ("air_pressure", None, "_Air Pressure...", "<Control>a", None, self.show_info_airp),
             ("cloud_cover", None, "_Cloud Cover...", "<Control>c", None, self.show_info_clou),
+            ("info_range", None, "Info in _Range...", "<Control><Shift>i", None, lambda x: self.info_range("General"))
+        ])
+        
+        # Create the Weather -> More Info in Range submenu.
+        action_weather_info_range_group = Gtk.Action("info_range_menu", "More Info in Ran_ge", None, None)
+        action_group.add_action(action_weather_info_range_group)
+        action_group.add_actions([
+            ("temperature_range", None, "_Temperature in Range...", "<Control><Shift>t", None, lambda x: self.info_range("Temperature")),
+            ("precipitation_range", None, "_Precipitation in Range...", "<Control><Shift>p", None, lambda x: self.info_range("Precipitation")),
+            ("wind_range", None, "_Wind in Range...", "<Control><Shift>w", None, lambda x: self.info_range("Wind")),
+            ("humidity_range", None, "_Humidity in Range...", "<Control><Shift>h", None, lambda x: self.info_range("Humidity")),
+            ("air_pressure_range", None, "_Air Pressure in Range...", "<Control><Shift>a", None, lambda x: self.info_range("Air Pressure")),
+            ("cloud_cover_range", None, "_Cloud Cover in Range...", "<Control><Shift>c", None, lambda x: self.info_range("Cloud Cover")),
             ("set_location", None, "Set _Location...", "<Control>l", None, self.set_location),
             ("clear_data", Gtk.STOCK_CLEAR, "Clear Current _Data...", "<Control>d", "Clear the data", self.clear),
             ("clear_all", None, "Clear _All Data...", "<Control><Alt>d", None, self.clear_all),
@@ -384,6 +398,15 @@ class Weather(Gtk.Window):
         
         # Update the title.
         self.set_title("Weather Or Not - %s - %s to %s" % (last_profile, (data[0][0] if len(data) != 0 else "None"), (data[len(data)-1][0] if len(data) != 0 else "None")))
+    
+    
+    def info_range(self, info):
+        """Gets the range for the info to display."""
+        
+        # Get the start date.
+        start_dlg = InfoRangeDialog(self, last_profile, info, "start")
+        start_dlg.run()
+        print("---- NOT DONE YET ----")
     
     
     def show_info(self, event):

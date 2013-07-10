@@ -32,6 +32,15 @@ MENU_DATA = """
         <menuitem action="air_pressure" />
         <menuitem action="cloud_cover" />
       </menu>
+      <menuitem action="info_range" />
+      <menu action="info_range_menu">
+        <menuitem action="temperature_range" />
+        <menuitem action="precipitation_range" />
+        <menuitem action="wind_range" />
+        <menuitem action="humidity_range" />
+        <menuitem action="air_pressure_range" />
+        <menuitem action="cloud_cover_range" />
+      </menu>
       <separator />
       <menuitem action="set_location" />
       <separator />
