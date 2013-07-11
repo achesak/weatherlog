@@ -405,8 +405,103 @@ class Weather(Gtk.Window):
         
         # Get the start date.
         start_dlg = InfoRangeDialog(self, last_profile, info, "start")
-        start_dlg.run()
-        print("---- NOT DONE YET ----")
+        
+        # Get the response.
+        response1 = start_dlg.run()
+        
+        # If the user clicked OK:
+        if response1 == Gtk.ResponseType.OK:
+            
+            # Get the date.
+            year1, month1, day1 = start_dlg.info_cal.get_date()
+            date1 = "%d/%d/%d" % (day1, month1 + 1, year1)
+            
+            # Check to make sure this date is valid, and cancel the action if not.
+            if date1 not in utility_functions.get_column(data, 0):
+                
+                # Show the dialog.
+                info_dlg = Gtk.MessageDialog(self, 0, Gtk.MessageType.WARNING, Gtk.ButtonsType.OK, "%s Info in Range - %s" % (info, last_profile))
+                info_dlg.format_secondary_text("%s is not a valid date." % date1)
+                  
+                # Run then close the dialog.
+                info_dlg.run()
+                info_dlg.destroy()
+                
+                # Close the dialog.
+                start_dlg.destroy()
+                
+                return
+        
+        # Otherwise, cancel the action.
+        else:
+            
+            # Close the dialog.
+            start_dlg.destroy()
+            
+            return
+        
+        # Close the dialog.
+        start_dlg.destroy()
+        
+        # Get the end date.
+        end_dlg = InfoRangeDialog(self, last_profile, info, "end")
+        
+        # Get the response.
+        response2 = end_dlg.run()
+        
+        # If the user clicked OK:
+        if response2 == Gtk.ResponseType.OK:
+            
+            # Get the date.
+            year2, month2, day2 = end_dlg.info_cal.get_date()
+            date2 = "%d/%d/%d" % (day2, month2 + 1, year2)
+            
+            # Check to make sure this date is valid, and cancel the action if not.
+            if date2 not in utility_functions.get_column(data, 0):
+                
+                # Show the dialog.
+                info_dlg = Gtk.MessageDialog(self, 0, Gtk.MessageType.WARNING, Gtk.ButtonsType.OK, "%s Info in Range - %s" % (info, last_profile))
+                info_dlg.format_secondary_text("%s is not a valid date." % date1)
+                  
+                # Run then close the dialog.
+                info_dlg.run()
+                info_dlg.destroy()
+                
+                # Close the dialog.
+                end_dlg.destroy()
+                
+                return
+            
+            # Check to make sure this date is not the same as or earlier than the starting date,
+            # and canel the action if it is.
+            elif date2 == date1 or (day1, month1 + 1, year1) > (day2, month2 + 1, year2):
+                
+                # Show the dialog.
+                info_dlg = Gtk.MessageDialog(self, 0, Gtk.MessageType.WARNING, Gtk.ButtonsType.OK, "%s Info in Range - %s" % (info, last_profile))
+                info_dlg.format_secondary_text("The ending date must not be before or the same as the starting date.")
+                  
+                # Run then close the dialog.
+                info_dlg.run()
+                info_dlg.destroy()
+                
+                # Close the dialog.
+                end_dlg.destroy()
+                
+                return
+        
+        # Otherwise, cancel the action.
+        else:
+            
+            # Close the dialog.
+            end_dlg.destroy()
+            
+            return
+        
+        # Close the dialog.
+        end_dlg.destroy()
+        
+        print "---------- NOT DONE YET ----------"
+    
     
     
     def show_info(self, event):
