@@ -214,8 +214,8 @@ class Weather(Gtk.Window):
             ("import", Gtk.STOCK_OPEN, "_Import...", None, "Import data from a file", self.import_file),
             ("import_profile", None, "Import as New _Profile...", "<Control><Shift>o", None, self.import_new_profile),
             ("export", Gtk.STOCK_SAVE, "_Export...", None, "Export data to a file", self.export_file),
-            ("export_html", None, "Export to _HTML...", "<Control><Shift>h", None, self.export_file_html),
-            ("export_csv", None, "Export to _CSV...", "<Control><Shift>c", None, self.export_file_csv),
+            ("export_html", None, "Export to _HTML...", "<Control><Alt>h", None, self.export_file_html),
+            ("export_csv", None, "Export to _CSV...", "<Control><Alt>c", None, self.export_file_csv),
             ("info", Gtk.STOCK_INFO, "_Info...", "<Control>i", "Show info about the data", self.show_info)
         ])
         
@@ -403,6 +403,13 @@ class Weather(Gtk.Window):
     def info_range(self, info):
         """Gets the range for the info to display."""
         
+        # If there is no data, tell the user and don't show the info dialog.
+        if len(data) == 0:
+            
+            # Show the dialog.
+            show_no_data_dialog(self, "%s Info - %s" % (info, last_profile))
+            return
+        
         # Get the start date.
         start_dlg = InfoRangeDialog(self, last_profile, info, "start")
         
@@ -500,11 +507,32 @@ class Weather(Gtk.Window):
         # Close the dialog.
         end_dlg.destroy()
         
-        print "---------- NOT DONE YET ----------"
+        # Get the indices.
+        date_col = utility_functions.get_column(data, 0)
+        index1 = date_col.index(date1)
+        index2 = date_col.index(date2)
+        
+        # Get the new list.
+        data2 = data[index1:index2 + 1]
+        
+        # Pass the data to the appropriate function.
+        if info == "General":
+            self.show_info(False, data2)
+        elif info == "Temperature":
+            self.show_info_temp(False, data2)
+        elif info == "Precipitation":
+            self.show_info_prec(False, data2)
+        elif info == "Wind":
+            self.show_info_wind(False, data2)
+        elif info == "Humidity":
+            self.show_info_humi(False, data2)
+        elif info == "Air Pressure":
+            self.show_info_airp(False, data2)
+        elif info == "Cloud Cover":
+            self.show_info_clou(False, data2)
     
     
-    
-    def show_info(self, event):
+    def show_info(self, event, data = data):
         """Shows info about the data."""
         
         # If there is no data, tell the user and don't show the info dialog.
@@ -600,7 +628,7 @@ class Weather(Gtk.Window):
         info_dlg.destroy()
     
     
-    def show_info_temp(self, event):
+    def show_info_temp(self, event, data = data):
         """Shows info about the temperature data."""
         
         # If there is no data, tell the user and don't show the info dialog.
@@ -637,7 +665,7 @@ class Weather(Gtk.Window):
         temp_dlg.destroy()
     
     
-    def show_info_prec(self, event):
+    def show_info_prec(self, event, data = data):
         """Shows info about the precipitation data."""
         
         # If there is no data, tell the user and don't show the info dialog.
@@ -721,7 +749,7 @@ class Weather(Gtk.Window):
         prec_dlg.destroy()
     
     
-    def show_info_wind(self, event):
+    def show_info_wind(self, event, data = data):
         """Shows info about the wind data."""
         
         # If there is no data, tell the user and don't show the info dialog.
@@ -767,7 +795,7 @@ class Weather(Gtk.Window):
         wind_dlg.destroy()
     
     
-    def show_info_humi(self, event):
+    def show_info_humi(self, event, data = data):
         """Shows info about the humidity data."""
         
         # If there is no data, tell the user and don't show the info dialog.
@@ -804,7 +832,7 @@ class Weather(Gtk.Window):
         humi_dlg.destroy()
     
     
-    def show_info_airp(self, event):
+    def show_info_airp(self, event, data = data):
         """Shows info about the air pressure data."""
         
         # If there is no data, tell the user and don't show the info dialog.
@@ -855,7 +883,7 @@ class Weather(Gtk.Window):
         airp_dlg.destroy()
     
     
-    def show_info_clou(self, event):
+    def show_info_clou(self, event, data = data):
         """Shows info about the cloud cover data."""
         
         # If there is no data, tell the user and don't show the info dialog.
