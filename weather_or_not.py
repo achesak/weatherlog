@@ -216,19 +216,19 @@ class Weather(Gtk.Window):
             ("export", Gtk.STOCK_SAVE, "_Export...", None, "Export data to a file", self.export_file),
             ("export_html", None, "Export to _HTML...", "<Control><Alt>h", None, self.export_file_html),
             ("export_csv", None, "Export to _CSV...", "<Control><Alt>c", None, self.export_file_csv),
-            ("info", Gtk.STOCK_INFO, "_Info...", "<Control>i", "Show info about the data", self.show_info)
+            ("info", Gtk.STOCK_INFO, "_Info...", "<Control>i", "Show info about the data", lambda x: self.show_info(event = "ignore", data = data))
         ])
         
         # Create the Weather -> More Info submenu.
         action_weather_info_group = Gtk.Action("info_menu", "_More Info", None, None)
         action_group.add_action(action_weather_info_group)
         action_group.add_actions([
-            ("temperature", None, "_Temperature...", "<Control>t", None, self.show_info_temp),
-            ("precipitation", None, "_Precipitation...", "<Control>p", None, self.show_info_prec),
-            ("wind", None, "_Wind...", "<Control>w", None, self.show_info_wind),
-            ("humidity", None, "_Humidity...", "<Control>h", None, self.show_info_humi),
-            ("air_pressure", None, "_Air Pressure...", "<Control>a", None, self.show_info_airp),
-            ("cloud_cover", None, "_Cloud Cover...", "<Control>c", None, self.show_info_clou),
+            ("temperature", None, "_Temperature...", "<Control>t", None, lambda x: self.show_info_temp(event = "ignore", data = data)),
+            ("precipitation", None, "_Precipitation...", "<Control>p", None, lambda x: self.show_info_prec(event = "ignore", data = data)),
+            ("wind", None, "_Wind...", "<Control>w", None, lambda x: self.show_info_wind(event = "ignore", data = data)),
+            ("humidity", None, "_Humidity...", "<Control>h", None, lambda x: self.show_info_humi(event = "ignore", data = data)),
+            ("air_pressure", None, "_Air Pressure...", "<Control>a", None, lambda x: self.show_info_airp(event = "ignore", data = data)),
+            ("cloud_cover", None, "_Cloud Cover...", "<Control>c", None, lambda x: self.show_info_clou(event = "ignore", data = data)),
             ("info_range", None, "Info in _Range...", "<Control><Shift>i", None, lambda x: self.info_range("General"))
         ])
         
@@ -356,8 +356,7 @@ class Weather(Gtk.Window):
         self.set_title("Weather Or Not - %s - %s to %s" % (last_profile, (data[0][0] if len(data) != 0 else "None"), (data[len(data)-1][0] if len(data) != 0 else "None")))
         
         # Close the dialog.
-        new_dlg.destroy()
-        
+        new_dlg.destroy()        
     
     
     def remove(self, event):
