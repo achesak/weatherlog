@@ -139,10 +139,10 @@ class AddNewDialog(Gtk.Dialog):
             
             # Show the dialog.
             pre_dlg = Gtk.MessageDialog(self, 0, Gtk.MessageType.INFO, Gtk.ButtonsType.OK, "Add New - %s" % profile)
-            pre_dlg.format_secondary_text("Temperature, wind, humidity, and air pressure have been prefilled using data from Yahoo! Weather.\n\nLocation is set to %s, at %s." % (user_location, station))
+            pre_dlg.format_secondary_text("Temperature, wind, humidity, and air pressure have been pre-filled using data from Yahoo! Weather.\n\nLocation is set to %s, at %s." % (user_location, station))
             
             # Run the dialog.
-            response = pre_dlg.run()
+            pre_dlg.run()
             pre_dlg.destroy()
     
     

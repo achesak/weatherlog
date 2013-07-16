@@ -1258,7 +1258,7 @@ class Weather(Gtk.Window):
         loc_box.add(loc_grid)
         
         # Create the label.
-        loc_lbl = Gtk.Label("Enter five digit US zip code or location ID.\n(Enter nothing to disable prefilling data.)")
+        loc_lbl = Gtk.Label("Enter five digit US zip code.\n(Enter nothing to disable pre-filling data.)")
         loc_lbl.set_alignment(0, 0.5)
         loc_grid.add(loc_lbl)
         
@@ -1276,8 +1276,23 @@ class Weather(Gtk.Window):
         # If the user clicked OK:
         if response == Gtk.ResponseType.OK:
             
-            # Store the location.
-            user_location = loc_ent.get_text()
+            # Get the location.
+            location = loc_ent.get_text()
+            
+            # If the location isn't valid, show the dialog and don't store it.
+            if location != "" and not re.compile("^\d{5}$").match(location):
+                
+                # Show the dialog.
+                ler_dlg = Gtk.MessageDialog(self, 0, Gtk.MessageType.WARNING, Gtk.ButtonsType.OK, "Set Location")
+                ler_dlg.format_secondary_text("\"%s\" is not a valid location." % location)
+                # Run then close the dialog.
+                ler_dlg.run()
+                ler_dlg.destroy()
+            
+            # Otherwise, set the new loation.
+            else:
+                
+                user_location = location
             
         
         # Close the dialog.
