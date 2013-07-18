@@ -36,7 +36,7 @@ THE SOFTWARE.
 
 # Import any needed modules.
 # Import Gtk for the interface.
-from gi.repository import Gtk
+from gi.repository import Gtk, Gdk
 # Import json for loading and saving the data.
 import json
 # Import collections.Counter for getting how often items appear.
@@ -293,6 +293,20 @@ class Weather(Gtk.Window):
         
         # Set the new title.
         self.set_title("Weather Or Not - %s - %s to %s" % (last_profile, (data[0][0] if len(data) != 0 else "None"), (data[len(data)-1][0] if len(data) != 0 else "None")))
+        
+        # Bind the events.
+        self.connect("key-press-event", self.keypress)
+    
+    
+    def keypress(self, widget, event):
+        """Handles keypresses."""
+        
+        # If the Escape key was pressed, and the application is in fullscreen,
+        # change back to windowed mode.
+        if Gdk.keyval_name(event.keyval) == "Escape" and self.fullscreen_state:
+            
+            # Toggle the fullscreen state.
+            self.toggle_fullscreen("ignore")
     
     
     def add_new(self, event):
