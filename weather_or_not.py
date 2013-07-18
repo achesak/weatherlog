@@ -121,7 +121,20 @@ try:
 except IOError:
     # Continue.
     user_location = ""
- 
+
+# Get the previous window size.
+try:
+    # Load the window size file.
+    wins_file = open("%s/window_size" % main_dir, "r")
+    last_width = int(wins_file.readline())
+    last_height = int(wins_file.readline())
+    wins_file.close()
+
+except IOError:
+    # Continue.
+    last_width = 900
+    last_height = 500
+
 # Load the data.   
 try:
     # This should be ~/.weatherornot/[profile name]/weather.json on Linux.
@@ -148,8 +161,8 @@ class Weather(Gtk.Window):
         """Create the application."""
         # Create the window.
         Gtk.Window.__init__(self, title = "Weather Or Not")
-        # Set the default size. This should be a good value on all except very tiny screens.
-        self.set_default_size(900, 500)
+        # Set the window size.
+        self.set_default_size(last_width, last_height)
         # Set the icon.
         self.set_icon_from_file("resources/images/icon.png")
         # Use this variable to store the fullscreen state.
@@ -296,6 +309,7 @@ class Weather(Gtk.Window):
         
         # Bind the events.
         self.connect("key-press-event", self.keypress)
+        self.connect("delete-event", self.delete_event)
     
     
     def keypress(self, widget, event):
@@ -309,11 +323,29 @@ class Weather(Gtk.Window):
             self.toggle_fullscreen("ignore")
         
         # If the Escape key was pressed and the application isn't in fullscreen,
-        # close the window.
+        # iconify the window.
         elif Gdk.keyval_name(event.keyval) == "Escape" and not self.fullscreen_state:
             
-            # Close the window.
-            self.exit("ignore", "this")
+            # iconify the window.
+            self.iconify()
+    
+    
+    def delete_event(self, widget, event):
+        """Saves the window size."""
+        
+        # Get the current window size.
+        height, width = self.get_size()
+        
+        # Save the window size.
+        try:
+            wins_file = open("%s/window_size" % main_dir, "w")
+            wins_file.write("%d\n%d" % (height, width))
+            wins_file.close()
+        
+        except IOError:
+            # Show the error message if something happened, but continue.
+            # This one is shown if there was an error writing to the file.
+            print("Error saving window size file (IOError).")
     
     
     def add_new(self, event):
