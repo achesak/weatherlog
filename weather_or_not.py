@@ -1141,6 +1141,19 @@ class Weather(Gtk.Window):
     def export_file(self, event):
         """Exports the data to a file."""
         
+        # If there is no data, tell the user and cancel the action.
+        if len(data) == 0:
+            
+            # Tell the user there is no data to export,
+            expo_dlg = Gtk.MessageDialog(self, 0, Gtk.MessageType.INFO, Gtk.ButtonsType.OK, "Export - %s" % last_profile)
+            expo_dlg.format_secondary_text("There is no data to export.")
+            
+            # Run then close the dialog.
+            expo_dlg.run()
+            expo_dlg.destroy()
+            
+            return
+        
         # Create the dialog.
         export_dlg = Gtk.FileChooserDialog("Export - %s" % last_profile, self, Gtk.FileChooserAction.SAVE, (Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL, Gtk.STOCK_OPEN, Gtk.ResponseType.OK))
         export_dlg.set_do_overwrite_confirmation(True)
@@ -1176,6 +1189,19 @@ class Weather(Gtk.Window):
     def export_file_html(self, event):
         """Formats the data into a HTML table, then exports it to a file."""
         
+        # If there is no data, tell the user and cancel the action.
+        if len(data) == 0:
+            
+            # Tell the user there is no data to export,
+            expo_dlg = Gtk.MessageDialog(self, 0, Gtk.MessageType.INFO, Gtk.ButtonsType.OK, "Export to HTML - %s" % last_profile)
+            expo_dlg.format_secondary_text("There is no data to export.")
+            
+            # Run then close the dialog.
+            expo_dlg.run()
+            expo_dlg.destroy()
+            
+            return
+        
         # Convert to data to HTML.
         html = export.html(data)
         
@@ -1208,6 +1234,19 @@ class Weather(Gtk.Window):
     
     def export_file_csv(self, event):
         """Formats the data into CSV, then exports it to a file."""
+        
+        # If there is no data, tell the user and cancel the action.
+        if len(data) == 0:
+            
+            # Tell the user there is no data to export,
+            expo_dlg = Gtk.MessageDialog(self, 0, Gtk.MessageType.INFO, Gtk.ButtonsType.OK, "Export to CSV - %s" % last_profile)
+            expo_dlg.format_secondary_text("There is no data to export.")
+            
+            # Run then close the dialog.
+            expo_dlg.run()
+            expo_dlg.destroy()
+            
+            return
         
         # Convert the data to CSV.
         csv = export.csv(data)
@@ -1390,7 +1429,7 @@ class Weather(Gtk.Window):
         # If there are no other profiles, tell the user and cancel the action.
         if len(profiles) == 0:
             
-            # Tell the user data has been cleared and that it will now close.
+            # Tell the user there are no other profiles.
             prof_dlg = Gtk.MessageDialog(self, 0, Gtk.MessageType.INFO, Gtk.ButtonsType.OK, "Switch Profile")
             prof_dlg.format_secondary_text("There are no other profiles.")
             
@@ -1573,7 +1612,7 @@ class Weather(Gtk.Window):
         # If there are no other profiles, tell the user and cancel the action.
         if len(profiles) == 0:
             
-            # Tell the user data has been cleared and that it will now close.
+            # Tell the user there are no other profiles.
             prof_dlg = Gtk.MessageDialog(self, 0, Gtk.MessageType.INFO, Gtk.ButtonsType.OK, "Remove Profile")
             prof_dlg.format_secondary_text("There are no other profiles.")
             
