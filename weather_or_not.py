@@ -1285,6 +1285,7 @@ class Weather(Gtk.Window):
                 # Show the dialog.
                 ler_dlg = Gtk.MessageDialog(self, 0, Gtk.MessageType.WARNING, Gtk.ButtonsType.OK, "Set Location")
                 ler_dlg.format_secondary_text("\"%s\" is not a valid location." % location)
+                
                 # Run then close the dialog.
                 ler_dlg.run()
                 ler_dlg.destroy()

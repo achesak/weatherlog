@@ -50,7 +50,7 @@ def html(data2):
 <td>%s</td>
 <td>%s</td>
 <td>%s</td>
-</tr>""" % (i[0], i[1], i[2], i[3], i[4], i[5], i[6], i[7])
+</tr>""" % (i[0], i[1], i[2], i[3], i[4], i[5], i[6], i[7].replace("<", "&lt;").replace(">", "&gt;"))
     
     # Add the closing tags.
     html += """
