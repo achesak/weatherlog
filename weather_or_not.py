@@ -301,12 +301,19 @@ class Weather(Gtk.Window):
     def keypress(self, widget, event):
         """Handles keypresses."""
         
-        # If the Escape key was pressed, and the application is in fullscreen,
+        # If the Escape key was pressed and the application is in fullscreen,
         # change back to windowed mode.
         if Gdk.keyval_name(event.keyval) == "Escape" and self.fullscreen_state:
             
             # Toggle the fullscreen state.
             self.toggle_fullscreen("ignore")
+        
+        # If the Escape key was pressed and the application isn't in fullscreen,
+        # close the window.
+        elif Gdk.keyval_name(event.keyval) == "Escape" and not self.fullscreen_state:
+            
+            # Close the window.
+            self.exit("ignore", "this")
     
     
     def add_new(self, event):
