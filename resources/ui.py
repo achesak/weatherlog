@@ -42,8 +42,6 @@ MENU_DATA = """
         <menuitem action="cloud_cover_range" />
       </menu>
       <separator />
-      <menuitem action="set_location" />
-      <separator />
       <menuitem action="clear_data" />
       <menuitem action="clear_all" />
       <separator />
@@ -56,6 +54,9 @@ MENU_DATA = """
       <separator />
       <menuitem action="add_profile" />
       <menuitem action="remove_profile" />
+    </menu>
+    <menu action="options_menu">
+      <menuitem action="options" />
     </menu>
     <menu action="help_menu">
       <menuitem action="about" />

@@ -255,7 +255,6 @@ class Weather(Gtk.Window):
             ("humidity_range", None, "_Humidity in Range...", "<Control><Shift>h", None, lambda x: self.info_range("Humidity")),
             ("air_pressure_range", None, "_Air Pressure in Range...", "<Control><Shift>a", None, lambda x: self.info_range("Air Pressure")),
             ("cloud_cover_range", None, "_Cloud Cover in Range...", "<Control><Shift>c", None, lambda x: self.info_range("Cloud Cover")),
-            ("set_location", None, "Set _Location...", "<Control>l", None, self.set_location),
             ("clear_data", Gtk.STOCK_CLEAR, "Clear Current _Data...", "<Control>d", "Clear the data", self.clear),
             ("clear_all", None, "Clear _All Data...", "<Control><Alt>d", None, self.clear_all),
             ("fullscreen", Gtk.STOCK_FULLSCREEN, "Toggle _Fullscreen", "F11", "Toggle fullscreen", self.toggle_fullscreen),
@@ -268,6 +267,12 @@ class Weather(Gtk.Window):
             ("switch_profile", None, "_Switch Profile...", "<Control><Shift>s", None, self.switch_profile),
             ("add_profile", None, "_Add Profile...", "<Control><Shift>n", None, self.add_profile),
             ("remove_profile", None, "_Remove Profile...", "<Control><Shift>d", None, self.remove_profile)
+        ])
+        
+        # Create the Options menu.
+        action_group.add_actions([
+            ("options_menu", None, "Options"),
+            ("options", None, "_Options", "F2", None, None)
         ])
         
         # Create the Help menu.
