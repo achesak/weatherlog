@@ -123,6 +123,19 @@ except IOError:
     # Continue.
     user_location = ""
 
+# Get the configuration.
+try:
+    # Load the configuration file.
+    config_file = open("%s/config" % main_dir, "r")
+    config = json.load(config_file)
+    config_file.close()
+
+except IOError:
+    # Continue.
+    config = {"pre-fill": True,
+              "location": "",
+              "units": "metric"}
+
 # Get the previous window size.
 try:
     # Load the window size file.
@@ -1821,7 +1834,24 @@ class Weather(Gtk.Window):
             # Show the error message if something happened, but continue.
             # This one is shown if there was an error with the data type.
             print("Error saving data file (TypeError or ValueError).")
+        
+        # Save the configuration.
+        try:
+            # Save the configuration file.
+            config_file = open("%s/config" % main_dir, "w")
+            json.dump(config, config_file)
+            config_file.close()
             
+        except IOError:
+            # Show the error message if something happened, but continue.
+            # This one is shown if there was an error writing to the file.
+            print("Error saving configuration file (IOError).")
+        
+        except (TypeError, ValueError):
+            # Show the error message if something happened, but continue.
+            # This one is shown if there was an error with the data type.
+            print("Error saving configuration file (TypeError or ValueError).")
+        
         # Save the last profile.
         try:
             # This should save to ~/.weatherornot/lastprofile on Linux.
