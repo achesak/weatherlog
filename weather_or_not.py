@@ -4,7 +4,7 @@
 ################################################################################
 
 # Weather Or Not
-# Version 0.2
+# Version 0.3
 
 # Weather Or Not is an application for keeping track of the weather.
 
@@ -77,6 +77,7 @@ from resources.dialogs.add_profile_dialog import *
 from resources.dialogs.switch_profile_dialog import *
 from resources.dialogs.remove_profile_dialog import *
 from resources.dialogs.info_range_dialog import *
+from resources.dialogs.options_dialog import *
 
 
 # Get the main directory.
@@ -272,7 +273,7 @@ class Weather(Gtk.Window):
         # Create the Options menu.
         action_group.add_actions([
             ("options_menu", None, "Options"),
-            ("options", None, "_Options", "F2", None, None)
+            ("options", None, "_Options", "F2", None, self.options)
         ])
         
         # Create the Help menu.
@@ -1745,6 +1746,19 @@ class Weather(Gtk.Window):
         else:
             self.fullscreen()
             self.fullscreen_state = True
+    
+    
+    def options(self, event):
+        """Shows the Options dialog."""
+        
+        # Create the dialog.
+        opt_dlg = OptionsDialog(self, None, None, None)
+        
+        # Get the response.
+        response = opt_dlg.run()
+        
+        # Close the dialog.
+        opt_dlg.destroy()
     
     
     def show_about(self, event):
