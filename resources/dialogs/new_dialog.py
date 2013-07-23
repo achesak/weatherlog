@@ -14,7 +14,7 @@ from .. import directions
 
 class AddNewDialog(Gtk.Dialog):
     """Shows the "Add New" dialog."""
-    def __init__(self, parent, profile, user_location, units):
+    def __init__(self, parent, profile, user_location, prefill, units):
         """Create the dialog."""
         
         # This window should be modal.
@@ -130,15 +130,15 @@ class AddNewDialog(Gtk.Dialog):
         self.wind_com.connect("changed", self.enable_wind)
         
         # Pre-fill the fields, if the user wants that.
-        if user_location:
-            station = self.prefill(user_location, units)
+        if prefill:
+            station = self.prefill(user_location, units, profile)
         
         # Show the dialog. The response gets handled by the function
         # in the main class.
         self.show_all()
         
         # Show the dialog saying data has been prefilled.
-        if user_location:
+        if user_location and station:
             
             # Show the dialog.
             pre_dlg = Gtk.MessageDialog(self, 0, Gtk.MessageType.INFO, Gtk.ButtonsType.OK, "Add New - %s" % profile)
@@ -177,11 +177,25 @@ class AddNewDialog(Gtk.Dialog):
             self.wind_sbtn.set_sensitive(True)
     
     
-    def prefill(self, user_location, units):
+    def prefill(self, user_location, units, profile):
         """Pre-fill the fields."""
         
         # Get the data.
         data = pywapi.get_weather_from_yahoo(user_location, units = ("metric" if units["prec"] == "cm" else "imperial"))
+        
+        # If the connection failed, tell the user and don't pre-fill data.
+        if data["error"] == "Could not connect to Yahoo! Weather":
+            
+            # Show the dialog.
+            pre_dlg = Gtk.MessageDialog(self, 0, Gtk.MessageType.WARNING, Gtk.ButtonsType.OK, "Add New - %s" % profile)
+            pre_dlg.format_secondary_text("Could not connect to Yahoo! Weather.\n\nData will not be pre-filled.")
+                
+            # Run then close the dialog.
+            pre_dlg.run()
+            pre_dlg.destroy()
+            
+            return False
+            
         
         # Set the temperature field.
         self.temp_sbtn.set_value(float(data["condition"]["temp"]))
@@ -196,7 +210,6 @@ class AddNewDialog(Gtk.Dialog):
         # Set the air pressure fields.
         self.airp_sbtn.set_value(float(data["atmosphere"]["pressure"]))
         self.airp_com.set_active(int(data["atmosphere"]["rising"]))
-        
         
         # Return the location.
         return "latitude %s and longitude %s" % (data["geo"]["lat"], data["geo"]["long"])

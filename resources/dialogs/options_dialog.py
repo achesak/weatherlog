@@ -10,7 +10,7 @@ from gi.repository import Gtk
 
 class OptionsDialog(Gtk.Dialog):
     """Shows the "Options" dialog."""
-    def __init__(self, parent, units, prefill_enabled, user_location):
+    def __init__(self, parent, config):
         """Create the dialog."""
         
         # This window should be modal.
@@ -28,6 +28,7 @@ class OptionsDialog(Gtk.Dialog):
         
         # Create the pre-fill data checkbox.
         self.pre_chk = Gtk.CheckButton("Pre-fill data")
+        self.pre_chk.set_active(config["pre-fill"])
         opt_grid.attach(self.pre_chk, 0, 0, 2, 1)
         
         # Create the location label and entry.
@@ -37,6 +38,7 @@ class OptionsDialog(Gtk.Dialog):
         self.loc_ent = Gtk.Entry()
         self.loc_ent.set_max_length(5)
         self.loc_ent.connect("changed", self.filter_numbers)
+        self.loc_ent.set_text(config["location"])
         opt_grid.attach_next_to(self.loc_ent, loc_lbl, Gtk.PositionType.RIGHT, 1, 1)
         
         # Create the Units label and combobox.
@@ -46,7 +48,7 @@ class OptionsDialog(Gtk.Dialog):
         self.unit_com = Gtk.ComboBoxText()
         for i in ["Metric", "Imperial"]:
             self.unit_com.append_text(i)
-        self.unit_com.set_active(0)
+        self.unit_com.set_active(["Metric", "Imperial"].index(config["units"].title()))
         opt_grid.attach_next_to(self.unit_com, unit_lbl, Gtk.PositionType.RIGHT, 1, 1)
         
         # Show the dialog. The response gets handled by the function

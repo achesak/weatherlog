@@ -112,17 +112,6 @@ except IOError:
     print("Error reading profile file (IOError).")
     sys.exit()
 
-# Get the user's location.
-try:
-    # Load the location file.
-    loc_file = open("%s/location" % main_dir, "r")
-    user_location = loc_file.read().rstrip()
-    loc_file.close()
-
-except IOError:
-    # Continue.
-    user_location = ""
-
 # Get the configuration.
 try:
     # Load the configuration file.
@@ -185,6 +174,9 @@ elif config["units"] == "imperial":
              "prec": "in",
              "wind": "mph",
              "airp": "mbar"}
+
+# Remember the first units.
+first_units = config["units"]
 
 
 class Weather(Gtk.Window):
@@ -391,7 +383,7 @@ class Weather(Gtk.Window):
         global data
         
         # Show the dialog.
-        new_dlg = AddNewDialog(self, last_profile, user_location, units)
+        new_dlg = AddNewDialog(self, last_profile, config["location"], config["pre-fill"], units)
         # Get the response.
         response = new_dlg.run()
         
@@ -1782,11 +1774,37 @@ class Weather(Gtk.Window):
     def options(self, event):
         """Shows the Options dialog."""
         
+        curr_units = config["units"]
+        
         # Create the dialog.
-        opt_dlg = OptionsDialog(self, None, None, None)
+        opt_dlg = OptionsDialog(self, config)
         
         # Get the response.
         response = opt_dlg.run()
+        
+        # If the user pressed OK:
+        if response == Gtk.ResponseType.OK:
+            
+            # Get the values.
+            prefill = opt_dlg.pre_chk.get_active()
+            location = opt_dlg.loc_ent.get_text()
+            units_ = opt_dlg.unit_com.get_active_text().lower()
+            
+            # Set the configuration.
+            config["pre-fill"] = prefill
+            config["location"] = location
+            config["units"] = units_
+            
+            # If the units changed, tell the user they won't take affect yet.
+            if units_ != first_units:
+                
+                # Confirm that the user wants to delete the profile.
+                uni_dlg = Gtk.MessageDialog(opt_dlg, 0, Gtk.MessageType.INFO, Gtk.ButtonsType.OK, "Options")
+                uni_dlg.format_secondary_text("Changes to the units will not fully take effect until the application is restarted.")
+                
+                # Run and close the dialog.
+                uni_dlg.run()
+                uni_dlg.destroy()
         
         # Close the dialog.
         opt_dlg.destroy()
@@ -1881,18 +1899,6 @@ class Weather(Gtk.Window):
             # Show the error message if something happened, but continue.
             # This one is shown if there was an error writing to the file.
             print("Error saving profile file (IOError).")
-        
-        # Save the location.
-        try:
-            # This should save to ~/.weatherornot/location on Linux.
-            loc_file = open("%s/location" % main_dir, "w")
-            loc_file.write(user_location)
-            loc_file.close()
-            
-        except IOError:
-            # Show the error message if something happened, but continue.
-            # This one is shown if there was an error writing to the file.
-            print("Error saving location file (IOError).")
         
         # Close the  application.
         Gtk.main_quit()
