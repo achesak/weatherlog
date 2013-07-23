@@ -169,6 +169,24 @@ except (TypeError, ValueError):
     sys.exit()
 
 
+# Configure the units.
+# Metric:
+if config["units"] == "metric":
+    
+    units = {"temp": "°C",
+             "prec": "cm",
+             "wind": "kph",
+             "airp": "hPa"}
+
+# Imperial:
+elif config["units"] == "imperial":
+    
+    units = {"temp": "°F",
+             "prec": "in",
+             "wind": "mph",
+             "airp": "mbar"}
+
+
 class Weather(Gtk.Window):
     """Shows the main application."""
     def __init__(self):
@@ -196,15 +214,15 @@ class Weather(Gtk.Window):
         self.treeview.append_column(date_col)
         # Create the Temperature column.
         temp_text = Gtk.CellRendererText()
-        temp_col = Gtk.TreeViewColumn("Temperature (°C)", temp_text, text = 1)
+        temp_col = Gtk.TreeViewColumn("Temperature (%s)" % units["temp"], temp_text, text = 1)
         self.treeview.append_column(temp_col)
         # Create the Precipation column.
         prec_text = Gtk.CellRendererText()
-        prec_col = Gtk.TreeViewColumn("Precipation (cm)", prec_text, text = 2)
+        prec_col = Gtk.TreeViewColumn("Precipation (%s)" % units["prec"], prec_text, text = 2)
         self.treeview.append_column(prec_col)
         # Create the Wind column.
         wind_text = Gtk.CellRendererText()
-        wind_col = Gtk.TreeViewColumn("Wind (kph)", wind_text, text = 3)
+        wind_col = Gtk.TreeViewColumn("Wind (%s)" % units["wind"], wind_text, text = 3)
         self.treeview.append_column(wind_col)
         # Create the Humidity column.
         humi_text = Gtk.CellRendererText()
@@ -212,7 +230,7 @@ class Weather(Gtk.Window):
         self.treeview.append_column(humi_col)
         # Create the Air Pressure column.
         airp_text = Gtk.CellRendererText()
-        airp_col = Gtk.TreeViewColumn("Air Pressure (hPa)", airp_text, text = 5)
+        airp_col = Gtk.TreeViewColumn("Air Pressure (%s)" % units["airp"], airp_text, text = 5)
         self.treeview.append_column(airp_col)
         # Create the Cloud Cover column.
         clou_text = Gtk.CellRendererText()
@@ -373,7 +391,7 @@ class Weather(Gtk.Window):
         global data
         
         # Show the dialog.
-        new_dlg = AddNewDialog(self, last_profile, user_location)
+        new_dlg = AddNewDialog(self, last_profile, user_location, units)
         # Get the response.
         response = new_dlg.run()
         
@@ -673,21 +691,21 @@ class Weather(Gtk.Window):
             ["First day", "%s" % date_first],
             ["Last day", "%s" % date_last],
             ["Number of days", "%d" % date_num],
-            ["Lowest temperature", "%.2f °C" % temp_low], 
-            ["Highest temperature", "%.2f °C" % temp_high],
-            ["Average temperature", "%.2f °C" % temp_avg],
-            ["Lowest precipitation", ("%.2f cm" % prec_low if prec_low != "None" else "None")],
-            ["Highest precipitation", ("%.2f cm" % prec_high if prec_high != "None" else "None")],
-            ["Average precipitation", ("%.2f cm" % prec_avg if prec_avg != "None" else "None")],
-            ["Lowest wind speed", ("%.2f kph" % wind_low if wind_low != "None" else "None")],
-            ["Highest wind speed", ("%.2f kph" % wind_high if wind_high != "None" else "None")],
-            ["Average wind speed", ("%.2f kph" % wind_avg if wind_avg != "None" else "None")],
+            ["Lowest temperature", "%.2f %s" % (temp_low, units["temp"])], 
+            ["Highest temperature", "%.2f %s" % (temp_high, units["temp"])],
+            ["Average temperature", "%.2f %s" % (temp_avg, units["temp"])],
+            ["Lowest precipitation", "%.2f %s" % (prec_low if prec_low != "None" else "None", units["prec"])],
+            ["Highest precipitation", "%.2f %s" % (prec_high if prec_high != "None" else "None", units["prec"])],
+            ["Average precipitation", "%.2f %s" % (prec_avg if prec_avg != "None" else "None", units["prec"])],
+            ["Lowest wind speed", "%.2f %s" % (wind_low if wind_low != "None" else "None", units["wind"])],
+            ["Highest wind speed", "%.2f %s" % (wind_high if wind_high != "None" else "None", units["wind"])],
+            ["Average wind speed", "%.2f %s" % (wind_avg if wind_avg != "None" else "None", units["wind"])],
             ["Lowest humidity", "%.2f%%" % humi_low], 
             ["Highest humidity", "%.2f%%" % humi_high],
             ["Average humidity", "%.2f%%" % humi_avg],
-            ["Lowest air pressure", "%.2f hPa" % airp_low],
-            ["Highest air pressure", "%.2f hPa" % airp_high],
-            ["Average air pressure", "%.2f hPa" % airp_avg],
+            ["Lowest air pressure", "%.2f %s" % (airp_low, units["airp"])],
+            ["Highest air pressure", "%.2f %s" % (airp_high, units["airp"])],
+            ["Average air pressure", "%.2f %s" % (airp_avg, units["airp"])],
             ["Most common cloud cover", "%s" % clou_mode]
         ]        
         
@@ -720,12 +738,12 @@ class Weather(Gtk.Window):
         
         # Create the data list.
         data2 = [
-            ["Lowest", "%.2f °C" % temp_low],
-            ["Highest", "%.2f °C" % temp_high],
-            ["Average", "%.2f °C" % temp_avg],
-            ["Median", "%.2f °C" % temp_median],
-            ["Range", "%.2f °C" % temp_range],
-            ["Most common", "%.2f °C" % temp_mode]
+            ["Lowest", "%.2f %s" % (temp_low, units["temp"])],
+            ["Highest", "%.2f %s" % (temp_high, units["temp"])],
+            ["Average", "%.2f %s" % (temp_avg, units["temp"])],
+            ["Median", "%.2f %s" % (temp_median, units["temp"])],
+            ["Range", "%.2f %s" % (temp_range, units["temp"])],
+            ["Most common", "%.2f %s" % (temp_mode, units["temp"])]
         ]
         
         # Show the dialog.
@@ -794,16 +812,16 @@ class Weather(Gtk.Window):
         
         # Create the data list.
         data2 = [
-            ["Lowest", ("%.2f cm" % prec_low if prec_low != "None" else "None")],
-            ["Highest", ("%.2f cm" % prec_high if prec_high != "None" else "None")],
-            ["Average", ("%.2f cm" % prec_avg if prec_avg != "None" else "None")],
-            ["Median", ("%.2f cm" % prec_median if prec_median != "None" else "None")],
-            ["Range", ("%.2f cm" % prec_range if prec_range != "None" else "None")],
-            ["Total (all)", "%.2f cm" % prec_total],
-            ["Total (rain)", "%.2f cm" % prec_total_rain],
-            ["Total (snow)", "%.2f cm" % prec_total_snow],
-            ["Total (hail)", "%.2f cm" % prec_total_hail],
-            ["Total (sleet)", "%.2f cm" % prec_total_sleet],
+            ["Lowest", "%.2f %s" % (prec_low if prec_low != "None" else "None", units["prec"])],
+            ["Highest", "%.2f %s" % (prec_high if prec_high != "None" else "None", units["prec"])],
+            ["Average", "%.2f %s" % (prec_avg if prec_avg != "None" else "None", units["prec"])],
+            ["Median", "%.2f %s" % (prec_median if prec_median != "None" else "None", units["prec"])],
+            ["Range", "%.2f %s" % (prec_range if prec_range != "None" else "None", units["prec"])],
+            ["Total (all)", "%.2f %s" % (prec_total, units["prec"])],
+            ["Total (rain)", "%.2f %s" % (prec_total_rain, units["prec"])],
+            ["Total (snow)", "%.2f %s" % (prec_total_snow, units["prec"])],
+            ["Total (hail)", "%.2f %s" % (prec_total_hail, units["prec"])],
+            ["Total (sleet)", "%.2f %s" % (prec_total_sleet, units["prec"])],
             ["None", "%d day%s" % (prec_none, "" if prec_none == 1 else "s")],
             ["Rain", "%d day%s" % (prec_rain, "" if prec_rain == 1 else "s")],
             ["Snow", "%d day%s" % (prec_snow, "" if prec_snow == 1 else "s")],
@@ -850,11 +868,11 @@ class Weather(Gtk.Window):
         
         # Create the data list.
         data2 = [
-            ["Lowest", ("%.2f kph" % wind_low if wind_low != "None" else "None")],
-            ["Highest", ("%.2f kph" % wind_high if wind_high != "None" else "None")],
-            ["Average", ("%.2f kph" % wind_avg if wind_avg != "None" else "None")],
-            ["Median", ("%.2f kph" % wind_median if wind_median != "None" else "None")],
-            ["Range", ("%.2f kph" % wind_range if wind_range != "None" else "None")],
+            ["Lowest", "%.2f %s" % (wind_low if wind_low != "None" else "None", units["wind"])],
+            ["Highest", "%.2f %s" % (wind_high if wind_high != "None" else "None", units["wind"])],
+            ["Average", "%.2f %s" % (wind_avg if wind_avg != "None" else "None", units["wind"])],
+            ["Median", "%.2f %s" % (wind_median if wind_median != "None" else "None", units["wind"])],
+            ["Range", "%.2f %s" % (wind_range if wind_range != "None" else "None", units["wind"])],
             ["Most common direction", "%s" % (wind_mode if wind_mode != "" else "None")]
         ]
         
@@ -935,12 +953,12 @@ class Weather(Gtk.Window):
         
         # Create the data list.
         data2 = [
-            ["Lowest", "%.2f hPa" % airp_low],
-            ["Highest", "%.2f hPa" % airp_high],
-            ["Average", "%.2f hPa" % airp_avg],
-            ["Median", "%.2f hPa" % airp_median],
-            ["Range", "%.2f hPa" % airp_range],
-            ["Most common", "%.2f hPa" % airp_mode],
+            ["Lowest", "%.2f %s" % (airp_low, units["airp"])],
+            ["Highest", "%.2f %s" % (airp_high, units["airp"])],
+            ["Average", "%.2f %s" % (airp_avg, units["airp"])],
+            ["Median", "%.2f %s" % (airp_median, units["airp"])],
+            ["Range", "%.2f %s" % (airp_range, units["airp"])],
+            ["Most common", "%.2f %s" % (airp_mode, units["airp"])],
             ["Steady", "%d day%s" % (airp_steady, "" if airp_steady == 1 else "s")],
             ["Rising", "%d day%s" % (airp_rising, "" if airp_rising == 1 else "s")],
             ["Falling", "%d day%s" % (airp_falling, "" if airp_falling == 1 else "s")]
@@ -1275,7 +1293,7 @@ class Weather(Gtk.Window):
             return
         
         # Convert to data to HTML.
-        html = export.html(data)
+        html = export.html(data, units)
         
         # Create the dialog.
         export_html_dlg = Gtk.FileChooserDialog("Export to HTML - %s" % last_profile, self, Gtk.FileChooserAction.SAVE, (Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL, Gtk.STOCK_OPEN, Gtk.ResponseType.OK))
@@ -1321,7 +1339,7 @@ class Weather(Gtk.Window):
             return
         
         # Convert the data to CSV.
-        csv = export.csv(data)
+        csv = export.csv(data, units)
         
         # Create the dialog.
         export_csv_dlg = Gtk.FileChooserDialog("Export to CSV - %s" % last_profile, self, Gtk.FileChooserAction.SAVE, (Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL, Gtk.STOCK_OPEN, Gtk.ResponseType.OK))

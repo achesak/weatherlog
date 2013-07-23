@@ -4,7 +4,7 @@
 # This file defines the functions for building the CSV and HTML.
 
 
-def html(data2):
+def html(data2, units):
     """Converts the data to HTML."""
     
     # Create a copy of the data. The original list should remain unchanged.
@@ -22,14 +22,14 @@ def html(data2):
 <table>
 <tr>
 <th>Date</th>
-<th>Temperature (°C)</th>
-<th>Precipitation (cm)</th>
-<th>Wind (kph)</th>
-<th>Humidity (%)</th>
-<th>Air Pressure (hPa)</th>
+<th>Temperature (%s)</th>
+<th>Precipitation (%s)</th>
+<th>Wind (%s)</th>
+<th>Humidity (%%)</th>
+<th>Air Pressure (%s)</th>
 <th>Cloud Cover</th>
 <th>Notes</th>
-</tr>"""
+</tr>""" % (units["temp"], units["prec"], units["wind"], units["airp"])
     
     # Add the data. Loop through each list, and add it as a table row.
     for i in data:
@@ -62,14 +62,14 @@ def html(data2):
     return html.lstrip()
 
 
-def csv(data2):
+def csv(data2, units):
     """Converts the data to CSV."""
     
     # Create a copy of the data. The original list should remain unchanged.
     data = data2[:]
     
     # Build the string.
-    csv = """"Date","Temperature (°C)","Precipitation (cm)","Wind (kph)","Humidity (%)","Air Pressure (hPa)","Cloud Cover","Notes"\n"""
+    csv = """"Date","Temperature (%s)","Precipitation (%s)","Wind (%s)","Humidity (%%)","Air Pressure (%s)","Cloud Cover","Notes"\n""" % (units["temp"], units["prec"], units["wind"], units["airp"])
     
     # Add the data. Loop through each list, and add it as a row.
     for i in data:

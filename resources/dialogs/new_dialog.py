@@ -14,7 +14,7 @@ from .. import directions
 
 class AddNewDialog(Gtk.Dialog):
     """Shows the "Add New" dialog."""
-    def __init__(self, parent, profile, user_location):
+    def __init__(self, parent, profile, user_location, units):
         """Create the dialog."""
         
         # This window should be modal.
@@ -38,17 +38,20 @@ class AddNewDialog(Gtk.Dialog):
         new_grid.attach_next_to(self.date_cal, date_lbl, Gtk.PositionType.RIGHT, 2, 1)
         
         # Create the Temperature label and spinbutton.
-        temp_lbl = Gtk.Label("Temperature (°C): ")
+        temp_lbl = Gtk.Label("Temperature (%s): " % units["temp"])
         temp_lbl.set_alignment(0, 0.5)
         new_grid.attach_next_to(temp_lbl, date_lbl, Gtk.PositionType.BOTTOM, 1, 1)
-        temp_adj = Gtk.Adjustment(lower = -100, upper = 100, step_increment = 1)
+        if units["temp"] == "°C":
+            temp_adj = Gtk.Adjustment(lower = -100, upper = 100, step_increment = 1)
+        else:
+            temp_adj = Gtk.Adjustment(lower = -150, upper = 150, step_increment = 1)
         self.temp_sbtn = Gtk.SpinButton(digits = 2, adjustment = temp_adj)
         self.temp_sbtn.set_numeric(False)
         self.temp_sbtn.set_value(0)
         new_grid.attach_next_to(self.temp_sbtn, temp_lbl, Gtk.PositionType.RIGHT, 2, 1)
         
         # Create the Precipitation label, spinbutton, and combobox.
-        prec_lbl = Gtk.Label("Precipitation (cm): ")
+        prec_lbl = Gtk.Label("Precipitation (%s): " % units["prec"])
         prec_lbl.set_alignment(0, 0.5)
         new_grid.attach_next_to(prec_lbl, temp_lbl, Gtk.PositionType.BOTTOM, 1, 1)
         prec_adj = Gtk.Adjustment(lower = 0, upper = 100, step_increment = 1)
@@ -64,7 +67,7 @@ class AddNewDialog(Gtk.Dialog):
         new_grid.attach_next_to(self.prec_com, self.prec_sbtn, Gtk.PositionType.RIGHT, 1, 1)
         
         # Create the Wind label, spinbutton, and combobox.
-        wind_lbl = Gtk.Label("Wind (kph): ")
+        wind_lbl = Gtk.Label("Wind (%s): " % units["wind"])
         wind_lbl.set_alignment(0, 0.5)
         new_grid.attach_next_to(wind_lbl, prec_lbl, Gtk.PositionType.BOTTOM, 1, 1)
         wind_adj = Gtk.Adjustment(lower = 0, upper = 500, step_increment = 1)
@@ -90,7 +93,7 @@ class AddNewDialog(Gtk.Dialog):
         new_grid.attach_next_to(self.humi_sbtn, humi_lbl, Gtk.PositionType.RIGHT, 2, 1)
         
         # Create the Air Pressure label, spinbutton, and combobox.
-        airp_lbl = Gtk.Label("Air Pressure (hPa): ")
+        airp_lbl = Gtk.Label("Air Pressure (%s): " % units["airp"])
         airp_lbl.set_alignment(0, 0.5)
         new_grid.attach_next_to(airp_lbl, humi_lbl, Gtk.PositionType.BOTTOM, 1, 1)
         airp_adj = Gtk.Adjustment(lower = 0, upper = 2000, step_increment = 1)
@@ -128,7 +131,7 @@ class AddNewDialog(Gtk.Dialog):
         
         # Pre-fill the fields, if the user wants that.
         if user_location:
-            station = self.prefill(user_location)
+            station = self.prefill(user_location, units)
         
         # Show the dialog. The response gets handled by the function
         # in the main class.
@@ -174,11 +177,11 @@ class AddNewDialog(Gtk.Dialog):
             self.wind_sbtn.set_sensitive(True)
     
     
-    def prefill(self, user_location):
+    def prefill(self, user_location, units):
         """Pre-fill the fields."""
         
         # Get the data.
-        data = pywapi.get_weather_from_yahoo(user_location, units = "metric")
+        data = pywapi.get_weather_from_yahoo(user_location, units = ("metric" if units["prec"] == "cm" else "imperial"))
         
         # Set the temperature field.
         self.temp_sbtn.set_value(float(data["condition"]["temp"]))
