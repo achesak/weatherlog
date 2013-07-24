@@ -183,20 +183,6 @@ class AddNewDialog(Gtk.Dialog):
         # Get the data.
         data = pywapi.get_weather_from_yahoo(user_location, units = ("metric" if units["prec"] == "cm" else "imperial"))
         
-        # If the connection failed, tell the user and don't pre-fill data.
-        if data["error"] == "Could not connect to Yahoo! Weather":
-            
-            # Show the dialog.
-            pre_dlg = Gtk.MessageDialog(self, 0, Gtk.MessageType.WARNING, Gtk.ButtonsType.OK, "Add New - %s" % profile)
-            pre_dlg.format_secondary_text("Could not connect to Yahoo! Weather.\n\nData will not be pre-filled.")
-                
-            # Run then close the dialog.
-            pre_dlg.run()
-            pre_dlg.destroy()
-            
-            return False
-            
-        
         # Set the temperature field.
         self.temp_sbtn.set_value(float(data["condition"]["temp"]))
         
@@ -209,6 +195,9 @@ class AddNewDialog(Gtk.Dialog):
         
         # Set the air pressure fields.
         self.airp_sbtn.set_value(float(data["atmosphere"]["pressure"]))
+        if units["airp"] == "mbar":
+            new_pressure = float(data["atmosphere"]["pressure"]) * 33.86389
+            self.airp_sbtn.set_value(new_pressure)
         self.airp_com.set_active(int(data["atmosphere"]["rising"]))
         
         # Return the location.

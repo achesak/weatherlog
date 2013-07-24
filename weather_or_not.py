@@ -175,9 +175,6 @@ elif config["units"] == "imperial":
              "wind": "mph",
              "airp": "mbar"}
 
-# Remember the first units.
-first_units = config["units"]
-
 
 class Weather(Gtk.Window):
     """Shows the main application."""
@@ -202,36 +199,36 @@ class Weather(Gtk.Window):
         self.treeview = Gtk.TreeView(model = self.liststore)
         # Create the Date column.
         date_text = Gtk.CellRendererText()
-        date_col = Gtk.TreeViewColumn("Date", date_text, text = 0)
-        self.treeview.append_column(date_col)
+        self.date_col = Gtk.TreeViewColumn("Date", date_text, text = 0)
+        self.treeview.append_column(self.date_col)
         # Create the Temperature column.
         temp_text = Gtk.CellRendererText()
-        temp_col = Gtk.TreeViewColumn("Temperature (%s)" % units["temp"], temp_text, text = 1)
-        self.treeview.append_column(temp_col)
+        self.temp_col = Gtk.TreeViewColumn("Temperature (%s)" % units["temp"], temp_text, text = 1)
+        self.treeview.append_column(self.temp_col)
         # Create the Precipation column.
         prec_text = Gtk.CellRendererText()
-        prec_col = Gtk.TreeViewColumn("Precipation (%s)" % units["prec"], prec_text, text = 2)
-        self.treeview.append_column(prec_col)
+        self.prec_col = Gtk.TreeViewColumn("Precipation (%s)" % units["prec"], prec_text, text = 2)
+        self.treeview.append_column(self.prec_col)
         # Create the Wind column.
         wind_text = Gtk.CellRendererText()
-        wind_col = Gtk.TreeViewColumn("Wind (%s)" % units["wind"], wind_text, text = 3)
-        self.treeview.append_column(wind_col)
+        self.wind_col = Gtk.TreeViewColumn("Wind (%s)" % units["wind"], wind_text, text = 3)
+        self.treeview.append_column(self.wind_col)
         # Create the Humidity column.
         humi_text = Gtk.CellRendererText()
-        humi_col = Gtk.TreeViewColumn("Humidity (%)", humi_text, text = 4)
-        self.treeview.append_column(humi_col)
+        self.humi_col = Gtk.TreeViewColumn("Humidity (%)", humi_text, text = 4)
+        self.treeview.append_column(self.humi_col)
         # Create the Air Pressure column.
         airp_text = Gtk.CellRendererText()
-        airp_col = Gtk.TreeViewColumn("Air Pressure (%s)" % units["airp"], airp_text, text = 5)
-        self.treeview.append_column(airp_col)
+        self.airp_col = Gtk.TreeViewColumn("Air Pressure (%s)" % units["airp"], airp_text, text = 5)
+        self.treeview.append_column(self.airp_col)
         # Create the Cloud Cover column.
         clou_text = Gtk.CellRendererText()
-        clou_col = Gtk.TreeViewColumn("Cloud Cover", clou_text, text = 6)
-        self.treeview.append_column(clou_col)
+        self.clou_col = Gtk.TreeViewColumn("Cloud Cover", clou_text, text = 6)
+        self.treeview.append_column(self.clou_col)
         # Create the Notes column.
         note_text = Gtk.CellRendererText()
-        note_col = Gtk.TreeViewColumn("Notes", note_text, text = 7)
-        self.treeview.append_column(note_col)
+        self.note_col = Gtk.TreeViewColumn("Notes", note_text, text = 7)
+        self.treeview.append_column(self.note_col)
         
         # Create the ScrolledWindow for displaying the list with a scrollbar.
         scrolled_win = Gtk.ScrolledWindow()
@@ -1774,7 +1771,7 @@ class Weather(Gtk.Window):
     def options(self, event):
         """Shows the Options dialog."""
         
-        curr_units = config["units"]
+        global units
         
         # Create the dialog.
         opt_dlg = OptionsDialog(self, config)
@@ -1795,16 +1792,28 @@ class Weather(Gtk.Window):
             config["location"] = location
             config["units"] = units_
             
-            # If the units changed, tell the user they won't take affect yet.
-            if units_ != first_units:
+            # Configure the units.
+            # Metric:
+            if config["units"] == "metric":
                 
-                # Confirm that the user wants to delete the profile.
-                uni_dlg = Gtk.MessageDialog(opt_dlg, 0, Gtk.MessageType.INFO, Gtk.ButtonsType.OK, "Options")
-                uni_dlg.format_secondary_text("Changes to the units will not fully take effect until the application is restarted.")
+                units = {"temp": "°C",
+                         "prec": "cm",
+                         "wind": "kph",
+                         "airp": "hPa"}
+            
+            # Imperial:
+            elif config["units"] == "imperial":
                 
-                # Run and close the dialog.
-                uni_dlg.run()
-                uni_dlg.destroy()
+                units = {"temp": "°F",
+                         "prec": "in",
+                         "wind": "mph",
+                         "airp": "mbar"}
+            
+            # Update the main window.
+            self.temp_col.set_title("Temperature (%s)" % units["temp"])
+            self.prec_col.set_title("Precipitation (%s)" % units["prec"])
+            self.wind_col.set_title("Wind (%s)" % units["wind"])
+            self.airp_col.set_title("Air Pressure (%s)" % units["airp"])
         
         # Close the dialog.
         opt_dlg.destroy()
