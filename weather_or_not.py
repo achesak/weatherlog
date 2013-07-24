@@ -121,7 +121,7 @@ try:
 
 except IOError:
     # Continue.
-    config = {"pre-fill": True,
+    config = {"pre-fill": False,
               "location": "",
               "units": "metric"}
 

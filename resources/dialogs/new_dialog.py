@@ -130,7 +130,7 @@ class AddNewDialog(Gtk.Dialog):
         self.wind_com.connect("changed", self.enable_wind)
         
         # Pre-fill the fields, if the user wants that.
-        if prefill:
+        if prefill and user_location:
             station = self.prefill(user_location, units, profile)
         
         # Show the dialog. The response gets handled by the function
