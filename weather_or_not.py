@@ -207,7 +207,7 @@ class Weather(Gtk.Window):
         self.treeview.append_column(self.temp_col)
         # Create the Precipation column.
         prec_text = Gtk.CellRendererText()
-        self.prec_col = Gtk.TreeViewColumn("Precipation (%s)" % units["prec"], prec_text, text = 2)
+        self.prec_col = Gtk.TreeViewColumn("Precipitation (%s)" % units["prec"], prec_text, text = 2)
         self.treeview.append_column(self.prec_col)
         # Create the Wind column.
         wind_text = Gtk.CellRendererText()
@@ -1772,6 +1772,7 @@ class Weather(Gtk.Window):
         """Shows the Options dialog."""
         
         global units
+        current_units = config["units"]
         
         # Create the dialog.
         opt_dlg = OptionsDialog(self, config)
