@@ -20,8 +20,16 @@ MENU_DATA = """
       <menuitem action="import" />
       <menuitem action="import_profile" />
       <menuitem action="export" />
-      <menuitem action="export_html" />
-      <menuitem action="export_csv" />
+      <menu action="export_menu">
+        <menuitem action="export_html" />
+        <menuitem action="export_csv" />
+        <separator />
+        <menuitem action="export_pastebin" />
+        <menuitem action="export_pastebin_html" />
+        <menuitem action="export_pastebin_csv" />
+        <separator />
+        <menuitem action="export_pastehtml" />
+      </menu>
       <separator />
       <menuitem action="info" />
       <menu action="info_menu">

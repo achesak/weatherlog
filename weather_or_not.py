@@ -249,9 +249,19 @@ class Weather(Gtk.Window):
             ("remove", Gtk.STOCK_REMOVE, "Remo_ve...", "<Control>r", "Remove a day from the list", self.remove),
             ("import", Gtk.STOCK_OPEN, "_Import...", None, "Import data from a file", self.import_file),
             ("import_profile", None, "Import as New _Profile...", "<Control><Shift>o", None, self.import_new_profile),
-            ("export", Gtk.STOCK_SAVE, "_Export...", None, "Export data to a file", self.export_file),
+            ("export", Gtk.STOCK_SAVE, "_Export...", None, "Export data to a file", self.export_file)
+        ])
+        
+        # Create the Weather -> Export to submenu.
+        action_weather_info_group = Gtk.Action("export_menu", "E_xport to", None, None)
+        action_group.add_action(action_weather_info_group)
+        action_group.add_actions([
             ("export_html", None, "Export to _HTML...", "<Control><Alt>h", None, self.export_file_html),
             ("export_csv", None, "Export to _CSV...", "<Control><Alt>c", None, self.export_file_csv),
+            ("export_pastebin", None, "Export to Paste_bin...", None, None, None),
+            ("export_pastebin_html", None, "_Export to Pastebin (HTML)...", None, None, None),
+            ("export_pastebin_csv", None, "E_xport to Pastebin (CSV)...", None, None, None),
+            ("export_pastehtml", None, "Export to _PasteHTML...", None, None, None),
             ("info", Gtk.STOCK_INFO, "_Info...", "<Control>i", "Show info about the data", lambda x: self.show_info(event = "ignore", data = data))
         ])
         
@@ -281,7 +291,7 @@ class Weather(Gtk.Window):
             ("clear_data", Gtk.STOCK_CLEAR, "Clear Current _Data...", "<Control>d", "Clear the data", self.clear),
             ("clear_all", None, "Clear _All Data...", "<Control><Alt>d", None, self.clear_all),
             ("fullscreen", Gtk.STOCK_FULLSCREEN, "Toggle _Fullscreen", "F11", "Toggle fullscreen", self.toggle_fullscreen),
-            ("exit", Gtk.STOCK_QUIT, "E_xit...", None, "Close the application", lambda x: self.exit("ignore", "this"))
+            ("exit", Gtk.STOCK_QUIT, "_Quit...", None, "Close the application", lambda x: self.exit("ignore", "this"))
         ])
         
         # Create the Profiles menu.
