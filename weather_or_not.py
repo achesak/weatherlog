@@ -69,6 +69,8 @@ import resources.utility_functions as utility_functions
 import resources.info_functions as info_functions
 # Import the functions for exporting the data.
 import resources.export as export
+# Import the function for converting the data.
+import resources.convert as convert
 # Import the dialogs.
 from resources.dialogs.new_dialog import *
 from resources.dialogs.info_dialog import *
@@ -1815,6 +1817,32 @@ class Weather(Gtk.Window):
             self.prec_col.set_title("Precipitation (%s)" % units["prec"])
             self.wind_col.set_title("Wind (%s)" % units["wind"])
             self.airp_col.set_title("Air Pressure (%s)" % units["airp"])
+            
+            # If the units changed, ask the user if they want to convert the data.
+            if current_units != units_:
+                
+                # Ask the user if they want to convert the data.
+                con_dlg = Gtk.MessageDialog(opt_dlg, 0, Gtk.MessageType.QUESTION, Gtk.ButtonsType.OK_CANCEL, "Options")
+                con_dlg.format_secondary_text("The units have changed from %s to %s.\n\nWould you like to convert the data to the new units?" % (current_units, units_))
+                
+                # Get the response.
+                response = con_dlg.run()
+                con_dlg.destroy()
+                
+                # If the user wants to continue:
+                if response == Gtk.ResponseType.OK:
+                    
+                    # Convert the data.
+                    new_data = convert.convert(data, units_)
+                    
+                    # Update the list.
+                    data[:] = []
+                    data[:] = new_data[:]
+                    
+                    # Update the ListStore.
+                    self.liststore.clear()
+                    for i in data:
+                        self.liststore.append(i)
         
         # Close the dialog.
         opt_dlg.destroy()

@@ -4,7 +4,7 @@
 # This file defines the function to converting data to different units.
 
 
-# THIS IS NOT YET DONE! IT NEEDS TO HANDLE STRINGS, None VALUES, AND DIRECTION/TYPE COLUMNS.
+from __future__ import division
 
 
 def convert(data2, units):
@@ -17,40 +17,68 @@ def convert(data2, units):
     # Metric to imperial:
     if units == "imperial":
         
-        for i in range(0, len(data[1])):
-            data[1][i] = float("%.2f" % (data[1][i] * (9 / 5)) + 32)
+        for i in range(0, len(data)):
+            data[i][1] = "%.2f" % ((float(data[i][1]) * (9 / 5)) + 32)
     
     # Imperial to metric:
     elif units == "metric":
         
-        for i in range(0, len(data[1])):
-            data[1][i] = float("%.2f" % (data[1][i] - 32) * (5 / 9))
+        for i in range(0, len(data)):
+            data[i][1] = "%.2f" % ((float(data[i][1]) - 32) * (5 / 9))
     
     # Convert the precipitation.
     # Metric to imperial:
     if units == "imperial":
         
-        for i in range(0, len(data[2])):
-            data[2][i] = float("%.2f" % data[2][i] / 2.54)
+        for i in range(0, len(data)):
+            
+            if data[i][2] != "None":
+                
+                split = data[i][2].split(" ")
+            
+                split[0] = "%.2f" % (float(split[0]) / 2.54)
+                
+                data[i][2] = " ".join(split)
     
     # Imperial to metric:
     elif units == "metric":
         
-        for i in range(0, len(data[2])):
-            data[2][i] = float("%.2f" % data[2][i] * 2.54)
+        for i in range(0, len(data)):
+            
+            if data[i][2] != "None":
+                
+                split = data[i][2].split(" ")
+            
+                split[0] = "%.2f" % (float(split[0]) * 2.54)
+                
+                data[i][2] = " ".join(split)
     
     # Convert the wind.
     # Metric to imperial:
     if units == "imperial":
         
-        for i in range(0, len(data[3])):
-            data[3][i] = float("%.2f" % data[3][i] / 1.60934)
+        for i in range(0, len(data)):
+            
+            if data[i][3] != "None":
+                
+                split = data[i][3].split(" ")
+            
+                split[0] = "%.2f" % (float(split[0]) / 1.60934)
+                
+                data[i][3] = " ".join(split)
     
     # Imperial to metric:
     elif units == "metric":
         
-        for i in range(0, len(data[3])):
-            data[3][i] = float("%.2f" % data[3][i] * 1.60934)
+        for i in range(0, len(data)):
+            
+            if data[i][3] != "None":
+                
+                split = data[i][3].split(" ")
+            
+                split[0] = "%.2f" % (float(split[0]) * 1.60934)
+                
+                data[i][3] = " ".join(split)
     
     # Return the new data.
     return data
