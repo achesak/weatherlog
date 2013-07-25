@@ -130,7 +130,7 @@ class AddNewDialog(Gtk.Dialog):
         self.wind_com.connect("changed", self.enable_wind)
         
         # Pre-fill the fields, if the user wants that.
-        if prefill and user_location:
+        if prefill and user_location and len(user_location) == 5:
             station = self.prefill(user_location, units, profile)
         
         # Show the dialog. The response gets handled by the function
@@ -138,7 +138,7 @@ class AddNewDialog(Gtk.Dialog):
         self.show_all()
         
         # Show the dialog saying data has been prefilled.
-        if user_location and station:
+        if prefill and user_location and len(user_location) == 5 and station:
             
             # Show the dialog.
             pre_dlg = Gtk.MessageDialog(self, 0, Gtk.MessageType.INFO, Gtk.ButtonsType.OK, "Add New - %s" % profile)
