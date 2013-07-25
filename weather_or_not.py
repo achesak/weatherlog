@@ -1469,17 +1469,17 @@ class Weather(Gtk.Window):
             
             # Delete all the files.
             shutil.rmtree(main_dir)
+            
+            # Tell the user data has been cleared and that it will now close.
+            clear_dlg2 = Gtk.MessageDialog(clear_dlg, 0, Gtk.MessageType.INFO, Gtk.ButtonsType.OK, "Clear All Data - %s" % last_profile)
+            clear_dlg2.format_secondary_text("All data has been cleared.\n\nWeather Or Not will now close...")
+            
+            # Run then close the dialog.
+            clear_dlg2.run()
+            clear_dlg2.destroy()
         
         # Close the dialog.
         clear_dlg.destroy()
-        
-        # Tell the user data has been cleared and that it will now close.
-        clear_dlg2 = Gtk.MessageDialog(self, 0, Gtk.MessageType.INFO, Gtk.ButtonsType.OK, "Clear All Data - %s" % last_profile)
-        clear_dlg2.format_secondary_text("All data has been cleared.\n\nWeather Or Not will now close...")
-        
-        # Run then close the dialog.
-        clear_dlg2.run()
-        clear_dlg2.destroy()
         
         # Close the dialog.
         Gtk.main_quit()
