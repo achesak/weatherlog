@@ -57,6 +57,15 @@ import os
 import os.path
 # Import sys for sys.exit().
 import sys
+# Import urlopen and urlencode for opening a file from a URL.
+# Try importing Python 3 module, then fall back to Python 2 if needed.
+try:
+    # Try importing for Python 3.
+    from urllib.request import urlopen
+    from urllib.parse import urlencode
+except ImportError:
+    # Fall back to Python 2.
+    from urllib import urlopen, urlencode
 
 # Tell Python not to create bytecode files.
 sys.dont_write_bytecode = True
@@ -125,7 +134,8 @@ except IOError:
     # Continue.
     config = {"pre-fill": False,
               "location": "",
-              "units": "metric"}
+              "units": "metric",
+              "pastebin": "d2314ff616133e54f728918b8af1500e"}
 
 # Get the previous window size.
 try:
@@ -258,9 +268,9 @@ class Weather(Gtk.Window):
         action_group.add_actions([
             ("export_html", None, "Export to _HTML...", "<Control><Alt>h", None, self.export_file_html),
             ("export_csv", None, "Export to _CSV...", "<Control><Alt>c", None, self.export_file_csv),
-            ("export_pastebin", None, "Export to Paste_bin...", None, None, None),
-            ("export_pastebin_html", None, "_Export to Pastebin (HTML)...", None, None, None),
-            ("export_pastebin_csv", None, "E_xport to Pastebin (CSV)...", None, None, None),
+            ("export_pastebin", None, "Export to Paste_bin...", None, None, lambda x: self.export_pastebin("raw")),
+            ("export_pastebin_html", None, "_Export to Pastebin (HTML)...", None, None, lambda x: self.export_pastebin("html")),
+            ("export_pastebin_csv", None, "E_xport to Pastebin (CSV)...", None, None, lambda x: self.export_pastebin("csv")),
             ("export_pastehtml", None, "Export to _PasteHTML...", None, None, None),
             ("info", Gtk.STOCK_INFO, "_Info...", "<Control>i", "Show info about the data", lambda x: self.show_info(event = "ignore", data = data))
         ])
@@ -1369,65 +1379,82 @@ class Weather(Gtk.Window):
         export_csv_dlg.destroy()
     
     
-    def set_location(self, event):
-        """Sets the user's location for pre-filling the Add New dialog."""
+    def export_pastebin(self, mode):
+        """Exports the data to Pastebin."""
         
-        global user_location
-        
-        # Create the dialog.
-        loc_dlg = Gtk.Dialog("Set Location", self, Gtk.DialogFlags.MODAL)
-        
-        # Add the buttons.
-        loc_dlg.add_button("OK", Gtk.ResponseType.OK)
-        loc_dlg.add_button("Cancel", Gtk.ResponseType.CANCEL)
-        
-        # Create the grid.
-        loc_box = loc_dlg.get_content_area()
-        loc_grid = Gtk.Grid()
-        # Add the grid to the dialog's content area.
-        loc_box.add(loc_grid)
-        
-        # Create the label.
-        loc_lbl = Gtk.Label("Enter five digit US zip code.\n(Enter nothing to disable pre-filling data.)")
-        loc_lbl.set_alignment(0, 0.5)
-        loc_grid.add(loc_lbl)
-        
-        # Create the entry.
-        loc_ent = Gtk.Entry()
-        loc_ent.set_text(user_location)
-        loc_grid.attach_next_to(loc_ent, loc_lbl, Gtk.PositionType.BOTTOM, 1, 1)
-        
-        # Show the dialog.
-        loc_dlg.show_all()
-        
-        # Run the dialog and get the response.
-        response = loc_dlg.run()
-        
-        # If the user clicked OK:
-        if response == Gtk.ResponseType.OK:
+        # If there is no data, tell the user and cancel the action.
+        if len(data) == 0:
             
-            # Get the location.
-            location = loc_ent.get_text()
+            # Tell the user there is no data to export.
+            expo_dlg = Gtk.MessageDialog(self, 0, Gtk.MessageType.INFO, Gtk.ButtonsType.OK, "Export to Pastebin - %s" % last_profile)
+            expo_dlg.format_secondary_text("There is no data to export.")
             
-            # If the location isn't valid, show the dialog and don't store it.
-            if location != "" and not re.compile("^\d{5}$").match(location):
-                
-                # Show the dialog.
-                ler_dlg = Gtk.MessageDialog(self, 0, Gtk.MessageType.WARNING, Gtk.ButtonsType.OK, "Set Location")
-                ler_dlg.format_secondary_text("\"%s\" is not a valid location." % location)
-                
-                # Run then close the dialog.
-                ler_dlg.run()
-                ler_dlg.destroy()
+            # Run then close the dialog.
+            expo_dlg.run()
+            expo_dlg.destroy()
             
-            # Otherwise, set the new loation.
-            else:
-                
-                user_location = location
-            
+            return
         
-        # Close the dialog.
-        loc_dlg.destroy()
+        # Convert the data.
+        if mode == "html":
+            new_data = export.html(data, units)
+        elif mode == "csv":
+            new_data = export.csv(data, units)
+        elif mode == "raw":
+            new_data = json.dumps(data)
+        
+        # Build the api string.
+        api = {"api_option": "paste",
+               "api_dev_key": config["pastebin"],
+               "api_paste_code": new_data}
+        
+        # Add the data type:
+        if mode == "html":
+            api["api_paste_format"] = "html5"
+        elif mode == "raw":
+            api["api_paste_format"] = "javascript"
+        
+        # Encode the api string.
+        api = urlencode(api)
+        
+        # Upload the text.
+        try:
+            
+            # Send the data.
+            pastebin = urlopen("http://pastebin.com/api/api_post.php", api)
+            
+            # Read the result.
+            result = pastebin.read()
+            
+            # Close the connection.
+            pastebin.close()
+            
+            success = True
+            
+        except:
+            
+            success = False
+        
+        # Show the dialog telling the user either that there was an error or giving the URL.
+        if success:
+            
+            # Tell the user the URL.
+            expo_dlg = Gtk.MessageDialog(self, 0, Gtk.MessageType.INFO, Gtk.ButtonsType.OK, "Export to Pastebin - %s" % last_profile)
+            expo_dlg.format_secondary_text("The data has been uploaded to Pastebin, and can be accessed at the following URL:\n\n%s" % result)
+            
+            # Run then close the dialog.
+            expo_dlg.run()
+            expo_dlg.destroy()
+        
+        else:
+            
+            # Tell the user there was an error
+            expo_dlg = Gtk.MessageDialog(self, 0, Gtk.MessageType.WARNING, Gtk.ButtonsType.OK, "Export to Pastebin - %s" % last_profile)
+            expo_dlg.format_secondary_text("The data could not be uploaded to Pastebin.")
+            
+            # Run then close the dialog.
+            expo_dlg.run()
+            expo_dlg.destroy()
     
     
     def clear(self, event):
