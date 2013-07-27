@@ -697,6 +697,14 @@ class Weather(Gtk.Window):
         clou_data = Counter(utility_functions.get_column(data, 6))
         clou_mode = clou_data.most_common(1)[0][0]
         
+        # Change any values, if needed.
+        prec_low = "None" if prec_low == "None" else ("%.2f %s" % (prec_low, units["prec"]))
+        prec_high = "None" if prec_high == "None" else ("%.2f %s" % (prec_high, units["prec"]))
+        prec_avg = "None" if prec_avg == "None" else ("%.2f %s" % (prec_avg, units["prec"]))
+        wind_low = "None" if wind_low == "None" else ("%.2f %s" % (wind_low, units["wind"]))
+        wind_high = "None" if wind_high == "None" else ("%.2f %s" % (wind_high, units["wind"]))
+        wind_avg = "None" if wind_avg == "None" else ("%.2f %s" % (wind_avg, units["wind"]))
+        
         # Create the data list.
         data2 = [
             ["First day", "%s" % date_first],
@@ -705,12 +713,12 @@ class Weather(Gtk.Window):
             ["Lowest temperature", "%.2f %s" % (temp_low, units["temp"])], 
             ["Highest temperature", "%.2f %s" % (temp_high, units["temp"])],
             ["Average temperature", "%.2f %s" % (temp_avg, units["temp"])],
-            ["Lowest precipitation", "%.2f %s" % (prec_low if prec_low != "None" else "None", units["prec"])],
-            ["Highest precipitation", "%.2f %s" % (prec_high if prec_high != "None" else "None", units["prec"])],
-            ["Average precipitation", "%.2f %s" % (prec_avg if prec_avg != "None" else "None", units["prec"])],
-            ["Lowest wind speed", "%.2f %s" % (wind_low if wind_low != "None" else "None", units["wind"])],
-            ["Highest wind speed", "%.2f %s" % (wind_high if wind_high != "None" else "None", units["wind"])],
-            ["Average wind speed", "%.2f %s" % (wind_avg if wind_avg != "None" else "None", units["wind"])],
+            ["Lowest precipitation", prec_low],
+            ["Highest precipitation", prec_high],
+            ["Average precipitation", prec_avg],
+            ["Lowest wind speed", wind_low],
+            ["Highest wind speed", wind_high],
+            ["Average wind speed", wind_avg],
             ["Lowest humidity", "%.2f%%" % humi_low], 
             ["Highest humidity", "%.2f%%" % humi_high],
             ["Average humidity", "%.2f%%" % humi_avg],
@@ -821,13 +829,20 @@ class Weather(Gtk.Window):
                 prec_hail += 1
         prec_mode = info_functions.mode(prec_data2)
         
+        # Change any values, if needed.
+        prec_low = "None" if prec_low == "None" else ("%.2f %s" % (prec_low, units["prec"]))
+        prec_high = "None" if prec_high == "None" else ("%.2f %s" % (prec_high, units["prec"]))
+        prec_avg = "None" if prec_avg == "None" else ("%.2f %s" % (prec_avg, units["prec"]))
+        prec_median = "None" if prec_median == "None" else ("%.2f %s" % (prec_median, units["prec"]))
+        prec_range = "None" if prec_range == "None" else ("%.2f %s" % (prec_range, units["prec"]))
+        
         # Create the data list.
         data2 = [
-            ["Lowest", "%.2f %s" % (prec_low if prec_low != "None" else "None", units["prec"])],
-            ["Highest", "%.2f %s" % (prec_high if prec_high != "None" else "None", units["prec"])],
-            ["Average", "%.2f %s" % (prec_avg if prec_avg != "None" else "None", units["prec"])],
-            ["Median", "%.2f %s" % (prec_median if prec_median != "None" else "None", units["prec"])],
-            ["Range", "%.2f %s" % (prec_range if prec_range != "None" else "None", units["prec"])],
+            ["Lowest", prec_low],
+            ["Highest", prec_high],
+            ["Average", prec_avg],
+            ["Median", prec_median],
+            ["Range", prec_range],
             ["Total (all)", "%.2f %s" % (prec_total, units["prec"])],
             ["Total (rain)", "%.2f %s" % (prec_total_rain, units["prec"])],
             ["Total (snow)", "%.2f %s" % (prec_total_snow, units["prec"])],
@@ -877,13 +892,20 @@ class Weather(Gtk.Window):
             wind_range = "None"
         wind_mode = info_functions.mode(wind_data2)
         
+        # Change any values, if needed.
+        wind_low = "None" if wind_low == "None" else ("%.2f %s" % (wind_low, units["wind"]))
+        wind_high = "None" if wind_high == "None" else ("%.2f %s" % (wind_high, units["wind"]))
+        wind_avg = "None" if wind_avg == "None" else ("%.2f %s" % (wind_avg, units["wind"]))
+        wind_median = "None" if wind_median == "None" else ("%.2f %s" % (wind_median, units["wind"]))
+        wind_range = "None" if wind_range == "None" else ("%.2f %s" % (wind_range, units["wind"]))
+        
         # Create the data list.
         data2 = [
-            ["Lowest", "%.2f %s" % (wind_low if wind_low != "None" else "None", units["wind"])],
-            ["Highest", "%.2f %s" % (wind_high if wind_high != "None" else "None", units["wind"])],
-            ["Average", "%.2f %s" % (wind_avg if wind_avg != "None" else "None", units["wind"])],
-            ["Median", "%.2f %s" % (wind_median if wind_median != "None" else "None", units["wind"])],
-            ["Range", "%.2f %s" % (wind_range if wind_range != "None" else "None", units["wind"])],
+            ["Lowest", wind_low],
+            ["Highest", wind_high],
+            ["Average", wind_avg],
+            ["Median", wind_median],
+            ["Range", wind_range],
             ["Most common direction", "%s" % (wind_mode if wind_mode != "" else "None")]
         ]
         
