@@ -19,6 +19,7 @@ MENU_DATA = """
       <separator />
       <menuitem action="import" />
       <menuitem action="import_profile" />
+      <menuitem action="import_append" />
       <menuitem action="export" />
       <menu action="export_menu">
         <menuitem action="export_html" />

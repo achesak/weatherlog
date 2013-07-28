@@ -259,6 +259,7 @@ class Weather(Gtk.Window):
             ("remove", Gtk.STOCK_REMOVE, "Remo_ve...", "<Control>r", "Remove a day from the list", self.remove),
             ("import", Gtk.STOCK_OPEN, "_Import...", None, "Import data from a file", self.import_file),
             ("import_profile", None, "Import as New _Profile...", "<Control><Shift>o", None, self.import_new_profile),
+            ("import_append", None, "Imp_ort and Merge...", None, None, self.import_append),
             ("export", Gtk.STOCK_SAVE, "_Export...", None, "Export data to a file", self.export_file)
         ])
         
@@ -1121,6 +1122,79 @@ class Weather(Gtk.Window):
             
         # Close the dialog.
         import_dlg.destroy()
+    
+    
+    def import_append(self, event):
+        """Imports data and merges it into the current list."""
+        
+        global data
+        
+        # Create the dialog.
+        import_dlg = Gtk.FileChooserDialog("Import and Merge - %s" % last_profile, self, Gtk.FileChooserAction.OPEN, (Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL, Gtk.STOCK_OPEN, Gtk.ResponseType.OK))
+        
+        # Set the filters.
+        filter_all = Gtk.FileFilter()
+        filter_all.set_name("All files")
+        filter_all.add_pattern("*")
+        filter_json = Gtk.FileFilter()
+        filter_json.set_name("Weather Or Not data files")
+        filter_json.add_pattern("*.json")
+        
+        # Add the filters.
+        import_dlg.add_filter(filter_all)
+        import_dlg.add_filter(filter_json)
+        
+        # Get the response.
+        response = import_dlg.run()
+        if response == Gtk.ResponseType.OK:
+            
+            # Get the filename.
+            filename = import_dlg.get_filename()
+            
+            # Read the data.
+            try:
+                # Read from the specified file. 
+                data_file = open(filename, "r")
+                data2 = json.load(data_file)
+                data_file.close()
+                
+            except IOError:
+                # Show the error message, and don't add the data.
+                # This one shows if there was a problem reading the file.
+                print("Error importing data (IOError).")
+            
+            except (TypeError, ValueError):
+                # Show the error message, and don't add the data.
+                # This one shows if there was a problem with the data type.
+                print("Error importing data (TypeError or ValueError).")
+            
+            else:
+                
+                # Filter the new data to make sure there are no duplicates.
+                new_data = []
+                date_col = utility_functions.get_column(data, 0)
+                for i in data2:
+                    
+                    # If the date already appears, don't include it.
+                    if i[0] not in date_col:
+                        new_data.append(i)
+                
+                # Append the data.
+                data += new_data
+                
+                # Sort the data.
+                data = sorted(data, key = lambda x: datetime.datetime.strptime(x[0], '%d/%m/%Y'))
+                
+                # Update the ListStore.
+                self.liststore.clear()
+                for i in data:
+                    self.liststore.append(i)
+                
+                # Update the title.
+                self.set_title("Weather Or Not - %s - %s to %s" % (last_profile, (data[0][0] if len(data) != 0 else "None"), (data[len(data)-1][0] if len(data) != 0 else "None")))
+            
+        # Close the dialog.
+        import_dlg.destroy()        
     
     
     def import_new_profile(self, event):
