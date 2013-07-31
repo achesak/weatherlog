@@ -28,8 +28,6 @@ MENU_DATA = """
         <menuitem action="export_pastebin" />
         <menuitem action="export_pastebin_html" />
         <menuitem action="export_pastebin_csv" />
-        <separator />
-        <menuitem action="export_pastehtml" />
       </menu>
       <separator />
       <menuitem action="info" />

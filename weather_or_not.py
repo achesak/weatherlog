@@ -272,7 +272,6 @@ class Weather(Gtk.Window):
             ("export_pastebin", None, "Export to Paste_bin...", None, None, lambda x: self.export_pastebin("raw")),
             ("export_pastebin_html", None, "_Export to Pastebin (HTML)...", None, None, lambda x: self.export_pastebin("html")),
             ("export_pastebin_csv", None, "E_xport to Pastebin (CSV)...", None, None, lambda x: self.export_pastebin("csv")),
-            ("export_pastehtml", None, "Export to _PasteHTML...", None, None, self.export_pastehtml),
             ("info", Gtk.STOCK_INFO, "_Info...", "<Control>i", "Show info about the data", lambda x: self.show_info(event = "ignore", data = data))
         ])
         
@@ -1198,7 +1197,7 @@ class Weather(Gtk.Window):
     
     
     def import_new_profile(self, event):
-        """Imports data from a file in a new profile."""
+        """Imports data from a file and inserts it in a new profile."""
         
         global last_profile
         global data
@@ -1547,71 +1546,6 @@ class Weather(Gtk.Window):
             # Tell the user there was an error
             expo_dlg = Gtk.MessageDialog(self, 0, Gtk.MessageType.WARNING, Gtk.ButtonsType.OK, "Export to Pastebin - %s" % last_profile)
             expo_dlg.format_secondary_text("The data could not be uploaded to Pastebin.")
-            
-            # Run then close the dialog.
-            expo_dlg.run()
-            expo_dlg.destroy()
-    
-    
-    def export_pastehtml(self, event):
-        """Exports the data to PasteHTML."""
-        
-        # If there is no data, tell the user and cancel the action.
-        if len(data) == 0:
-            
-            # Tell the user there is no data to export.
-            expo_dlg = Gtk.MessageDialog(self, 0, Gtk.MessageType.INFO, Gtk.ButtonsType.OK, "Export to PasteHTML - %s" % last_profile)
-            expo_dlg.format_secondary_text("There is no data to export.")
-            
-            # Run then close the dialog.
-            expo_dlg.run()
-            expo_dlg.destroy()
-            
-            return
-        
-        # Convert the data.
-        new_data = export.html(data, units)
-        
-        # Build the api string.
-        api = {"txt": new_data}
-        
-        # Encode the api string.
-        api = urlencode(api)
-        
-        # Upload the text.
-        try:
-            
-            # Send the data.
-            pastehtml = urlopen("http://pastehtml.com/upload/create?input_type=html&result=address", api)
-            
-            # Read the result.
-            result = pastehtml.read()
-            
-            # Close the connection.
-            pastehtml.close()
-            
-            success = True
-            
-        except:
-            
-            success = False
-        
-        # Show the dialog telling the user either that there was an error or giving the URL.
-        if success:
-            
-            # Tell the user the URL.
-            expo_dlg = Gtk.MessageDialog(self, 0, Gtk.MessageType.INFO, Gtk.ButtonsType.OK, "Export to PasteHTML - %s" % last_profile)
-            expo_dlg.format_secondary_text("The data has been uploaded to PasteHTML, and can be accessed at the following URL:\n\n%s" % result)
-            
-            # Run then close the dialog.
-            expo_dlg.run()
-            expo_dlg.destroy()
-        
-        else:
-            
-            # Tell the user there was an error
-            expo_dlg = Gtk.MessageDialog(self, 0, Gtk.MessageType.WARNING, Gtk.ButtonsType.OK, "Export to PasteHTML - %s" % last_profile)
-            expo_dlg.format_secondary_text("The data could not be uploaded to PasteHTML.")
             
             # Run then close the dialog.
             expo_dlg.run()
