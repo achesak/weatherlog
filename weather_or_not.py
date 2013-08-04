@@ -658,7 +658,7 @@ class Weather(Gtk.Window):
         
         # Get the precipitation data.
         prec_data1, prec_data2 = utility_functions.split_list(utility_functions.get_column(data, 2))
-        prec_data1 = utility_functions.convert_float(prec_data1)
+        prec_data1 = utility_functions.convert_float(utility_functions.none_to_zero(prec_data1))
         try:
             prec_low = min(prec_data1)
             prec_high = max(prec_data1)
@@ -670,7 +670,7 @@ class Weather(Gtk.Window):
         
         # Get the wind data.
         wind_data1, wind_data2 = utility_functions.split_list(utility_functions.get_column(data, 3))
-        wind_data1 = utility_functions.convert_float(wind_data1)
+        wind_data1 = utility_functions.convert_float(utility_functions.none_to_zero(wind_data1))
         try:
             wind_low = min(wind_data1)
             wind_high = max(wind_data1)
@@ -786,7 +786,7 @@ class Weather(Gtk.Window):
         # Get the data.
         prec_data1, prec_data2 = utility_functions.split_list(utility_functions.get_column(data, 2))
         prec_split = utility_functions.split_list2(utility_functions.get_column(data, 2))
-        prec_data1 = utility_functions.filter_none(prec_data1, prec_data2)
+        prec_data1 = utility_functions.none_to_zero(prec_data1)
         prec_data1 = utility_functions.convert_float(prec_data1)
         try:
             prec_low = min(prec_data1)
@@ -876,7 +876,7 @@ class Weather(Gtk.Window):
         
         # Get the data.
         wind_data1, wind_data2 = utility_functions.split_list(utility_functions.get_column(data, 3))
-        wind_data1 = utility_functions.filter_none(wind_data1, wind_data2)
+        wind_data1 = utility_functions.none_to_zero(wind_data1)
         wind_data1 = utility_functions.convert_float(wind_data1)
         try:
             wind_low = min(wind_data1)

@@ -88,16 +88,18 @@ def split_list2(data):
     return n_list
 
 
-def filter_none(data1, data2):
-    """Filters items out of the first list when the corrosponding value in the second list is None."""
+def none_to_zero(data):
+    """Changes any "None" values to "0" (zero)."""
     
     # Create the new list.
     n_list = []
     
-    # Loop through the list, only appending items if the second item isn't None.
-    for i in range(0, len(data1)):
-        if data1[i] != "None":
-            n_list.append(data1[i])
+    # Loop through the list, and change values as needed.
+    for i in data:
+        if i == "None":
+            n_list.append("0")
+        else:
+            n_list.append(i)
     
     # Return the new list.
     return n_list
