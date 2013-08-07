@@ -3,10 +3,10 @@
 
 ################################################################################
 
-# Weather Or Not
-# Version 0.3
+# WeatherLog
+# Version 0.3.1
 
-# Weather Or Not is an application for keeping track of the weather.
+# WeatherLog is an application for keeping track of the weather.
 
 # Released under the MIT open source license:
 """
@@ -193,7 +193,7 @@ class Weather(Gtk.Window):
     def __init__(self):
         """Create the application."""
         # Create the window.
-        Gtk.Window.__init__(self, title = "Weather Or Not")
+        Gtk.Window.__init__(self, title = "WeatherLog")
         # Set the window size.
         self.set_default_size(last_width, last_height)
         # Set the icon.
@@ -353,7 +353,7 @@ class Weather(Gtk.Window):
         self.show_all()
         
         # Set the new title.
-        self.set_title("Weather Or Not - %s - %s to %s" % (last_profile, (data[0][0] if len(data) != 0 else "None"), (data[len(data)-1][0] if len(data) != 0 else "None")))
+        self.set_title("WeatherLog - %s - %s to %s" % (last_profile, (data[0][0] if len(data) != 0 else "None"), (data[len(data)-1][0] if len(data) != 0 else "None")))
         
         # Bind the events.
         self.connect("key-press-event", self.keypress)
@@ -454,7 +454,7 @@ class Weather(Gtk.Window):
                     self.liststore.append(i)
         
         # Update the title.
-        self.set_title("Weather Or Not - %s - %s to %s" % (last_profile, (data[0][0] if len(data) != 0 else "None"), (data[len(data)-1][0] if len(data) != 0 else "None")))
+        self.set_title("WeatherLog - %s - %s to %s" % (last_profile, (data[0][0] if len(data) != 0 else "None"), (data[len(data)-1][0] if len(data) != 0 else "None")))
         
         # Close the dialog.
         new_dlg.destroy()        
@@ -497,7 +497,7 @@ class Weather(Gtk.Window):
             self.liststore.append(i)
         
         # Update the title.
-        self.set_title("Weather Or Not - %s - %s to %s" % (last_profile, (data[0][0] if len(data) != 0 else "None"), (data[len(data)-1][0] if len(data) != 0 else "None")))
+        self.set_title("WeatherLog - %s - %s to %s" % (last_profile, (data[0][0] if len(data) != 0 else "None"), (data[len(data)-1][0] if len(data) != 0 else "None")))
     
     
     def info_range(self, info):
@@ -1077,7 +1077,7 @@ class Weather(Gtk.Window):
         filter_all.set_name("All files")
         filter_all.add_pattern("*")
         filter_json = Gtk.FileFilter()
-        filter_json.set_name("Weather Or Not data files")
+        filter_json.set_name("WeatherLog data files")
         filter_json.add_pattern("*.json")
         
         # Add the filters.
@@ -1136,7 +1136,7 @@ class Weather(Gtk.Window):
         filter_all.set_name("All files")
         filter_all.add_pattern("*")
         filter_json = Gtk.FileFilter()
-        filter_json.set_name("Weather Or Not data files")
+        filter_json.set_name("WeatherLog data files")
         filter_json.add_pattern("*.json")
         
         # Add the filters.
@@ -1190,7 +1190,7 @@ class Weather(Gtk.Window):
                     self.liststore.append(i)
                 
                 # Update the title.
-                self.set_title("Weather Or Not - %s - %s to %s" % (last_profile, (data[0][0] if len(data) != 0 else "None"), (data[len(data)-1][0] if len(data) != 0 else "None")))
+                self.set_title("WeatherLog - %s - %s to %s" % (last_profile, (data[0][0] if len(data) != 0 else "None"), (data[len(data)-1][0] if len(data) != 0 else "None")))
             
         # Close the dialog.
         import_dlg.destroy()        
@@ -1270,7 +1270,7 @@ class Weather(Gtk.Window):
                 self.liststore.clear()
                 
                 # Set the new title.
-                self.set_title("Weather Or Not - %s - %s to %s" % (last_profile, (data[0][0] if len(data) != 0 else "None"), (data[len(data)-1][0] if len(data) != 0 else "None")))
+                self.set_title("WeatherLog - %s - %s to %s" % (last_profile, (data[0][0] if len(data) != 0 else "None"), (data[len(data)-1][0] if len(data) != 0 else "None")))
         
             # Close the dialog.
             new_dlg.destroy()
@@ -1289,7 +1289,7 @@ class Weather(Gtk.Window):
         filter_all.set_name("All files")
         filter_all.add_pattern("*")
         filter_json = Gtk.FileFilter()
-        filter_json.set_name("Weather Or Not data files")
+        filter_json.set_name("WeatherLog data files")
         filter_json.add_pattern("*.json")
         
         # Add the filters.
@@ -1576,7 +1576,7 @@ class Weather(Gtk.Window):
         clear_dlg.destroy()
         
         # Update the title.
-        self.set_title("Weather Or Not - %s - %s to %s" % (last_profile, (data[0][0] if len(data) != 0 else "None"), (data[len(data)-1][0] if len(data) != 0 else "None")))
+        self.set_title("WeatherLog - %s - %s to %s" % (last_profile, (data[0][0] if len(data) != 0 else "None"), (data[len(data)-1][0] if len(data) != 0 else "None")))
     
     
     def clear_all(self, event):
@@ -1604,7 +1604,7 @@ class Weather(Gtk.Window):
             
             # Tell the user data has been cleared and that it will now close.
             clear_dlg2 = Gtk.MessageDialog(clear_dlg, 0, Gtk.MessageType.INFO, Gtk.ButtonsType.OK, "Clear All Data - %s" % last_profile)
-            clear_dlg2.format_secondary_text("All data has been cleared.\n\nWeather Or Not will now close...")
+            clear_dlg2.format_secondary_text("All data has been cleared.\n\nWeatherLog will now close...")
             
             # Run then close the dialog.
             clear_dlg2.run()
@@ -1721,7 +1721,7 @@ class Weather(Gtk.Window):
                     self.liststore.append(i)
                 
                 # Set the new title.
-                self.set_title("Weather Or Not - %s - %s to %s" % (last_profile, (data[0][0] if len(data) != 0 else "None"), (data[len(data)-1][0] if len(data) != 0 else "None")))
+                self.set_title("WeatherLog - %s - %s to %s" % (last_profile, (data[0][0] if len(data) != 0 else "None"), (data[len(data)-1][0] if len(data) != 0 else "None")))
         
         # Close the dialog.
         swi_dlg.destroy()
@@ -1795,7 +1795,7 @@ class Weather(Gtk.Window):
                 self.liststore.clear()
                 
                 # Set the new title.
-                self.set_title("Weather Or Not - %s - %s to %s" % (last_profile, (data[0][0] if len(data) != 0 else "None"), (data[len(data)-1][0] if len(data) != 0 else "None")))
+                self.set_title("WeatherLog - %s - %s to %s" % (last_profile, (data[0][0] if len(data) != 0 else "None"), (data[len(data)-1][0] if len(data) != 0 else "None")))
         
         # Close the dialog.
         new_dlg.destroy()
@@ -1987,13 +1987,13 @@ class Weather(Gtk.Window):
         about_dlg = Gtk.AboutDialog()
         
         # Set the title.
-        about_dlg.set_title("About Weather Or Not")
+        about_dlg.set_title("About WeatherLog")
         # Set the program name.
         about_dlg.set_program_name(TITLE)
         # Set the program version.
         about_dlg.set_version(VERSION)
         # Set the comments. Maybe come up with something better later?
-        about_dlg.set_comments("Weather Or Not is an application for keeping track of the weather.")
+        about_dlg.set_comments("WeatherLog is an application for keeping track of the weather.")
         # Set the copyright notice. Legal stuff, bleh.
         about_dlg.set_copyright("Copyright (c) 2013 Adam Chesak")
         # Set the authors. This is, of course, only me. I feel special.
