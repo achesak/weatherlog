@@ -4,7 +4,7 @@
 ################################################################################
 
 # WeatherLog
-# Version 0.3.1
+# Version 0.1
 
 # WeatherLog is an application for keeping track of the weather.
 
@@ -422,6 +422,12 @@ class Weather(Gtk.Window):
             airp_read = new_dlg.airp_com.get_active_text()
             clou = new_dlg.clou_com.get_active_text()
             note = new_dlg.note_ent.get_text()
+            
+            # If the precipitation or wind are zero, set the appropriate type/direction to "None".
+            if not prec:
+                prec_type = "None"
+            if not wind:
+                wind_dir = "None"
             
             # If the date is already used, show the dialog.
             if date in utility_functions.get_column(data, 0):
