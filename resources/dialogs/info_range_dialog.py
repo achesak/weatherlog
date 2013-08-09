@@ -9,7 +9,7 @@ from gi.repository import Gtk
 
 class InfoRangeDialog(Gtk.Dialog):
     """Shows the "Add New" dialog."""
-    def __init__(self, parent, profile, info, which):
+    def __init__(self, parent, profile, info, which, day, month, year):
         """Create the dialog."""
         
         # This window should be modal.
@@ -33,6 +33,10 @@ class InfoRangeDialog(Gtk.Dialog):
         # Create the calendar.
         self.info_cal = Gtk.Calendar()
         info_grid.attach_next_to(self.info_cal, info_lbl, Gtk.PositionType.BOTTOM, 1, 1)
+        
+        # Set the default date.
+        self.info_cal.select_month(month, year)
+        self.info_cal.select_day(day)
         
         # Show the dialog.
         self.show_all()

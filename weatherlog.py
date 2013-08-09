@@ -4,7 +4,7 @@
 ################################################################################
 
 # WeatherLog
-# Version 0.1
+# Version 0.4
 
 # WeatherLog is an application for keeping track of the weather.
 
@@ -516,8 +516,20 @@ class Weather(Gtk.Window):
             show_no_data_dialog(self, "%s Info - %s" % (info, last_profile))
             return
         
+        # Get the first entered date.
+        days, months, years = data[0][0].split("/")
+        days = int(days)
+        months = int(months) - 1
+        years = int(years)
+        
+        # Get the last entered date.
+        daye, monthe, yeare = data[len(data) - 1][0].split("/")
+        daye = int(daye)
+        monthe = int(monthe) - 1
+        yeare = int(yeare)
+        
         # Get the start date.
-        start_dlg = InfoRangeDialog(self, last_profile, info, "start")
+        start_dlg = InfoRangeDialog(self, last_profile, info, "start", days, months, years)
         
         # Get the response.
         response1 = start_dlg.run()
@@ -557,7 +569,7 @@ class Weather(Gtk.Window):
         start_dlg.destroy()
         
         # Get the end date.
-        end_dlg = InfoRangeDialog(self, last_profile, info, "end")
+        end_dlg = InfoRangeDialog(self, last_profile, info, "end", daye, monthe, yeare)
         
         # Get the response.
         response2 = end_dlg.run()
