@@ -529,7 +529,7 @@ class Weather(Gtk.Window):
         yeare = int(yeare)
         
         # Get the start date.
-        start_dlg = InfoRangeDialog(self, last_profile, info, "start", days, months, years)
+        start_dlg = InfoRangeDialog(self, last_profile, info, "starting", days, months, years)
         
         # Get the response.
         response1 = start_dlg.run()
@@ -569,7 +569,7 @@ class Weather(Gtk.Window):
         start_dlg.destroy()
         
         # Get the end date.
-        end_dlg = InfoRangeDialog(self, last_profile, info, "end", daye, monthe, yeare)
+        end_dlg = InfoRangeDialog(self, last_profile, info, "ending", daye, monthe, yeare)
         
         # Get the response.
         response2 = end_dlg.run()
@@ -2035,8 +2035,8 @@ class Weather(Gtk.Window):
     def show_help(self, event):
         """Shows the help in a web browser."""
         
-        # Open the website.
-        webbrowser.open("http://poultryandprogramming.wordpress.com/programming/weather-or-not-help/")    
+        # Open the help file.
+        webbrowser.open("resources/help/help.html")    
     
 
     def exit(self, x, y):

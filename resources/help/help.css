@@ -1,0 +1,37 @@
+body {
+    margin: 0px;
+    font-family: Verdana, Arial, sans-serif;
+}
+
+img {
+    display: block;
+    margin-right: auto;
+    margin-left: auto;
+}
+
+a {
+    color: #666666;
+}
+
+h1 {
+    width: 100%;
+    border-bottom: 1px solid black;
+}
+
+.box1 {
+    background-color: #EBEBEB;
+}
+
+.box2 {
+    background-color: #C9C9C9;
+}
+
+.box1, .box2 {
+    margin: 0px;
+    padding: 10px;
+}
+
+.top {
+    font-style: italic;
+    font-size: 0.8em;
+}
