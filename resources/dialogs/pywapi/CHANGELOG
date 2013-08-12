@@ -1,3 +1,6 @@
+v0.3.4 (17 July 2013)
+! Fix for Unicode decoding issue in get_woeid_from_yahoo()
+
 v0.3.3 (2 June 2013)
 + Added suggested dependency on unidecode Python module, to get
   location IDs for place names containing non-ascii characters
@@ -8,9 +11,9 @@ v0.3.3 (2 June 2013)
 
 v0.3.2 (21 May 2013)
 + Added function get_loc_id_from_weather_com(), which is same as
-  get_location_ids(), but with return format like get_woe_id_from_yahoo().
+  get_location_ids(), but with return format like get_woeid_from_yahoo().
 + Added function get_where_on_earth_ids(), which is same as
-  get_woe_id_from_yahoo(),  but with return format like get_location_ids().
+  get_woeid_from_yahoo(),  but with return format like get_location_ids().
 
 v0.3.1 (17 May 2013)
 + Added function to calculate Heat Index from specified temperature and humidity.

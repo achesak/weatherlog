@@ -28,7 +28,7 @@
 
 """ Fetches weather reports from Yahoo! Weather, Weather.com and NOAA """
 
-__version__ = "0.3.3"
+__version__ = "0.3.4"
 
 try:
     # Python 3 imports
@@ -126,8 +126,9 @@ def get_weather_from_weather_com(location_id, units = 'metric'):
     else:
         # Python 2
         content_type = handler.info().dict['content-type']
-    charset = re.search('charset\=(.*)',content_type).group(1)
-    if not charset:
+    try:
+        charset = re.search('charset\=(.*)', content_type).group(1)
+    except AttributeError:
         charset = 'utf-8'
     if charset.lower() != 'utf-8':
         xml_response = handler.read().decode(charset).encode('utf-8')
@@ -139,7 +140,8 @@ def get_weather_from_weather_com(location_id, units = 'metric'):
     try:
         weather_dom = dom.getElementsByTagName('weather')[0]
     except IndexError:
-        error_data = {'error': dom.getElementsByTagName('error')[0].getElementsByTagName('err')[0].firstChild.data}
+        error_data = {'error': dom.getElementsByTagName('error')[
+            0].getElementsByTagName('err')[0].firstChild.data}
         dom.unlink()
         return error_data
 
@@ -164,13 +166,18 @@ def get_weather_from_weather_com(location_id, units = 'metric'):
                     'uv': ('i','t'),
                     'moon': ('icon','t')}
 
-    weather_data = {}
-    for (tag, list_of_tags2) in data_structure.items():
-        key = key_map[tag]
-        weather_data[key] = {}
-        for tag2 in list_of_tags2:
-            key2 = key_map[tag2]
-            weather_data[key][key2] = weather_dom.getElementsByTagName(tag)[0].getElementsByTagName(tag2)[0].firstChild.data
+    try:
+        weather_data = {}
+        for (tag, list_of_tags2) in data_structure.items():
+            key = key_map[tag]
+            weather_data[key] = {}
+            for tag2 in list_of_tags2:
+                key2 = key_map[tag2]
+                weather_data[key][key2] = weather_dom.getElementsByTagName(
+                    tag)[0].getElementsByTagName(tag2)[0].firstChild.data
+    except IndexError:
+        error_data = {'error': 'Error parsing Weather.com response. Full response: %s' % xml_response}
+        return error_data
 
     cc_dom = weather_dom.getElementsByTagName('cc')[0]
     for (tag, list_of_tags2) in cc_structure.items():
@@ -178,7 +185,8 @@ def get_weather_from_weather_com(location_id, units = 'metric'):
         weather_data['current_conditions'][key] = {}
         for tag2 in list_of_tags2:
             key2 = key_map[tag2]
-            weather_data['current_conditions'][key][key2] = cc_dom.getElementsByTagName(tag)[0].getElementsByTagName(tag2)[0].firstChild.data
+            weather_data['current_conditions'][key][key2] = cc_dom.getElementsByTagName(
+                tag)[0].getElementsByTagName(tag2)[0].firstChild.data
             
     forecasts = []
     time_of_day_map = {'d':'day', 'n':'night'}
@@ -188,17 +196,20 @@ def get_weather_from_weather_com(location_id, units = 'metric'):
         tmp_forecast['date'] = forecast.getAttribute('dt')
         for tag in ('hi', 'low', 'sunr', 'suns'):
             key = key_map[tag]
-            tmp_forecast[key] = forecast.getElementsByTagName(tag)[0].firstChild.data
+            tmp_forecast[key] = forecast.getElementsByTagName(
+                tag)[0].firstChild.data
         for part in forecast.getElementsByTagName('part'):
             time_of_day = time_of_day_map[part.getAttribute('p')]
             tmp_forecast[time_of_day] = {}
             for tag2 in ('icon', 't', 'bt', 'ppcp', 'hmid'):
                 key2 = key_map[tag2]
-                tmp_forecast[time_of_day][key2] = part.getElementsByTagName(tag2)[0].firstChild.data
+                tmp_forecast[time_of_day][
+                    key2] = part.getElementsByTagName(tag2)[0].firstChild.data
             tmp_forecast[time_of_day]['wind'] = {}
             for tag2 in ('s', 'gust', 'd', 't'):            
                 key2 = key_map[tag2]
-                tmp_forecast[time_of_day]['wind'][key2] = part.getElementsByTagName('wind')[0].getElementsByTagName(tag2)[0].firstChild.data
+                tmp_forecast[time_of_day]['wind'][key2] = part.getElementsByTagName(
+                    'wind')[0].getElementsByTagName(tag2)[0].firstChild.data
         forecasts.append(tmp_forecast)
         
     weather_data['forecasts'] = forecasts
@@ -244,8 +255,9 @@ def get_countries_from_google(hl = ''):
     else:
         # Python 2
         content_type = handler.info().dict['content-type']
-    charset = re.search('charset\=(.*)',content_type).group(1)
-    if not charset:
+    try:
+        charset = re.search('charset\=(.*)', content_type).group(1)
+    except AttributeError:
         charset = 'utf-8'
     if charset.lower() != 'utf-8':
         xml_response = handler.read().decode(charset).encode('utf-8')
@@ -259,8 +271,10 @@ def get_countries_from_google(hl = ''):
     
     for country_dom in countries_dom:
         country = {}
-        country['name'] = country_dom.getElementsByTagName('name')[0].getAttribute('data')
-        country['iso_code'] = country_dom.getElementsByTagName('iso_code')[0].getAttribute('data')
+        country['name'] = country_dom.getElementsByTagName(
+            'name')[0].getAttribute('data')
+        country['iso_code'] = country_dom.getElementsByTagName(
+            'iso_code')[0].getAttribute('data')
         countries.append(country)
     
     dom.unlink()
@@ -294,8 +308,9 @@ def get_cities_from_google(country_code, hl = ''):
     else:
         # Python 2
         content_type = handler.info().dict['content-type']
-    charset = re.search('charset\=(.*)',content_type).group(1)
-    if not charset:
+    try:
+        charset = re.search('charset\=(.*)', content_type).group(1)
+    except AttributeError:
         charset = 'utf-8'
     if charset.lower() != 'utf-8':
         xml_response = handler.read().decode(charset).encode('utf-8')
@@ -309,9 +324,12 @@ def get_cities_from_google(country_code, hl = ''):
     
     for city_dom in cities_dom:
         city = {}
-        city['name'] = city_dom.getElementsByTagName('name')[0].getAttribute('data')
-        city['latitude_e6'] = city_dom.getElementsByTagName('latitude_e6')[0].getAttribute('data')
-        city['longitude_e6'] = city_dom.getElementsByTagName('longitude_e6')[0].getAttribute('data')
+        city['name'] = city_dom.getElementsByTagName(
+            'name')[0].getAttribute('data')
+        city['latitude_e6'] = city_dom.getElementsByTagName(
+            'latitude_e6')[0].getAttribute('data')
+        city['longitude_e6'] = city_dom.getElementsByTagName(
+            'longitude_e6')[0].getAttribute('data')
         cities.append(city)
     
     dom.unlink()
@@ -353,8 +371,9 @@ def get_weather_from_yahoo(location_id, units = 'metric'):
     else:
         # Python 2
         content_type = handler.info().dict['content-type']
-    charset = re.search('charset\=(.*)',content_type).group(1)
-    if not charset:
+    try:
+        charset = re.search('charset\=(.*)', content_type).group(1)
+    except AttributeError:
         charset = 'utf-8'
     if charset.lower() != 'utf-8':
         xml_response = handler.read().decode(charset).encode('utf-8')
@@ -365,10 +384,13 @@ def get_weather_from_yahoo(location_id, units = 'metric'):
         
     weather_data = {}
     try:
-        weather_data['title'] = dom.getElementsByTagName('title')[0].firstChild.data
-        weather_data['link'] = dom.getElementsByTagName('link')[0].firstChild.data
+        weather_data['title'] = dom.getElementsByTagName(
+            'title')[0].firstChild.data
+        weather_data['link'] = dom.getElementsByTagName(
+            'link')[0].firstChild.data
     except IndexError:
-        error_data = {'error': dom.getElementsByTagName('item')[0].getElementsByTagName('title')[0].firstChild.data}
+        error_data = {'error': dom.getElementsByTagName('item')[
+            0].getElementsByTagName('title')[0].firstChild.data}
         dom.unlink()
         return error_data
         
@@ -388,14 +410,18 @@ def get_weather_from_yahoo(location_id, units = 'metric'):
 
     weather_data['geo'] = {}
     try:
-        weather_data['geo']['lat'] = dom.getElementsByTagName('geo:lat')[0].firstChild.data
-        weather_data['geo']['long'] = dom.getElementsByTagName('geo:long')[0].firstChild.data
+        weather_data['geo']['lat'] = dom.getElementsByTagName(
+            'geo:lat')[0].firstChild.data
+        weather_data['geo']['long'] = dom.getElementsByTagName(
+            'geo:long')[0].firstChild.data
     except AttributeError:
         weather_data['geo']['lat'] = unicode()
         weather_data['geo']['long'] = unicode()
 
-    weather_data['condition']['title'] = dom.getElementsByTagName('item')[0].getElementsByTagName('title')[0].firstChild.data
-    weather_data['html_description'] = dom.getElementsByTagName('item')[0].getElementsByTagName('description')[0].firstChild.data
+    weather_data['condition']['title'] = dom.getElementsByTagName(
+        'item')[0].getElementsByTagName('title')[0].firstChild.data
+    weather_data['html_description'] = dom.getElementsByTagName(
+        'item')[0].getElementsByTagName('description')[0].firstChild.data
     
     forecasts = []
     for forecast in dom.getElementsByTagNameNS(YAHOO_WEATHER_NS, 'forecast'):
@@ -480,8 +506,9 @@ def get_weather_from_noaa(station_id):
     else:
         # Python 2
         content_type = handler.info().dict['content-type']
-    charset = re.search('charset\=(.*)',content_type).group(1)
-    if not charset:
+    try:
+        charset = re.search('charset\=(.*)', content_type).group(1)
+    except AttributeError:
         charset = 'utf-8'
     if charset.lower() != 'utf-8':
         xml_response = handler.read().decode(charset).encode('utf-8')
@@ -529,7 +556,8 @@ def get_weather_from_noaa(station_id):
     current_observation = dom.getElementsByTagName('current_observation')[0]
     for tag in data_structure:
         try:
-            weather_data[tag] = current_observation.getElementsByTagName(tag)[0].firstChild.data
+            weather_data[tag] = current_observation.getElementsByTagName(
+                tag)[0].firstChild.data
         except IndexError:
             pass
 
@@ -809,8 +837,9 @@ def get_loc_id_from_weather_com(search_string):
     else:
         # Python 2
         content_type = handler.info().dict['content-type']
-    charset = re.search('charset\=(.*)',content_type).group(1)
-    if not charset:
+    try:
+        charset = re.search('charset\=(.*)', content_type).group(1)
+    except AttributeError:
         charset = 'utf-8'
     if charset.lower() != 'utf-8':
         xml_response = handler.read().decode(charset).encode('utf-8')
@@ -838,7 +867,7 @@ def get_loc_id_from_weather_com(search_string):
 
 def get_where_on_earth_ids(search_string):    
     """Get Yahoo 'Where On Earth' ID for the place names that best match the
-    specified string. Same as get_woe_id_from_yahoo() but different return format.
+    specified string. Same as get_woeid_from_yahoo() but different return format.
     
     Parameters:
       search_string: Plaintext string to match to available place names.
@@ -882,8 +911,10 @@ def get_woeid_from_yahoo(search_string):
     ## This uses Yahoo's YQL tables to directly query Yahoo's database, e.g.                        
     ## http://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20geo.placefinder%20where%20text%3D%22New%20York%22
     if sys.version > '3':
+        # Python 3
         encoded_string = search_string
     else:
+        # Python 2
         encoded_string = search_string.encode('utf-8')
     params = {'q': WOEID_QUERY_STRING % encoded_string, 'format': 'json'}
     url = '?'.join((WOEID_SEARCH_URL, urlencode(params)))
@@ -897,13 +928,14 @@ def get_woeid_from_yahoo(search_string):
     else:
         # Python 2
         content_type = handler.info().dict['content-type']
-    charset = re.search('charset\=(.*)',content_type).group(1)
-    if not charset:
+    try:
+        charset = re.search('charset\=(.*)', content_type).group(1)
+    except AttributeError:
         charset = 'utf-8'
     if charset.lower() != 'utf-8':
         json_response = handler.read().decode(charset).encode('utf-8')
     else:
-        json_response = handler.read().decode()
+        json_response = handler.read()
     handler.close()
     yahoo_woeid_result = json.loads(json_response)
 
