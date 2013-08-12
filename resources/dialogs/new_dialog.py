@@ -214,4 +214,4 @@ class AddNewDialog(Gtk.Dialog):
         self.airp_com.set_active(int(data["atmosphere"]["rising"]))
         
         # Return the location.
-        return "latitude %s and longitude %s" % (data["geo"]["lat"], data["geo"]["long"])
+        return "%s, %s" % (data["location"]["city"], data["location"]["country"])
