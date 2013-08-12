@@ -183,6 +183,19 @@ class AddNewDialog(Gtk.Dialog):
         # Get the data.
         data = pywapi.get_weather_from_yahoo(user_location, units = ("metric" if units["prec"] == "cm" else "imperial"))
         
+        # If there was an error, tell the user and cancel the action.
+        if "error" in data:
+            
+            # Show the dialog.
+            pre_dlg = Gtk.MessageDialog(self, 0, Gtk.MessageType.WARNING, Gtk.ButtonsType.OK, "Add New - %s" % profile)
+            pre_dlg.format_secondary_text("There was an error getting the data from Yahoo! Weather.")
+            
+            # Run the dialog.
+            pre_dlg.run()
+            pre_dlg.destroy()
+            
+            return False
+        
         # Set the temperature field.
         self.temp_sbtn.set_value(float(data["condition"]["temp"]))
         
