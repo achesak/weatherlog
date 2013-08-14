@@ -1902,8 +1902,8 @@ class Weather(Gtk.Window):
             else:
                 
                 # Confirm that the user wants to delete the profile.
-                del_dlg = Gtk.MessageDialog(rem_dlg, 0, Gtk.MessageType.QUESTION, Gtk.ButtonsType.OK_CANCEL, "Confirm Delete")
-                del_dlg.format_secondary_text("Are you sure you want to delete the profile?\n\nThis action cannot be undone.")
+                del_dlg = Gtk.MessageDialog(rem_dlg, 0, Gtk.MessageType.QUESTION, Gtk.ButtonsType.OK_CANCEL, "Confirm Remove Profile")
+                del_dlg.format_secondary_text("Are you sure you want to remove the profile?\n\nThis action cannot be undone.")
                 
                 # Get the response.
                 response = del_dlg.run()
