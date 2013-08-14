@@ -1075,18 +1075,6 @@ class Weather(Gtk.Window):
     def import_file(self, event):
         """Imports data from a file."""
         
-        # Confirm that the user wants to overwrite the data.
-        over_dlg = Gtk.MessageDialog(self, 0, Gtk.MessageType.QUESTION, Gtk.ButtonsType.OK_CANCEL, "Confirm Import - %s" % last_profile)
-        over_dlg.format_secondary_text("Are you sure you want to import the data?\n\nCurrent data will be overwritten.")
-        
-        # Get the response.
-        response = over_dlg.run()
-        over_dlg.destroy()
-        
-        # If the user doesn't want to overwrite, cancel the action.
-        if response != Gtk.ResponseType.OK:
-            return
-        
         # Create the dialog.
         import_dlg = Gtk.FileChooserDialog("Import - %s" % last_profile, self, Gtk.FileChooserAction.OPEN, (Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL, Gtk.STOCK_OPEN, Gtk.ResponseType.OK))
         
@@ -1105,6 +1093,19 @@ class Weather(Gtk.Window):
         # Get the response.
         response = import_dlg.run()
         if response == Gtk.ResponseType.OK:
+            
+            # Confirm that the user wants to overwrite the data.
+            over_dlg = Gtk.MessageDialog(self, 0, Gtk.MessageType.QUESTION, Gtk.ButtonsType.OK_CANCEL, "Confirm Import - %s" % last_profile)
+            over_dlg.format_secondary_text("Are you sure you want to import the data?\n\nCurrent data will be overwritten.")
+            
+            # Get the response.
+            response = over_dlg.run()
+            over_dlg.destroy()
+            
+            # If the user doesn't want to overwrite, cancel the action.
+            if response != Gtk.ResponseType.OK:
+                import_dlg.destroy()
+                return
             
             # Get the filename.
             filename = import_dlg.get_filename()
