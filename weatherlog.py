@@ -2020,8 +2020,8 @@ class Weather(Gtk.Window):
         about_dlg.set_program_name(TITLE)
         # Set the program version.
         about_dlg.set_version(VERSION)
-        # Set the comments. Maybe come up with something better later?
-        about_dlg.set_comments("WeatherLog is an application for keeping track of the weather.")
+        # Set the comments.
+        about_dlg.set_comments("WeatherLog is an application for keeping track of the weather\nand getting information about past trends.")
         # Set the copyright notice. Legal stuff, bleh.
         about_dlg.set_copyright("Copyright (c) 2013 Adam Chesak")
         # Set the authors. This is, of course, only me. I feel special.
