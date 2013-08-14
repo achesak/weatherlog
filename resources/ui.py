@@ -5,7 +5,7 @@
 
 
 # Define the version and title. These are used in the About dialog.
-VERSION = "0.4"
+VERSION = "1.0"
 TITLE = "WeatherLog"
 
 

@@ -4,7 +4,7 @@
 ################################################################################
 
 # WeatherLog
-# Version 0.4
+# Version 1.0
 
 # WeatherLog is an application for keeping track of the weather.
 
@@ -1628,12 +1628,12 @@ class Weather(Gtk.Window):
             # Run then close the dialog.
             clear_dlg2.run()
             clear_dlg2.destroy()
+            
+            # Close the dialog.
+            Gtk.main_quit()
         
         # Close the dialog.
         clear_dlg.destroy()
-        
-        # Close the dialog.
-        Gtk.main_quit()
     
     
     def switch_profile(self, event):
