@@ -52,6 +52,10 @@ MENU_DATA = """
       <menuitem action="clear_data" />
       <menuitem action="clear_all" />
       <separator />
+      <menuitem action="reload_current" />
+      <menuitem action="reload_all" />
+      <menuitem action="manual_save" />
+      <separator />
       <menuitem action="fullscreen" />
       <separator />
       <menuitem action="exit" />

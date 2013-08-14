@@ -300,6 +300,9 @@ class Weather(Gtk.Window):
             ("cloud_cover_range", None, "_Cloud Cover in Range...", "<Control><Shift>c", None, lambda x: self.info_range("Cloud Cover")),
             ("clear_data", Gtk.STOCK_CLEAR, "Clear Current _Data...", "<Control>d", "Clear the data", self.clear),
             ("clear_all", None, "Clear _All Data...", "<Control><Alt>d", None, self.clear_all),
+            ("reload_current", None, "Reload Current Data...", "F5", None, None),
+            ("reload_all", None, "Reload All Data...", "<Shift>F5", None, None),
+            ("manual_save", None, "Man_ual Save", "<Control>m", None, None),
             ("fullscreen", Gtk.STOCK_FULLSCREEN, "Toggle _Fullscreen", "F11", "Toggle fullscreen", self.toggle_fullscreen),
             ("exit", Gtk.STOCK_QUIT, "_Quit...", None, "Close the application", lambda x: self.exit("ignore", "this"))
         ])
@@ -2048,9 +2051,7 @@ class Weather(Gtk.Window):
         # Show the dialog.
         about_dlg.show_all()
         
-        # Have the dialog close when the user presses the Close button.
-        # There is only one button, so it's not necessary to check for 
-        # Gtk.ResponseType.CLOSE here.
+        # Run then close the dialog.
         about_dlg.run()
         about_dlg.destroy()
 
