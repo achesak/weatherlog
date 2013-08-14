@@ -36,7 +36,7 @@ THE SOFTWARE.
 
 # Import any needed modules.
 # Import Gtk for the interface.
-from gi.repository import Gtk, Gdk
+from gi.repository import Gtk, Gdk, GdkPixbuf
 # Import json for loading and saving the data.
 import json
 # Import collections.Counter for getting how often items appear.
@@ -2011,6 +2011,17 @@ class Weather(Gtk.Window):
     def show_about(self, event):
         """Shows the About dialog."""
         
+        # Load the icon.
+        img_file = open("resources/images/icon.png", "rb")
+        img_bin = img_file.read()
+        img_file.close()
+        
+        # Get the PixBuf.
+        loader = GdkPixbuf.PixbufLoader.new_with_type("png")
+        loader.write(img_bin)
+        loader.close()
+        pixbuf = loader.get_pixbuf()
+        
         # Create the dialog.
         about_dlg = Gtk.AboutDialog()
         
@@ -2018,6 +2029,8 @@ class Weather(Gtk.Window):
         about_dlg.set_title("About WeatherLog")
         # Set the program name.
         about_dlg.set_program_name(TITLE)
+        # Set the program icon.
+        about_dlg.set_logo(pixbuf)
         # Set the program version.
         about_dlg.set_version(VERSION)
         # Set the comments.
