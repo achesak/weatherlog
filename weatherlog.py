@@ -92,7 +92,7 @@ from resources.dialogs.options_dialog import *
 
 
 # Get the main directory.
-main_dir = "%s/.weatherornot" % os.path.expanduser("~")
+main_dir = "%s/.weatherlog" % os.path.expanduser("~")
 
 # Check to see if the directory exists, and create it if it doesn't.
 dir_exists = True
@@ -152,7 +152,7 @@ except IOError:
 
 # Load the data.   
 try:
-    # This should be ~/.weatherornot/[profile name]/weather.json on Linux.
+    # This should be ~/.weatherlog/[profile name]/weather.json on Linux.
     data_file = open("%s/profiles/%s/weather.json" % (main_dir, last_profile), "r")
     data = json.load(data_file)
     data_file.close()
@@ -1276,7 +1276,7 @@ class Weather(Gtk.Window):
                 
                 # Save the current data.
                 try:
-                    # This should save to ~/.weatherornot/[profile name]/weather.json on Linux.
+                    # This should save to ~/.weatherlog/[profile name]/weather.json on Linux.
                     data_file = open("%s/profiles/%s/weather.json" % (main_dir, last_profile), "w")
                     json.dump(data, data_file)
                     data_file.close()
@@ -1708,7 +1708,7 @@ class Weather(Gtk.Window):
                 
                 # Save the current data.
                 try:
-                    # This should save to ~/.weatherornot/[profile name]/weather.json on Linux.
+                    # This should save to ~/.weatherlog/[profile name]/weather.json on Linux.
                     data_file = open("%s/profiles/%s/weather.json" % (main_dir, last_profile), "w")
                     json.dump(data, data_file)
                     data_file.close()
@@ -1729,7 +1729,7 @@ class Weather(Gtk.Window):
                 
                 # Load the data.   
                 try:
-                    # This should be ~/.weatherornot/[profile name]/weather.json on Linux.
+                    # This should be ~/.weatherlog/[profile name]/weather.json on Linux.
                     data_file = open("%s/profiles/%s/weather.json" % (main_dir, name), "r")
                     data = json.load(data_file)
                     data_file.close()
@@ -1801,7 +1801,7 @@ class Weather(Gtk.Window):
                 
                 # Save the current data.
                 try:
-                    # This should save to ~/.weatherornot/[profile name]/weather.json on Linux.
+                    # This should save to ~/.weatherlog/[profile name]/weather.json on Linux.
                     data_file = open("%s/profiles/%s/weather.json" % (main_dir, last_profile), "w")
                     json.dump(data, data_file)
                     data_file.close()
@@ -2016,7 +2016,7 @@ class Weather(Gtk.Window):
         
         # Save to the file.
         try:
-            # This should save to ~/.weatherornot/[profile name]/weather.json on Linux.
+            # This should save to ~/.weatherlog/[profile name]/weather.json on Linux.
             data_file = open("%s/profiles/%s/weather.json" % (main_dir, last_profile), "w")
             json.dump(data, data_file)
             data_file.close()
@@ -2050,7 +2050,7 @@ class Weather(Gtk.Window):
         
         # Save the last profile.
         try:
-            # This should save to ~/.weatherornot/lastprofile on Linux.
+            # This should save to ~/.weatherlog/lastprofile on Linux.
             prof_file = open("%s/lastprofile" % main_dir, "w")
             prof_file.write(last_profile)
             prof_file.close()
