@@ -152,6 +152,8 @@ except IOError:
     last_height = 500
 
 # If the user doesn't want to restore the window size, set the size to the defaults.
+if not "restore" in config:
+    config["restore"] = True
 if not config["restore"]:
     last_width = 900
     last_height = 500

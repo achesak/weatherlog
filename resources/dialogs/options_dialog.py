@@ -59,7 +59,8 @@ class OptionsDialog(Gtk.Dialog):
         # Show the dialog. The response gets handled by the function
         # in the main class.
         self.show_all()
-        
+    
+    
     def filter_numbers(self, event):
         """Filters non-numbers out of the entry."""
         
