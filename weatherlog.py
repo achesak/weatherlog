@@ -302,7 +302,7 @@ class Weather(Gtk.Window):
             ("clear_all", None, "Clear _All Data...", "<Control><Alt>d", None, self.clear_all),
             ("reload_current", None, "Reload Current Data...", "F5", None, None),
             ("reload_all", None, "Reload All Data...", "<Shift>F5", None, None),
-            ("manual_save", None, "Man_ual Save", "<Control>m", None, None),
+            ("manual_save", None, "Manual Save", "<Control>m", None, self.save),
             ("fullscreen", Gtk.STOCK_FULLSCREEN, "Toggle _Fullscreen", "F11", "Toggle fullscreen", self.toggle_fullscreen),
             ("exit", Gtk.STOCK_QUIT, "_Quit...", None, "Close the application", lambda x: self.exit("ignore", "this"))
         ])
@@ -1710,7 +1710,7 @@ class Weather(Gtk.Window):
                 try:
                     # This should save to ~/.weatherornot/[profile name]/weather.json on Linux.
                     data_file = open("%s/profiles/%s/weather.json" % (main_dir, last_profile), "w")
-                    json.dump(data, data_file, indent = 4)
+                    json.dump(data, data_file)
                     data_file.close()
                     
                 except IOError:
@@ -2011,6 +2011,67 @@ class Weather(Gtk.Window):
         opt_dlg.destroy()
     
     
+    def save(self, show_dialog = True):
+        """Saves the data."""
+        
+        # Save to the file.
+        try:
+            # This should save to ~/.weatherornot/[profile name]/weather.json on Linux.
+            data_file = open("%s/profiles/%s/weather.json" % (main_dir, last_profile), "w")
+            json.dump(data, data_file)
+            data_file.close()
+            
+        except IOError:
+            # Show the error message if something happened, but continue.
+            # This one is shown if there was an error writing to the file.
+            print("Error saving data file (IOError).")
+        
+        except (TypeError, ValueError):
+            # Show the error message if something happened, but continue.
+            # This one is shown if there was an error with the data type.
+            print("Error saving data file (TypeError or ValueError).")
+        
+        # Save the configuration.
+        try:
+            # Save the configuration file.
+            config_file = open("%s/config" % main_dir, "w")
+            json.dump(config, config_file)
+            config_file.close()
+            
+        except IOError:
+            # Show the error message if something happened, but continue.
+            # This one is shown if there was an error writing to the file.
+            print("Error saving configuration file (IOError).")
+        
+        except (TypeError, ValueError):
+            # Show the error message if something happened, but continue.
+            # This one is shown if there was an error with the data type.
+            print("Error saving configuration file (TypeError or ValueError).")
+        
+        # Save the last profile.
+        try:
+            # This should save to ~/.weatherornot/lastprofile on Linux.
+            prof_file = open("%s/lastprofile" % main_dir, "w")
+            prof_file.write(last_profile)
+            prof_file.close()
+            
+        except IOError:
+            # Show the error message if something happened, but continue.
+            # This one is shown if there was an error writing to the file.
+            print("Error saving profile file (IOError).")
+        
+        # Show the dialog, if specified.
+        if show_dialog:
+            
+            # Show the dialog.
+            sav_dlg = Gtk.MessageDialog(self, 0, Gtk.MessageType.INFO, Gtk.ButtonsType.OK, "Manual Save - %s" % last_profile)
+            sav_dlg.format_secondary_text("Data has been saved.")
+            
+            # Run then close the dialog.
+            sav_dlg.run()
+            sav_dlg.destroy()
+    
+    
     def show_about(self, event):
         """Shows the About dialog."""
         
@@ -2066,51 +2127,8 @@ class Weather(Gtk.Window):
     def exit(self, x, y):
         """Saves data and closes the application."""
         
-        # Save to the file.
-        try:
-            # This should save to ~/.weatherornot/[profile name]/weather.json on Linux.
-            data_file = open("%s/profiles/%s/weather.json" % (main_dir, last_profile), "w")
-            json.dump(data, data_file)
-            data_file.close()
-            
-        except IOError:
-            # Show the error message if something happened, but continue.
-            # This one is shown if there was an error writing to the file.
-            print("Error saving data file (IOError).")
-        
-        except (TypeError, ValueError):
-            # Show the error message if something happened, but continue.
-            # This one is shown if there was an error with the data type.
-            print("Error saving data file (TypeError or ValueError).")
-        
-        # Save the configuration.
-        try:
-            # Save the configuration file.
-            config_file = open("%s/config" % main_dir, "w")
-            json.dump(config, config_file)
-            config_file.close()
-            
-        except IOError:
-            # Show the error message if something happened, but continue.
-            # This one is shown if there was an error writing to the file.
-            print("Error saving configuration file (IOError).")
-        
-        except (TypeError, ValueError):
-            # Show the error message if something happened, but continue.
-            # This one is shown if there was an error with the data type.
-            print("Error saving configuration file (TypeError or ValueError).")
-        
-        # Save the last profile.
-        try:
-            # This should save to ~/.weatherornot/lastprofile on Linux.
-            prof_file = open("%s/lastprofile" % main_dir, "w")
-            prof_file.write(last_profile)
-            prof_file.close()
-            
-        except IOError:
-            # Show the error message if something happened, but continue.
-            # This one is shown if there was an error writing to the file.
-            print("Error saving profile file (IOError).")
+        # Save the application.
+        self.save(show_dialog = False)
         
         # Close the  application.
         Gtk.main_quit()
