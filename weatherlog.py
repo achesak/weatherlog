@@ -2046,7 +2046,7 @@ class Weather(Gtk.Window):
         """Shows the help in a web browser."""
         
         # Open the help file.
-        webbrowser.open("resources/help/help.html")    
+        webbrowser.open_new("resources/help/help.html")    
     
 
     def exit(self, x, y):
