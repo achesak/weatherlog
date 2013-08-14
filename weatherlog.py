@@ -300,9 +300,9 @@ class Weather(Gtk.Window):
             ("cloud_cover_range", None, "_Cloud Cover in Range...", "<Control><Shift>c", None, lambda x: self.info_range("Cloud Cover")),
             ("clear_data", Gtk.STOCK_CLEAR, "Clear Current _Data...", "<Control>d", "Clear the data", self.clear),
             ("clear_all", None, "Clear _All Data...", "<Control><Alt>d", None, self.clear_all),
-            ("reload_current", None, "Reload Current Data...", "F5", None, None),
+            ("reload_current", None, "Reload Current Data...", "F5", None, self.reload_current),
             ("reload_all", None, "Reload All Data...", "<Shift>F5", None, None),
-            ("manual_save", None, "Manual Save", "<Control>m", None, self.save),
+            ("manual_save", None, "Manual Save", "<Control>m", None, lambda x: self.save(show_dialog = True)),
             ("fullscreen", Gtk.STOCK_FULLSCREEN, "Toggle _Fullscreen", "F11", "Toggle fullscreen", self.toggle_fullscreen),
             ("exit", Gtk.STOCK_QUIT, "_Quit...", None, "Close the application", lambda x: self.exit("ignore", "this"))
         ])
@@ -1738,13 +1738,13 @@ class Weather(Gtk.Window):
                     # Show the error message, and close the application.
                     # This one shows if there was a problem reading the file.
                     print("Error importing data (IOError).")
-                    sys.exit()
+                    data = []
                     
                 except (TypeError, ValueError):
                     # Show the error message, and close the application.
                     # This one shows if there was a problem with the data type.
                     print("Error importing data (TypeError or ValueError).")
-                    sys.exit()
+                    data = []
                 
                 # Switch to the new profile.
                 last_profile = name
@@ -2070,6 +2070,60 @@ class Weather(Gtk.Window):
             # Run then close the dialog.
             sav_dlg.run()
             sav_dlg.destroy()
+    
+    
+    def reload_current(self, event):
+        """Reloads the current data."""
+        
+        global data
+        
+        # Show the confirmation dialog.
+        rel_dlg = Gtk.MessageDialog(self, 0, Gtk.MessageType.QUESTION, Gtk.ButtonsType.OK_CANCEL, "Reload Current Data - %s" % last_profile)
+        rel_dlg.format_secondary_text("Are you sure you want to reload the current data?\n\nUnsaved changes will be lost.")
+        
+        # Get the response.
+        response = rel_dlg.run()
+        rel_dlg.destroy()
+        
+        # If the user wants to continue:
+        if response == Gtk.ResponseType.OK:
+            
+            # Clear the list.
+            data[:] = []
+            
+            # Clear the ListStore.
+            self.liststore.clear()
+            
+            # Load the data.   
+            try:
+                # This should be ~/.weatherlog/[profile name]/weather.json on Linux.
+                data_file = open("%s/profiles/%s/weather.json" % (main_dir, last_profile), "r")
+                data = json.load(data_file)
+                data_file.close()
+                
+            except IOError:
+                # Show the error message, and close the application.
+                # This one shows if there was a problem reading the file.
+                print("Error importing data (IOError).")
+                data = []
+                
+            except (TypeError, ValueError):
+                # Show the error message, and close the application.
+                # This one shows if there was a problem with the data type.
+                print("Error importing data (TypeError or ValueError).")
+                data = []
+            
+            # Update the ListStore.
+            for i in data:
+                self.liststore.append(i)
+        
+            # Tell the user the data has been reloaded.
+            rel_dlg = Gtk.MessageDialog(self, 0, Gtk.MessageType.INFO, Gtk.ButtonsType.OK, "Reload Current Data - %s" % last_profile)
+            rel_dlg.format_secondary_text("Data has been reloaded.")
+            
+            # Run then close the dialog.
+            rel_dlg.run()
+            rel_dlg.destroy()
     
     
     def show_about(self, event):
