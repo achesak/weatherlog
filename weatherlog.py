@@ -476,7 +476,16 @@ class Weather(Gtk.Window):
             date = tm.get_value(ti, 0)
         
         except:
-            # If nothing was selected, don't continue.
+            # If nothing was selected, show a dialog and don't continue.
+            
+            # Tell the user there is nothing selected.
+            sel_dlg = Gtk.MessageDialog(self, 0, Gtk.MessageType.WARNING, Gtk.ButtonsType.OK, "Remove - %s" % last_profile)
+            sel_dlg.format_secondary_text("No list item selected.")
+            
+            # Run then close the dialog.
+            sel_dlg.run()
+            sel_dlg.destroy()
+            
             return
         
         # Confirm that the user wants to delete the row.
