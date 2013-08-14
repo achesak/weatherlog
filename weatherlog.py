@@ -133,6 +133,7 @@ try:
 except IOError:
     # Continue.
     config = {"pre-fill": False,
+              "restore": True,
               "location": "",
               "units": "metric",
               "pastebin": "d2314ff616133e54f728918b8af1500e"}
@@ -147,6 +148,11 @@ try:
 
 except IOError:
     # Continue.
+    last_width = 900
+    last_height = 500
+
+# If the user doesn't want to restore the window size, set the size to the defaults.
+if not config["restore"]:
     last_width = 900
     last_height = 500
 
@@ -1949,11 +1955,13 @@ class Weather(Gtk.Window):
             
             # Get the values.
             prefill = opt_dlg.pre_chk.get_active()
+            restore = opt_dlg.win_chk.get_active()
             location = opt_dlg.loc_ent.get_text()
             units_ = opt_dlg.unit_com.get_active_text().lower()
             
             # Set the configuration.
             config["pre-fill"] = prefill
+            config["restore" ] = restore
             config["location"] = location
             config["units"] = units_
             

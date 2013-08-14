@@ -31,10 +31,15 @@ class OptionsDialog(Gtk.Dialog):
         self.pre_chk.set_active(config["pre-fill"])
         opt_grid.attach(self.pre_chk, 0, 0, 2, 1)
         
+        # Create the restore window size checkbox.
+        self.win_chk = Gtk.CheckButton("Restore window size")
+        self.win_chk.set_active(config["restore"])
+        opt_grid.attach_next_to(self.win_chk, self.pre_chk, Gtk.PositionType.BOTTOM, 2, 1)
+        
         # Create the location label and entry.
         loc_lbl = Gtk.Label("Location: ")
         loc_lbl.set_alignment(0, 0.5)
-        opt_grid.attach_next_to(loc_lbl, self.pre_chk, Gtk.PositionType.BOTTOM, 1, 1)
+        opt_grid.attach_next_to(loc_lbl, self.win_chk, Gtk.PositionType.BOTTOM, 1, 1)
         self.loc_ent = Gtk.Entry()
         self.loc_ent.set_max_length(5)
         self.loc_ent.connect("changed", self.filter_numbers)
