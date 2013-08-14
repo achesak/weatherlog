@@ -9,7 +9,7 @@
 # WeatherLog is an application for keeping track of the weather.
 
 # Released under the MIT open source license:
-"""
+license_text = """
 Copyright (c) 2013 Adam Chesak
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -2040,7 +2040,7 @@ class Weather(Gtk.Window):
         # Set the authors. This is, of course, only me. I feel special.
         about_dlg.set_authors(["Adam Chesak <achesak@yahoo.com>"])
         # Set the license.
-        about_dlg.set_license_type(Gtk.License.MIT_X11)
+        about_dlg.set_license(license_text)
         # Set the website.
         about_dlg.set_website("http://poultryandprogramming.wordpress.com/")
         about_dlg.set_website_label("http://poultryandprogramming.wordpress.com/")
