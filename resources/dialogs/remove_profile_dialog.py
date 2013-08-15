@@ -12,6 +12,7 @@ class RemoveProfileDialog(Gtk.Dialog):
     """Shows the "Remove Profile" dialog."""
     def __init__(self, parent, profiles):
         """Create the dialog."""
+        
         # This window should be modal.
         Gtk.Dialog.__init__(self, "Remove Profile", parent, Gtk.DialogFlags.MODAL)
         

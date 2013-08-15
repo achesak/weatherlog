@@ -34,8 +34,7 @@ def html(data2, units):
     # Add the data. Loop through each list, and add it as a table row.
     for i in data:
         
-        # Convert the data to utf-8. This will cause an error otherwise,
-        # for reasons I don't quite understand.
+        # Convert the data to utf-8.
         for j in range(0, len(i)):
             i[j] = i[j].encode("utf-8")
         
@@ -74,8 +73,7 @@ def csv(data2, units):
     # Add the data. Loop through each list, and add it as a row.
     for i in data:
         
-        # Convert the data to utf-8. This will cause an error otherwise,
-        # for reasons I don't quite understand.
+        # Convert the data to utf-8.
         for j in range(0, len(i)):
             i[j] = i[j].encode("utf-8")
         

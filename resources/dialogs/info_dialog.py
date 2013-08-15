@@ -16,6 +16,7 @@ class GenericInfoDialog(Gtk.Dialog):
     """Shows the info dialog."""
     def __init__(self, parent, title, data):
         """Create the dialog."""
+        
         # This window should be modal.
         Gtk.Dialog.__init__(self, title, parent, Gtk.DialogFlags.MODAL)
         self.set_default_size(300, 300)

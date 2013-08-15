@@ -8,7 +8,6 @@
 VERSION = "1.0"
 TITLE = "WeatherLog"
 
-
 # Define the menu and toolbar XML.
 MENU_DATA = """
 <ui>

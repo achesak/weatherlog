@@ -12,6 +12,7 @@ class AddProfileDialog(Gtk.Dialog):
     """Shows the "Add Profile" dialog."""
     def __init__(self, parent):
         """Create the dialog."""
+        
         # This window should be modal.
         Gtk.Dialog.__init__(self, "Add Profile", parent, Gtk.DialogFlags.MODAL)
         

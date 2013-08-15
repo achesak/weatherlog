@@ -5,7 +5,7 @@
 
 
 def degree_to_direction(deg):
-    """Convert degree to wind direction."""
+    """Convert degrees to wind direction."""
     
     # N < 11.25
     if deg < 11.25:

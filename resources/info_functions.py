@@ -22,8 +22,11 @@ def mean(numbers):
     return total / len(numbers)
 
 
-def median(numbers):
+def median(numbers2):
     """Finds the median of a list of numbers."""
+    
+    # Make a copy of the data. The original list should be unmodified.
+    numbers = numbers2[:]
     
     # Sort the list.
     numbers.sort()
