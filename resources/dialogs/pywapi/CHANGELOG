@@ -1,3 +1,6 @@
+v0.3.5 (14 August 2013)
+! Better handling of Weather.com data when current conditions are empty
+
 v0.3.4 (17 July 2013)
 ! Fix for Unicode decoding issue in get_woeid_from_yahoo()
 

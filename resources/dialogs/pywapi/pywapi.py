@@ -28,7 +28,7 @@
 
 """ Fetches weather reports from Yahoo! Weather, Weather.com and NOAA """
 
-__version__ = "0.3.4"
+__version__ = "0.3.5"
 
 try:
     # Python 3 imports
@@ -155,7 +155,7 @@ def get_weather_from_weather_com(location_id, units = 'metric'):
                'wind':'wind', 's':'speed', 'gust':'gust', 'hmid':'humidity',
                'vis':'visibility', 'uv':'uv', 'i':'index', 'dewp':'dewpoint',
                'moon':'moon_phase', 'hi':'high', 'low':'low', 'sunr':'sunrise',
-             'suns':'sunset', 'bt':'brief_text', 'ppcp':'chance_precip'}
+               'suns':'sunset', 'bt':'brief_text', 'ppcp':'chance_precip'}
 
     data_structure = {'head': ('ut', 'ud', 'us', 'up', 'ur'),
                       'loc': ('dnam', 'lat', 'lon'),
@@ -165,6 +165,16 @@ def get_weather_from_weather_com(location_id, units = 'metric'):
                     'wind': ('s','gust','d','t'),
                     'uv': ('i','t'),
                     'moon': ('icon','t')}
+
+    # sanity check, skip missing items
+    try:
+        for (tag, list_of_tags2) in data_structure.items():
+            for tag2 in list_of_tags2:
+                if weather_dom.getElementsByTagName(tag)[0].childNodes.length == 0:
+                    data_structure[tag] = []
+    except IndexError:
+        error_data = {'error': 'Error parsing Weather.com response. Full response: %s' % xml_response}
+        return error_data
 
     try:
         weather_data = {}
@@ -179,38 +189,40 @@ def get_weather_from_weather_com(location_id, units = 'metric'):
         error_data = {'error': 'Error parsing Weather.com response. Full response: %s' % xml_response}
         return error_data
 
-    cc_dom = weather_dom.getElementsByTagName('cc')[0]
-    for (tag, list_of_tags2) in cc_structure.items():
-        key = key_map[tag]
-        weather_data['current_conditions'][key] = {}
-        for tag2 in list_of_tags2:
-            key2 = key_map[tag2]
-            weather_data['current_conditions'][key][key2] = cc_dom.getElementsByTagName(
-                tag)[0].getElementsByTagName(tag2)[0].firstChild.data
-            
-    forecasts = []
-    time_of_day_map = {'d':'day', 'n':'night'}
-    for forecast in weather_dom.getElementsByTagName('dayf')[0].getElementsByTagName('day'):
-        tmp_forecast = {}
-        tmp_forecast['day_of_week'] = forecast.getAttribute('t')
-        tmp_forecast['date'] = forecast.getAttribute('dt')
-        for tag in ('hi', 'low', 'sunr', 'suns'):
+    if weather_dom.getElementsByTagName('cc')[0].childNodes.length > 0:
+        cc_dom = weather_dom.getElementsByTagName('cc')[0]
+        for (tag, list_of_tags2) in cc_structure.items():
             key = key_map[tag]
-            tmp_forecast[key] = forecast.getElementsByTagName(
-                tag)[0].firstChild.data
-        for part in forecast.getElementsByTagName('part'):
-            time_of_day = time_of_day_map[part.getAttribute('p')]
-            tmp_forecast[time_of_day] = {}
-            for tag2 in ('icon', 't', 'bt', 'ppcp', 'hmid'):
+            weather_data['current_conditions'][key] = {}
+            for tag2 in list_of_tags2:
                 key2 = key_map[tag2]
-                tmp_forecast[time_of_day][
-                    key2] = part.getElementsByTagName(tag2)[0].firstChild.data
-            tmp_forecast[time_of_day]['wind'] = {}
-            for tag2 in ('s', 'gust', 'd', 't'):            
-                key2 = key_map[tag2]
-                tmp_forecast[time_of_day]['wind'][key2] = part.getElementsByTagName(
-                    'wind')[0].getElementsByTagName(tag2)[0].firstChild.data
-        forecasts.append(tmp_forecast)
+                weather_data['current_conditions'][key][key2] = cc_dom.getElementsByTagName(
+                    tag)[0].getElementsByTagName(tag2)[0].firstChild.data
+    
+    forecasts = []
+    if weather_dom.getElementsByTagName('dayf') > 0:
+        time_of_day_map = {'d':'day', 'n':'night'}
+        for forecast in weather_dom.getElementsByTagName('dayf')[0].getElementsByTagName('day'):
+            tmp_forecast = {}
+            tmp_forecast['day_of_week'] = forecast.getAttribute('t')
+            tmp_forecast['date'] = forecast.getAttribute('dt')
+            for tag in ('hi', 'low', 'sunr', 'suns'):
+                key = key_map[tag]
+                tmp_forecast[key] = forecast.getElementsByTagName(
+                    tag)[0].firstChild.data
+            for part in forecast.getElementsByTagName('part'):
+                time_of_day = time_of_day_map[part.getAttribute('p')]
+                tmp_forecast[time_of_day] = {}
+                for tag2 in ('icon', 't', 'bt', 'ppcp', 'hmid'):
+                    key2 = key_map[tag2]
+                    tmp_forecast[time_of_day][
+                        key2] = part.getElementsByTagName(tag2)[0].firstChild.data
+                tmp_forecast[time_of_day]['wind'] = {}
+                for tag2 in ('s', 'gust', 'd', 't'):            
+                    key2 = key_map[tag2]
+                    tmp_forecast[time_of_day]['wind'][key2] = part.getElementsByTagName(
+                        'wind')[0].getElementsByTagName(tag2)[0].firstChild.data
+            forecasts.append(tmp_forecast)
         
     weather_data['forecasts'] = forecasts
     
