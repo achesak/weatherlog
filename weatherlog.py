@@ -71,7 +71,7 @@ except ImportError:
 sys.dont_write_bytecode = True
 
 # Import the application's UI data.
-from resources.ui import *
+from resources.ui import VERSION, TITLE, MENU_DATA
 # Import the functions for various tasks.
 import resources.utility_functions as utility_functions
 # Import the functions for getting the data.
