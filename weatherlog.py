@@ -1571,7 +1571,7 @@ class Weather(Gtk.Window):
         """Clears all data."""
         
         # Confirm that the user wants to clear the data.
-        response = show_question_dialog(self, "Confirm Clear All Data - %s" % last_profile, "Are you sure you want to clear all the data?\n\nThis action cannot be undone, and requires a restart.")
+        response = show_question_dialog(self, "Confirm Clear All Data", "Are you sure you want to clear all the data?\n\nThis action cannot be undone, and requires a restart.")
         
         # If the user confirms the clear:
         if response == Gtk.ResponseType.OK:
@@ -1587,7 +1587,7 @@ class Weather(Gtk.Window):
             shutil.rmtree(main_dir)
             
             # Tell the user data has been cleared and that it will now close.
-            show_alert_dialog(self, "Clear All Data - %s" % last_profile, "All data has been cleared.\n\nWeatherLog will now close...")
+            show_alert_dialog(self, "Clear All Data", "All data has been cleared.\n\nWeatherLog will now close...")
             
             # Close the application.
             Gtk.main_quit()
