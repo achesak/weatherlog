@@ -1962,13 +1962,13 @@ class Weather(Gtk.Window):
             except IOError:
                 # Show the error message, and close the application.
                 # This one shows if there was a problem reading the file.
-                print("Error importing data (IOError).")
+                print("Error reloading data (IOError).")
                 data = []
                 
             except (TypeError, ValueError):
                 # Show the error message, and close the application.
                 # This one shows if there was a problem with the data type.
-                print("Error importing data (TypeError or ValueError).")
+                print("Error reloading data (TypeError or ValueError).")
                 data = []
             
             # Update the ListStore.
