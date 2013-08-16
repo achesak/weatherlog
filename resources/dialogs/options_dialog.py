@@ -67,5 +67,5 @@ class OptionsDialog(Gtk.Dialog):
         # Get the text.
         text = self.loc_ent.get_text()
         
-        # Only allow numbers.
+        # Only allow numbers. Filter out any other characters.
         self.loc_ent.set_text("".join([i for i in text if i in "0123456789"]))

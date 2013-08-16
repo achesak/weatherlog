@@ -24,6 +24,8 @@ def convert_float(data):
     # Loop through the list, converting the items to floats.
     numbers = []
     for i in range(0, len(data)):
+        
+        # If the item is "None", skip it.
         if data[i] != "None":
             numbers.append(float(data[i]))
     
@@ -55,11 +57,16 @@ def split_list(data):
     
     # Loop through the list, splitting the items and adding them to the new lists.
     for i in data2:
+        
+        # Split the item and append the first one.
         i_split = i.split(" ")
         n_list1.append(i_split[0])
         
+        # If the second one is "None", append an empty string.
         if i == "None":
             n_list2.append("")
+        
+        # Otherwise, append the second value.
         else:
             n_list2.append(i_split[1])
     
@@ -79,8 +86,11 @@ def split_list2(data):
     # Loop through the list, splitting the items and adding them to the new list.
     for i in data2:
         
+        # If the value is "None" don't split it, but use an empty string as the first value.
         if i == "None":
             n_list.append(["", "None"])
+        
+        # Otherwise, split the value.
         else:
             n_list.append(i.split(" "))
     
@@ -96,8 +106,12 @@ def none_to_zero(data):
     
     # Loop through the list, and change values as needed.
     for i in data:
+        
+        # If the value is "None", change it to "0".
         if i == "None":
             n_list.append("0")
+        
+        # Otherwise, append it as is.
         else:
             n_list.append(i)
     

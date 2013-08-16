@@ -39,9 +39,9 @@ THE SOFTWARE.
 from gi.repository import Gtk, Gdk, GdkPixbuf
 # Import json for loading and saving the data.
 import json
-# Import collections.Counter for getting how often items appear.
+# Import collections.Counter for getting the mode of the data.
 from collections import Counter
-# Import webbrowser for opening websites in the user's browser.
+# Import webbrowser for opening the help in the user's browser.
 import webbrowser
 # Import datetime for getting the difference between two dates.
 import datetime
@@ -55,7 +55,7 @@ import shutil
 import os
 # Import os.path for seeing if a directory exists.
 import os.path
-# Import sys for sys.exit().
+# Import sys for closing the application.
 import sys
 # Import urlopen and urlencode for opening a file from a URL.
 # Try importing Python 3 module, then fall back to Python 2 if needed.
@@ -67,28 +67,37 @@ except ImportError:
     # Fall back to Python 2.
     from urllib import urlopen, urlencode
 
-# Tell Python not to create bytecode files.
+# Tell Python not to create bytecode files, as they mess with the git repo.
+# This line can be removed be the user, if desired.
 sys.dont_write_bytecode = True
 
 # Import the application's UI data.
 from resources.ui import VERSION, TITLE, MENU_DATA
 # Import the functions for various tasks.
 import resources.utility_functions as utility_functions
-# Import the functions for getting the data.
+# Import the functions for getting and calculating the data.
 import resources.info_functions as info_functions
 # Import the functions for exporting the data.
 import resources.export as export
 # Import the function for converting the data.
 import resources.convert as convert
-# Import the dialogs.
+# Import the dialog for getting new data.
 from resources.dialogs.new_dialog import AddNewDialog
+# Import the dialog for displaying information.
 from resources.dialogs.info_dialog import GenericInfoDialog
+# Import the dialog for telling the user there is no data.
 from resources.dialogs.data_dialog import show_no_data_dialog
+# Import the dialog for adding a profile.
 from resources.dialogs.add_profile_dialog import AddProfileDialog
+# Import the dialog for switching profiles.
 from resources.dialogs.switch_profile_dialog import SwitchProfileDialog
+# Import the dialog for removing profiles.
 from resources.dialogs.remove_profile_dialog import RemoveProfileDialog
+# Import the dialog for selecting a range of dates to show information about.
 from resources.dialogs.info_range_dialog import InfoRangeDialog
+# Import the dialog for changing the options.
 from resources.dialogs.options_dialog import OptionsDialog
+# Import the miscellaneous dialogs.
 from resources.dialogs.misc_dialogs import show_alert_dialog, show_error_dialog, show_question_dialog
 
 
@@ -98,12 +107,15 @@ main_dir = "%s/.weatherlog" % os.path.expanduser("~")
 # Check to see if the directory exists, and create it if it doesn't.
 dir_exists = True
 if not os.path.exists(main_dir) or not os.path.isdir(main_dir):
+    
     # Create the directory.
     os.makedirs(main_dir)
+    
     # Create the last profile file.
     last_prof = open("%s/lastprofile" % main_dir, "w")
     last_prof.write("Main Profile")
     last_prof.close()
+    
     # Create the Main Profile directory and data file.
     os.makedirs("%s/profiles/Main Profile" % main_dir)
     last_prof_data = open("%s/profiles/Main Profile/weather.json" % main_dir, "w")
@@ -152,9 +164,12 @@ except IOError:
     last_width = 900
     last_height = 500
 
-# If the user doesn't want to restore the window size, set the size to the defaults.
+# If there is no "restore" configuration option, add one.
+# This is for compatability with upgrades from previous versions.
 if not "restore" in config:
     config["restore"] = True
+
+# If the user doesn't want to restore the window size, set the size to the defaults.
 if not config["restore"]:
     last_width = 900
     last_height = 500
@@ -201,6 +216,7 @@ class Weather(Gtk.Window):
     """Shows the main application."""
     def __init__(self):
         """Create the application."""
+        
         # Create the window.
         Gtk.Window.__init__(self, title = "WeatherLog")
         # Set the window size.
@@ -218,34 +234,42 @@ class Weather(Gtk.Window):
         
         # Create the TreeView for displaying the data.
         self.treeview = Gtk.TreeView(model = self.liststore)
+        
         # Create the Date column.
         date_text = Gtk.CellRendererText()
         self.date_col = Gtk.TreeViewColumn("Date", date_text, text = 0)
         self.treeview.append_column(self.date_col)
+        
         # Create the Temperature column.
         temp_text = Gtk.CellRendererText()
         self.temp_col = Gtk.TreeViewColumn("Temperature (%s)" % units["temp"], temp_text, text = 1)
         self.treeview.append_column(self.temp_col)
+        
         # Create the Precipation column.
         prec_text = Gtk.CellRendererText()
         self.prec_col = Gtk.TreeViewColumn("Precipitation (%s)" % units["prec"], prec_text, text = 2)
         self.treeview.append_column(self.prec_col)
+        
         # Create the Wind column.
         wind_text = Gtk.CellRendererText()
         self.wind_col = Gtk.TreeViewColumn("Wind (%s)" % units["wind"], wind_text, text = 3)
         self.treeview.append_column(self.wind_col)
+        
         # Create the Humidity column.
         humi_text = Gtk.CellRendererText()
         self.humi_col = Gtk.TreeViewColumn("Humidity (%)", humi_text, text = 4)
         self.treeview.append_column(self.humi_col)
+        
         # Create the Air Pressure column.
         airp_text = Gtk.CellRendererText()
         self.airp_col = Gtk.TreeViewColumn("Air Pressure (%s)" % units["airp"], airp_text, text = 5)
         self.treeview.append_column(self.airp_col)
+        
         # Create the Cloud Cover column.
         clou_text = Gtk.CellRendererText()
         self.clou_col = Gtk.TreeViewColumn("Cloud Cover", clou_text, text = 6)
         self.treeview.append_column(self.clou_col)
+        
         # Create the Notes column.
         note_text = Gtk.CellRendererText()
         self.note_col = Gtk.TreeViewColumn("Notes", note_text, text = 7)
@@ -253,14 +277,17 @@ class Weather(Gtk.Window):
         
         # Create the ScrolledWindow for displaying the list with a scrollbar.
         scrolled_win = Gtk.ScrolledWindow()
+        
         # The container should scroll both horizontally and vertically.
         scrolled_win.set_hexpand(True)
         scrolled_win.set_vexpand(True)
+        
         # Display the TreeView.
         scrolled_win.add(self.treeview)
         
         # Create the action group for the menus.
         action_group = Gtk.ActionGroup("actions")
+        
         # Create the Weather menu.
         action_group.add_actions([
             ("weather_menu", None, "Weather"),

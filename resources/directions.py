@@ -7,6 +7,10 @@
 def degree_to_direction(deg):
     """Convert degrees to wind direction."""
     
+    # Each direction gets 22.5 degreees, or 11.25 degrees away from the exact direction.
+    # For example, exact North is 0 degrees, but anything larger than or equal to 348.75
+    # or smaller than 11.25 is also considered North.
+    
     # N < 11.25
     if deg < 11.25:
         return "N"

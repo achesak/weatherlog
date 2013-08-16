@@ -7,6 +7,7 @@
 # Import GTK for the dialog.
 from gi.repository import Gtk
 
+
 class InfoRangeDialog(Gtk.Dialog):
     """Shows the "Add New" dialog."""
     def __init__(self, parent, profile, info, which, day, month, year):

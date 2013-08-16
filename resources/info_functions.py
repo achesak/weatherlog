@@ -4,9 +4,9 @@
 # This file defines functions used for getting the data.
 
 
-# Import the math module.
+# Import the math module for rounding numbers.
 import math
-# Import the collections module.
+# Import the collections module for getting the mode of a list of numbers.
 import collections
 
 
@@ -43,7 +43,7 @@ def median(numbers2):
 def range(numbers):
     """Finds the range of a list of numbers."""
     
-    # Range is maximum - minimum.
+    # Calculate the range.
     return max(numbers) - min(numbers)
 
 
