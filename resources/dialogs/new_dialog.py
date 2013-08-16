@@ -6,6 +6,8 @@
 
 # Import GTK for the dialog.
 from gi.repository import Gtk
+# Import the dialogs.
+from misc_dialogs import *
 # Import pywapi to pre-fill the fields.
 import pywapi.pywapi as pywapi
 # Import function to convert degrees to a wind direction.
@@ -141,12 +143,7 @@ class AddNewDialog(Gtk.Dialog):
         if prefill and user_location and len(user_location) == 5 and station:
             
             # Show the dialog.
-            pre_dlg = Gtk.MessageDialog(self, 0, Gtk.MessageType.INFO, Gtk.ButtonsType.OK, "Add New - %s" % profile)
-            pre_dlg.format_secondary_text("Temperature, wind, humidity, and air pressure have been pre-filled using data from Yahoo! Weather.\n\nLocation is set to %s, at %s." % (user_location, station))
-            
-            # Run the dialog.
-            pre_dlg.run()
-            pre_dlg.destroy()
+            show_alert_dialog(self, "Add New - %s" % profile, "Temperature, wind, humidity, and air pressure have been pre-filled using data from Yahoo! Weather.\n\nLocation is set to %s, at %s." % (user_location, station))
     
     
     def enable_prec(self, widget):
@@ -187,12 +184,7 @@ class AddNewDialog(Gtk.Dialog):
         if "error" in data:
             
             # Show the dialog.
-            pre_dlg = Gtk.MessageDialog(self, 0, Gtk.MessageType.WARNING, Gtk.ButtonsType.OK, "Add New - %s" % profile)
-            pre_dlg.format_secondary_text("There was an error getting the data from Yahoo! Weather.")
-            
-            # Run the dialog.
-            pre_dlg.run()
-            pre_dlg.destroy()
+            show_error_dialog(self, "Add New - %s" % profile, "There was an error getting the data from Yahoo! Weather.")
             
             return False
         

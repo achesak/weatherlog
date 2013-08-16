@@ -8,7 +8,7 @@
 from gi.repository import Gtk
 
 
-def show_alert_dialog(title, msg):
+def show_alert_dialog(self, title, msg):
     """Shows the alert dialog."""
     
     # Create the dialog.
@@ -20,7 +20,7 @@ def show_alert_dialog(title, msg):
     alert_dlg.destroy()
 
 
-def show_error_dialog(title, msg):
+def show_error_dialog(self, title, msg):
     """Shows the error dialog."""
     
     # Create the dialog.
@@ -32,7 +32,7 @@ def show_error_dialog(title, msg):
     error_dlg.destroy()
 
 
-def show_question_dialog(title, msg):
+def show_question_dialog(self, title, msg):
     """Shows the question dialog."""
     
     # Create the dialog.

@@ -89,6 +89,7 @@ from resources.dialogs.switch_profile_dialog import *
 from resources.dialogs.remove_profile_dialog import *
 from resources.dialogs.info_range_dialog import *
 from resources.dialogs.options_dialog import *
+from resources.dialogs.misc_dialogs import *
 
 
 # Get the main directory.
@@ -489,22 +490,12 @@ class Weather(Gtk.Window):
             # If nothing was selected, show a dialog and don't continue.
             
             # Tell the user there is nothing selected.
-            sel_dlg = Gtk.MessageDialog(self, 0, Gtk.MessageType.WARNING, Gtk.ButtonsType.OK, "Remove - %s" % last_profile)
-            sel_dlg.format_secondary_text("No list item selected.")
-            
-            # Run then close the dialog.
-            sel_dlg.run()
-            sel_dlg.destroy()
+            show_error_dialog(self, "Remove - %s" % last_profile, "No list item selected.")
             
             return
         
         # Confirm that the user wants to delete the row.
-        rem_dlg = Gtk.MessageDialog(self, 0, Gtk.MessageType.QUESTION, Gtk.ButtonsType.OK_CANCEL, "Confirm Remove - %s" % last_profile)
-        rem_dlg.format_secondary_text("Are you sure you want to delete the data for %s?\n\nThis action cannot be undone." % date)
-        
-        # Get the response.
-        response = rem_dlg.run()
-        rem_dlg.destroy()
+        response = show_question_dialog(self, "Confirm Remove - %s" % last_profile, "Are you sure you want to delete the data for %s?\n\nThis action cannot be undone." % date)
         
         # If the user doesn't want to overwrite, cancel the action.
         if response != Gtk.ResponseType.OK:
@@ -564,12 +555,7 @@ class Weather(Gtk.Window):
             if date1 not in utility_functions.get_column(data, 0):
                 
                 # Show the dialog.
-                info_dlg = Gtk.MessageDialog(self, 0, Gtk.MessageType.WARNING, Gtk.ButtonsType.OK, "%s Info in Range - %s" % (info, last_profile))
-                info_dlg.format_secondary_text("%s is not a valid date." % date1)
-                  
-                # Run then close the dialog.
-                info_dlg.run()
-                info_dlg.destroy()
+                show_error_dialog(self, "%s Info in Range - %s" % (info, last_profile), "%s is not a valid date." % date1)
                 
                 # Close the dialog.
                 start_dlg.destroy()
@@ -604,12 +590,7 @@ class Weather(Gtk.Window):
             if date2 not in utility_functions.get_column(data, 0):
                 
                 # Show the dialog.
-                info_dlg = Gtk.MessageDialog(self, 0, Gtk.MessageType.WARNING, Gtk.ButtonsType.OK, "%s Info in Range - %s" % (info, last_profile))
-                info_dlg.format_secondary_text("%s is not a valid date." % date1)
-                  
-                # Run then close the dialog.
-                info_dlg.run()
-                info_dlg.destroy()
+                show_error_dialog(self, "%s Info in Range - %s" % (info, last_profile), "%s is not a valid date." % date2)
                 
                 # Close the dialog.
                 end_dlg.destroy()
@@ -1378,7 +1359,7 @@ class Weather(Gtk.Window):
         # If there is no data, tell the user and cancel the action.
         if len(data) == 0:
             
-            # Tell the user there is no data to export,
+            # Tell the user there is no data to export.
             expo_dlg = Gtk.MessageDialog(self, 0, Gtk.MessageType.INFO, Gtk.ButtonsType.OK, "Export - %s" % last_profile)
             expo_dlg.format_secondary_text("There is no data to export.")
             
