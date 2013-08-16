@@ -443,17 +443,12 @@ class Weather(Gtk.Window):
             # If the date is already used, show the dialog.
             if date in utility_functions.get_column(data, 0):
                 
-                # Create the error dialog.
-                err_miss_dlg = Gtk.MessageDialog(new_dlg, 0, Gtk.MessageType.WARNING, Gtk.ButtonsType.OK, "Add New")
-                err_miss_dlg.format_secondary_text("The date %s has already been entered." % date)
-                
                 # Show the error dialog.
-                err_miss_dlg.run()
+                show_error_dialog(new_dlg, "Add New", "The date %s has already been entered." % date)
                 
                 # Close the error dialog and the "Add New" dialog. The second one
                 # is needed because of a bug where the window will stop responding
                 # to events, making it useless. Fix later!
-                err_miss_dlg.destroy()
                 new_dlg.destroy()
                 
             else:
@@ -602,12 +597,7 @@ class Weather(Gtk.Window):
             elif date2 == date1 or (day1, month1 + 1, year1) > (day2, month2 + 1, year2):
                 
                 # Show the dialog.
-                info_dlg = Gtk.MessageDialog(self, 0, Gtk.MessageType.WARNING, Gtk.ButtonsType.OK, "%s Info in Range - %s" % (info, last_profile))
-                info_dlg.format_secondary_text("The ending date must not be before or the same as the starting date.")
-                  
-                # Run then close the dialog.
-                info_dlg.run()
-                info_dlg.destroy()
+                show_error_dialog(self, "%s Info in Range - %s" % (info, last_profile), "The ending date must not be before or the same as the starting date.")
                 
                 # Close the dialog.
                 end_dlg.destroy()
@@ -1095,12 +1085,7 @@ class Weather(Gtk.Window):
         if response == Gtk.ResponseType.OK:
             
             # Confirm that the user wants to overwrite the data.
-            over_dlg = Gtk.MessageDialog(self, 0, Gtk.MessageType.QUESTION, Gtk.ButtonsType.OK_CANCEL, "Confirm Import - %s" % last_profile)
-            over_dlg.format_secondary_text("Are you sure you want to import the data?\n\nCurrent data will be overwritten.")
-            
-            # Get the response.
-            response = over_dlg.run()
-            over_dlg.destroy()
+            response = show_question_dialog(self, "Confirm Import - %s" % last_profile, "Are you sure you want to import the data?\n\nCurrent data will be overwritten.")
             
             # If the user doesn't want to overwrite, cancel the action.
             if response != Gtk.ResponseType.OK:
@@ -1235,28 +1220,22 @@ class Weather(Gtk.Window):
             if re.compile("[^a-zA-Z1-90 \.\-\+\(\)\?\!]").match(name) or not name or name.lstrip().rstrip() == "" or name.startswith("."):
                 
                 # Create the error dialog.
-                err_new_dlg = Gtk.MessageDialog(new_dlg, 0, Gtk.MessageType.WARNING, Gtk.ButtonsType.OK, "Add Profile")
-                err_new_dlg.format_secondary_text("The profile name \"%s\" is not valid.\n\n1. Profile names may not be blank.\n2. Profile names may not be all spaces.\n3. Profile names may only be letters, numbers, and spaces.\n4. Profile names may not start with a period (\".\")." % name)
+                show_error_dialog(new_dlg, "Add Profile", "The profile name \"%s\" is not valid.\n\n1. Profile names may not be blank.\n2. Profile names may not be all spaces.\n3. Profile names may only be letters, numbers, and spaces.\n4. Profile names may not start with a period (\".\")." % name)
                 
-                # Show then close the error dialog.
-                err_new_dlg.run()
-                err_new_dlg.destroy()
-                
+                # Close the dialog.
                 new_dlg.destroy()
+                
                 return
             
             # If the profile name is already in use, show a dialog and cancel the action.
             elif os.path.isdir("%s/profiles/%s" % (main_dir, name)):
                 
                 # Create the error dialog.
-                err_new_dlg = Gtk.MessageDialog(new_dlg, 0, Gtk.MessageType.WARNING, Gtk.ButtonsType.OK, "Add Profile")
-                err_new_dlg.format_secondary_text("The profile name \"%s\" is already in use." % name)
+                show_error_dialog(new_dlg, "Add Profile", "The profile name \"%s\" is already in use." % name)
                 
-                # Show then close the error dialog.
-                err_new_dlg.run()
-                err_new_dlg.destroy()
-                
+                # Close the dialog.
                 new_dlg.destroy()
+                
                 return
             
             # Otherwise if there are no problems with the name, add the profile.
@@ -1360,12 +1339,7 @@ class Weather(Gtk.Window):
         if len(data) == 0:
             
             # Tell the user there is no data to export.
-            expo_dlg = Gtk.MessageDialog(self, 0, Gtk.MessageType.INFO, Gtk.ButtonsType.OK, "Export - %s" % last_profile)
-            expo_dlg.format_secondary_text("There is no data to export.")
-            
-            # Run then close the dialog.
-            expo_dlg.run()
-            expo_dlg.destroy()
+            show_alert_dialog(self, "Export - %s" % last_profile, "There is no data to export.")
             
             return
         
@@ -1408,12 +1382,7 @@ class Weather(Gtk.Window):
         if len(data) == 0:
             
             # Tell the user there is no data to export,
-            expo_dlg = Gtk.MessageDialog(self, 0, Gtk.MessageType.INFO, Gtk.ButtonsType.OK, "Export to HTML - %s" % last_profile)
-            expo_dlg.format_secondary_text("There is no data to export.")
-            
-            # Run then close the dialog.
-            expo_dlg.run()
-            expo_dlg.destroy()
+            show_alert_dialog(self, "Export to HTML - %s" % last_profile, "There is no data to export.")
             
             return
         
@@ -1454,12 +1423,7 @@ class Weather(Gtk.Window):
         if len(data) == 0:
             
             # Tell the user there is no data to export,
-            expo_dlg = Gtk.MessageDialog(self, 0, Gtk.MessageType.INFO, Gtk.ButtonsType.OK, "Export to CSV - %s" % last_profile)
-            expo_dlg.format_secondary_text("There is no data to export.")
-            
-            # Run then close the dialog.
-            expo_dlg.run()
-            expo_dlg.destroy()
+            show_alert_dialog(self, "Export to CSV - %s" % last_profile, "There is no data to export.")
             
             return
         
@@ -1500,12 +1464,7 @@ class Weather(Gtk.Window):
         if len(data) == 0:
             
             # Tell the user there is no data to export.
-            expo_dlg = Gtk.MessageDialog(self, 0, Gtk.MessageType.INFO, Gtk.ButtonsType.OK, "Export to Pastebin - %s" % last_profile)
-            expo_dlg.format_secondary_text("There is no data to export.")
-            
-            # Run then close the dialog.
-            expo_dlg.run()
-            expo_dlg.destroy()
+            show_alert_dialog(self, "Export to Pastebin - %s" % last_profile, "There is no data to export.")
             
             return
         
@@ -1553,33 +1512,19 @@ class Weather(Gtk.Window):
         if success:
             
             # Tell the user the URL.
-            expo_dlg = Gtk.MessageDialog(self, 0, Gtk.MessageType.INFO, Gtk.ButtonsType.OK, "Export to Pastebin - %s" % last_profile)
-            expo_dlg.format_secondary_text("The data has been uploaded to Pastebin, and can be accessed at the following URL:\n\n%s" % result)
-            
-            # Run then close the dialog.
-            expo_dlg.run()
-            expo_dlg.destroy()
+            show_alert_dialog(self, "Export to Pastebin - %s" % last_profile, "The data has been uploaded to Pastebin, and can be accessed at the following URL:\n\n%s" % result)
         
         else:
             
             # Tell the user there was an error
-            expo_dlg = Gtk.MessageDialog(self, 0, Gtk.MessageType.WARNING, Gtk.ButtonsType.OK, "Export to Pastebin - %s" % last_profile)
-            expo_dlg.format_secondary_text("The data could not be uploaded to Pastebin.")
-            
-            # Run then close the dialog.
-            expo_dlg.run()
-            expo_dlg.destroy()
+            show_error_dialog(self, "Export to Pastebin - %s" % last_profile, "The data could not be uploaded to Pastebin.")
     
     
     def clear(self, event):
         """Clears the data."""
         
         # Confirm that the user wants to clear the data.
-        clear_dlg = Gtk.MessageDialog(self, 0, Gtk.MessageType.QUESTION, Gtk.ButtonsType.OK_CANCEL, "Confirm Clear Current Data - %s" % last_profile)
-        clear_dlg.format_secondary_text("Are you sure you want to clear the data?\n\nThis action cannot be undone.")
-        
-        # Get the response.
-        response = clear_dlg.run()
+        response = show_question_dialog(self, "Confirm Clear Current Data - %s" % last_profile, "Are you sure you want to clear the data?\n\nThis action cannot be undone.")
         
         # If the user confirms the clear:
         if response == Gtk.ResponseType.OK:
@@ -1591,9 +1536,6 @@ class Weather(Gtk.Window):
             # Clear the ListStore.
             self.liststore.clear()
         
-        # Close the dialog.
-        clear_dlg.destroy()
-        
         # Update the title.
         self.set_title("WeatherLog - %s - %s to %s" % (last_profile, (data[0][0] if len(data) != 0 else "None"), (data[len(data)-1][0] if len(data) != 0 else "None")))
     
@@ -1602,11 +1544,7 @@ class Weather(Gtk.Window):
         """Clears all data."""
         
         # Confirm that the user wants to clear the data.
-        clear_dlg = Gtk.MessageDialog(self, 0, Gtk.MessageType.QUESTION, Gtk.ButtonsType.OK_CANCEL, "Confirm Clear All Data - %s" % last_profile)
-        clear_dlg.format_secondary_text("Are you sure you want to clear all the data?\n\nThis action cannot be undone, and requires a restart.")
-        
-        # Get the response.
-        response = clear_dlg.run()
+        response = show_question_dialog(self, "Confirm Clear All Data - %s" % last_profile, "Are you sure you want to clear all the data?\n\nThis action cannot be undone, and requires a restart.")
         
         # If the user confirms the clear:
         if response == Gtk.ResponseType.OK:
@@ -1622,18 +1560,10 @@ class Weather(Gtk.Window):
             shutil.rmtree(main_dir)
             
             # Tell the user data has been cleared and that it will now close.
-            clear_dlg2 = Gtk.MessageDialog(clear_dlg, 0, Gtk.MessageType.INFO, Gtk.ButtonsType.OK, "Clear All Data - %s" % last_profile)
-            clear_dlg2.format_secondary_text("All data has been cleared.\n\nWeatherLog will now close...")
+            show_alert_dialog(self, "Clear All Data - %s" % last_profile, "All data has been cleared.\n\nWeatherLog will now close...")
             
-            # Run then close the dialog.
-            clear_dlg2.run()
-            clear_dlg2.destroy()
-            
-            # Close the dialog.
+            # Close the application.
             Gtk.main_quit()
-        
-        # Close the dialog.
-        clear_dlg.destroy()
     
     
     def switch_profile(self, event):
@@ -1662,12 +1592,7 @@ class Weather(Gtk.Window):
         if len(profiles) == 0:
             
             # Tell the user there are no other profiles.
-            prof_dlg = Gtk.MessageDialog(self, 0, Gtk.MessageType.INFO, Gtk.ButtonsType.OK, "Switch Profile")
-            prof_dlg.format_secondary_text("There are no other profiles.")
-            
-            # Run then close the dialog.
-            prof_dlg.run()
-            prof_dlg.destroy()
+            show_alert_dialog(self, "Switch Profile", "There are no other profiles.")
             
             return
         
@@ -1684,12 +1609,7 @@ class Weather(Gtk.Window):
             if not name:
                 
                 # Create the error dialog.
-                err_swi_dlg = Gtk.MessageDialog(swi_dlg, 0, Gtk.MessageType.WARNING, Gtk.ButtonsType.OK, "Switch Profile")
-                err_swi_dlg.format_secondary_text("No profile was selected.")
-                
-                # Show then close the error dialog.
-                err_swi_dlg.run()
-                err_swi_dlg.destroy()
+                show_error_dialog(swi_dlg, "Switch Profile", "No profile was selected.")
             
             # Otherwise if there are no problems with the name, switch to the profile.
             else:
@@ -1766,23 +1686,13 @@ class Weather(Gtk.Window):
             if re.compile("[^a-zA-Z1-90 \.\-\+\(\)\?\!]").match(name) or not name or name.lstrip().rstrip() == "" or name.startswith("."):
                 
                 # Create the error dialog.
-                err_new_dlg = Gtk.MessageDialog(new_dlg, 0, Gtk.MessageType.WARNING, Gtk.ButtonsType.OK, "Add Profile")
-                err_new_dlg.format_secondary_text("The profile name \"%s\" is not valid.\n\n1. Profile names may not be blank.\n2. Profile names may not be all spaces.\n3. Profile names may only be letters, numbers, and spaces.\n4. Profile names may not start with a period (\".\")." % name)
-                
-                # Show then close the error dialog.
-                err_new_dlg.run()
-                err_new_dlg.destroy()
+                show_error_dialog(new_dlg, "Add Profile", "The profile name \"%s\" is not valid.\n\n1. Profile names may not be blank.\n2. Profile names may not be all spaces.\n3. Profile names may only be letters, numbers, and spaces.\n4. Profile names may not start with a period (\".\")." % name)
             
             # If the profile name is already in use, show a dialog and cancel the action.
             elif os.path.isdir("%s/profiles/%s" % (main_dir, name)):
                 
                 # Create the error dialog.
-                err_new_dlg = Gtk.MessageDialog(new_dlg, 0, Gtk.MessageType.WARNING, Gtk.ButtonsType.OK, "Add Profile")
-                err_new_dlg.format_secondary_text("The profile name \"%s\" is already in use." % name)
-                
-                # Show then close the error dialog.
-                err_new_dlg.run()
-                err_new_dlg.destroy()
+                show_error_dialog(new_dlg, "Add Profile", "The profile name \"%s\" is already in use." % name)
             
             # Otherwise if there are no problems with the name, add the profile.
             else:
@@ -1845,12 +1755,7 @@ class Weather(Gtk.Window):
         if len(profiles) == 0:
             
             # Tell the user there are no other profiles.
-            prof_dlg = Gtk.MessageDialog(self, 0, Gtk.MessageType.INFO, Gtk.ButtonsType.OK, "Remove Profile")
-            prof_dlg.format_secondary_text("There are no other profiles.")
-            
-            # Run then close the dialog.
-            prof_dlg.run()
-            prof_dlg.destroy()
+            show_alert_dialog(self, "Remove Profile", "There are no other profiles.")
             
             return
         
@@ -1867,35 +1772,13 @@ class Weather(Gtk.Window):
             if not name:
                 
                 # Create the error dialog.
-                err_rem_dlg = Gtk.MessageDialog(rem_dlg, 0, Gtk.MessageType.WARNING, Gtk.ButtonsType.OK, "Remove Profile")
-                err_rem_dlg.format_secondary_text("No profile was selected.")
-                
-                # Show then close the error dialog.
-                err_rem_dlg.run()
-                err_rem_dlg.destroy()
-            
-            # If the selected profile is the current one, show a 
-            # dialog and cancel the action.
-            elif name == last_profile:
-                
-                # Create the error dialog.
-                err_rem_dlg = Gtk.MessageDialog(rem_dlg, 0, Gtk.MessageType.WARNING, Gtk.ButtonsType.OK, "Remove Profile")
-                err_rem_dlg.format_secondary_text("The current profile cannot be deleted.")
-                
-                # Show then close the error dialog.
-                err_rem_dlg.run()
-                err_rem_dlg.destroy()
+                show_error_dialog(rem_dlg, "Remove Profile", "No profile was selected.")
             
             # Otherwise remove the profile.
             else:
                 
                 # Confirm that the user wants to delete the profile.
-                del_dlg = Gtk.MessageDialog(rem_dlg, 0, Gtk.MessageType.QUESTION, Gtk.ButtonsType.OK_CANCEL, "Confirm Remove Profile")
-                del_dlg.format_secondary_text("Are you sure you want to remove the profile?\n\nThis action cannot be undone.")
-                
-                # Get the response.
-                response = del_dlg.run()
-                del_dlg.destroy()
+                response = show_question_dialog(rem_dlg, "Confirm Remove Profile", "Are you sure you want to remove the profile?\n\nThis action cannot be undone.")
                 
                 # If the user wants to continue:
                 if response == Gtk.ResponseType.OK:
@@ -1975,14 +1858,9 @@ class Weather(Gtk.Window):
             if current_units != units_:
                 
                 # Ask the user if they want to convert the data.
-                con_dlg = Gtk.MessageDialog(opt_dlg, 0, Gtk.MessageType.QUESTION, Gtk.ButtonsType.OK_CANCEL, "Options")
-                con_dlg.format_secondary_text("The units have changed from %s to %s.\n\nWould you like to convert the data to the new units?" % (current_units, units_))
+                response = show_question_dialog(opt_dlg, "Options", "The units have changed from %s to %s.\n\nWould you like to convert the data to the new units?" % (current_units, units_))
                 
-                # Get the response.
-                response = con_dlg.run()
-                con_dlg.destroy()
-                
-                # If the user wants to continue:
+                # If the user wants to convert the data:
                 if response == Gtk.ResponseType.OK:
                     
                     # Convert the data.
@@ -2054,12 +1932,7 @@ class Weather(Gtk.Window):
         if show_dialog:
             
             # Show the dialog.
-            sav_dlg = Gtk.MessageDialog(self, 0, Gtk.MessageType.INFO, Gtk.ButtonsType.OK, "Manual Save - %s" % last_profile)
-            sav_dlg.format_secondary_text("Data has been saved.")
-            
-            # Run then close the dialog.
-            sav_dlg.run()
-            sav_dlg.destroy()
+            show_alert_dialog(self, "Manual Save - %s" % last_profile, "Data has been saved.")
     
     
     def reload_current(self, event):
@@ -2068,12 +1941,7 @@ class Weather(Gtk.Window):
         global data
         
         # Show the confirmation dialog.
-        rel_dlg = Gtk.MessageDialog(self, 0, Gtk.MessageType.QUESTION, Gtk.ButtonsType.OK_CANCEL, "Reload Current Data - %s" % last_profile)
-        rel_dlg.format_secondary_text("Are you sure you want to reload the current data?\n\nUnsaved changes will be lost.")
-        
-        # Get the response.
-        response = rel_dlg.run()
-        rel_dlg.destroy()
+        response = show_question_dialog(self, "Reload Current Data - %s" % last_profile, "Are you sure you want to reload the current data?\n\nUnsaved changes will be lost.")
         
         # If the user wants to continue:
         if response == Gtk.ResponseType.OK:
@@ -2106,14 +1974,6 @@ class Weather(Gtk.Window):
             # Update the ListStore.
             for i in data:
                 self.liststore.append(i)
-        
-            # Tell the user the data has been reloaded.
-            rel_dlg = Gtk.MessageDialog(self, 0, Gtk.MessageType.INFO, Gtk.ButtonsType.OK, "Reload Current Data - %s" % last_profile)
-            rel_dlg.format_secondary_text("Data has been reloaded.")
-            
-            # Run then close the dialog.
-            rel_dlg.run()
-            rel_dlg.destroy()
     
     
     def show_about(self, event):
