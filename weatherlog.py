@@ -81,15 +81,15 @@ import resources.export as export
 # Import the function for converting the data.
 import resources.convert as convert
 # Import the dialogs.
-from resources.dialogs.new_dialog import *
-from resources.dialogs.info_dialog import *
-from resources.dialogs.data_dialog import *
-from resources.dialogs.add_profile_dialog import *
-from resources.dialogs.switch_profile_dialog import *
-from resources.dialogs.remove_profile_dialog import *
-from resources.dialogs.info_range_dialog import *
-from resources.dialogs.options_dialog import *
-from resources.dialogs.misc_dialogs import *
+from resources.dialogs.new_dialog import AddNewDialog
+from resources.dialogs.info_dialog import GenericInfoDialog
+from resources.dialogs.data_dialog import show_no_data_dialog
+from resources.dialogs.add_profile_dialog import AddProfileDialog
+from resources.dialogs.switch_profile_dialog import SwitchProfileDialog
+from resources.dialogs.remove_profile_dialog import RemoveProfileDialog
+from resources.dialogs.info_range_dialog import InfoRangeDialog
+from resources.dialogs.options_dialog import OptionsDialog
+from resources.dialogs.misc_dialogs import show_alert_dialog, show_error_dialog, show_question_dialog
 
 
 # Get the main directory.
