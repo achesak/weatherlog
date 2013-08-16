@@ -512,7 +512,7 @@ class Weather(Gtk.Window):
             # If nothing was selected, show a dialog and don't continue.
             
             # Tell the user there is nothing selected.
-            show_error_dialog(self, "Remove - %s" % last_profile, "No list item selected.")
+            show_error_dialog(self, "Remove - %s" % last_profile, "No date selected.")
             
             return
         
