@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 
-# This file defines the Add New dialog.
+# This file defines the function for showing the no data dialog.
 
 
 # Import GTK for the dialog.
