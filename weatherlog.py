@@ -1632,62 +1632,53 @@ class Weather(Gtk.Window):
         # If the OK button was pressed:
         if response == Gtk.ResponseType.OK:
             
-            # If nothing was selected, show a dialog and cancel the action.
-            if not name:
+            # Save the current data.
+            try:
+                # This should save to ~/.weatherlog/[profile name]/weather.json on Linux.
+                data_file = open("%s/profiles/%s/weather.json" % (main_dir, last_profile), "w")
+                json.dump(data, data_file)
+                data_file.close()
                 
-                # Create the error dialog.
-                show_error_dialog(swi_dlg, "Switch Profile", "No profile was selected.")
+            except IOError:
+                # Show the error message if something happened, but continue.
+                # This one is shown if there was an error writing to the file.
+                print("Error saving data file (IOError).")
             
-            # Otherwise if there are no problems with the name, switch to the profile.
-            else:
+            except (TypeError, ValueError):
+                # Show the error message if something happened, but continue.
+                # This one is shown if there was an error with the data type.
+                print("Error saving data file (TypeError or ValueError).")
+            
+            # Clear the old data.
+            data[:] = []
+            self.liststore.clear()
+            
+            # Load the data.   
+            try:
+                # This should be ~/.weatherlog/[profile name]/weather.json on Linux.
+                data_file = open("%s/profiles/%s/weather.json" % (main_dir, name), "r")
+                data = json.load(data_file)
+                data_file.close()
                 
-                # Save the current data.
-                try:
-                    # This should save to ~/.weatherlog/[profile name]/weather.json on Linux.
-                    data_file = open("%s/profiles/%s/weather.json" % (main_dir, last_profile), "w")
-                    json.dump(data, data_file)
-                    data_file.close()
-                    
-                except IOError:
-                    # Show the error message if something happened, but continue.
-                    # This one is shown if there was an error writing to the file.
-                    print("Error saving data file (IOError).")
-                
-                except (TypeError, ValueError):
-                    # Show the error message if something happened, but continue.
-                    # This one is shown if there was an error with the data type.
-                    print("Error saving data file (TypeError or ValueError).")
-                
-                # Clear the old data.
-                data[:] = []
-                self.liststore.clear()
-                
-                # Load the data.   
-                try:
-                    # This should be ~/.weatherlog/[profile name]/weather.json on Linux.
-                    data_file = open("%s/profiles/%s/weather.json" % (main_dir, name), "r")
-                    data = json.load(data_file)
-                    data_file.close()
-                    
-                except IOError:
-                    # Show the error message, and close the application.
-                    # This one shows if there was a problem reading the file.
-                    print("Error importing data (IOError).")
-                    data = []
-                    
-                except (TypeError, ValueError):
-                    # Show the error message, and close the application.
-                    # This one shows if there was a problem with the data type.
-                    print("Error importing data (TypeError or ValueError).")
-                    data = []
-                
-                # Switch to the new profile.
-                last_profile = name
-                for i in data:
-                    self.liststore.append(i)
-                
-                # Set the new title.
-                self.set_title("WeatherLog - %s - %s to %s" % (last_profile, (data[0][0] if len(data) != 0 else "None"), (data[len(data)-1][0] if len(data) != 0 else "None")))
+            except IOError:
+                # Show the error message, and close the application.
+                # This one shows if there was a problem reading the file.
+                print("Error importing data (IOError).")
+                data = []
+            
+            except (TypeError, ValueError):
+                # Show the error message, and close the application.
+                # This one shows if there was a problem with the data type.
+                print("Error importing data (TypeError or ValueError).")
+                data = []
+            
+            # Switch to the new profile.
+            last_profile = name
+            for i in data:
+                self.liststore.append(i)
+            
+            # Set the new title.
+            self.set_title("WeatherLog - %s - %s to %s" % (last_profile, (data[0][0] if len(data) != 0 else "None"), (data[len(data)-1][0] if len(data) != 0 else "None")))
         
         # Close the dialog.
         swi_dlg.destroy()
@@ -1795,23 +1786,14 @@ class Weather(Gtk.Window):
         # If the OK button was pressed:
         if response == Gtk.ResponseType.OK:
             
-            # If nothing was selected, show a dialog and cancel the action.
-            if not name:
-                
-                # Create the error dialog.
-                show_error_dialog(rem_dlg, "Remove Profile", "No profile was selected.")
+            # Confirm that the user wants to delete the profile.
+            response = show_question_dialog(rem_dlg, "Confirm Remove Profile", "Are you sure you want to remove the profile?\n\nThis action cannot be undone.")
             
-            # Otherwise remove the profile.
-            else:
+            # If the user wants to continue:
+            if response == Gtk.ResponseType.OK:
                 
-                # Confirm that the user wants to delete the profile.
-                response = show_question_dialog(rem_dlg, "Confirm Remove Profile", "Are you sure you want to remove the profile?\n\nThis action cannot be undone.")
-                
-                # If the user wants to continue:
-                if response == Gtk.ResponseType.OK:
-                    
-                    # Delete the directory.
-                    shutil.rmtree("%s/profiles/%s" % (main_dir, name))
+                # Delete the directory.
+                shutil.rmtree("%s/profiles/%s" % (main_dir, name))
         
         # Close the dialog.
         rem_dlg.destroy()
