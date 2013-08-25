@@ -149,7 +149,11 @@ except IOError:
               "restore": True,
               "location": "",
               "units": "metric",
-              "pastebin": "d2314ff616133e54f728918b8af1500e"}
+              "pastebin": "d2314ff616133e54f728918b8af1500e",
+              "show_units": True,
+              "show_dates": True,
+              "escape_fullscreen": "exit fullscreen",
+              "escape_windowed": "minimize"}
 
 # Get the previous window size.
 try:
@@ -164,10 +168,19 @@ except IOError:
     last_width = 900
     last_height = 500
 
-# If there is no "restore" configuration option, add one.
+# If there is missing configuration options, then add them.
 # This is for compatability with upgrades from previous versions.
 if not "restore" in config:
     config["restore"] = True
+if not "show_units" in config:
+    config["show_units"] = True
+if not "show_dates" in config:
+    config["show_dates"] = True
+if not "escape_windowed" in config:
+    config["escape_windowed"] = "minimize"
+if not "escape_fullscreen" in config:
+    config["escape_fullscreen"] = "exit fullscreen"
+
 
 # If the user doesn't want to restore the window size, set the size to the defaults.
 if not config["restore"]:
@@ -401,19 +414,37 @@ class Weather(Gtk.Window):
     def keypress(self, widget, event):
         """Handles keypresses."""
         
-        # If the Escape key was pressed and the application is in fullscreen,
-        # change back to windowed mode.
+        # If the Escape key was pressed and the application is in fullscreen:
         if Gdk.keyval_name(event.keyval) == "Escape" and self.fullscreen_state:
             
-            # Toggle the fullscreen state.
-            self.toggle_fullscreen("ignore")
+            # Do whatever the user wants:
+            # Ignore:
+            if config["escape_fullscreen"].lower() == "ignore":
+                return
+            
+            # Exit fullscreen:
+            elif config["escape_fullscreen"].lower() == "exit fullscreen":
+                self.toggle_fullscreen("ignore")
+            
+            # Close:
+            elif config["escape_fullscreen"].lower() == "close":
+                self.exit("ignore", "this")
         
-        # If the Escape key was pressed and the application isn't in fullscreen,
-        # iconify the window.
+        # If the Escape key was pressed and the application isn't in fullscreen:
         elif Gdk.keyval_name(event.keyval) == "Escape" and not self.fullscreen_state:
             
-            # iconify the window.
-            self.iconify()
+            # Do whatever the user wants:
+            # Ignore:
+            if config["escape_windowed"].lower() == "ignore":
+                return
+            
+            # Minimize:
+            elif config["escape_windowed"].lower() == "minimize":
+                self.iconify()
+            
+            # Close:
+            elif config["escape_windowed"].lower() == "close":
+                self.exit("ignore", "this")
     
     
     def delete_event(self, widget, event):
@@ -1833,12 +1864,20 @@ class Weather(Gtk.Window):
             restore = opt_dlg.win_chk.get_active()
             location = opt_dlg.loc_ent.get_text()
             units_ = opt_dlg.unit_com.get_active_text().lower()
+            esc_win = opt_dlg.escw_com.get_active_text().lower()
+            esc_ful = opt_dlg.escf_com.get_active_text().lower()
+            show_date = opt_dlg.date_chk.get_active()
+            show_units = opt_dlg.unit_chk.get_active()
             
             # Set the configuration.
             config["pre-fill"] = prefill
             config["restore" ] = restore
             config["location"] = location
             config["units"] = units_
+            config["escape_windowed"] = esc_win
+            config["escape_fullscreen"] = esc_ful
+            config["show_dates"] = show_date
+            config["show_units"] = show_units
             
             # Configure the units.
             # Metric:

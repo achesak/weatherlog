@@ -66,7 +66,7 @@ class OptionsDialog(Gtk.Dialog):
         self.escw_com = Gtk.ComboBoxText()
         for i in ["Ignore", "Minimize", "Close"]:
             self.escw_com.append_text(i)
-       # self.escw_com.set_active(["Metric", "Imperial"].index(config["units"].title()))
+        self.escw_com.set_active(["Ignore", "Minimize", "Close"].index(config["escape_windowed"].title()))
         opt_grid2.attach_next_to(self.escw_com, escw_lbl, Gtk.PositionType.RIGHT, 1, 1)
         
         # Create the Escape Fullscreen label and entry.
@@ -76,7 +76,7 @@ class OptionsDialog(Gtk.Dialog):
         self.escf_com = Gtk.ComboBoxText()
         for i in ["Ignore", "Exit Fullscreen", "Close"]:
             self.escf_com.append_text(i)
-       # self.escf_com.set_active(["Metric", "Imperial"].index(config["units"].title()))
+        self.escf_com.set_active(["Ignore", "Exit Fullscreen", "Close"].index(config["escape_fullscreen"].title()))
         opt_grid2.attach_next_to(self.escf_com, escf_lbl, Gtk.PositionType.RIGHT, 1, 1)
         
         # Create the third grid.
@@ -90,12 +90,12 @@ class OptionsDialog(Gtk.Dialog):
         
         # Create the Show dates in title checkbox.
         self.date_chk = Gtk.CheckButton("Show dates in title")
-       # self.date_chk.set_active(config["restore"])
+        self.date_chk.set_active(config["show_dates"])
         opt_grid3.attach(self.date_chk, 0, 1, 2, 1)
         
         # Create the Show units in list checkbox.
         self.unit_chk = Gtk.CheckButton("Show units in list")
-       # self.unit_chk.set_active(config["restore"])
+        self.unit_chk.set_active(config["show_units"])
         opt_grid3.attach(self.unit_chk, 0, 2, 2, 1)
         
         # Add the notebook.
