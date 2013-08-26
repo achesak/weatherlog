@@ -1300,21 +1300,7 @@ class Weather(Gtk.Window):
             else:
                 
                 # Save the current data.
-                try:
-                    # This should save to ~/.weatherlog/[profile name]/weather.json on Linux.
-                    data_file = open("%s/profiles/%s/weather.json" % (main_dir, last_profile), "w")
-                    json.dump(data, data_file)
-                    data_file.close()
-                    
-                except IOError:
-                    # Show the error message if something happened, but continue.
-                    # This one is shown if there was an error writing to the file.
-                    print("Error saving data file (IOError).")
-                
-                except (TypeError, ValueError):
-                    # Show the error message if something happened, but continue.
-                    # This one is shown if there was an error with the data type.
-                    print("Error saving data file (TypeError or ValueError).")
+                self.save(show_dialog = False)
                 
                 # Create the directory and file.
                 last_profile = name
@@ -1664,21 +1650,7 @@ class Weather(Gtk.Window):
         if response == Gtk.ResponseType.OK:
             
             # Save the current data.
-            try:
-                # This should save to ~/.weatherlog/[profile name]/weather.json on Linux.
-                data_file = open("%s/profiles/%s/weather.json" % (main_dir, last_profile), "w")
-                json.dump(data, data_file)
-                data_file.close()
-                
-            except IOError:
-                # Show the error message if something happened, but continue.
-                # This one is shown if there was an error writing to the file.
-                print("Error saving data file (IOError).")
-            
-            except (TypeError, ValueError):
-                # Show the error message if something happened, but continue.
-                # This one is shown if there was an error with the data type.
-                print("Error saving data file (TypeError or ValueError).")
+            self.save(show_dialog = False)
             
             # Clear the old data.
             data[:] = []
@@ -1747,21 +1719,7 @@ class Weather(Gtk.Window):
             else:
                 
                 # Save the current data.
-                try:
-                    # This should save to ~/.weatherlog/[profile name]/weather.json on Linux.
-                    data_file = open("%s/profiles/%s/weather.json" % (main_dir, last_profile), "w")
-                    json.dump(data, data_file)
-                    data_file.close()
-                    
-                except IOError:
-                    # Show the error message if something happened, but continue.
-                    # This one is shown if there was an error writing to the file.
-                    print("Error saving data file (IOError).")
-                
-                except (TypeError, ValueError):
-                    # Show the error message if something happened, but continue.
-                    # This one is shown if there was an error with the data type.
-                    print("Error saving data file (TypeError or ValueError).")
+                self.save(show_dialog = False)
                 
                 # Create the directory and file.
                 last_profile = name
