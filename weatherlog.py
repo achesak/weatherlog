@@ -527,7 +527,10 @@ class Weather(Gtk.Window):
         self.set_title("WeatherLog - %s - %s to %s" % (last_profile, (data[0][0] if len(data) != 0 else "None"), (data[len(data)-1][0] if len(data) != 0 else "None")))
         
         # Close the dialog.
-        new_dlg.destroy()        
+        new_dlg.destroy() 
+        
+        # Save the data.
+        self.save(show_dialog = False)
     
     
     def remove(self, event):
@@ -567,7 +570,10 @@ class Weather(Gtk.Window):
         
         # Update the title.
         self.set_title("WeatherLog - %s - %s to %s" % (last_profile, (data[0][0] if len(data) != 0 else "None"), (data[len(data)-1][0] if len(data) != 0 else "None")))
-    
+        
+        # Save the data.
+        self.save(show_dialog = False)
+        
     
     def info_range(self, info):
         """Gets the range for the info to display."""
@@ -1582,7 +1588,10 @@ class Weather(Gtk.Window):
         
         # Update the title.
         self.set_title("WeatherLog - %s - %s to %s" % (last_profile, (data[0][0] if len(data) != 0 else "None"), (data[len(data)-1][0] if len(data) != 0 else "None")))
-    
+        
+        # Save the data.
+        self.save(show_dialog = False)
+        
     
     def clear_all(self, event):
         """Clears all data."""
@@ -2035,10 +2044,7 @@ class Weather(Gtk.Window):
     
 
     def exit(self, x, y):
-        """Saves data and closes the application."""
-        
-        # Save the application.
-        self.save(show_dialog = False)
+        """Closes the application."""
         
         # Close the  application.
         Gtk.main_quit()
