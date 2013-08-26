@@ -404,11 +404,22 @@ class Weather(Gtk.Window):
         self.show_all()
         
         # Set the new title.
-        self.set_title("WeatherLog - %s - %s to %s" % (last_profile, (data[0][0] if len(data) != 0 else "None"), (data[len(data)-1][0] if len(data) != 0 else "None")))
+        if config["show_dates"]:
+            self.set_title("WeatherLog - %s - %s to %s" % (last_profile, (data[0][0] if len(data) != 0 else "None"), (data[len(data)-1][0] if len(data) != 0 else "None")))
+        else:
+            self.set_title("WeatherLog - %s" % last_profile)
         
         # Bind the events.
         self.connect("key-press-event", self.keypress)
         self.connect("delete-event", self.delete_event)
+        
+        # Change the titles, if needed.
+        if not config["show_units"]:
+            self.temp_col.set_title("Temperature")
+            self.prec_col.set_title("Precipitation")
+            self.wind_col.set_title("Wind")
+            self.humi_col.set_title("Humidity")
+            self.airp_col.set_title("Air Pressure")
     
     
     def keypress(self, widget, event):
@@ -524,7 +535,10 @@ class Weather(Gtk.Window):
                     self.liststore.append(i)
         
         # Update the title.
-        self.set_title("WeatherLog - %s - %s to %s" % (last_profile, (data[0][0] if len(data) != 0 else "None"), (data[len(data)-1][0] if len(data) != 0 else "None")))
+        if config["show_dates"]:
+            self.set_title("WeatherLog - %s - %s to %s" % (last_profile, (data[0][0] if len(data) != 0 else "None"), (data[len(data)-1][0] if len(data) != 0 else "None")))
+        else:
+            self.set_title("WeatherLog - %s" % last_profile)
         
         # Close the dialog.
         new_dlg.destroy() 
@@ -569,8 +583,11 @@ class Weather(Gtk.Window):
             self.liststore.append(i)
         
         # Update the title.
-        self.set_title("WeatherLog - %s - %s to %s" % (last_profile, (data[0][0] if len(data) != 0 else "None"), (data[len(data)-1][0] if len(data) != 0 else "None")))
-        
+        if config["show_dates"]:
+            self.set_title("WeatherLog - %s - %s to %s" % (last_profile, (data[0][0] if len(data) != 0 else "None"), (data[len(data)-1][0] if len(data) != 0 else "None")))
+        else:
+            self.set_title("WeatherLog - %s" % last_profile)
+            
         # Save the data.
         self.save(show_dialog = False)
         
@@ -1258,8 +1275,11 @@ class Weather(Gtk.Window):
                     self.liststore.append(i)
                 
                 # Update the title.
-                self.set_title("WeatherLog - %s - %s to %s" % (last_profile, (data[0][0] if len(data) != 0 else "None"), (data[len(data)-1][0] if len(data) != 0 else "None")))
-            
+                if config["show_dates"]:
+                    self.set_title("WeatherLog - %s - %s to %s" % (last_profile, (data[0][0] if len(data) != 0 else "None"), (data[len(data)-1][0] if len(data) != 0 else "None")))
+                else:
+                    self.set_title("WeatherLog - %s" % last_profile)
+                    
         # Close the dialog.
         import_dlg.destroy()        
     
@@ -1318,8 +1338,10 @@ class Weather(Gtk.Window):
                 self.liststore.clear()
                 
                 # Set the new title.
-                self.set_title("WeatherLog - %s - %s to %s" % (last_profile, (data[0][0] if len(data) != 0 else "None"), (data[len(data)-1][0] if len(data) != 0 else "None")))
-        
+                if config["show_dates"]:
+                    self.set_title("WeatherLog - %s - %s to %s" % (last_profile, (data[0][0] if len(data) != 0 else "None"), (data[len(data)-1][0] if len(data) != 0 else "None")))
+                else:
+                    self.set_title("WeatherLog - %s" % last_profile)
             # Close the dialog.
             new_dlg.destroy()
         
@@ -1587,7 +1609,10 @@ class Weather(Gtk.Window):
             self.liststore.clear()
         
         # Update the title.
-        self.set_title("WeatherLog - %s - %s to %s" % (last_profile, (data[0][0] if len(data) != 0 else "None"), (data[len(data)-1][0] if len(data) != 0 else "None")))
+        if config["show_dates"]:
+            self.set_title("WeatherLog - %s - %s to %s" % (last_profile, (data[0][0] if len(data) != 0 else "None"), (data[len(data)-1][0] if len(data) != 0 else "None")))
+        else:
+            self.set_title("WeatherLog - %s" % last_profile)
         
         # Save the data.
         self.save(show_dialog = False)
@@ -1690,8 +1715,11 @@ class Weather(Gtk.Window):
                 self.liststore.append(i)
             
             # Set the new title.
-            self.set_title("WeatherLog - %s - %s to %s" % (last_profile, (data[0][0] if len(data) != 0 else "None"), (data[len(data)-1][0] if len(data) != 0 else "None")))
-        
+            if config["show_dates"]:
+                self.set_title("WeatherLog - %s - %s to %s" % (last_profile, (data[0][0] if len(data) != 0 else "None"), (data[len(data)-1][0] if len(data) != 0 else "None")))
+            else:
+                self.set_title("WeatherLog - %s" % last_profile)
+                
         # Close the dialog.
         swi_dlg.destroy()
     
@@ -1740,8 +1768,11 @@ class Weather(Gtk.Window):
                 self.liststore.clear()
                 
                 # Set the new title.
-                self.set_title("WeatherLog - %s - %s to %s" % (last_profile, (data[0][0] if len(data) != 0 else "None"), (data[len(data)-1][0] if len(data) != 0 else "None")))
-        
+                if config["show_dates"]:
+                    self.set_title("WeatherLog - %s - %s to %s" % (last_profile, (data[0][0] if len(data) != 0 else "None"), (data[len(data)-1][0] if len(data) != 0 else "None")))
+                else:
+                    self.set_title("WeatherLog - %s" % last_profile)
+                    
         # Close the dialog.
         new_dlg.destroy()
     
@@ -1833,7 +1864,7 @@ class Weather(Gtk.Window):
             units_ = opt_dlg.unit_com.get_active_text().lower()
             esc_win = opt_dlg.escw_com.get_active_text().lower()
             esc_ful = opt_dlg.escf_com.get_active_text().lower()
-            show_date = opt_dlg.date_chk.get_active()
+            show_dates = opt_dlg.date_chk.get_active()
             show_units = opt_dlg.unit_chk.get_active()
             
             # Set the configuration.
@@ -1843,7 +1874,7 @@ class Weather(Gtk.Window):
             config["units"] = units_
             config["escape_windowed"] = esc_win
             config["escape_fullscreen"] = esc_ful
-            config["show_dates"] = show_date
+            config["show_dates"] = show_dates
             config["show_units"] = show_units
             
             # Configure the units.
@@ -1889,6 +1920,29 @@ class Weather(Gtk.Window):
                     self.liststore.clear()
                     for i in data:
                         self.liststore.append(i)
+            
+            # Add/remove the units, if desired:
+            if not config["show_units"]:
+                self.temp_col.set_title("Temperature")
+                self.prec_col.set_title("Precipitation")
+                self.wind_col.set_title("Wind")
+                self.humi_col.set_title("Humidity")
+                self.airp_col.set_title("Air Pressure")
+            else:
+                self.temp_col.set_title("Temperature (%s)" % units["temp"])
+                self.prec_col.set_title("Precipitation (%s)" % units["prec"])
+                self.wind_col.set_title("Wind (%s)" % units["wind"])
+                self.humi_col.set_title("Humidity (%)")
+                self.airp_col.set_title("Air Pressure (%s)" % units["airp"])
+            
+            # Set the title, if desired:
+            if config["show_dates"]:
+                self.set_title("WeatherLog - %s - %s to %s" % (last_profile, (data[0][0] if len(data) != 0 else "None"), (data[len(data)-1][0] if len(data) != 0 else "None")))
+            else:
+                self.set_title("WeatherLog - %s" % last_profile)
+            
+            # Save the data.
+            self.save(show_dialog = False)
         
         # Close the dialog.
         opt_dlg.destroy()
