@@ -1332,9 +1332,6 @@ class Weather(Gtk.Window):
             # Otherwise if there are no problems with the name, add the profile.
             else:
                 
-                # Save the current data.
-                self.save(show_dialog = False)
-                
                 # Create the directory and file.
                 last_profile = name
                 os.makedirs("%s/profiles/%s" % (main_dir, name))
@@ -1690,9 +1687,6 @@ class Weather(Gtk.Window):
         # If the OK button was pressed:
         if response == Gtk.ResponseType.OK:
             
-            # Save the current data.
-            self.save(show_dialog = False)
-            
             # Clear the old data.
             data[:] = []
             self.liststore.clear()
@@ -1761,9 +1755,6 @@ class Weather(Gtk.Window):
             
             # Otherwise if there are no problems with the name, add the profile.
             else:
-                
-                # Save the current data.
-                self.save(show_dialog = False)
                 
                 # Create the directory and file.
                 last_profile = name
