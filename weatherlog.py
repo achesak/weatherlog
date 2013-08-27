@@ -35,7 +35,7 @@ THE SOFTWARE.
 
 
 # Import any needed modules.
-# Import Gtk for the interface.
+# Import Gtk and Gdk for the interface.
 from gi.repository import Gtk, Gdk, GdkPixbuf
 # Import json for loading and saving the data.
 import json
@@ -155,19 +155,6 @@ except IOError:
               "escape_fullscreen": "exit fullscreen",
               "escape_windowed": "minimize"}
 
-# Get the previous window size.
-try:
-    # Load the window size file.
-    wins_file = open("%s/window_size" % main_dir, "r")
-    last_width = int(wins_file.readline())
-    last_height = int(wins_file.readline())
-    wins_file.close()
-
-except IOError:
-    # Continue.
-    last_width = 900
-    last_height = 500
-
 # If there is missing configuration options, then add them.
 # This is for compatability with upgrades from previous versions.
 if not "restore" in config:
@@ -181,6 +168,18 @@ if not "escape_windowed" in config:
 if not "escape_fullscreen" in config:
     config["escape_fullscreen"] = "exit fullscreen"
 
+# Get the previous window size.
+try:
+    # Load the window size file.
+    wins_file = open("%s/window_size" % main_dir, "r")
+    last_width = int(wins_file.readline())
+    last_height = int(wins_file.readline())
+    wins_file.close()
+
+except IOError:
+    # Continue.
+    last_width = 900
+    last_height = 500
 
 # If the user doesn't want to restore the window size, set the size to the defaults.
 if not config["restore"]:
@@ -211,6 +210,10 @@ except (TypeError, ValueError):
 # Metric:
 if config["units"] == "metric":
     
+    # Temperature is Celsius.
+    # Precipitation is centimeters.
+    # Wind speed is kilometers per hour.
+    # Air pressure is hecto-pascals.
     units = {"temp": "°C",
              "prec": "cm",
              "wind": "kph",
@@ -219,6 +222,10 @@ if config["units"] == "metric":
 # Imperial:
 elif config["units"] == "imperial":
     
+    # Temperature is Fahrenheit.
+    # Precipitation is inches.
+    # Wind speed is miles per hour
+    # Air pressure is millibars.
     units = {"temp": "°F",
              "prec": "in",
              "wind": "mph",
@@ -1453,7 +1460,7 @@ class Weather(Gtk.Window):
         # If there is no data, tell the user and cancel the action.
         if len(data) == 0:
             
-            # Tell the user there is no data to export,
+            # Tell the user there is no data to export.
             show_alert_dialog(self, "Export to HTML - %s" % last_profile, "There is no data to export.")
             
             return
@@ -1494,7 +1501,7 @@ class Weather(Gtk.Window):
         # If there is no data, tell the user and cancel the action.
         if len(data) == 0:
             
-            # Tell the user there is no data to export,
+            # Tell the user there is no data to export.
             show_alert_dialog(self, "Export to CSV - %s" % last_profile, "There is no data to export.")
             
             return
