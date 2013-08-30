@@ -153,7 +153,9 @@ except IOError:
               "show_units": True,
               "show_dates": True,
               "escape_fullscreen": "exit fullscreen",
-              "escape_windowed": "minimize"}
+              "escape_windowed": "minimize",
+              "auto_save": True,
+              "confirm_del": True}
 
 # If there is missing configuration options, then add them.
 # This is for compatability with upgrades from previous versions.
@@ -167,6 +169,10 @@ if not "escape_windowed" in config:
     config["escape_windowed"] = "minimize"
 if not "escape_fullscreen" in config:
     config["escape_fullscreen"] = "exit fullscreen"
+if not "auto_save" in config:
+    config["auto_save"] = True
+if not "confirm_del" in config:
+    config["confirm_del"] = True
 
 # Get the previous window size.
 try:
@@ -357,7 +363,7 @@ class Weather(Gtk.Window):
             ("clear_data", Gtk.STOCK_CLEAR, "Clear Current _Data...", "<Control>d", "Clear the data", self.clear),
             ("clear_all", None, "Clear _All Data...", "<Control><Alt>d", None, self.clear_all),
             ("reload_current", None, "Reload _Current Data...", "F5", None, self.reload_current),
-            ("manual_save", None, "Man_ual Save...", "<Control>m", None, lambda x: self.save(show_dialog = True)),
+            ("manual_save", None, "Man_ual Save...", "<Control>m", None, lambda x: self.save(show_dialog = True, automatic = False)),
             ("fullscreen", Gtk.STOCK_FULLSCREEN, "Toggle _Fullscreen", "F11", "Toggle fullscreen", self.toggle_fullscreen),
             ("exit", Gtk.STOCK_QUIT, "_Quit...", None, "Close the application", lambda x: self.exit("ignore", "this"))
         ])
@@ -571,12 +577,15 @@ class Weather(Gtk.Window):
             
             return
         
-        # Confirm that the user wants to delete the row.
-        response = show_question_dialog(self, "Confirm Remove - %s" % last_profile, "Are you sure you want to delete the data for %s?\n\nThis action cannot be undone." % date)
-        
-        # If the user doesn't want to overwrite, cancel the action.
-        if response != Gtk.ResponseType.OK:
-            return
+        # Only show the dialog if the user wants that.
+        if config["confirm_del"]:
+            
+            # Confirm that the user wants to delete the row.
+            response = show_question_dialog(self, "Confirm Remove - %s" % last_profile, "Are you sure you want to delete the data for %s?\n\nThis action cannot be undone." % date)
+            
+            # If the user doesn't want to overwrite, cancel the action.
+            if response != Gtk.ResponseType.OK:
+                return
         
         # Get the index of the date.
         index = utility_functions.get_column(data, 0).index(date)
@@ -1599,14 +1608,26 @@ class Weather(Gtk.Window):
     def clear(self, event):
         """Clears the data."""
         
-        # Confirm that the user wants to clear the data.
-        response = show_question_dialog(self, "Confirm Clear Current Data - %s" % last_profile, "Are you sure you want to clear the data?\n\nThis action cannot be undone.")
+        global data
         
-        # If the user confirms the clear:
-        if response == Gtk.ResponseType.OK:
+        # Only show the dialog if the user wants that.
+        if config["confirm_del"]:
+            
+            # Confirm that the user wants to clear the data.
+            response = show_question_dialog(self, "Confirm Clear Current Data - %s" % last_profile, "Are you sure you want to clear the data?\n\nThis action cannot be undone.")
+            
+            # If the user confirms the clear:
+            if response == Gtk.ResponseType.OK:
+                
+                # Clear the data.
+                data[:] = []
+                
+                # Clear the ListStore.
+                self.liststore.clear()
+        
+        else:
             
             # Clear the data.
-            global data
             data[:] = []
             
             # Clear the ListStore.
@@ -1625,14 +1646,35 @@ class Weather(Gtk.Window):
     def clear_all(self, event):
         """Clears all data."""
         
-        # Confirm that the user wants to clear the data.
-        response = show_question_dialog(self, "Confirm Clear All Data", "Are you sure you want to clear all the data?\n\nThis action cannot be undone, and requires a restart.")
+        global data
         
-        # If the user confirms the clear:
-        if response == Gtk.ResponseType.OK:
+        # Only show the dialog if the user wants that.
+        if config["confirm_del"]:
+            
+            # Confirm that the user wants to clear the data.
+            response = show_question_dialog(self, "Confirm Clear All Data", "Are you sure you want to clear all the data?\n\nThis action cannot be undone, and requires a restart.")
+            
+            # If the user confirms the clear:
+            if response == Gtk.ResponseType.OK:
+                
+                # Clear the data.
+                data[:] = []
+                
+                # Clear the ListStore.
+                self.liststore.clear()
+                
+                # Delete all the files.
+                shutil.rmtree(main_dir)
+                
+                # Tell the user data has been cleared and that it will now close.
+                show_alert_dialog(self, "Clear All Data", "All data has been cleared.\n\nWeatherLog will now close...")
+                
+                # Close the application.
+                Gtk.main_quit()
+        
+        else:
             
             # Clear the data.
-            global data
             data[:] = []
             
             # Clear the ListStore.
@@ -1813,14 +1855,23 @@ class Weather(Gtk.Window):
         # If the OK button was pressed:
         if response == Gtk.ResponseType.OK:
             
-            # Confirm that the user wants to delete the profile.
-            response = show_question_dialog(rem_dlg, "Confirm Remove Profile", "Are you sure you want to remove the profile?\n\nThis action cannot be undone.")
+            # Only show the dialog if the user wants that.
+            if config["confirm_del"]:
+                
+                # Confirm that the user wants to delete the profile.
+                response = show_question_dialog(rem_dlg, "Confirm Remove Profile", "Are you sure you want to remove the profile?\n\nThis action cannot be undone.")
+                
+                # If the user wants to continue:
+                if response == Gtk.ResponseType.OK:
+                    
+                    # Delete the directory.
+                    shutil.rmtree("%s/profiles/%s" % (main_dir, name))
             
-            # If the user wants to continue:
-            if response == Gtk.ResponseType.OK:
+            else:
                 
                 # Delete the directory.
                 shutil.rmtree("%s/profiles/%s" % (main_dir, name))
+        
         
         # Close the dialog.
         rem_dlg.destroy()
@@ -1864,6 +1915,8 @@ class Weather(Gtk.Window):
             esc_ful = opt_dlg.escf_com.get_active_text().lower()
             show_dates = opt_dlg.date_chk.get_active()
             show_units = opt_dlg.unit_chk.get_active()
+            auto_save = opt_dlg.sav_chk.get_active()
+            confirm_del = opt_dlg.del_chk.get_active()
             
             # Set the configuration.
             config["pre-fill"] = prefill
@@ -1874,6 +1927,8 @@ class Weather(Gtk.Window):
             config["escape_fullscreen"] = esc_ful
             config["show_dates"] = show_dates
             config["show_units"] = show_units
+            config["auto_save"] = auto_save
+            config["confirm_del"] = confirm_del
             
             # Configure the units.
             # Metric:
@@ -1940,14 +1995,18 @@ class Weather(Gtk.Window):
                 self.set_title("WeatherLog - %s" % last_profile)
             
             # Save the data.
-            self.save(show_dialog = False)
+            self.save(show_dialog = False, from_options = True)
         
         # Close the dialog.
         opt_dlg.destroy()
     
     
-    def save(self, show_dialog = True):
+    def save(self, show_dialog = True, automatic = True, from_options = False):
         """Saves the data."""
+        
+        # If the user doesn't want automatic saves, don't continue.
+        if automatic and not config["auto_save"] and not from_options:
+            return
         
         # Save to the file.
         try:
