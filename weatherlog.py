@@ -590,7 +590,7 @@ class Weather(Gtk.Window):
         # Get the index of the date.
         index = utility_functions.get_column(data, 0).index(date)
         
-        # Delete the index in the data.
+        # Delete the index in the list.
         del data[index]
         
         # Refresh the ListStore.
