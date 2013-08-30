@@ -1645,9 +1645,6 @@ class Weather(Gtk.Window):
     
     def clear_all(self, event):
         """Clears all data."""
-        
-        global data
-        
         # Only show the dialog if the user wants that.
         if config["confirm_del"]:
             
@@ -1656,9 +1653,6 @@ class Weather(Gtk.Window):
             
             # If the user confirms the clear:
             if response == Gtk.ResponseType.OK:
-                
-                # Clear the data.
-                data[:] = []
                 
                 # Clear the ListStore.
                 self.liststore.clear()
@@ -1673,9 +1667,6 @@ class Weather(Gtk.Window):
                 Gtk.main_quit()
         
         else:
-            
-            # Clear the data.
-            data[:] = []
             
             # Clear the ListStore.
             self.liststore.clear()
