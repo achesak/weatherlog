@@ -2152,9 +2152,50 @@ class Weather(Gtk.Window):
         Gtk.main_quit()
 
 
-# Show the window and start the application.
-if __name__ == "__main__":
+# Show the window and start the application, but only if there are no exta arguments.
+if __name__ == "__main__" and len(sys.argv) == 1:
+    
+    # Show the window and start the application.
     win = Weather()
     win.connect("delete-event", win.exit)
     win.show_all()
     Gtk.main()
+
+# If there are arguments, add them to the data list and don't show the interface
+elif __name__ == "__main__" and len(sys.argv) > 1:
+    
+    # Get the arguments.
+    date = sys.argv[1]
+    temp = sys.argv[2]
+    prec = sys.argv[3]
+    wind = sys.argv[4]
+    humi = sys.argv[5]
+    airp = sys.argv[6]
+    clou = sys.argv[7]
+    if len(sys.argv) == 9:
+        note = sys.argv[8]
+    else:
+        note = ""
+    
+    # Add the data to the list.
+    data.append([date, temp, prec, wind, humi, airp, clou, note])
+    
+    # Sort the list.
+    data = sorted(data, key = lambda x: datetime.datetime.strptime(x[0], '%d/%m/%Y'))
+    
+    # Save to the file.
+    try:
+        # This should save to ~/.weatherlog/[profile name]/weather.json on Linux.
+        data_file = open("%s/profiles/%s/weather.json" % (main_dir, last_profile), "w")
+        json.dump(data, data_file)
+        data_file.close()
+        
+    except IOError:
+        # Show the error message if something happened, but continue.
+        # This one is shown if there was an error writing to the file.
+        print("Error saving data file (IOError).")
+    
+    except (TypeError, ValueError):
+        # Show the error message if something happened, but continue.
+        # This one is shown if there was an error with the data type.
+        print("Error saving data file (TypeError or ValueError).")
