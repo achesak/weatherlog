@@ -6,7 +6,8 @@
 # WeatherLog
 # Version 1.1
 
-# WeatherLog is an application for keeping track of the weather.
+# WeatherLog is an application for keeping track of the weather and
+# getting information about past trends.
 
 # Released under the MIT open source license:
 license_text = """
@@ -2164,38 +2165,102 @@ if __name__ == "__main__" and len(sys.argv) == 1:
 # If there are arguments, add them to the data list and don't show the interface
 elif __name__ == "__main__" and len(sys.argv) > 1:
     
-    # Get the arguments.
-    date = sys.argv[1]
-    temp = sys.argv[2]
-    prec = sys.argv[3]
-    wind = sys.argv[4]
-    humi = sys.argv[5]
-    airp = sys.argv[6]
-    clou = sys.argv[7]
-    if len(sys.argv) == 9:
-        note = sys.argv[8]
-    else:
-        note = ""
-    
-    # Add the data to the list.
-    data.append([date, temp, prec, wind, humi, airp, clou, note])
-    
-    # Sort the list.
-    data = sorted(data, key = lambda x: datetime.datetime.strptime(x[0], '%d/%m/%Y'))
-    
-    # Save to the file.
-    try:
-        # This should save to ~/.weatherlog/[profile name]/weather.json on Linux.
-        data_file = open("%s/profiles/%s/weather.json" % (main_dir, last_profile), "w")
-        json.dump(data, data_file)
-        data_file.close()
+    # Add a row of data.
+    if sys.argv[1] == "add":
         
-    except IOError:
-        # Show the error message if something happened, but continue.
-        # This one is shown if there was an error writing to the file.
-        print("Error saving data file (IOError).")
+        # Get the arguments.
+        date = sys.argv[2]
+        temp = sys.argv[3]
+        prec = sys.argv[4]
+        wind = sys.argv[5]
+        humi = sys.argv[6]
+        airp = sys.argv[7]
+        clou = sys.argv[8]
+        if len(sys.argv) == 10:
+            note = sys.argv[9]
+        else:
+            note = ""
+        
+        # Save to the file.
+        try: 
+        
+            # Append the data.
+            data.append([date, temp, prec, wind, humi, airp, clou, note])
+            
+            # Sort the list.
+            data = sorted(data, key = lambda x: datetime.datetime.strptime(x[0], '%d/%m/%Y'))
+            
+            # Save the data.
+            data_file = open("%s/profiles/%s/weather.json" % (main_dir, last_profile), "w")
+            json.dump(data, data_file)
+            data_file.close()
+            
+        except IOError:
+            # Show the error message if something happened, but continue.
+            # This one is shown if there was an error writing to the file.
+            print("Error saving data file (IOError).")
+        
+        except (TypeError, ValueError):
+            # Show the error message if something happened, but continue.
+            # This one is shown if there was an error with the data type.
+            print("Error saving data file (TypeError or ValueError).")
+        
     
-    except (TypeError, ValueError):
-        # Show the error message if something happened, but continue.
-        # This one is shown if there was an error with the data type.
-        print("Error saving data file (TypeError or ValueError).")
+    # Remove a row of data.
+    elif sys.argv[1] == "remove":
+        
+        # Get the index.
+        index = int(sys.argv[2])
+        
+        # Save to the file.
+        try:
+            
+            # Remove the row.
+            del data[index]
+            
+            # Sort the list.
+            data = sorted(data, key = lambda x: datetime.datetime.strptime(x[0], '%d/%m/%Y'))
+            
+            # Save the data.
+            data_file = open("%s/profiles/%s/weather.json" % (main_dir, last_profile), "w")
+            json.dump(data, data_file)
+            data_file.close()
+            
+        except IOError:
+            # Show the error message if something happened, but continue.
+            # This one is shown if there was an error writing to the file.
+            print("Error saving data file (IOError).")
+        
+        except (TypeError, ValueError):
+            # Show the error message if something happened, but continue.
+            # This one is shown if there was an error with the data type.
+            print("Error saving data file (TypeError or ValueError).")
+    
+    
+    # Clear the current profile.
+    elif sys.argv[1] == "clear":
+        
+        # Clear the file.
+        try:
+            
+            # Get the data.
+            data_file = open("%s/profiles/%s/weather.json" % (main_dir, last_profile), "w")
+            data_file.write("[]")
+            data_file.close()
+            
+        except IOError:
+            # Show the error message if something happened, but continue.
+            # This one is shown if there was an error writing to the file.
+            print("Error saving data file (IOError).")
+        
+        except (TypeError, ValueError):
+            # Show the error message if something happened, but continue.
+            # This one is shown if there was an error with the data type.
+            print("Error saving data file (TypeError or ValueError).")
+    
+    
+    # Clear all the data.
+    elif sys.argv[1] == "clear_all":
+        
+        # Delete all the files.
+        shutil.rmtree(main_dir)
