@@ -1727,6 +1727,7 @@ class Weather(Gtk.Window):
             
             # Load the data.   
             try:
+                
                 # This should be ~/.weatherlog/[profile name]/weather.json on Linux.
                 data_file = open("%s/profiles/%s/weather.json" % (main_dir, name), "r")
                 data = json.load(data_file)
@@ -1754,6 +1755,10 @@ class Weather(Gtk.Window):
                 self.set_title("WeatherLog - %s - %s to %s" % (last_profile, (data[0][0] if len(data) != 0 else "None"), (data[len(data)-1][0] if len(data) != 0 else "None")))
             else:
                 self.set_title("WeatherLog - %s" % last_profile)
+            
+            # Save the data.
+            self.save(show_dialog = False)
+            
                 
         # Close the dialog.
         swi_dlg.destroy()
@@ -2165,7 +2170,7 @@ if __name__ == "__main__" and len(sys.argv) == 1:
 # If there are arguments, add them to the data list and don't show the interface
 elif __name__ == "__main__" and len(sys.argv) > 1:
     
-    # Add a row of data.
+    # Add a row of data:
     if sys.argv[1] == "add":
         
         # Get the arguments.
@@ -2206,7 +2211,7 @@ elif __name__ == "__main__" and len(sys.argv) > 1:
             print("Error saving data file (TypeError or ValueError).")
         
     
-    # Remove a row of data.
+    # Remove a row of data:
     elif sys.argv[1] == "remove":
         
         # Get the index.
@@ -2237,7 +2242,7 @@ elif __name__ == "__main__" and len(sys.argv) > 1:
             print("Error saving data file (TypeError or ValueError).")
     
     
-    # Clear the current profile.
+    # Clear the current profile:
     elif sys.argv[1] == "clear":
         
         # Clear the file.
@@ -2259,7 +2264,7 @@ elif __name__ == "__main__" and len(sys.argv) > 1:
             print("Error saving data file (TypeError or ValueError).")
     
     
-    # Clear all the data.
+    # Clear all the data:
     elif sys.argv[1] == "clear_all":
         
         # Delete all the files.
