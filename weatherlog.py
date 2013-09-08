@@ -2287,3 +2287,48 @@ elif __name__ == "__main__" and len(sys.argv) > 1:
             # Show the error message if something happened, but continue.
             # This one is shown if there was an error writing to the file.
             print("Error saving profile file (IOError).")
+    
+    
+    # Add a new profile:
+    elif sys.argv[1] == "add_profile":
+        
+        # If the profile name is already in use, cancel the action.
+        if os.path.isdir("%s/profiles/%s" % (main_dir, sys.argv[2])):
+                
+            print("Profile name is already is use.")
+            
+        # Otherwise if there are no problems with the name, add the profile.
+        else:
+            
+            # Create the directory and file.
+            os.makedirs("%s/profiles/%s" % (main_dir, sys.argv[2]))
+            new_prof_file = open("%s/profiles/%s/weather.json" % (main_dir, sys.argv[2]), "w")
+            new_prof_file.write("[]")
+            new_prof_file.close()
+        
+        # Save the new profile name.
+        try:
+            # This should save to ~/.weatherlog/lastprofile on Linux.
+            prof_file = open("%s/lastprofile" % main_dir, "w")
+            prof_file.write(sys.argv[2])
+            prof_file.close()
+            
+        except IOError:
+            # Show the error message if something happened, but continue.
+            # This one is shown if there was an error writing to the file.
+            print("Error saving profile file (IOError).")
+    
+    
+    # Remove an existing profile:
+    elif sys.argv[1] == "remove_profile":
+        
+        # If this profile is the current one, cancel the action.
+        if sys.argv[2] == last_profile:
+            
+            print("Profile is currently in use.")
+        
+        # Otherwise, remove the profile.
+        else:
+            
+            # Delete the directory.
+            shutil.rmtree("%s/profiles/%s" % (main_dir, sys.argv[2]))

@@ -31,3 +31,12 @@ clear
 
 clear_all
 - Deletes all the data. 
+
+switch_profile profile
+- Switches to a profile.
+
+add_profile profile
+- Adds a new profile.
+
+remove_profile profile
+- Removes a profile.
