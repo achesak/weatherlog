@@ -327,8 +327,8 @@ class Weather(Gtk.Window):
         ])
         
         # Create the Weather -> Export to submenu.
-        action_weather_info_group = Gtk.Action("export_menu", "E_xport to", None, None)
-        action_group.add_action(action_weather_info_group)
+        action_weather_export_group = Gtk.Action("export_menu", "E_xport to", None, None)
+        action_group.add_action(action_weather_export_group)
         action_group.add_actions([
             ("export_html", None, "Export to _HTML...", "<Control><Alt>h", None, self.export_file_html),
             ("export_csv", None, "Export to _CSV...", "<Control><Alt>c", None, self.export_file_csv),
