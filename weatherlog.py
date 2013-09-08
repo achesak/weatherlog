@@ -1798,7 +1798,9 @@ class Weather(Gtk.Window):
                 # Create the directory and file.
                 last_profile = name
                 os.makedirs("%s/profiles/%s" % (main_dir, name))
-                open("%s/profiles/%s/weather.json" % (main_dir, name), "w").close()
+                new_prof_file = open("%s/profiles/%s/weather.json" % (main_dir, name), "w")
+                new_prof_file.write("[]")
+                new_prof_file.close()
                 
                 # Clear the old data.
                 data[:] = []
@@ -2269,3 +2271,19 @@ elif __name__ == "__main__" and len(sys.argv) > 1:
         
         # Delete all the files.
         shutil.rmtree(main_dir)
+    
+    
+    # Switch profiles:
+    elif sys.argv[1] == "switch_profile":
+        
+        # Save the new profile name.
+        try:
+            # This should save to ~/.weatherlog/lastprofile on Linux.
+            prof_file = open("%s/lastprofile" % main_dir, "w")
+            prof_file.write(sys.argv[2])
+            prof_file.close()
+            
+        except IOError:
+            # Show the error message if something happened, but continue.
+            # This one is shown if there was an error writing to the file.
+            print("Error saving profile file (IOError).")
