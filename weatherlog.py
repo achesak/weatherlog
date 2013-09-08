@@ -4,7 +4,7 @@
 ################################################################################
 
 # WeatherLog
-# Version 1.2
+# Version 1.2.1
 
 # WeatherLog is an application for keeping track of the weather and
 # getting information about past trends.
@@ -317,7 +317,7 @@ class Weather(Gtk.Window):
         
         # Create the Weather menu.
         action_group.add_actions([
-            ("weather_menu", None, "Weather"),
+            ("weather_menu", None, "_Weather"),
             ("add_new", Gtk.STOCK_ADD, "Add _New...", "<Control>n", "Add a new day to the list", self.add_new),
             ("remove", Gtk.STOCK_REMOVE, "Remo_ve...", "<Control>r", "Remove a day from the list", self.remove),
             ("import", Gtk.STOCK_OPEN, "_Import...", None, "Import data from a file", self.import_file),
@@ -371,7 +371,7 @@ class Weather(Gtk.Window):
         
         # Create the Profiles menu.
         action_group.add_actions([
-            ("profiles_menu", None, "Profiles"),
+            ("profiles_menu", None, "_Profiles"),
             ("switch_profile", None, "_Switch Profile...", "<Control><Shift>s", None, self.switch_profile),
             ("add_profile", None, "_Add Profile...", "<Control><Shift>n", None, self.add_profile),
             ("remove_profile", None, "_Remove Profile...", "<Control><Shift>d", None, self.remove_profile)
@@ -379,13 +379,13 @@ class Weather(Gtk.Window):
         
         # Create the Options menu.
         action_group.add_actions([
-            ("options_menu", None, "Options"),
+            ("options_menu", None, "_Options"),
             ("options", None, "_Options...", "F2", None, self.options)
         ])
         
         # Create the Help menu.
         action_group.add_actions([
-            ("help_menu", None, "Help"),
+            ("help_menu", None, "_Help"),
             ("about", Gtk.STOCK_ABOUT, "_About...", "<Shift>F1", None, self.show_about),
             ("help", Gtk.STOCK_HELP, "_Help...", None, None, self.show_help)
         ])
