@@ -322,7 +322,7 @@ class Weather(Gtk.Window):
             ("remove", Gtk.STOCK_REMOVE, "Remo_ve...", "<Control>r", "Remove a day from the list", self.remove),
             ("import", Gtk.STOCK_OPEN, "_Import...", None, "Import data from a file", self.import_file),
             ("import_profile", None, "Import as New _Profile...", "<Control><Shift>o", None, self.import_new_profile),
-            ("import_append", None, "Imp_ort and Merge...", None, None, self.import_append),
+            ("import_append", None, "Imp_ort and Merge...", "<Alt><Shift>o", None, self.import_append),
             ("export", Gtk.STOCK_SAVE, "_Export...", None, "Export data to a file", self.export_file)
         ])
         
