@@ -28,7 +28,7 @@
 
 """ Fetches weather reports from Yahoo! Weather, Weather.com and NOAA """
 
-__version__ = "0.3.5"
+__version__ = "0.3.6"
 
 try:
     # Python 3 imports
@@ -200,7 +200,7 @@ def get_weather_from_weather_com(location_id, units = 'metric'):
                     tag)[0].getElementsByTagName(tag2)[0].firstChild.data
     
     forecasts = []
-    if weather_dom.getElementsByTagName('dayf') > 0:
+    if len(weather_dom.getElementsByTagName('dayf')) > 0:
         time_of_day_map = {'d':'day', 'n':'night'}
         for forecast in weather_dom.getElementsByTagName('dayf')[0].getElementsByTagName('day'):
             tmp_forecast = {}

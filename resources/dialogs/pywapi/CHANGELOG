@@ -1,3 +1,6 @@
+v0.3.6 (3 September 2013)
+! Fix for Py3k compatibility in get_weather_from_weather_com()
+
 v0.3.5 (14 August 2013)
 ! Better handling of Weather.com data when current conditions are empty
 
