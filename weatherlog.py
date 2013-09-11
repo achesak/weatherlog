@@ -1894,6 +1894,7 @@ class Weather(Gtk.Window):
         """Shows the Options dialog."""
         
         global units
+        global config
         current_units = config["units"]
         
         # Create the dialog.
@@ -1956,13 +1957,107 @@ class Weather(Gtk.Window):
             if current_units != units_:
                 
                 # Ask the user if they want to convert the data.
-                response = show_question_dialog(opt_dlg, "Options", "The units have changed from %s to %s.\n\nWould you like to convert the data to the new units?" % (current_units, units_))
+                response = show_question_dialog(opt_dlg, "Options", "The units have changed from %s to %s.\n\nWould you like to convert the data to the new units?" % (current_units, config["units"]))
                 
                 # If the user wants to convert the data:
                 if response == Gtk.ResponseType.OK:
                     
                     # Convert the data.
                     new_data = convert.convert(data, units_)
+                    
+                    # Update the list.
+                    data[:] = []
+                    data[:] = new_data[:]
+                    
+                    # Update the ListStore.
+                    self.liststore.clear()
+                    for i in data:
+                        self.liststore.append(i)
+            
+            # Add/remove the units, if desired:
+            if not config["show_units"]:
+                self.temp_col.set_title("Temperature")
+                self.prec_col.set_title("Precipitation")
+                self.wind_col.set_title("Wind")
+                self.humi_col.set_title("Humidity")
+                self.airp_col.set_title("Air Pressure")
+            else:
+                self.temp_col.set_title("Temperature (%s)" % units["temp"])
+                self.prec_col.set_title("Precipitation (%s)" % units["prec"])
+                self.wind_col.set_title("Wind (%s)" % units["wind"])
+                self.humi_col.set_title("Humidity (%)")
+                self.airp_col.set_title("Air Pressure (%s)" % units["airp"])
+            
+            # Set the title, if desired:
+            if config["show_dates"]:
+                self.set_title("WeatherLog - %s - %s to %s" % (last_profile, (data[0][0] if len(data) != 0 else "None"), (data[len(data)-1][0] if len(data) != 0 else "None")))
+            else:
+                self.set_title("WeatherLog - %s" % last_profile)
+            
+            # Save the data.
+            self.save(show_dialog = False, from_options = True)
+        
+        # If the user pressed Reset:
+        elif response == 3:
+            
+            # Confirm that the user wants to reset the options.
+            reset = show_question_dialog(opt_dlg, "Options", "Are you sure you want to reset the options to the default values?")
+                
+            # If the user doesn't want to, don't continue.
+            if response == Gtk.ResponseType.CANCEL:
+                
+                # Close the dialog.
+                opt_dlg.destroy()
+                
+                return
+            
+            # Set the config variables.
+            config = {"pre-fill": False,
+                      "restore": True,
+                      "location": "",
+                      "units": "metric",
+                      "pastebin": "d2314ff616133e54f728918b8af1500e",
+                      "show_units": True,
+                      "show_dates": True,
+                      "escape_fullscreen": "exit fullscreen",
+                      "escape_windowed": "minimize",
+                      "auto_save": True,
+                      "confirm_del": True}
+            
+            # Configure the units.
+            # Metric:
+            if config["units"] == "metric":
+                
+                units = {"temp": "°C",
+                         "prec": "cm",
+                         "wind": "kph",
+                         "airp": "hPa"}
+            
+            # Imperial:
+            elif config["units"] == "imperial":
+                
+                units = {"temp": "°F",
+                         "prec": "in",
+                         "wind": "mph",
+                         "airp": "mbar"}
+            
+            # Update the main window.
+            self.temp_col.set_title("Temperature (%s)" % units["temp"])
+            self.prec_col.set_title("Precipitation (%s)" % units["prec"])
+            self.wind_col.set_title("Wind (%s)" % units["wind"])
+            self.airp_col.set_title("Air Pressure (%s)" % units["airp"])
+            
+            # If the units changed, ask the user if they want to convert the data.
+            if current_units != config["units"]:
+                
+                # Ask the user if they want to convert the data.
+                response = show_question_dialog(opt_dlg, "Options", "The units have changed from %s to %s.\n\nWould you like to convert the data to the new units?" % (current_units, config["units"]))
+                
+                # If the user wants to convert the data:
+                if response == Gtk.ResponseType.OK:
+                    
+                    # Convert the data.
+                    new_data = convert.convert(data, config["units"])
                     
                     # Update the list.
                     data[:] = []
