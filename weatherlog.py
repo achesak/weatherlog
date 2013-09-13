@@ -472,7 +472,7 @@ class Weather(Gtk.Window):
             self.humi_col.set_title("Humidity")
             self.airp_col.set_title("Air Pressure")
         
-        # Show the dialog telling the user the profile couldn't be found, if needed:
+        # Show the dialog telling the user the profile couldn't be found, if neccessary:
         if not profile_exists:
             
             # Show the dialog.
