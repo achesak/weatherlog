@@ -4,7 +4,7 @@
 ################################################################################
 
 # WeatherLog
-# Version 1.2.2
+# Version 1.3
 
 # WeatherLog is an application for keeping track of the weather and
 # getting information about past trends.
@@ -1692,40 +1692,107 @@ class Weather(Gtk.Window):
     
     def clear_all(self, event):
         """Clears all data."""
+        
+        global last_profile
+        global config
+        global units
+        
         # Only show the dialog if the user wants that.
+        clear = True
         if config["confirm_del"]:
             
             # Confirm that the user wants to clear the data.
-            response = show_question_dialog(self, "Confirm Clear All Data", "Are you sure you want to clear all the data?\n\nThis action cannot be undone, and requires a restart.")
+            response = show_question_dialog(self, "Confirm Clear All Data", "Are you sure you want to clear all the data?\n\nThis action cannot be undone.")
             
-            # If the user confirms the clear:
-            if response == Gtk.ResponseType.OK:
-                
-                # Clear the ListStore.
-                self.liststore.clear()
-                
-                # Delete all the files.
-                shutil.rmtree(main_dir)
-                
-                # Tell the user data has been cleared and that it will now close.
-                show_alert_dialog(self, "Clear All Data", "All data has been cleared.\n\nWeatherLog will now close...")
-                
-                # Close the application.
-                Gtk.main_quit()
+            # If the user cancels the clear:
+            if response != Gtk.ResponseType.OK:
+                clear = False
         
-        else:
+        # If the user wants to continue:
+        if clear:
             
-            # Clear the ListStore.
+            # Clear the old data.
+            data[:] = []
             self.liststore.clear()
             
             # Delete all the files.
             shutil.rmtree(main_dir)
             
-            # Tell the user data has been cleared and that it will now close.
-            show_alert_dialog(self, "Clear All Data", "All data has been cleared.\n\nWeatherLog will now close...")
+            # Create the directory.
+            os.makedirs(main_dir)
             
-            # Close the application.
-            Gtk.main_quit()
+            # Set the profile name.
+            last_profile = "Main Profile"
+            
+            # Create the last profile file.
+            last_prof = open("%s/lastprofile" % main_dir, "w")
+            last_prof.write("Main Profile")
+            last_prof.close()
+            
+            # Create the Main Profile directory and data file.
+            os.makedirs("%s/profiles/Main Profile" % main_dir)
+            last_prof_data = open("%s/profiles/Main Profile/weather.json" % main_dir, "w")
+            last_prof_data.write("[]")
+            last_prof_data.close()
+            
+            # Set the default config.
+            config = {"pre-fill": False,
+                      "restore": True,
+                      "location": "",
+                      "units": "metric",
+                      "pastebin": "d2314ff616133e54f728918b8af1500e",
+                      "show_units": True,
+                      "show_dates": True,
+                      "escape_fullscreen": "exit fullscreen",
+                      "escape_windowed": "minimize",
+                      "auto_save": True,
+                      "confirm_del": True}
+            
+            # Configure the units.
+            # Metric:
+            if config["units"] == "metric":
+                
+                units = {"temp": "°C",
+                         "prec": "cm",
+                         "wind": "kph",
+                         "airp": "hPa"}
+            
+            # Imperial:
+            elif config["units"] == "imperial":
+                
+                units = {"temp": "°F",
+                         "prec": "in",
+                         "wind": "mph",
+                         "airp": "mbar"}
+            
+            # Update the main window.
+            self.temp_col.set_title("Temperature (%s)" % units["temp"])
+            self.prec_col.set_title("Precipitation (%s)" % units["prec"])
+            self.wind_col.set_title("Wind (%s)" % units["wind"])
+            self.airp_col.set_title("Air Pressure (%s)" % units["airp"])
+            
+            # Add/remove the units, if desired:
+            if not config["show_units"]:
+                self.temp_col.set_title("Temperature")
+                self.prec_col.set_title("Precipitation")
+                self.wind_col.set_title("Wind")
+                self.humi_col.set_title("Humidity")
+                self.airp_col.set_title("Air Pressure")
+            else:
+                self.temp_col.set_title("Temperature (%s)" % units["temp"])
+                self.prec_col.set_title("Precipitation (%s)" % units["prec"])
+                self.wind_col.set_title("Wind (%s)" % units["wind"])
+                self.humi_col.set_title("Humidity (%)")
+                self.airp_col.set_title("Air Pressure (%s)" % units["airp"])
+            
+            # Set the new title.
+            if config["show_dates"]:
+                self.set_title("WeatherLog - %s - %s to %s" % (last_profile, (data[0][0] if len(data) != 0 else "None"), (data[len(data)-1][0] if len(data) != 0 else "None")))
+            else:
+                self.set_title("WeatherLog - %s" % last_profile)
+            
+            # Save the data.
+            self.save(show_dialog = False, from_options = True)
     
     
     def switch_profile(self, event):
