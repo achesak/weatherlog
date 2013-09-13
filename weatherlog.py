@@ -106,7 +106,6 @@ from resources.dialogs.misc_dialogs import show_alert_dialog, show_error_dialog,
 main_dir = "%s/.weatherlog" % os.path.expanduser("~")
 
 # Check to see if the directory exists, and create it if it doesn't.
-dir_exists = True
 if not os.path.exists(main_dir) or not os.path.isdir(main_dir):
     
     # Create the directory.
@@ -122,7 +121,6 @@ if not os.path.exists(main_dir) or not os.path.isdir(main_dir):
     last_prof_data = open("%s/profiles/Main Profile/weather.json" % main_dir, "w")
     last_prof_data.write("[]")
     last_prof_data.close()
-    dir_exists = False
 
 # Get the last profile.
 try:
@@ -130,12 +128,51 @@ try:
     prof_file = open("%s/lastprofile" % main_dir, "r")
     last_profile = prof_file.read().rstrip()
     prof_file.close()
+    
+    # Check to make sure the profile exists:
+    # Remember the currect directory and switch to where the profiles are stored.
+    current_dir = os.getcwd()
+    os.chdir("%s/profiles" % main_dir)
+    
+    # Get the list of profiles.
+    profiles_list = glob.glob("*")
+    
+    # Switch back to the previous directory.
+    os.chdir(current_dir)
+    
+    # Check if the profile exists:
+    if last_profile in profiles_list:
+        profile_exists = True
+    else:
+        profile_exists = False
+        original_profile = last_profile
 
 except IOError:
     # Show the error message, and close the application.
     # This one shows if there was a problem reading the file.
     print("Error reading profile file (IOError).")
     sys.exit()
+
+# If the profile doesn't exist, switch or make one that does:
+if not profile_exists:
+    
+    # If the default profile exists, switch to that.
+    if "Main Profile" in profiles_list:
+        
+        # Set the profile name.
+        last_profile = "Main Profile"
+    
+    # Otherwise, create the profile:
+    else:
+        
+        # Create the Main Profile directory and data file.
+        os.makedirs("%s/profiles/Main Profile" % main_dir)
+        last_prof_data = open("%s/profiles/Main Profile/weather.json" % main_dir, "w")
+        last_prof_data.write("[]")
+        last_prof_data.close()
+        
+        # Set the profile name.
+        last_profile = "Main Profile"
 
 # Get the configuration.
 try:
@@ -434,6 +471,15 @@ class Weather(Gtk.Window):
             self.wind_col.set_title("Wind")
             self.humi_col.set_title("Humidity")
             self.airp_col.set_title("Air Pressure")
+        
+        # Show the dialog telling the user the profile couldn't be found, if needed:
+        if not profile_exists:
+            
+            # Show the dialog.
+            show_alert_dialog(self, "WeatherLog", "The profile \"%s\" could not be found." % original_profile)
+            
+            # Save the profile name.
+            self.save(show_dialog = False)
     
     
     def keypress(self, widget, event):
