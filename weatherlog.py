@@ -2364,6 +2364,9 @@ class Weather(Gtk.Window):
     def exit(self, x, y):
         """Closes the application."""
         
+        # Save the data.
+        self.save(show_dialog = False, from_options = True)
+        
         # Close the  application.
         Gtk.main_quit()
 
