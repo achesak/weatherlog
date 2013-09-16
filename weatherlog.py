@@ -2543,3 +2543,9 @@ elif __name__ == "__main__" and len(sys.argv) > 1:
             
             # Delete the directory.
             shutil.rmtree("%s/profiles/%s" % (main_dir, sys.argv[2]))
+    
+    # Show the help:
+    elif sys.argv[1] == "help":
+		
+		# Open the help file.
+        webbrowser.open_new("resources/help/help.html")
