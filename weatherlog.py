@@ -2651,3 +2651,36 @@ elif __name__ == "__main__" and len(sys.argv) > 1:
             # Show the error message if something happened, but continue.
             # This one is shown if there was an error with the data type.
             print("Error saving configuration file (TypeError or ValueError).")
+    
+    # Reset the options:
+    elif sys.argv[1] == "reset_options":
+        
+        # Set the config variables.
+        config = {"pre-fill": False,
+                  "restore": True,
+                  "location": "",
+                  "units": "metric",
+                  "pastebin": "d2314ff616133e54f728918b8af1500e",
+                  "show_units": True,
+                  "show_dates": True,
+                  "escape_fullscreen": "exit fullscreen",
+                  "escape_windowed": "minimize",
+                  "auto_save": True,
+                  "confirm_del": True}
+        
+        # Save the configuration.
+        try:
+            # Save the configuration file.
+            config_file = open("%s/config" % main_dir, "w")
+            json.dump(config, config_file)
+            config_file.close()
+            
+        except IOError:
+            # Show the error message if something happened, but continue.
+            # This one is shown if there was an error writing to the file.
+            print("Error saving configuration file (IOError).")
+        
+        except (TypeError, ValueError):
+            # Show the error message if something happened, but continue.
+            # This one is shown if there was an error with the data type.
+            print("Error saving configuration file (TypeError or ValueError).")
