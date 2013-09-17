@@ -71,7 +71,7 @@ class OptionsDialog(Gtk.Dialog):
         opt_grid2_lbl = Gtk.Label("Keys")
         
         # Create the Escape Windowed label and entry.
-        escw_lbl = Gtk.Label("Escape Windowed: ")
+        escw_lbl = Gtk.Label("Escape windowed: ")
         escw_lbl.set_alignment(0, 0.5)
         opt_grid2.attach(escw_lbl, 0, 0, 1, 1)
         self.escw_com = Gtk.ComboBoxText()
@@ -81,7 +81,7 @@ class OptionsDialog(Gtk.Dialog):
         opt_grid2.attach_next_to(self.escw_com, escw_lbl, Gtk.PositionType.RIGHT, 1, 1)
         
         # Create the Escape Fullscreen label and entry.
-        escf_lbl = Gtk.Label("Escape Fullscreen: ")
+        escf_lbl = Gtk.Label("Escape fullscreen: ")
         escf_lbl.set_alignment(0, 0.5)
         opt_grid2.attach_next_to(escf_lbl, escw_lbl, Gtk.PositionType.BOTTOM, 1, 1)
         self.escf_com = Gtk.ComboBoxText()

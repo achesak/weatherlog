@@ -64,9 +64,11 @@ try:
     # Try importing for Python 3.
     from urllib.request import urlopen
     from urllib.parse import urlencode
+    py_version = 3
 except ImportError:
     # Fall back to Python 2.
     from urllib import urlopen, urlencode
+    py_version = 2
 
 # Tell Python not to create bytecode files, as they mess with the git repo.
 # This line can be removed be the user, if desired.
@@ -2546,6 +2548,106 @@ elif __name__ == "__main__" and len(sys.argv) > 1:
     
     # Show the help:
     elif sys.argv[1] == "help":
-		
-		# Open the help file.
+        
+        # Open the help file.
         webbrowser.open_new("resources/help/help.html")
+    
+    # Set the options:
+    elif sys.argv[1] == "options":
+        
+        def get_input():
+            """Gets input from the user."""
+            
+            # If this is running under python 2:
+            if py_version == 2:
+                user_input = raw_input()
+            
+            # If this is running under python 3:
+            elif py_version == 3:
+                user_input = input()
+            
+            # Return the user's input.
+            return user_input
+        
+        # Ask the user for the options.
+        print("----If nothing is entered the current value will be kept----")
+        sys.stdout.write("Pre-fill data (current: %s) (True|False): " % config["pre-fill"])
+        opt_prefill = get_input()
+        sys.stdout.write("Save automatically (current: %s) (True|False): " % config["auto_save"])
+        opt_autosave = get_input()
+        sys.stdout.write("Confirm deletions (current: %s) (True|False): " % config["confirm_del"])
+        opt_confirmdel = get_input()
+        sys.stdout.write("Location (current: %s) (five ints): " % config["location"])
+        opt_location = get_input()
+        sys.stdout.write("Units (current: %s) (metric|imperial): " % config["units"])
+        opt_units = get_input()
+        sys.stdout.write("Escape windowed (current: %s) (ignore|minimize|close): " % config["escape_windowed"])
+        opt_escwin = get_input()
+        sys.stdout.write("Escape fullscreen (current: %s) (ignore|exit fullscreen|close): " % config["escape_fullscreen"])
+        opt_escfull = get_input()
+        sys.stdout.write("Restore window size (current: %s) (True|False): " % config["restore"])
+        opt_restore = get_input()
+        sys.stdout.write("Show dates in title (current: %s) (True|False): " % config["show_dates"])
+        opt_showdates = get_input()
+        sys.stdout.write("Show unit in list (current: %s) (True|False): " % config["show_units"])
+        opt_showunits = get_input()
+        
+        # Set the options.
+        if opt_prefill == "True":
+            config["pre-fill"] = True
+        elif opt_prefill == "False":
+            config["pre-fill"] = False
+        
+        if opt_autosave == "True":
+            config["auto_save"] = True
+        elif opt_autosave == "False":
+            config["auto_save"] = False
+        
+        if opt_confirmdel == "True":
+            config["confirm_del"] = True
+        elif opt_confirmdel == "False":
+            config["confirm_del"] = False
+        
+        if opt_location:
+            config["location"] = opt_location
+        
+        if opt_units:
+            config["units"] = opt_units
+        
+        if opt_escwin:
+            config["escape_windowed"] = opt_escwin
+        
+        if opt_escfull:
+            config["escape_fullscreen"] = opt_escfull
+        
+        if opt_restore == "True":
+            config["restore"] = True
+        elif opt_restore == "False":
+            config["restore"] = False
+        
+        if opt_showdates == "True":
+            config["show_dates"] = True
+        elif opt_showdates == "False":
+            config["show_dates"] = False
+        
+        if opt_showunits == "True":
+            config["show_units"] = True
+        elif opt_showunits == "False":
+            config["show_units"] = False
+        
+        # Save the configuration.
+        try:
+            # Save the configuration file.
+            config_file = open("%s/config" % main_dir, "w")
+            json.dump(config, config_file)
+            config_file.close()
+            
+        except IOError:
+            # Show the error message if something happened, but continue.
+            # This one is shown if there was an error writing to the file.
+            print("Error saving configuration file (IOError).")
+        
+        except (TypeError, ValueError):
+            # Show the error message if something happened, but continue.
+            # This one is shown if there was an error with the data type.
+            print("Error saving configuration file (TypeError or ValueError).")
