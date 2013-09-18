@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 
-# This file defines the functions for building the CSV and HTML.
+# This file defines the functions for converting data to HTML and CSV.
 
 
 def html(data2, units):
@@ -15,7 +15,7 @@ def html(data2, units):
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<title>Data exported from Weather Or Not</title>
+<title>Data exported from WeatherLog</title>
 <meta charset="utf-8" />
 </head>
 <body>
@@ -85,3 +85,48 @@ def csv(data2, units):
     
     # Return the CSV.
     return csv
+
+
+def info_html(data):
+    """Converts the info data to HTML."""
+    
+    # Build the string.
+    html = """
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>Data exported from WeatherLog</title>
+<meta charset="utf-8" />
+</head>
+<body>
+<table>
+<tr>
+<th>Field</th>
+<th>Value</th>
+</tr>"""
+    
+    # Add the data. Loop through each list, and add it as a table row.
+    for i in data:
+        
+        # Convert the data to utf-8.
+        for j in range(0, len(i)):
+            try:
+                i[j] = i[j].encode("utf-8")
+            except:
+                pass
+        
+        # Add the row of data.
+        html += """
+<tr>
+<td>%s</td>
+<td>%s</td>
+</tr>""" % (i[0], i[1])
+    
+    # Add the closing tags.
+    html += """
+</table>
+</body>
+</html>"""
+    
+    # Return the HTML.
+    return html.lstrip()

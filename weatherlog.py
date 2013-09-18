@@ -882,9 +882,66 @@ class Weather(Gtk.Window):
             ["Most common cloud cover", "%s" % clou_mode]
         ]        
         
-        # Show the dialog.
+        # Show the dialog and get the response.
         info_dlg = GenericInfoDialog(self, "General Info - %s" % last_profile, data2)
-        info_dlg.run()
+        response = info_dlg.run()
+        
+        # If the user clicked Export:
+        if response == 9:
+            
+            # Create the dialog.
+            export_dlg = Gtk.FileChooserDialog("Export - %s" % last_profile, self, Gtk.FileChooserAction.SAVE, (Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL, Gtk.STOCK_OPEN, Gtk.ResponseType.OK))
+            export_dlg.set_do_overwrite_confirmation(True)
+            
+            # Get the response.
+            response2 = export_dlg.run()
+            if response2 == Gtk.ResponseType.OK:
+                
+                # Convert the data to HTML.
+                data2 = export.info_html([
+                                         ["First day", "%s" % date_first],
+                                         ["Last day", "%s" % date_last],
+                                         ["Number of days", "%d" % date_num],
+                                         ["Lowest temperature", "%.2f %s" % (temp_low, units["temp"])], 
+                                         ["Highest temperature", "%.2f %s" % (temp_high, units["temp"])],
+                                         ["Average temperature", "%.2f %s" % (temp_avg, units["temp"])],
+                                         ["Lowest precipitation", prec_low],
+                                         ["Highest precipitation", prec_high],
+                                         ["Average precipitation", prec_avg],
+                                         ["Lowest wind speed", wind_low],
+                                         ["Highest wind speed", wind_high],
+                                         ["Average wind speed", wind_avg],
+                                         ["Lowest humidity", "%.2f%%" % humi_low], 
+                                         ["Highest humidity", "%.2f%%" % humi_high],
+                                         ["Average humidity", "%.2f%%" % humi_avg],
+                                         ["Lowest air pressure", "%.2f %s" % (airp_low, units["airp"])],
+                                         ["Highest air pressure", "%.2f %s" % (airp_high, units["airp"])],
+                                         ["Average air pressure", "%.2f %s" % (airp_avg, units["airp"])],
+                                         ["Most common cloud cover", "%s" % clou_mode]
+                ])
+                
+                # Get the filename.
+                filename = export_dlg.get_filename()
+                
+                # Save the data.
+                try:
+                    # Write to the specified file.
+                    data_file = open(filename, "w")
+                    json.dump(data2, data_file, indent = 4)
+                    data_file.close()
+                    
+                except IOError:
+                    # Show the error message.
+                    # This only shows if the error occurred when writing to the file.
+                    print("Error exporting data (IOError).")
+                
+                except (TypeError, ValueError):
+                    # Show the error message.
+                    # This one is shown if there was an error with the data type.
+                    print("Error exporting data (TypeError or ValueError).")
+                
+            # Close the dialog.
+            export_dlg.destroy()
         
         # Close the dialog. The response can be ignored.
         info_dlg.destroy()
