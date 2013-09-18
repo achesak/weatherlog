@@ -930,7 +930,7 @@ class Weather(Gtk.Window):
                 try:
                     # Write to the specified file.
                     data_file = open(filename, "w")
-                    json.dump(data2, data_file, indent = 4)
+                    data_file.write(data2)
                     data_file.close()
                     
                 except IOError:
