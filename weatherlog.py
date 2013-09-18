@@ -892,7 +892,7 @@ class Weather(Gtk.Window):
         if response == 9:
             
             # Create the dialog.
-            export_dlg = Gtk.FileChooserDialog("Export - %s" % last_profile, self, Gtk.FileChooserAction.SAVE, (Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL, Gtk.STOCK_OPEN, Gtk.ResponseType.OK))
+            export_dlg = Gtk.FileChooserDialog("Export Info - %s" % last_profile, self, Gtk.FileChooserAction.SAVE, (Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL, Gtk.STOCK_OPEN, Gtk.ResponseType.OK))
             export_dlg.set_do_overwrite_confirmation(True)
             
             # Get the response.
@@ -979,9 +979,53 @@ class Weather(Gtk.Window):
             ["Most common", "%.2f %s" % (temp_mode, units["temp"])]
         ]
         
-        # Show the dialog.
+        # Show the dialog and get the response.
         temp_dlg = GenericInfoDialog(self, "Temperature Info - %s" % last_profile, data2)
-        temp_dlg.run()
+        response = temp_dlg.run()
+        
+        # If the user clicked Export:
+        if response == 9:
+            
+            # Create the dialog.
+            export_dlg = Gtk.FileChooserDialog("Export Info - %s" % last_profile, self, Gtk.FileChooserAction.SAVE, (Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL, Gtk.STOCK_OPEN, Gtk.ResponseType.OK))
+            export_dlg.set_do_overwrite_confirmation(True)
+            
+            # Get the response.
+            response2 = export_dlg.run()
+            if response2 == Gtk.ResponseType.OK:
+                
+                # Convert the data to HTML.
+                data2 = export.info_html([
+                                         ["Lowest", "%.2f %s" % (temp_low, units["temp"])],
+                                         ["Highest", "%.2f %s" % (temp_high, units["temp"])],
+                                         ["Average", "%.2f %s" % (temp_avg, units["temp"])],
+                                         ["Median", "%.2f %s" % (temp_median, units["temp"])],
+                                         ["Range", "%.2f %s" % (temp_range, units["temp"])],
+                                         ["Most common", "%.2f %s" % (temp_mode, units["temp"])]
+                ])
+                
+                # Get the filename.
+                filename = export_dlg.get_filename()
+                
+                # Save the data.
+                try:
+                    # Write to the specified file.
+                    data_file = open(filename, "w")
+                    data_file.write(data2)
+                    data_file.close()
+                    
+                except IOError:
+                    # Show the error message.
+                    # This only shows if the error occurred when writing to the file.
+                    print("Error exporting data (IOError).")
+                
+                except (TypeError, ValueError):
+                    # Show the error message.
+                    # This one is shown if there was an error with the data type.
+                    print("Error exporting data (TypeError or ValueError).")
+                
+            # Close the dialog.
+            export_dlg.destroy()
         
         # Close the dialog. The response can be ignored.
         temp_dlg.destroy()
