@@ -803,6 +803,7 @@ class Weather(Gtk.Window):
         date_first2 = datetime.datetime.strptime(date_first, "%d/%m/%Y")
         date_last2 = datetime.datetime.strptime(date_last, "%d/%m/%Y")
         date_num = (date_last2 - date_first2).days + 1
+        day_num = len(data)
         
         # Get the temperature data.
         temp_data = utility_functions.convert_float(utility_functions.get_column(data, 1))
@@ -863,7 +864,8 @@ class Weather(Gtk.Window):
         data2 = [
             ["First day", "%s" % date_first],
             ["Last day", "%s" % date_last],
-            ["Number of days", "%d" % date_num],
+            ["Number of days", "%d" % day_num],
+            ["Range of days", "%d" % date_num],
             ["Lowest temperature", "%.2f %s" % (temp_low, units["temp"])], 
             ["Highest temperature", "%.2f %s" % (temp_high, units["temp"])],
             ["Average temperature", "%.2f %s" % (temp_avg, units["temp"])],
@@ -901,7 +903,8 @@ class Weather(Gtk.Window):
                 data2 = export.info_html([
                                          ["First day", "%s" % date_first],
                                          ["Last day", "%s" % date_last],
-                                         ["Number of days", "%d" % date_num],
+                                         ["Number of days", "%d" % day_num],
+                                         ["Range of days", "%d" % date_num],
                                          ["Lowest temperature", "%.2f %s" % (temp_low, units["temp"])], 
                                          ["Highest temperature", "%.2f %s" % (temp_high, units["temp"])],
                                          ["Average temperature", "%.2f %s" % (temp_avg, units["temp"])],
