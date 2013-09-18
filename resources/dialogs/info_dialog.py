@@ -32,7 +32,7 @@ class GenericInfoDialog(Gtk.Dialog):
         self.treeview = Gtk.TreeView(model = self.liststore)
         # Create the Category column.
         cate_text = Gtk.CellRendererText()
-        cate_col = Gtk.TreeViewColumn("Category", cate_text, text = 0)
+        cate_col = Gtk.TreeViewColumn("Field", cate_text, text = 0)
         self.treeview.append_column(cate_col)
         # Create the Value column.
         valu_text = Gtk.CellRendererText()

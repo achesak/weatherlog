@@ -109,11 +109,11 @@ def info_html(data):
     for i in data:
         
         # Convert the data to utf-8.
-        for j in range(0, len(i)):
-            try:
-                i[j] = i[j].encode("utf-8")
-            except:
-                pass
+        try:
+            i[0] = i[0].encode("utf-8")
+            i[1] = i[1].encode("utf-8")
+        except:
+            pass
         
         # Add the row of data.
         html += """
