@@ -17,12 +17,16 @@ class GenericInfoDialog(Gtk.Dialog):
     def __init__(self, parent, title, data):
         """Create the dialog."""
         
+        # Remember the data.
+        self.data = data[:]
+        
         # This window should be modal.
         Gtk.Dialog.__init__(self, title, parent, Gtk.DialogFlags.MODAL)
         self.set_default_size(300, 300)
         
-        # Add the button.
+        # Add the buttons.
         self.add_button("Close", Gtk.ResponseType.CLOSE)
+        #self.add_button("Export", 9)
         
         # Create the ListStore for storing the data.
         self.liststore = Gtk.ListStore(str, str)

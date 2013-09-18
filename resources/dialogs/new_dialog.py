@@ -23,8 +23,8 @@ class AddNewDialog(Gtk.Dialog):
         Gtk.Dialog.__init__(self, "Add New - %s" % profile, parent, Gtk.DialogFlags.MODAL)
         
         # Add the buttons.
-        self.add_button("OK", Gtk.ResponseType.OK)
         self.add_button("Cancel", Gtk.ResponseType.CANCEL)
+        self.add_button("OK", Gtk.ResponseType.OK)
         
         # Create the grid.
         new_box = self.get_content_area()

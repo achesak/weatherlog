@@ -22,9 +22,9 @@ class OptionsDialog(Gtk.Dialog):
         notebook.set_tab_pos(Gtk.PositionType.TOP)
         
         # Add the buttons.
-        self.add_button("OK", Gtk.ResponseType.OK)
-        self.add_button("Cancel", Gtk.ResponseType.CANCEL)
         self.add_button("Reset", 3)
+        self.add_button("Cancel", Gtk.ResponseType.CANCEL)
+        self.add_button("OK", Gtk.ResponseType.OK)
         
         # Create the first grid.
         opt_box = self.get_content_area()

@@ -17,8 +17,8 @@ class InfoRangeDialog(Gtk.Dialog):
         Gtk.Dialog.__init__(self, "%s Info in Range - %s" % (info, profile), parent, Gtk.DialogFlags.MODAL)
         
         # Add the buttons.
-        self.add_button("OK", Gtk.ResponseType.OK)
         self.add_button("Cancel", Gtk.ResponseType.CANCEL)
+        self.add_button("OK", Gtk.ResponseType.OK)
         
         # Create the grid.
         info_box = self.get_content_area()
