@@ -40,3 +40,12 @@ add_profile profile
 
 remove_profile profile
 - Removes a profile.
+
+options
+- Allows the user to change the options.
+
+reset_options
+- Resets the options to the default values.
+
+help
+- Opens the help in the user's web browser.
