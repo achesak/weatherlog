@@ -192,8 +192,14 @@ class AddNewDialog(Gtk.Dialog):
         self.temp_sbtn.set_value(float(data["condition"]["temp"]))
         
         # Set the wind fields.
-        self.wind_com.set_active(["None", "N", "NNE", "NE", "ENE", "E", "ESE", "SE", "SSE", "S", "SSW", "SW", "WSW", "W", "WNW", "NW", "NNW"].index(directions.degree_to_direction(float(data["wind"]["direction"]))))
-        self.wind_sbtn.set_value(float(data["wind"]["speed"]))
+        try:
+            self.wind_com.set_active(["None", "N", "NNE", "NE", "ENE", "E", "ESE", "SE", "SSE", "S", "SSW", "SW", "WSW", "W", "WNW", "NW", "NNW"].index(directions.degree_to_direction(float(data["wind"]["direction"]))))
+        except:
+            self.wind_com.set_active(0)
+        try:
+            self.wind_sbtn.set_value(float(data["wind"]["speed"]))
+        except:
+            self.wind_sbtn.set_value(0.0)
         
         # Set the humidity field.
         self.humi_sbtn.set_value(float(data["atmosphere"]["humidity"]))
