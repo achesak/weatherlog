@@ -3020,3 +3020,21 @@ elif __name__ == "__main__" and len(sys.argv) > 1:
             # Show the error message if something happened, but continue.
             # This one is shown if there was an error with the data type.
             print("Error saving configuration file (TypeError or ValueError).")
+    
+    # Set the window size:
+    elif sys.argv[1] == "window_size":
+        
+        # Get the window size.
+        width = int(sys.argv[2])
+        height = int(sys.argv[3])
+        
+        # Save the window size.
+        try:
+            wins_file = open("%s/window_size" % main_dir, "w")
+            wins_file.write("%d\n%d" % (width, height))
+            wins_file.close()
+        
+        except IOError:
+            # Show the error message if something happened, but continue.
+            # This one is shown if there was an error writing to the file.
+            print("Error saving window size file (IOError).")
