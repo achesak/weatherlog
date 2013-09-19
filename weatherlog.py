@@ -1856,9 +1856,6 @@ class Weather(Gtk.Window):
             
             return
         
-        # Convert to data to HTML.
-        html = export.html(data, units)
-        
         # Create the dialog.
         export_html_dlg = Gtk.FileChooserDialog("Export to HTML - %s" % last_profile, self, Gtk.FileChooserAction.SAVE, (Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL, Gtk.STOCK_OPEN, Gtk.ResponseType.OK))
         export_html_dlg.set_do_overwrite_confirmation(True)
@@ -1866,6 +1863,9 @@ class Weather(Gtk.Window):
         # Get the response.
         response = export_html_dlg.run()
         if response == Gtk.ResponseType.OK:
+            
+            # Convert to data to HTML.
+            html = export.html(data, units)
             
             # Get the filename.
             filename = export_html_dlg.get_filename()
@@ -1897,9 +1897,6 @@ class Weather(Gtk.Window):
             
             return
         
-        # Convert the data to CSV.
-        csv = export.csv(data, units)
-        
         # Create the dialog.
         export_csv_dlg = Gtk.FileChooserDialog("Export to CSV - %s" % last_profile, self, Gtk.FileChooserAction.SAVE, (Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL, Gtk.STOCK_OPEN, Gtk.ResponseType.OK))
         export_csv_dlg.set_do_overwrite_confirmation(True)
@@ -1907,6 +1904,9 @@ class Weather(Gtk.Window):
         # Get the response.
         response = export_csv_dlg.run()
         if response == Gtk.ResponseType.OK:
+            
+            # Convert the data to CSV.
+            csv = export.csv(data, units)
             
             # Get the filename.
             filename = export_csv_dlg.get_filename()
