@@ -15,6 +15,8 @@ class RemoveProfileDialog(Gtk.Dialog):
         
         # This window should be modal.
         Gtk.Dialog.__init__(self, "Remove Profile", parent, Gtk.DialogFlags.MODAL)
+        # Don't allow the user to resize the window.
+        self.set_resizable(False)
         
         # Add the buttons.
         self.add_button("Cancel", Gtk.ResponseType.CANCEL)

@@ -21,6 +21,8 @@ class AddNewDialog(Gtk.Dialog):
         
         # This window should be modal.
         Gtk.Dialog.__init__(self, "Add New - %s" % profile, parent, Gtk.DialogFlags.MODAL)
+        # Don't allow the user to resize the window.
+        self.set_resizable(False)
         
         # Add the buttons.
         self.add_button("Cancel", Gtk.ResponseType.CANCEL)
