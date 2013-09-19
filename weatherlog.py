@@ -1114,9 +1114,63 @@ class Weather(Gtk.Window):
             ["Most common type", "%s" % (prec_mode if prec_mode != "" else "None")]
         ]
         
-        # Show the dialog.
+        # Show the dialog and get the response.
         prec_dlg = GenericInfoDialog(self, "Precipitation Info - %s" % last_profile, data2)
-        prec_dlg.run()
+        response = prec_dlg.run()
+        
+        # If the user clicked Export:
+        if response == 9:
+            
+            # Create the dialog.
+            export_dlg = Gtk.FileChooserDialog("Export Info - %s" % last_profile, self, Gtk.FileChooserAction.SAVE, (Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL, Gtk.STOCK_OPEN, Gtk.ResponseType.OK))
+            export_dlg.set_do_overwrite_confirmation(True)
+            
+            # Get the response.
+            response2 = export_dlg.run()
+            if response2 == Gtk.ResponseType.OK:
+                
+                # Convert the data to HTML.
+                data2 = export.info_html([
+                                         ["Lowest", prec_low],
+                                         ["Highest", prec_high],
+                                         ["Average", prec_avg],
+                                         ["Median", prec_median],
+                                         ["Range", prec_range],
+                                         ["Total (all)", "%.2f %s" % (prec_total, units["prec"])],
+                                         ["Total (rain)", "%.2f %s" % (prec_total_rain, units["prec"])],
+                                         ["Total (snow)", "%.2f %s" % (prec_total_snow, units["prec"])],
+                                         ["Total (hail)", "%.2f %s" % (prec_total_hail, units["prec"])],
+                                         ["Total (sleet)", "%.2f %s" % (prec_total_sleet, units["prec"])],
+                                         ["None", "%d day%s" % (prec_none, "" if prec_none == 1 else "s")],
+                                         ["Rain", "%d day%s" % (prec_rain, "" if prec_rain == 1 else "s")],
+                                         ["Snow", "%d day%s" % (prec_snow, "" if prec_snow == 1 else "s")],
+                                         ["Hail", "%d day%s" % (prec_hail, "" if prec_hail == 1 else "s")],
+                                         ["Sleet", "%d day%s" % (prec_sleet, "" if prec_sleet == 1 else "s")],
+                                         ["Most common type", "%s" % (prec_mode if prec_mode != "" else "None")]
+                ])
+                
+                # Get the filename.
+                filename = export_dlg.get_filename()
+                
+                # Save the data.
+                try:
+                    # Write to the specified file.
+                    data_file = open(filename, "w")
+                    data_file.write(data2)
+                    data_file.close()
+                    
+                except IOError:
+                    # Show the error message.
+                    # This only shows if the error occurred when writing to the file.
+                    print("Error exporting data (IOError).")
+                
+                except (TypeError, ValueError):
+                    # Show the error message.
+                    # This one is shown if there was an error with the data type.
+                    print("Error exporting data (TypeError or ValueError).")
+                
+            # Close the dialog.
+            export_dlg.destroy()
         
         # Close the dialog. The response can be ignored.
         prec_dlg.destroy()
@@ -1167,9 +1221,53 @@ class Weather(Gtk.Window):
             ["Most common direction", "%s" % (wind_mode if wind_mode != "" else "None")]
         ]
         
-        # Show the dialog.
+        # Show the dialog and get the response.
         wind_dlg = GenericInfoDialog(self, "Wind Info - %s" % last_profile, data2)
-        wind_dlg.run()
+        response = wind_dlg.run()
+        
+        # If the user clicked Export:
+        if response == 9:
+            
+            # Create the dialog.
+            export_dlg = Gtk.FileChooserDialog("Export Info - %s" % last_profile, self, Gtk.FileChooserAction.SAVE, (Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL, Gtk.STOCK_OPEN, Gtk.ResponseType.OK))
+            export_dlg.set_do_overwrite_confirmation(True)
+            
+            # Get the response.
+            response2 = export_dlg.run()
+            if response2 == Gtk.ResponseType.OK:
+                
+                # Convert the data to HTML.
+                data2 = export.info_html([
+                                         ["Lowest", wind_low],
+                                         ["Highest", wind_high],
+                                         ["Average", wind_avg],
+                                         ["Median", wind_median],
+                                         ["Range", wind_range],
+                                         ["Most common direction", "%s" % (wind_mode if wind_mode != "" else "None")]
+                ])
+                
+                # Get the filename.
+                filename = export_dlg.get_filename()
+                
+                # Save the data.
+                try:
+                    # Write to the specified file.
+                    data_file = open(filename, "w")
+                    data_file.write(data2)
+                    data_file.close()
+                    
+                except IOError:
+                    # Show the error message.
+                    # This only shows if the error occurred when writing to the file.
+                    print("Error exporting data (IOError).")
+                
+                except (TypeError, ValueError):
+                    # Show the error message.
+                    # This one is shown if there was an error with the data type.
+                    print("Error exporting data (TypeError or ValueError).")
+                
+            # Close the dialog.
+            export_dlg.destroy()
         
         # Close the dialog. The response can be ignored.
         wind_dlg.destroy()
@@ -1204,9 +1302,53 @@ class Weather(Gtk.Window):
             ["Most common", "%.2f%%" % humi_mode]
         ]
         
-        # Show the dialog.
+        # Show the dialog and get the response.
         humi_dlg = GenericInfoDialog(self, "Humidity Info - %s" % last_profile, data2)
-        humi_dlg.run()
+        response = humi_dlg.run()
+        
+        # If the user clicked Export:
+        if response == 9:
+            
+            # Create the dialog.
+            export_dlg = Gtk.FileChooserDialog("Export Info - %s" % last_profile, self, Gtk.FileChooserAction.SAVE, (Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL, Gtk.STOCK_OPEN, Gtk.ResponseType.OK))
+            export_dlg.set_do_overwrite_confirmation(True)
+            
+            # Get the response.
+            response2 = export_dlg.run()
+            if response2 == Gtk.ResponseType.OK:
+                
+                # Convert the data to HTML.
+                data2 = export.info_html([
+                                         ["Lowest", "%.2f%%" % humi_low],
+                                         ["Highest", "%.2f%%" % humi_high],
+                                         ["Average", "%.2f%%" % humi_avg],
+                                         ["Median", "%.2f%%" % humi_median],
+                                         ["Range", "%.2f%%" % humi_range],
+                                         ["Most common", "%.2f%%" % humi_mode]
+                ])
+                
+                # Get the filename.
+                filename = export_dlg.get_filename()
+                
+                # Save the data.
+                try:
+                    # Write to the specified file.
+                    data_file = open(filename, "w")
+                    data_file.write(data2)
+                    data_file.close()
+                    
+                except IOError:
+                    # Show the error message.
+                    # This only shows if the error occurred when writing to the file.
+                    print("Error exporting data (IOError).")
+                
+                except (TypeError, ValueError):
+                    # Show the error message.
+                    # This one is shown if there was an error with the data type.
+                    print("Error exporting data (TypeError or ValueError).")
+                
+            # Close the dialog.
+            export_dlg.destroy()
         
         # Close the dialog. The response can be ignored.
         humi_dlg.destroy()
@@ -1255,9 +1397,56 @@ class Weather(Gtk.Window):
             ["Falling", "%d day%s" % (airp_falling, "" if airp_falling == 1 else "s")]
         ]
         
-        # Show the dialog.
+        # Show the dialog and get the response.
         airp_dlg = GenericInfoDialog(self, "Air Pressure Info - %s" % last_profile, data2)
-        airp_dlg.run()
+        response = airp_dlg.run()
+        
+        # If the user clicked Export:
+        if response == 9:
+            
+            # Create the dialog.
+            export_dlg = Gtk.FileChooserDialog("Export Info - %s" % last_profile, self, Gtk.FileChooserAction.SAVE, (Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL, Gtk.STOCK_OPEN, Gtk.ResponseType.OK))
+            export_dlg.set_do_overwrite_confirmation(True)
+            
+            # Get the response.
+            response2 = export_dlg.run()
+            if response2 == Gtk.ResponseType.OK:
+                
+                # Convert the data to HTML.
+                data2 = export.info_html([
+                                         ["Lowest", "%.2f %s" % (airp_low, units["airp"])],
+                                         ["Highest", "%.2f %s" % (airp_high, units["airp"])],
+                                         ["Average", "%.2f %s" % (airp_avg, units["airp"])],
+                                         ["Median", "%.2f %s" % (airp_median, units["airp"])],
+                                         ["Range", "%.2f %s" % (airp_range, units["airp"])],
+                                         ["Most common", "%.2f %s" % (airp_mode, units["airp"])],
+                                         ["Steady", "%d day%s" % (airp_steady, "" if airp_steady == 1 else "s")],
+                                         ["Rising", "%d day%s" % (airp_rising, "" if airp_rising == 1 else "s")],
+                                         ["Falling", "%d day%s" % (airp_falling, "" if airp_falling == 1 else "s")]
+                ])
+                
+                # Get the filename.
+                filename = export_dlg.get_filename()
+                
+                # Save the data.
+                try:
+                    # Write to the specified file.
+                    data_file = open(filename, "w")
+                    data_file.write(data2)
+                    data_file.close()
+                    
+                except IOError:
+                    # Show the error message.
+                    # This only shows if the error occurred when writing to the file.
+                    print("Error exporting data (IOError).")
+                
+                except (TypeError, ValueError):
+                    # Show the error message.
+                    # This one is shown if there was an error with the data type.
+                    print("Error exporting data (TypeError or ValueError).")
+                
+            # Close the dialog.
+            export_dlg.destroy()
         
         # Close the dialog. The response can be ignored.
         airp_dlg.destroy()
@@ -1306,7 +1495,50 @@ class Weather(Gtk.Window):
         
         # Show the dialog.
         clou_dlg = GenericInfoDialog(self, "Cloud Cover Info - %s" % last_profile, data2)
-        clou_dlg.run()
+        response = clou_dlg.run()
+        
+        # If the user clicked Export:
+        if response == 9:
+            
+            # Create the dialog.
+            export_dlg = Gtk.FileChooserDialog("Export Info - %s" % last_profile, self, Gtk.FileChooserAction.SAVE, (Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL, Gtk.STOCK_OPEN, Gtk.ResponseType.OK))
+            export_dlg.set_do_overwrite_confirmation(True)
+            
+            # Get the response.
+            response2 = export_dlg.run()
+            if response2 == Gtk.ResponseType.OK:
+                
+                # Convert the data to HTML.
+                data2 = export.info_html([
+                                         ["Sunny", "%s day%s" % (m_dict["Sunny"], "" if m_dict["Sunny"] == 1 else "s")],
+                                         ["Mostly Sunny", "%s day%s" % (m_dict["Mostly Sunny"], "" if m_dict["Mostly Sunny"] == 1 else "s")],
+                                         ["Partly Cloudy", "%s day%s" % (m_dict["Partly Cloudy"], "" if m_dict["Partly Cloudy"] == 1 else "s")],
+                                         ["Mostly Cloudy", "%s day%s" % (m_dict["Mostly Cloudy"], "" if m_dict["Mostly Cloudy"] == 1 else "s")],
+                                         ["Cloudy", "%s day%s" % (m_dict["Cloudy"], "" if m_dict["Cloudy"] == 1 else "s")]
+                ])
+                
+                # Get the filename.
+                filename = export_dlg.get_filename()
+                
+                # Save the data.
+                try:
+                    # Write to the specified file.
+                    data_file = open(filename, "w")
+                    data_file.write(data2)
+                    data_file.close()
+                    
+                except IOError:
+                    # Show the error message.
+                    # This only shows if the error occurred when writing to the file.
+                    print("Error exporting data (IOError).")
+                
+                except (TypeError, ValueError):
+                    # Show the error message.
+                    # This one is shown if there was an error with the data type.
+                    print("Error exporting data (TypeError or ValueError).")
+                
+            # Close the dialog.
+            export_dlg.destroy()
         
         # Close the dialog. The response can be ignored.
         clou_dlg.destroy()
