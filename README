@@ -49,3 +49,6 @@ reset_options
 
 help
 - Opens the help in the user's web browser.
+
+window_size width height
+- Sets the size of the window for the next time the application is opened.
