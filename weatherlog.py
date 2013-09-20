@@ -1237,7 +1237,7 @@ class Weather(Gtk.Window):
             if response2 == Gtk.ResponseType.OK:
                 
                 # Convert the data to HTML.
-                data2 = export.info_html([
+                data2 = export.info_html([ 
                                          ["Lowest", wind_low],
                                          ["Highest", wind_high],
                                          ["Average", wind_avg],
