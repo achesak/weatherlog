@@ -211,7 +211,7 @@ if not "escape_fullscreen" in config:
     config["escape_fullscreen"] = "exit fullscreen"
 if not "auto_save" in config:
     config["auto_save"] = True
-if not "confirm_del" in config:
+if not "confirm_del" in config: 
     config["confirm_del"] = True
 
 # Get the previous window size.
