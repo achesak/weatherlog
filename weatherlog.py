@@ -197,7 +197,7 @@ except IOError:
               "auto_save": True,
               "confirm_del": True}
 
-# If there is missing configuration options, then add them. 
+# If there is missing configuration options, then add them.
 # This is for compatability with upgrades from previous versions.
 if not "restore" in config:
     config["restore"] = True
