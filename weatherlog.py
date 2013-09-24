@@ -195,7 +195,8 @@ except IOError:
               "escape_fullscreen": "exit fullscreen",
               "escape_windowed": "minimize",
               "auto_save": True,
-              "confirm_del": True}
+              "confirm_del": True,
+              "show_pre-fill": True}
 
 # If there is missing configuration options, then add them.
 # This is for compatability with upgrades from previous versions.
@@ -213,6 +214,8 @@ if not "auto_save" in config:
     config["auto_save"] = True
 if not "confirm_del" in config: 
     config["confirm_del"] = True
+if not "show_pre-fill" in config:
+    config["show_pre-fill"] = True
 
 # Get the previous window size.
 try:
@@ -544,7 +547,7 @@ class Weather(Gtk.Window):
         global data
         
         # Show the dialog.
-        new_dlg = AddNewDialog(self, last_profile, config["location"], config["pre-fill"], units)
+        new_dlg = AddNewDialog(self, last_profile, config["location"], config["pre-fill"], config["show_pre-fill"], units)
         # Get the response.
         response = new_dlg.run()
         
@@ -2084,7 +2087,8 @@ class Weather(Gtk.Window):
                       "escape_fullscreen": "exit fullscreen",
                       "escape_windowed": "minimize",
                       "auto_save": True,
-                      "confirm_del": True}
+                      "confirm_del": True,
+                      "show_pre-fill": True}
             
             # Configure the units.
             # Metric:
@@ -2368,6 +2372,7 @@ class Weather(Gtk.Window):
             show_units = opt_dlg.unit_chk.get_active()
             auto_save = opt_dlg.sav_chk.get_active()
             confirm_del = opt_dlg.del_chk.get_active()
+            show_prefill = opt_dlg.pdl_chk.get_active()
             
             # Set the configuration.
             config["pre-fill"] = prefill
@@ -2380,6 +2385,7 @@ class Weather(Gtk.Window):
             config["show_units"] = show_units
             config["auto_save"] = auto_save
             config["confirm_del"] = confirm_del
+            config["show_pre-fill"] = show_prefill
             
             # Configure the units.
             # Metric:
@@ -2473,7 +2479,8 @@ class Weather(Gtk.Window):
                       "escape_fullscreen": "exit fullscreen",
                       "escape_windowed": "minimize",
                       "auto_save": True,
-                      "confirm_del": True}
+                      "confirm_del": True
+                      "show_pre-fill": True}
             
             # Configure the units.
             # Metric:
@@ -2927,6 +2934,8 @@ elif __name__ == "__main__" and len(sys.argv) > 1:
         opt_showdates = get_input()
         sys.stdout.write("Show unit in list (current: %s) (True|False): " % config["show_units"])
         opt_showunits = get_input()
+        sys.stdout.write("Show prefill dialog (current: %s) (True|False): " % config["show_pre-fill"])
+        opt_showprefill = get_input()
         
         # Set the options.
         if opt_prefill == "True":
@@ -2970,6 +2979,11 @@ elif __name__ == "__main__" and len(sys.argv) > 1:
             config["show_units"] = True
         elif opt_showunits == "False":
             config["show_units"] = False
+        
+        if opt_showprefill == "True":
+            config["show_pre-fill"] = True
+        elif opt_showprefill == "False":
+            config["show_pre-fill"] = False
         
         # Save the configuration.
         try:

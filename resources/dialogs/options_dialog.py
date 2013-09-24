@@ -111,6 +111,11 @@ class OptionsDialog(Gtk.Dialog):
         self.unit_chk.set_active(config["show_units"])
         opt_grid3.attach(self.unit_chk, 0, 2, 2, 1)
         
+        # Create the show pre-fill dialog checkbox.
+        self.pdl_chk = Gtk.CheckButton("Show pre-fill dialog")
+        self.pdl_chk.set_active(config["show_pre-fill"])
+        opt_grid3.attach(self.pdl_chk, 0, 3, 2, 1)
+        
         # Add the notebook.
         opt_box.add(notebook)
         

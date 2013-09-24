@@ -16,7 +16,7 @@ from .. import directions
 
 class AddNewDialog(Gtk.Dialog):
     """Shows the "Add New" dialog."""
-    def __init__(self, parent, profile, user_location, prefill, units):
+    def __init__(self, parent, profile, user_location, prefill, show_prefill_dlg, units):
         """Create the dialog."""
         
         # This window should be modal.
@@ -142,7 +142,7 @@ class AddNewDialog(Gtk.Dialog):
         self.show_all()
         
         # Show the dialog saying data has been prefilled.
-        if prefill and user_location and len(user_location) == 5 and station:
+        if show_prefill_dlg and prefill and user_location and len(user_location) == 5 and station:
             
             # Show the dialog.
             show_alert_dialog(self, "Add New - %s" % profile, "Temperature, wind, humidity, and air pressure have been pre-filled using data from Yahoo! Weather.\n\nLocation is set to %s, at %s." % (user_location, station))
