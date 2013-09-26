@@ -116,6 +116,11 @@ class OptionsDialog(Gtk.Dialog):
         self.pdl_chk.set_active(config["show_pre-fill"])
         opt_grid3.attach(self.pdl_chk, 0, 3, 2, 1)
         
+        # Create the confirm exit checkbox.
+        self.cex_chk = Gtk.CheckButton("Confirm exit")
+        self.cex_chk.set_active(config["confirm_exit"])
+        opt_grid3.attach(self.cex_chk, 0, 4, 2, 1)
+        
         # Add the notebook.
         opt_box.add(notebook)
         

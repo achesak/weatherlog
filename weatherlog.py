@@ -196,7 +196,8 @@ except IOError:
               "escape_windowed": "minimize",
               "auto_save": True,
               "confirm_del": True,
-              "show_pre-fill": True}
+              "show_pre-fill": True,
+              "confirm_exit": False}
 
 # If there is missing configuration options, then add them.
 # This is for compatability with upgrades from previous versions.
@@ -216,6 +217,8 @@ if not "confirm_del" in config:
     config["confirm_del"] = True
 if not "show_pre-fill" in config:
     config["show_pre-fill"] = True
+if not "confirm_exit" in config:
+    config["confirm_exit"] = False
 
 # Get the previous window size.
 try:
@@ -2088,7 +2091,8 @@ class Weather(Gtk.Window):
                       "escape_windowed": "minimize",
                       "auto_save": True,
                       "confirm_del": True,
-                      "show_pre-fill": True}
+                      "show_pre-fill": True,
+                      "confirm_exit": False}
             
             # Configure the units.
             # Metric:
@@ -2373,6 +2377,7 @@ class Weather(Gtk.Window):
             auto_save = opt_dlg.sav_chk.get_active()
             confirm_del = opt_dlg.del_chk.get_active()
             show_prefill = opt_dlg.pdl_chk.get_active()
+            confirm_exit = opt_dlg.cex_chk.get_active()
             
             # Set the configuration.
             config["pre-fill"] = prefill
@@ -2386,6 +2391,7 @@ class Weather(Gtk.Window):
             config["auto_save"] = auto_save
             config["confirm_del"] = confirm_del
             config["show_pre-fill"] = show_prefill
+            config["confirm_exit"] = confirm_exit
             
             # Configure the units.
             # Metric:
@@ -2479,8 +2485,9 @@ class Weather(Gtk.Window):
                       "escape_fullscreen": "exit fullscreen",
                       "escape_windowed": "minimize",
                       "auto_save": True,
-                      "confirm_del": True
-                      "show_pre-fill": True}
+                      "confirm_del": True,
+                      "show_pre-fill": True,
+                      "confirm_exit": False}
             
             # Configure the units.
             # Metric:
@@ -2709,11 +2716,34 @@ class Weather(Gtk.Window):
     def exit(self, x, y):
         """Closes the application."""
         
-        # Save the data.
-        self.save(show_dialog = False, from_options = True)
+        # Show the confirmation dialog, if the user wants that.
+        if config["confirm_exit"]:
+            response = show_question_dialog(self, "Quit", "Are you sure you want to close the application?")
         
-        # Close the  application.
-        Gtk.main_quit()
+        # If the user wants to continue:
+        if config["confirm_exit"] and response == Gtk.ResponseType.OK:
+        
+            # Save the data.
+            self.save(show_dialog = False, from_options = True)
+            
+            # Close the application.
+            Gtk.main_quit()
+            
+            return False
+        
+        # If the user pressed cancel:
+        elif config["confirm_exit"] and response == Gtk.ResponseType.CANCEL:
+            
+            return True
+        
+        # If the user doesn't want a confirmation dialog, quit immediately.
+        if not config["confirm_exit"]:
+            
+            # Save the data.
+            self.save(show_dialog = False, from_options = True)
+            
+            # Close the  application.
+            Gtk.main_quit()
 
 
 # Show the window and start the application, but only if there are no exta arguments.
@@ -2936,6 +2966,8 @@ elif __name__ == "__main__" and len(sys.argv) > 1:
         opt_showunits = get_input()
         sys.stdout.write("Show prefill dialog (current: %s) (True|False): " % config["show_pre-fill"])
         opt_showprefill = get_input()
+        sys.stdout.write("Confirm exit (current: %s) (True|False): " % config["confirm_exit"])
+        opt_confirmexit = get_input()
         
         # Set the options.
         if opt_prefill == "True":
@@ -2985,6 +3017,11 @@ elif __name__ == "__main__" and len(sys.argv) > 1:
         elif opt_showprefill == "False":
             config["show_pre-fill"] = False
         
+        if opt_confirmexit == "True":
+            config["confirm_exit"] = True
+        elif opt_confirmexit == "False":
+            config["confirm_exit"] = False
+        
         # Save the configuration.
         try:
             # Save the configuration file.
@@ -3016,7 +3053,9 @@ elif __name__ == "__main__" and len(sys.argv) > 1:
                   "escape_fullscreen": "exit fullscreen",
                   "escape_windowed": "minimize",
                   "auto_save": True,
-                  "confirm_del": True}
+                  "confirm_del": True,
+                  "show_pre-fill": True,
+                  "confirm_exit": False}
         
         # Save the configuration.
         try:
