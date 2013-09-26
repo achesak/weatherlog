@@ -4,7 +4,7 @@
 ################################################################################
 
 # WeatherLog
-# Version 1.4
+# Version 1.4.1
 
 # WeatherLog is an application for keeping track of the weather and
 # getting information about past trends.
