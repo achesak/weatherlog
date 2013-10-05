@@ -58,6 +58,8 @@ import os
 import os.path
 # Import sys for closing the application.
 import sys
+# Import platform for getting the user's operating system.
+import platform
 # Import urlopen and urlencode for opening a file from a URL.
 # Try importing Python 3 module, then fall back to Python 2 if needed.
 try:
@@ -105,7 +107,10 @@ from resources.dialogs.misc_dialogs import show_alert_dialog, show_error_dialog,
 
 
 # Get the main directory.
-main_dir = "%s/.weatherlog" % os.path.expanduser("~")
+if platform.system().lower() == "windows":
+    main_dir = "C:\\.weatherlog"
+else:
+    main_dir = "%s/.weatherlog" % os.path.expanduser("~")
 
 # Check to see if the directory exists, and create it if it doesn't.
 if not os.path.exists(main_dir) or not os.path.isdir(main_dir):
