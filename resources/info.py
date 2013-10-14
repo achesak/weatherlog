@@ -214,3 +214,149 @@ def prec_info(data, units):
     
     # Return the data list.
     return data2
+
+
+def wind_info(data, units):
+    """Gets the wind info."""
+    
+    # Get the data.
+    wind_data1, wind_data2 = utility_functions.split_list(utility_functions.get_column(data, 3))
+    wind_data1 = utility_functions.none_to_zero(wind_data1)
+    wind_data1 = utility_functions.convert_float(wind_data1)
+    try:
+        wind_low = min(wind_data1)
+        wind_high = max(wind_data1)
+        wind_avg = info_functions.mean(wind_data1)
+        wind_median = info_functions.median(wind_data1)
+        wind_range = info_functions.range(wind_data1)
+    except:
+        wind_low = "None"
+        wind_high = "None"
+        wind_avg = "None"
+        wind_median = "None"
+        wind_range = "None"
+    wind_mode = info_functions.mode(wind_data2)
+    
+    # Change any values, if needed.
+    wind_low = "None" if wind_low == "None" else ("%.2f %s" % (wind_low, units["wind"]))
+    wind_high = "None" if wind_high == "None" else ("%.2f %s" % (wind_high, units["wind"]))
+    wind_avg = "None" if wind_avg == "None" else ("%.2f %s" % (wind_avg, units["wind"]))
+    wind_median = "None" if wind_median == "None" else ("%.2f %s" % (wind_median, units["wind"]))
+    wind_range = "None" if wind_range == "None" else ("%.2f %s" % (wind_range, units["wind"]))
+    
+    # Create the data list.
+    data2 = [
+        ["Lowest", wind_low],
+        ["Highest", wind_high],
+        ["Average", wind_avg],
+        ["Median", wind_median],
+        ["Range", wind_range],
+        ["Most common direction", "%s" % (wind_mode if wind_mode != "" else "None")]
+    ]
+    
+    # Return the data list.
+    return data2
+
+
+def humi_info(data, units):
+    """Gets the humidity info."""
+    
+    # Get the data.
+    humi_data = utility_functions.convert_float(utility_functions.get_column(data, 4))
+    humi_low = min(humi_data)
+    humi_high = max(humi_data)
+    humi_avg = info_functions.mean(humi_data)
+    humi_median = info_functions.median(humi_data)
+    humi_range = info_functions.range(humi_data)
+    humi_mode = info_functions.mode(humi_data)
+    
+    # Create the data list.
+    data2 = [
+        ["Lowest", "%.2f%%" % humi_low],
+        ["Highest", "%.2f%%" % humi_high],
+        ["Average", "%.2f%%" % humi_avg],
+        ["Median", "%.2f%%" % humi_median],
+        ["Range", "%.2f%%" % humi_range],
+        ["Most common", "%.2f%%" % humi_mode]
+    ]
+    
+    # Return the data list.
+    return data2
+
+
+def airp_info(data, units):
+    """Gets the air pressure info."""
+    
+    # Get the data.
+    airp_data1, airp_data2 = utility_functions.split_list(utility_functions.get_column(data, 5))
+    airp_data1 = utility_functions.convert_float(airp_data1)
+    airp_low = min(airp_data1)
+    airp_high = max(airp_data1)
+    airp_avg = info_functions.mean(airp_data1)
+    airp_median = info_functions.median(airp_data1)
+    airp_range = info_functions.range(airp_data1)
+    airp_mode = info_functions.mode(airp_data1)
+    airp_steady = 0
+    airp_rising = 0
+    airp_falling = 0
+    for i in airp_data2:
+        if i == "Steady":
+            airp_steady += 1
+        elif i == "Rising":
+            airp_rising += 1
+        elif i == "Falling":
+            airp_falling += 1
+    
+    # Create the data list.
+    data2 = [
+        ["Lowest", "%.2f %s" % (airp_low, units["airp"])],
+        ["Highest", "%.2f %s" % (airp_high, units["airp"])],
+        ["Average", "%.2f %s" % (airp_avg, units["airp"])],
+        ["Median", "%.2f %s" % (airp_median, units["airp"])],
+        ["Range", "%.2f %s" % (airp_range, units["airp"])],
+        ["Most common", "%.2f %s" % (airp_mode, units["airp"])],
+        ["Steady", "%d day%s" % (airp_steady, "" if airp_steady == 1 else "s")],
+        ["Rising", "%d day%s" % (airp_rising, "" if airp_rising == 1 else "s")],
+        ["Falling", "%d day%s" % (airp_falling, "" if airp_falling == 1 else "s")]
+    ]
+    
+    # Return the data list.
+    return data2
+
+
+def clou_info(data, units):
+    """Gets the cloud cover info."""
+    
+    # Get the data.
+    # Put the items into a collection.
+    clou_data = Counter(utility_functions.get_column(data, 6))
+    # Find how many times the items appear.
+    m_list = clou_data.most_common()
+    # Convert the list to a dictionary.
+    m_dict = {}
+    for i in m_list:
+        m_dict[i[0]] = i[1]
+    
+    # If any of the items don't appear, add dict items for them, with the values set to 0.
+    if not "Sunny" in m_dict:
+        m_dict["Sunny"] = 0
+    if not "Mostly Sunny" in m_dict:
+        m_dict["Mostly Sunny"] = 0
+    if not "Partly Cloudy" in m_dict:
+        m_dict["Partly Cloudy"] = 0
+    if not "Mostly Cloudy" in m_dict:
+        m_dict["Mostly Cloudy"] = 0
+    if not "Cloudy" in m_dict:
+        m_dict["Cloudy"] = 0
+    
+    # Create the data list.
+    data2 = [
+        ["Sunny", "%s day%s" % (m_dict["Sunny"], "" if m_dict["Sunny"] == 1 else "s")],
+        ["Mostly Sunny", "%s day%s" % (m_dict["Mostly Sunny"], "" if m_dict["Mostly Sunny"] == 1 else "s")],
+        ["Partly Cloudy", "%s day%s" % (m_dict["Partly Cloudy"], "" if m_dict["Partly Cloudy"] == 1 else "s")],
+        ["Mostly Cloudy", "%s day%s" % (m_dict["Mostly Cloudy"], "" if m_dict["Mostly Cloudy"] == 1 else "s")],
+        ["Cloudy", "%s day%s" % (m_dict["Cloudy"], "" if m_dict["Cloudy"] == 1 else "s")]
+    ]
+    
+    # Return the data list.
+    return data2
