@@ -78,35 +78,35 @@ except ImportError:
 sys.dont_write_bytecode = True
 
 # Import the application's UI data.
-from resources.ui import VERSION, TITLE, MENU_DATA
+from weatherlog_resources.ui import VERSION, TITLE, MENU_DATA
 # Import the functions for various tasks.
-import resources.utility_functions as utility_functions
+import weatherlog_resources.utility_functions as utility_functions
 # Import the functions for getting and calculating the data.
-import resources.info_functions as info_functions
+import weatherlog_resources.info_functions as info_functions
 # Import the functions for exporting the data.
-import resources.export as export
+import weatherlog_resources.export as export
 # Import the function for converting the data.
-import resources.convert as convert
+import weatherlog_resources.convert as convert
 # Import the functions for getting the info.
-import resources.info as info
+import weatherlog_resources.info as info
 # Import the dialog for getting new data.
-from resources.dialogs.new_dialog import AddNewDialog
+from weatherlog_resources.dialogs.new_dialog import AddNewDialog
 # Import the dialog for displaying information.
-from resources.dialogs.info_dialog import GenericInfoDialog
+from weatherlog_resources.dialogs.info_dialog import GenericInfoDialog
 # Import the dialog for telling the user there is no data.
-from resources.dialogs.data_dialog import show_no_data_dialog
+from weatherlog_resources.dialogs.data_dialog import show_no_data_dialog
 # Import the dialog for adding a profile.
-from resources.dialogs.add_profile_dialog import AddProfileDialog
+from weatherlog_resources.dialogs.add_profile_dialog import AddProfileDialog
 # Import the dialog for switching profiles.
-from resources.dialogs.switch_profile_dialog import SwitchProfileDialog
+from weatherlog_resources.dialogs.switch_profile_dialog import SwitchProfileDialog
 # Import the dialog for removing profiles.
-from resources.dialogs.remove_profile_dialog import RemoveProfileDialog
+from weatherlog_resources.dialogs.remove_profile_dialog import RemoveProfileDialog
 # Import the dialog for selecting a range of dates to show information about.
-from resources.dialogs.info_range_dialog import InfoRangeDialog
+from weatherlog_resources.dialogs.info_range_dialog import InfoRangeDialog
 # Import the dialog for changing the options.
-from resources.dialogs.options_dialog import OptionsDialog
+from weatherlog_resources.dialogs.options_dialog import OptionsDialog
 # Import the miscellaneous dialogs.
-from resources.dialogs.misc_dialogs import show_alert_dialog, show_error_dialog, show_question_dialog
+from weatherlog_resources.dialogs.misc_dialogs import show_alert_dialog, show_error_dialog, show_question_dialog
 
 
 # Get the main directory.
@@ -302,7 +302,7 @@ class Weather(Gtk.Window):
         # Set the window size.
         self.set_default_size(last_width, last_height)
         # Set the icon.
-        self.set_icon_from_file("resources/images/icon.png")
+        self.set_icon_from_file("weatherlog_resources/images/icon.png")
         # Use this variable to store the fullscreen state.
         self.fullscreen_state = False
         
@@ -2321,7 +2321,7 @@ class Weather(Gtk.Window):
         """Shows the About dialog."""
         
         # Load the icon.
-        img_file = open("resources/images/icon.png", "rb")
+        img_file = open("weatherlog_resources/images/icon.png", "rb")
         img_bin = img_file.read()
         img_file.close()
         
@@ -2366,7 +2366,7 @@ class Weather(Gtk.Window):
         """Shows the help in a web browser."""
         
         # Open the help file.
-        webbrowser.open_new("resources/help/help.html")    
+        webbrowser.open_new("weatherlog_resources/help/help.html")    
     
 
     def exit(self, x, y):
@@ -2579,7 +2579,7 @@ elif __name__ == "__main__" and len(sys.argv) > 1:
     elif sys.argv[1] == "help":
         
         # Open the help file.
-        webbrowser.open_new("resources/help/help.html")
+        webbrowser.open_new("weatherlog_resources/help/help.html")
     
     # Set the options:
     elif sys.argv[1] == "options":
