@@ -868,24 +868,8 @@ class Weather(Gtk.Window):
             show_no_data_dialog(self, "Temperature Info - %s" % last_profile)
             return
         
-        # Get the data.
-        temp_data = utility_functions.convert_float(utility_functions.get_column(data, 1))
-        temp_low = min(temp_data)
-        temp_high = max(temp_data)
-        temp_avg = info_functions.mean(temp_data)
-        temp_median = info_functions.median(temp_data)
-        temp_range = info_functions.range(temp_data)
-        temp_mode = info_functions.mode(temp_data)
-        
-        # Create the data list.
-        data2 = [
-            ["Lowest", "%.2f %s" % (temp_low, units["temp"])],
-            ["Highest", "%.2f %s" % (temp_high, units["temp"])],
-            ["Average", "%.2f %s" % (temp_avg, units["temp"])],
-            ["Median", "%.2f %s" % (temp_median, units["temp"])],
-            ["Range", "%.2f %s" % (temp_range, units["temp"])],
-            ["Most common", "%.2f %s" % (temp_mode, units["temp"])]
-        ]
+        # Get the info.
+        data2 = info.temp_info(data, units)
         
         # Show the dialog and get the response.
         temp_dlg = GenericInfoDialog(self, "Temperature Info - %s" % last_profile, data2)
@@ -903,14 +887,7 @@ class Weather(Gtk.Window):
             if response2 == Gtk.ResponseType.OK:
                 
                 # Convert the data to HTML.
-                data2 = export.info_html([
-                                         ["Lowest", "%.2f %s" % (temp_low, units["temp"])],
-                                         ["Highest", "%.2f %s" % (temp_high, units["temp"])],
-                                         ["Average", "%.2f %s" % (temp_avg, units["temp"])],
-                                         ["Median", "%.2f %s" % (temp_median, units["temp"])],
-                                         ["Range", "%.2f %s" % (temp_range, units["temp"])],
-                                         ["Most common", "%.2f %s" % (temp_mode, units["temp"])]
-                ])
+                data2 = export.info_html(data2)
                 
                 # Get the filename.
                 filename = export_dlg.get_filename()
@@ -949,78 +926,8 @@ class Weather(Gtk.Window):
             show_no_data_dialog(self, "Precipitation Info - %s" % last_profile)
             return
         
-        # Get the data.
-        prec_data1, prec_data2 = utility_functions.split_list(utility_functions.get_column(data, 2))
-        prec_split = utility_functions.split_list2(utility_functions.get_column(data, 2))
-        prec_data1 = utility_functions.none_to_zero(prec_data1)
-        prec_data1 = utility_functions.convert_float(prec_data1)
-        try:
-            prec_low = min(prec_data1)
-            prec_high = max(prec_data1)
-            prec_avg = info_functions.mean(prec_data1)
-            prec_median = info_functions.median(prec_data1)
-            prec_range = info_functions.range(prec_data1)
-        except:
-            prec_low = "None"
-            prec_high = "None"
-            prec_avg = "None"
-            prec_median = "None"
-            prec_range = "None"
-        prec_total = 0
-        prec_total_rain = 0
-        prec_total_snow = 0
-        prec_total_hail = 0
-        prec_total_sleet = 0
-        prec_none = 0
-        prec_rain = 0
-        prec_snow = 0
-        prec_hail = 0
-        prec_sleet = 0
-        for i in prec_split:
-            if i[1] != "None":
-                prec_total += float(i[0])
-            if i[1] == "None":
-                prec_none += 1
-            elif i[1] == "Rain":
-                prec_total_rain += float(i[0])
-                prec_rain += 1
-            elif i[1] == "Snow":
-                prec_total_snow += float(i[0])
-                prec_snow += 1
-            elif i[1] == "Hail":
-                prec_total_hail += float(i[0])
-                prec_hail += 1
-            elif i[1] == "Sleet":
-                prec_total_sleet += float(i[0])
-                prec_hail += 1
-        prec_mode = info_functions.mode(prec_data2)
-        
-        # Change any values, if needed.
-        prec_low = "None" if prec_low == "None" else ("%.2f %s" % (prec_low, units["prec"]))
-        prec_high = "None" if prec_high == "None" else ("%.2f %s" % (prec_high, units["prec"]))
-        prec_avg = "None" if prec_avg == "None" else ("%.2f %s" % (prec_avg, units["prec"]))
-        prec_median = "None" if prec_median == "None" else ("%.2f %s" % (prec_median, units["prec"]))
-        prec_range = "None" if prec_range == "None" else ("%.2f %s" % (prec_range, units["prec"]))
-        
-        # Create the data list.
-        data2 = [
-            ["Lowest", prec_low],
-            ["Highest", prec_high],
-            ["Average", prec_avg],
-            ["Median", prec_median],
-            ["Range", prec_range],
-            ["Total (all)", "%.2f %s" % (prec_total, units["prec"])],
-            ["Total (rain)", "%.2f %s" % (prec_total_rain, units["prec"])],
-            ["Total (snow)", "%.2f %s" % (prec_total_snow, units["prec"])],
-            ["Total (hail)", "%.2f %s" % (prec_total_hail, units["prec"])],
-            ["Total (sleet)", "%.2f %s" % (prec_total_sleet, units["prec"])],
-            ["None", "%d day%s" % (prec_none, "" if prec_none == 1 else "s")],
-            ["Rain", "%d day%s" % (prec_rain, "" if prec_rain == 1 else "s")],
-            ["Snow", "%d day%s" % (prec_snow, "" if prec_snow == 1 else "s")],
-            ["Hail", "%d day%s" % (prec_hail, "" if prec_hail == 1 else "s")],
-            ["Sleet", "%d day%s" % (prec_sleet, "" if prec_sleet == 1 else "s")],
-            ["Most common type", "%s" % (prec_mode if prec_mode != "" else "None")]
-        ]
+        # Get the info.
+        data2 = info.prec_info(data, units)
         
         # Show the dialog and get the response.
         prec_dlg = GenericInfoDialog(self, "Precipitation Info - %s" % last_profile, data2)
@@ -1038,24 +945,7 @@ class Weather(Gtk.Window):
             if response2 == Gtk.ResponseType.OK:
                 
                 # Convert the data to HTML.
-                data2 = export.info_html([
-                                         ["Lowest", prec_low],
-                                         ["Highest", prec_high],
-                                         ["Average", prec_avg],
-                                         ["Median", prec_median],
-                                         ["Range", prec_range],
-                                         ["Total (all)", "%.2f %s" % (prec_total, units["prec"])],
-                                         ["Total (rain)", "%.2f %s" % (prec_total_rain, units["prec"])],
-                                         ["Total (snow)", "%.2f %s" % (prec_total_snow, units["prec"])],
-                                         ["Total (hail)", "%.2f %s" % (prec_total_hail, units["prec"])],
-                                         ["Total (sleet)", "%.2f %s" % (prec_total_sleet, units["prec"])],
-                                         ["None", "%d day%s" % (prec_none, "" if prec_none == 1 else "s")],
-                                         ["Rain", "%d day%s" % (prec_rain, "" if prec_rain == 1 else "s")],
-                                         ["Snow", "%d day%s" % (prec_snow, "" if prec_snow == 1 else "s")],
-                                         ["Hail", "%d day%s" % (prec_hail, "" if prec_hail == 1 else "s")],
-                                         ["Sleet", "%d day%s" % (prec_sleet, "" if prec_sleet == 1 else "s")],
-                                         ["Most common type", "%s" % (prec_mode if prec_mode != "" else "None")]
-                ])
+                data2 = export.info_html(data2)
                 
                 # Get the filename.
                 filename = export_dlg.get_filename()
