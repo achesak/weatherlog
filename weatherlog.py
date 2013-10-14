@@ -830,28 +830,11 @@ class Weather(Gtk.Window):
             response2 = export_dlg.run()
             if response2 == Gtk.ResponseType.OK:
                 
-                # Convert the data to HTML.
-                data2 = export.info_html(data2)
-                
                 # Get the filename.
                 filename = export_dlg.get_filename()
                 
-                # Save the data.
-                try:
-                    # Write to the specified file.
-                    data_file = open(filename, "w")
-                    data_file.write(data2)
-                    data_file.close()
-                    
-                except IOError:
-                    # Show the error message.
-                    # This only shows if the error occurred when writing to the file.
-                    print("Error exporting data (IOError).")
-                
-                except (TypeError, ValueError):
-                    # Show the error message.
-                    # This one is shown if there was an error with the data type.
-                    print("Error exporting data (TypeError or ValueError).")
+                # Export the info.
+                export_info.export_info(data2, filename)
                 
             # Close the dialog.
             export_dlg.destroy()
@@ -888,28 +871,11 @@ class Weather(Gtk.Window):
             response2 = export_dlg.run()
             if response2 == Gtk.ResponseType.OK:
                 
-                # Convert the data to HTML.
-                data2 = export.info_html(data2)
-                
                 # Get the filename.
                 filename = export_dlg.get_filename()
                 
-                # Save the data.
-                try:
-                    # Write to the specified file.
-                    data_file = open(filename, "w")
-                    data_file.write(data2)
-                    data_file.close()
-                    
-                except IOError:
-                    # Show the error message.
-                    # This only shows if the error occurred when writing to the file.
-                    print("Error exporting data (IOError).")
-                
-                except (TypeError, ValueError):
-                    # Show the error message.
-                    # This one is shown if there was an error with the data type.
-                    print("Error exporting data (TypeError or ValueError).")
+                # Export the info.
+                export_info.export_info(data2, filename)
                 
             # Close the dialog.
             export_dlg.destroy()
@@ -946,28 +912,11 @@ class Weather(Gtk.Window):
             response2 = export_dlg.run()
             if response2 == Gtk.ResponseType.OK:
                 
-                # Convert the data to HTML.
-                data2 = export.info_html(data2)
-                
                 # Get the filename.
                 filename = export_dlg.get_filename()
                 
-                # Save the data.
-                try:
-                    # Write to the specified file.
-                    data_file = open(filename, "w")
-                    data_file.write(data2)
-                    data_file.close()
-                    
-                except IOError:
-                    # Show the error message.
-                    # This only shows if the error occurred when writing to the file.
-                    print("Error exporting data (IOError).")
-                
-                except (TypeError, ValueError):
-                    # Show the error message.
-                    # This one is shown if there was an error with the data type.
-                    print("Error exporting data (TypeError or ValueError).")
+                # Export the info.
+                export_info.export_info(data2, filename)
                 
             # Close the dialog.
             export_dlg.destroy()
@@ -1004,28 +953,11 @@ class Weather(Gtk.Window):
             response2 = export_dlg.run()
             if response2 == Gtk.ResponseType.OK:
                 
-                # Convert the data to HTML.
-                data2 = export.info_html(data2)
-                
                 # Get the filename.
                 filename = export_dlg.get_filename()
                 
-                # Save the data.
-                try:
-                    # Write to the specified file.
-                    data_file = open(filename, "w")
-                    data_file.write(data2)
-                    data_file.close()
-                    
-                except IOError:
-                    # Show the error message.
-                    # This only shows if the error occurred when writing to the file.
-                    print("Error exporting data (IOError).")
-                
-                except (TypeError, ValueError):
-                    # Show the error message.
-                    # This one is shown if there was an error with the data type.
-                    print("Error exporting data (TypeError or ValueError).")
+                # Export the info.
+                export_info.export_info(data2, filename)
                 
             # Close the dialog.
             export_dlg.destroy()
@@ -1062,28 +994,11 @@ class Weather(Gtk.Window):
             response2 = export_dlg.run()
             if response2 == Gtk.ResponseType.OK:
                 
-                # Convert the data to HTML.
-                data2 = export.info_html(data2)
-                
                 # Get the filename.
                 filename = export_dlg.get_filename()
                 
-                # Save the data.
-                try:
-                    # Write to the specified file.
-                    data_file = open(filename, "w")
-                    data_file.write(data2)
-                    data_file.close()
-                    
-                except IOError:
-                    # Show the error message.
-                    # This only shows if the error occurred when writing to the file.
-                    print("Error exporting data (IOError).")
-                
-                except (TypeError, ValueError):
-                    # Show the error message.
-                    # This one is shown if there was an error with the data type.
-                    print("Error exporting data (TypeError or ValueError).")
+                # Export the info.
+                export_info.export_info(data2, filename)
                 
             # Close the dialog.
             export_dlg.destroy()
@@ -1120,28 +1035,11 @@ class Weather(Gtk.Window):
             response2 = export_dlg.run()
             if response2 == Gtk.ResponseType.OK:
                 
-                # Convert the data to HTML.
-                data2 = export.info_html(data2)
-                
                 # Get the filename.
                 filename = export_dlg.get_filename()
                 
-                # Save the data.
-                try:
-                    # Write to the specified file.
-                    data_file = open(filename, "w")
-                    data_file.write(data2)
-                    data_file.close()
-                    
-                except IOError:
-                    # Show the error message.
-                    # This only shows if the error occurred when writing to the file.
-                    print("Error exporting data (IOError).")
-                
-                except (TypeError, ValueError):
-                    # Show the error message.
-                    # This one is shown if there was an error with the data type.
-                    print("Error exporting data (TypeError or ValueError).")
+                # Export the info.
+                export_info.export_info(data2, filename)
                 
             # Close the dialog.
             export_dlg.destroy()
