@@ -37,6 +37,7 @@ MENU_DATA = """
         <menuitem action="humidity" />
         <menuitem action="air_pressure" />
         <menuitem action="cloud_cover" />
+        <menuitem action="notes" />
       </menu>
       <menuitem action="info_range" />
       <menu action="info_range_menu">
@@ -46,6 +47,7 @@ MENU_DATA = """
         <menuitem action="humidity_range" />
         <menuitem action="air_pressure_range" />
         <menuitem action="cloud_cover_range" />
+        <menuitem action="notes_range" />
       </menu>
       <separator />
       <menuitem action="clear_data" />
