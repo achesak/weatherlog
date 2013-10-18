@@ -360,3 +360,17 @@ def clou_info(data, units):
     
     # Return the data list.
     return data2
+
+
+def note_info(data, units):
+    """Gets the notes info."""
+    
+    # Get the data.
+    data2 = []
+    
+    # Loop through the list, appending the dates and notes.
+    for i in range(0, len(data)):
+        data2.append([data[i][0], data[i][7]])
+    
+    # Retun the data list.
+    return data2

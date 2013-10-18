@@ -403,7 +403,7 @@ class Weather(Gtk.Window):
             ("humidity", None, "_Humidity...", "<Control>h", None, lambda x: self.show_info_humi(event = "ignore", data = data)),
             ("air_pressure", None, "_Air Pressure...", "<Control>a", None, lambda x: self.show_info_airp(event = "ignore", data = data)),
             ("cloud_cover", None, "_Cloud Cover...", "<Control>c", None, lambda x: self.show_info_clou(event = "ignore", data = data)),
-            ("notes", None, "_Notes...", "<Control>e", None, None),
+            ("notes", None, "_Notes...", "<Control>e", None, lambda x: self.show_info_note(event = "ignore", data = data)),
             ("info_range", None, "Info in _Range...", "<Control><Shift>i", None, lambda x: self.info_range("General"))
         ])
         
@@ -417,7 +417,7 @@ class Weather(Gtk.Window):
             ("humidity_range", None, "_Humidity in Range...", "<Control><Shift>h", None, lambda x: self.info_range("Humidity")),
             ("air_pressure_range", None, "_Air Pressure in Range...", "<Control><Shift>a", None, lambda x: self.info_range("Air Pressure")),
             ("cloud_cover_range", None, "_Cloud Cover in Range...", "<Control><Shift>c", None, lambda x: self.info_range("Cloud Cover")),
-            ("notes_range", None, "_Notes in Range...", "<Control><Shift>e", None, None),
+            ("notes_range", None, "_Notes in Range...", "<Control><Shift>e", None, lambda x: self.info_range("Notes")),
             ("clear_data", Gtk.STOCK_CLEAR, "Clear Current _Data...", "<Control>d", "Clear the data", self.clear),
             ("clear_all", None, "Clear _All Data...", "<Control><Alt>d", None, self.clear_all),
             ("reload_current", None, "Reload _Current Data...", "F5", None, self.reload_current),
@@ -802,6 +802,8 @@ class Weather(Gtk.Window):
             self.show_info_airp(False, data2)
         elif info == "Cloud Cover":
             self.show_info_clou(False, data2)
+        elif info == "Notes":
+            self.show_info_note(False, data2)
     
     
     def show_info(self, event, data = data):
@@ -1089,6 +1091,59 @@ class Weather(Gtk.Window):
         
         # Close the dialog. The response can be ignored.
         clou_dlg.destroy()
+    
+    
+    
+    
+    
+    
+    
+    
+    def show_info_note(self, event, data = data):
+        """Shows the notes."""
+        
+        # If there is no data, tell the user and don't show the info dialog.
+        if len(data) == 0:
+            
+            # Show the dialog.
+            show_no_data_dialog(self, "Notes Info - %s" % last_profile)
+            return
+        
+        # Get the info.
+        data2 = info.note_info(data, units)
+        
+        # Show the dialog.
+        note_dlg = GenericInfoDialog(self, "Notes Info - %s" % last_profile, data2)
+        response = note_dlg.run()
+        
+        # If the user clicked Export:
+        if response == 9:
+            
+            # Create the dialog.
+            export_dlg = Gtk.FileChooserDialog("Export Notes Info - %s" % last_profile, self, Gtk.FileChooserAction.SAVE, (Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL, Gtk.STOCK_OPEN, Gtk.ResponseType.OK))
+            export_dlg.set_do_overwrite_confirmation(True)
+            
+            # Get the response.
+            response2 = export_dlg.run()
+            if response2 == Gtk.ResponseType.OK:
+                
+                # Get the filename.
+                filename = export_dlg.get_filename()
+                
+                # Export the info.
+                export_info.export_info(data2, filename)
+                
+            # Close the dialog.
+            export_dlg.destroy()
+        
+        # Close the dialog. The response can be ignored.
+        note_dlg.destroy()
+    
+    
+    
+    
+    
+    
     
     
     def import_file(self, event):
