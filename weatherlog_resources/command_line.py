@@ -24,7 +24,7 @@ def add(data, main_dir, last_profile, args):
         humi = args[6]
         airp = args[7]
         clou = args[8]
-        if len(args) == 10:
+        if len(args) >= 10:
             note = args[9]
         else:
             note = ""
