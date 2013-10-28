@@ -2372,23 +2372,7 @@ elif __name__ == "__main__" and len(sys.argv) > 1:
     # Clear the current profile:
     elif sys.argv[1] == "clear":
         
-        # Clear the file.
-        try:
-            
-            # Get the data.
-            data_file = open("%s/profiles/%s/weather.json" % (main_dir, last_profile), "w")
-            data_file.write("[]")
-            data_file.close()
-            
-        except IOError:
-            # Show the error message if something happened, but continue.
-            # This one is shown if there was an error writing to the file.
-            print("Error saving data file (IOError).")
-        
-        except (TypeError, ValueError):
-            # Show the error message if something happened, but continue.
-            # This one is shown if there was an error with the data type.
-            print("Error saving data file (TypeError or ValueError).")
+        command_line.clear(main_dir, last_profile)
     
     
     # Clear all the data:
@@ -2401,62 +2385,19 @@ elif __name__ == "__main__" and len(sys.argv) > 1:
     # Switch profiles:
     elif sys.argv[1] == "switch_profile":
         
-        # Save the new profile name.
-        try:
-            # This should save to ~/.weatherlog/lastprofile on Linux.
-            prof_file = open("%s/lastprofile" % main_dir, "w")
-            prof_file.write(sys.argv[2])
-            prof_file.close()
-            
-        except IOError:
-            # Show the error message if something happened, but continue.
-            # This one is shown if there was an error writing to the file.
-            print("Error saving profile file (IOError).")
+        command_line.switch_profile(main_dir, sys.argv[2])
     
     
     # Add a new profile:
     elif sys.argv[1] == "add_profile":
         
-        # If the profile name is already in use, cancel the action.
-        if os.path.isdir("%s/profiles/%s" % (main_dir, sys.argv[2])):
-                
-            print("Profile name is already is use.")
-            
-        # Otherwise if there are no problems with the name, add the profile.
-        else:
-            
-            # Create the directory and file.
-            os.makedirs("%s/profiles/%s" % (main_dir, sys.argv[2]))
-            new_prof_file = open("%s/profiles/%s/weather.json" % (main_dir, sys.argv[2]), "w")
-            new_prof_file.write("[]")
-            new_prof_file.close()
-        
-        # Save the new profile name.
-        try:
-            # This should save to ~/.weatherlog/lastprofile on Linux.
-            prof_file = open("%s/lastprofile" % main_dir, "w")
-            prof_file.write(sys.argv[2])
-            prof_file.close()
-            
-        except IOError:
-            # Show the error message if something happened, but continue.
-            # This one is shown if there was an error writing to the file.
-            print("Error saving profile file (IOError).")
+        command_line.add_profile(main_dir, sys.argv[2])
     
     
     # Remove an existing profile:
     elif sys.argv[1] == "remove_profile":
         
-        # If this profile is the current one, cancel the action.
-        if sys.argv[2] == last_profile:
-            
-            print("Profile is currently in use.")
-        
-        # Otherwise, remove the profile.
-        else:
-            
-            # Delete the directory.
-            shutil.rmtree("%s/profiles/%s" % (main_dir, sys.argv[2]))
+        command_line.remove_profile(main_dir, last_profile, sys.argv[2])
     
     # Show the help:
     elif sys.argv[1] == "help":
@@ -2467,166 +2408,14 @@ elif __name__ == "__main__" and len(sys.argv) > 1:
     # Set the options:
     elif sys.argv[1] == "options":
         
-        def get_input():
-            """Gets input from the user."""
-            
-            # If this is running under python 2:
-            if py_version == 2:
-                user_input = raw_input()
-            
-            # If this is running under python 3:
-            elif py_version == 3:
-                user_input = input()
-            
-            # Return the user's input.
-            return user_input
-        
-        # Ask the user for the options.
-        print("----If nothing is entered the current value will be kept----")
-        sys.stdout.write("Pre-fill data (current: %s) (True|False): " % config["pre-fill"])
-        opt_prefill = get_input()
-        sys.stdout.write("Save automatically (current: %s) (True|False): " % config["auto_save"])
-        opt_autosave = get_input()
-        sys.stdout.write("Confirm deletions (current: %s) (True|False): " % config["confirm_del"])
-        opt_confirmdel = get_input()
-        sys.stdout.write("Location (current: %s) (five ints): " % config["location"])
-        opt_location = get_input()
-        sys.stdout.write("Units (current: %s) (metric|imperial): " % config["units"])
-        opt_units = get_input()
-        sys.stdout.write("Escape windowed (current: %s) (ignore|minimize|close): " % config["escape_windowed"])
-        opt_escwin = get_input()
-        sys.stdout.write("Escape fullscreen (current: %s) (ignore|exit fullscreen|close): " % config["escape_fullscreen"])
-        opt_escfull = get_input()
-        sys.stdout.write("Restore window size (current: %s) (True|False): " % config["restore"])
-        opt_restore = get_input()
-        sys.stdout.write("Show dates in title (current: %s) (True|False): " % config["show_dates"])
-        opt_showdates = get_input()
-        sys.stdout.write("Show unit in list (current: %s) (True|False): " % config["show_units"])
-        opt_showunits = get_input()
-        sys.stdout.write("Show prefill dialog (current: %s) (True|False): " % config["show_pre-fill"])
-        opt_showprefill = get_input()
-        sys.stdout.write("Confirm exit (current: %s) (True|False): " % config["confirm_exit"])
-        opt_confirmexit = get_input()
-        
-        # Set the options.
-        if opt_prefill == "True":
-            config["pre-fill"] = True
-        elif opt_prefill == "False":
-            config["pre-fill"] = False
-        
-        if opt_autosave == "True":
-            config["auto_save"] = True
-        elif opt_autosave == "False":
-            config["auto_save"] = False
-        
-        if opt_confirmdel == "True":
-            config["confirm_del"] = True
-        elif opt_confirmdel == "False":
-            config["confirm_del"] = False
-        
-        if opt_location:
-            config["location"] = opt_location
-        
-        if opt_units:
-            config["units"] = opt_units
-        
-        if opt_escwin:
-            config["escape_windowed"] = opt_escwin
-        
-        if opt_escfull:
-            config["escape_fullscreen"] = opt_escfull
-        
-        if opt_restore == "True":
-            config["restore"] = True
-        elif opt_restore == "False":
-            config["restore"] = False
-        
-        if opt_showdates == "True":
-            config["show_dates"] = True
-        elif opt_showdates == "False":
-            config["show_dates"] = False
-        
-        if opt_showunits == "True":
-            config["show_units"] = True
-        elif opt_showunits == "False":
-            config["show_units"] = False
-        
-        if opt_showprefill == "True":
-            config["show_pre-fill"] = True
-        elif opt_showprefill == "False":
-            config["show_pre-fill"] = False
-        
-        if opt_confirmexit == "True":
-            config["confirm_exit"] = True
-        elif opt_confirmexit == "False":
-            config["confirm_exit"] = False
-        
-        # Save the configuration.
-        try:
-            # Save the configuration file.
-            config_file = open("%s/config" % main_dir, "w")
-            json.dump(config, config_file)
-            config_file.close()
-            
-        except IOError:
-            # Show the error message if something happened, but continue.
-            # This one is shown if there was an error writing to the file.
-            print("Error saving configuration file (IOError).")
-        
-        except (TypeError, ValueError):
-            # Show the error message if something happened, but continue.
-            # This one is shown if there was an error with the data type.
-            print("Error saving configuration file (TypeError or ValueError).")
+        command_line.options(py_version, config, main_dir)
     
     # Reset the options:
     elif sys.argv[1] == "reset_options":
         
-        # Set the config variables.
-        config = {"pre-fill": False,
-                  "restore": True,
-                  "location": "",
-                  "units": "metric",
-                  "pastebin": "d2314ff616133e54f728918b8af1500e",
-                  "show_units": True,
-                  "show_dates": True,
-                  "escape_fullscreen": "exit fullscreen",
-                  "escape_windowed": "minimize",
-                  "auto_save": True,
-                  "confirm_del": True,
-                  "show_pre-fill": True,
-                  "confirm_exit": False}
-        
-        # Save the configuration.
-        try:
-            # Save the configuration file.
-            config_file = open("%s/config" % main_dir, "w")
-            json.dump(config, config_file)
-            config_file.close()
-            
-        except IOError:
-            # Show the error message if something happened, but continue.
-            # This one is shown if there was an error writing to the file.
-            print("Error saving configuration file (IOError).")
-        
-        except (TypeError, ValueError):
-            # Show the error message if something happened, but continue.
-            # This one is shown if there was an error with the data type.
-            print("Error saving configuration file (TypeError or ValueError).")
+        command_line.reset_options(config, main_dir)
     
     # Set the window size:
     elif sys.argv[1] == "window_size":
         
-        # Get the window size.
-        width = int(sys.argv[2])
-        height = int(sys.argv[3])
-        
-        # Save the window size.
-        try:
-            wins_file = open("%s/window_size" % main_dir, "w")
-            wins_file.write("%d\n%d" % (width, height))
-            wins_file.close()
-        
-        except IOError:
-            # Show the error message if something happened, but continue.
-            # This one is shown if there was an error writing to the file.
-            print("Error saving window size file (IOError).")
+        command_line.window_size(main_dir, sys.argv)
