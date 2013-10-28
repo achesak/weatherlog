@@ -2366,32 +2366,7 @@ elif __name__ == "__main__" and len(sys.argv) > 1:
     # Remove a row of data:
     elif sys.argv[1] == "remove":
         
-        # Get the index.
-        index = int(sys.argv[2])
-        
-        # Save to the file.
-        try:
-            
-            # Remove the row.
-            del data[index]
-            
-            # Sort the list.
-            data = sorted(data, key = lambda x: datetime.datetime.strptime(x[0], '%d/%m/%Y'))
-            
-            # Save the data.
-            data_file = open("%s/profiles/%s/weather.json" % (main_dir, last_profile), "w")
-            json.dump(data, data_file)
-            data_file.close()
-            
-        except IOError:
-            # Show the error message if something happened, but continue.
-            # This one is shown if there was an error writing to the file.
-            print("Error saving data file (IOError).")
-        
-        except (TypeError, ValueError):
-            # Show the error message if something happened, but continue.
-            # This one is shown if there was an error with the data type.
-            print("Error saving data file (TypeError or ValueError).")
+        command_line.remove(data, main_dir, last_profile, sys.argv)
     
     
     # Clear the current profile:

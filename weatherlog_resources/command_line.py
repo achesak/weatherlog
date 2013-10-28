@@ -57,3 +57,39 @@ def add(data, main_dir, last_profile, args):
             # Show the error message if something happened, but continue.
             # This one is shown if the date is of the wrong format.
             print("Error saving data file (ValueError) - date format is likely invalid (needs to be %d/%m/%Y).")
+
+
+def remove(data, main_dir, last_profile, args):
+    """Removes a row of data."""
+    
+    # Get the index.
+    index = int(args[2])
+    
+    # Save to the file.
+    try:
+        
+        # Remove the row.
+        del data[index]
+        
+        # Sort the list.
+        data = sorted(data, key = lambda x: datetime.datetime.strptime(x[0], '%d/%m/%Y'))
+        
+        # Save the data.
+        data_file = open("%s/profiles/%s/weather.json" % (main_dir, last_profile), "w")
+        json.dump(data, data_file)
+        data_file.close()
+        
+    except IOError:
+        # Show the error message if something happened, but continue.
+        # This one is shown if there was an error writing to the file.
+        print("Error saving data file (IOError).")
+    
+    except (TypeError, ValueError):
+        # Show the error message if something happened, but continue.
+        # This one is shown if there was an error with the data type.
+        print("Error saving data file (TypeError or ValueError).")
+    
+    except IndexError:
+        # Show the error message if something happened, but continue.
+        # This one is shown if the index is invalid.
+        print("Error saving data file (IndexError).")
