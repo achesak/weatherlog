@@ -4,7 +4,7 @@ WeatherLog is an application for keeping track of the weather and getting inform
 
 WeatherLog requires the Python interpreter to run. Development is done using 2.7.x, but it should work with 3.x as well. GTK+ 3 is also required.
 
-To run WeatherLog, open a terminal in the directory containing the files and type "python weatherlog.py". Currently WeatherLog only works on Linux.
+To run WeatherLog, open a terminal in the directory containing the files and type "python weatherlog.py". Currently WeatherLog only works on Linux and Windows.
 
 ----
 

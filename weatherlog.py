@@ -1096,12 +1096,6 @@ class Weather(Gtk.Window):
         clou_dlg.destroy()
     
     
-    
-    
-    
-    
-    
-    
     def show_info_note(self, event, data = data):
         """Shows the notes."""
         
