@@ -182,7 +182,7 @@ def prec_info(data, units):
             prec_hail += 1
         elif i[1] == "Sleet":
             prec_total_sleet += float(i[0])
-            prec_hail += 1
+            prec_sleet += 1
     prec_mode = info_functions.mode(prec_data2)
     
     # Change any values, if needed.
