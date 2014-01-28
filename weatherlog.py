@@ -429,6 +429,17 @@ class Weather(Gtk.Window):
             ("exit", Gtk.STOCK_QUIT, "_Quit...", None, "Close the application", lambda x: self.exit("ignore", "this"))
         ])
         
+        # Create the Weather -> Charts submenu.
+        action_weather_charts_group = Gtk.Action("info_charts_menu", "Charts", None, None)
+        action_group.add_action(action_weather_charts_group)
+        action_group.add_actions([
+            ("temperature_chart", None, "_Temperature Chart...", "<Alt><Shift>t", None, None),
+            ("precipitation_chart", None, "_Precipitation Chart...", "<Alt><Shift>p", None, None),
+            ("wind_chart", None, "_Wind Chart...", "<Alt><Shift>w", None, None),
+            ("humidity_chart", None, "_Humidity Chart...", "<Alt><Shift>h", None, None),
+            ("air_pressure_chart", None, "_Air Pressure Chart...", "<Alt><Shift>a", None, None),
+        ])
+        
         # Create the Profiles menu.
         action_group.add_actions([
             ("profiles_menu", None, "_Profiles"),

@@ -50,6 +50,14 @@ MENU_DATA = """
         <menuitem action="notes_range" />
       </menu>
       <separator />
+      <menu action="info_charts_menu">
+        <menuitem action="temperature_chart" />
+        <menuitem action="precipitation_chart" />
+        <menuitem action="wind_chart" />
+        <menuitem action="humidity_chart" />
+        <menuitem action="air_pressure_chart" />
+      </menu>
+      <separator />
       <menuitem action="clear_data" />
       <menuitem action="clear_all" />
       <separator />
