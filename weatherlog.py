@@ -110,6 +110,8 @@ from weatherlog_resources.dialogs.remove_profile_dialog import RemoveProfileDial
 from weatherlog_resources.dialogs.info_range_dialog import InfoRangeDialog
 # Import the dialog for changing the options.
 from weatherlog_resources.dialogs.options_dialog import OptionsDialog
+# Import the dialog for displaying the charts.
+from weatherlog_resources.dialogs.chart_dialog import GenericChartDialog
 # Import the miscellaneous dialogs.
 from weatherlog_resources.dialogs.misc_dialogs import show_alert_dialog, show_error_dialog, show_question_dialog
 
