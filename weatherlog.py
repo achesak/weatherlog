@@ -432,7 +432,7 @@ class Weather(Gtk.Window):
         ])
         
         # Create the Weather -> Charts submenu.
-        action_weather_charts_group = Gtk.Action("info_charts_menu", "Charts", None, None)
+        action_weather_charts_group = Gtk.Action("info_charts_menu", "Chart_s", None, None)
         action_group.add_action(action_weather_charts_group)
         action_group.add_actions([
             ("temperature_chart", None, "_Temperature Chart...", "<Alt><Shift>t", None, None),
@@ -440,6 +440,17 @@ class Weather(Gtk.Window):
             ("wind_chart", None, "_Wind Chart...", "<Alt><Shift>w", None, None),
             ("humidity_chart", None, "_Humidity Chart...", "<Alt><Shift>h", None, None),
             ("air_pressure_chart", None, "_Air Pressure Chart...", "<Alt><Shift>a", None, None),
+        ])
+        
+        # Create the Weather -> Charts in Range submenu.
+        action_weather_charts_group = Gtk.Action("info_charts_range_menu", "C_harts in Range", None, None)
+        action_group.add_action(action_weather_charts_group)
+        action_group.add_actions([
+            ("temperature_range_chart", None, "_Temperature Chart in Range...", None, None, None),
+            ("precipitation_range_chart", None, "_Precipitation Chart in Range...", None, None, None),
+            ("wind_range_chart", None, "_Wind Chart in Range...", None, None, None),
+            ("humidity_range_chart", None, "_Humidity Chart in Range...", None, None, None),
+            ("air_pressure_range_chart", None, "_Air Pressure Chart in Range...", None, None, None),
         ])
         
         # Create the Profiles menu.
