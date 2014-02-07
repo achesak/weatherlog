@@ -5,7 +5,7 @@
 
 
 # Define the version and title. These are used in the About dialog.
-VERSION = "1.4.6"
+VERSION = "1.5"
 TITLE = "WeatherLog"
 
 # Define the menu and toolbar XML.
