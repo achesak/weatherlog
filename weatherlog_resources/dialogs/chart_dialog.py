@@ -19,14 +19,14 @@ class GenericChartDialog(Gtk.Dialog):
         
         # This window should be modal.
         Gtk.Dialog.__init__(self, title, parent, Gtk.DialogFlags.MODAL)
-        self.set_default_size(300, 300)
+        self.set_default_size(800, 300)
         
         # Add the buttons.
         self.add_button("Export", 9)
         self.add_button("Close", Gtk.ResponseType.CLOSE)
         
         # Create the ListStore for storing the data.
-        self.liststore = Gtk.ListStore(str, str)
+        self.liststore = Gtk.ListStore(str, str, str, str, str, str)
         
         # Create the TreeView for displaying the data.
         self.treeview = Gtk.TreeView(model = self.liststore)
@@ -40,19 +40,19 @@ class GenericChartDialog(Gtk.Dialog):
         self.treeview.append_column(valu_col)
         # Create the Average Diff. column.
         avg_text = Gtk.CellRendererText()
-        avg_col = Gtk.TreeViewColumn("Average Diff.", valu_text, text = 2)
+        avg_col = Gtk.TreeViewColumn("Average Difference", valu_text, text = 2)
         self.treeview.append_column(avg_col)
         # Create the Low Diff. column.
         low_text = Gtk.CellRendererText()
-        low_col = Gtk.TreeViewColumn("Low Diff.", low_text, text = 3)
+        low_col = Gtk.TreeViewColumn("Low Difference", low_text, text = 3)
         self.treeview.append_column(low_col)
         # Create the High Diff. column.
         high_text = Gtk.CellRendererText()
-        high_col = Gtk.TreeViewColumn("High Diff.", high_text, text = 4)
+        high_col = Gtk.TreeViewColumn("High Difference", high_text, text = 4)
         self.treeview.append_column(high_col)
         # Create the Median Diff. column.
         med_text = Gtk.CellRendererText()
-        med_col = Gtk.TreeViewColumn("Median Diff.", med_text, text = 5)
+        med_col = Gtk.TreeViewColumn("Median Difference", med_text, text = 5)
         self.treeview.append_column(med_col)
         
         # Create the ScrolledWindow for displaying the list with a scrollbar.

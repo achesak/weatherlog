@@ -92,6 +92,8 @@ import weatherlog_resources.export_info as export_info
 import weatherlog_resources.convert as convert
 # Import the functions for getting the info.
 import weatherlog_resources.info as info
+# Import the functions for getting the chart data.
+import weatherlog_resources.charts as charts
 # Import the functions for handling command line arguments.
 import weatherlog_resources.command_line as command_line
 # Import the dialog for getting new data.
@@ -435,7 +437,7 @@ class Weather(Gtk.Window):
         action_weather_charts_group = Gtk.Action("info_charts_menu", "Chart_s", None, None)
         action_group.add_action(action_weather_charts_group)
         action_group.add_actions([
-            ("temperature_chart", None, "_Temperature Chart...", "<Alt><Shift>t", None, None),
+            ("temperature_chart", None, "_Temperature Chart...", "<Alt><Shift>t", None, lambda x: self.show_chart_temp(event = "ignore", data = data)),
             ("precipitation_chart", None, "_Precipitation Chart...", "<Alt><Shift>p", None, None),
             ("wind_chart", None, "_Wind Chart...", "<Alt><Shift>w", None, None),
             ("humidity_chart", None, "_Humidity Chart...", "<Alt><Shift>h", None, None),
@@ -1160,11 +1162,46 @@ class Weather(Gtk.Window):
         # Close the dialog. The response can be ignored.
         note_dlg.destroy()
     
-    
-    
-    
-    
-    
+
+    def show_chart_temp(self, event, data = data):
+        """Shows chart about the temperature data."""
+        
+        # If there is no data, tell the user and don't show the chart dialog.
+        if len(data) == 0:
+            
+            # Show the dialog.
+            show_no_data_dialog(self, "Temperature Info - %s" % last_profile)
+            return
+        
+        # Get the chart data.
+        data2 = charts.temp_chart(data, units)
+        
+        # Show the dialog and get the response.
+        temp_dlg = GenericChartDialog(self, "Temperature Chart - %s" % last_profile, data2)
+        response = temp_dlg.run()
+        
+        # If the user clicked Export:
+        if response == 9:
+            
+            # Create the dialog.
+            export_dlg = Gtk.FileChooserDialog("Export Temperature Chart - %s" % last_profile, self, Gtk.FileChooserAction.SAVE, (Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL, Gtk.STOCK_OPEN, Gtk.ResponseType.OK))
+            export_dlg.set_do_overwrite_confirmation(True)
+            
+            # Get the response.
+            response2 = export_dlg.run()
+            if response2 == Gtk.ResponseType.OK:
+                
+                # Get the filename.
+                filename = export_dlg.get_filename()
+                
+                # Export the info.
+                export_info.export_chart(data2, filename)
+                
+            # Close the dialog.
+            export_dlg.destroy()
+        
+        # Close the dialog. The response can be ignored.
+        temp_dlg.destroy()
     
     
     def import_file(self, event):

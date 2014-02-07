@@ -130,3 +130,72 @@ def info_html(data):
     
     # Return the HTML.
     return html.lstrip()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+def info_html(data):
+    """Converts the info data to HTML."""
+    
+    # Build the string.
+    html = """
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>Data exported from WeatherLog</title>
+<meta charset="utf-8" />
+</head>
+<body>
+<table>
+<tr>
+<th>Day</th>
+<th>Value</th>
+<th>Average Diff.</th>
+<th>Low Diff.</th>
+<th>High Diff.</th>
+<th>Median Diff.</th>
+</tr>"""
+    
+    # Add the data. Loop through each list, and add it as a table row.
+    for i in data:
+        
+        # Convert the data to utf-8.
+        try:
+            i[0] = i[0].encode("utf-8")
+            i[1] = i[1].encode("utf-8")
+            i[2] = i[2].encode("utf-8")
+            i[3] = i[3].encode("utf-8")
+            i[4] = i[4].encode("utf-8")
+            i[5] = i[5].encode("utf-8")
+        except:
+            pass
+        
+        # Add the row of data.
+        html += """
+<tr>
+<td>%s</td>
+<td>%s</td>
+<td>%s</td>
+<td>%s</td>
+<td>%s</td>
+<td>%s</td>
+</tr>""" % (i[0], i[1])
+    
+    # Add the closing tags.
+    html += """
+</table>
+</body>
+</html>"""
+    
+    # Return the HTML.
+    return html.lstrip()
