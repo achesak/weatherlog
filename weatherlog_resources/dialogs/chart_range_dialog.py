@@ -1,20 +1,20 @@
 # -*- coding: utf-8 -*-
 
 
-# This file defines the Info Range dialog.
+# This file defines the Chart Range dialog.
 
 
 # Import GTK for the dialog.
 from gi.repository import Gtk
 
 
-class InfoRangeDialog(Gtk.Dialog):
-    """Shows the info range dialog."""
+class ChartRangeDialog(Gtk.Dialog):
+    """Shows the chart range dialog."""
     def __init__(self, parent, profile, info, which, day, month, year):
         """Create the dialog."""
         
         # This window should be modal.
-        Gtk.Dialog.__init__(self, "%s Info in Range - %s" % (info, profile), parent, Gtk.DialogFlags.MODAL)
+        Gtk.Dialog.__init__(self, "%s Chart in Range - %s" % (info, profile), parent, Gtk.DialogFlags.MODAL)
         # Don't allow the user to resize the window.
         self.set_resizable(False)
         

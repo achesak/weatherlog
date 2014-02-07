@@ -110,6 +110,8 @@ from weatherlog_resources.dialogs.switch_profile_dialog import SwitchProfileDial
 from weatherlog_resources.dialogs.remove_profile_dialog import RemoveProfileDialog
 # Import the dialog for selecting a range of dates to show information about.
 from weatherlog_resources.dialogs.info_range_dialog import InfoRangeDialog
+# Import the dialog for selecting a range of dates to show a chart about.
+from weatherlog_resources.dialogs.chart_range_dialog import ChartRangeDialog
 # Import the dialog for changing the options.
 from weatherlog_resources.dialogs.options_dialog import OptionsDialog
 # Import the dialog for displaying the charts.
@@ -438,22 +440,30 @@ class Weather(Gtk.Window):
         action_group.add_action(action_weather_charts_group)
         action_group.add_actions([
             ("temperature_chart", None, "_Temperature Chart...", "<Alt><Shift>t", None, lambda x: self.show_chart_temp(event = "ignore", data = data)),
-            ("precipitation_chart", None, "_Precipitation Chart...", "<Alt><Shift>p", None, None),
-            ("wind_chart", None, "_Wind Chart...", "<Alt><Shift>w", None, None),
-            ("humidity_chart", None, "_Humidity Chart...", "<Alt><Shift>h", None, None),
-            ("air_pressure_chart", None, "_Air Pressure Chart...", "<Alt><Shift>a", None, None),
+            ("precipitation_chart", None, "_Precipitation Chart...", "<Alt><Shift>p", None, lambda x: self.show_chart_prec(event = "ignore", data = data)),
+            ("wind_chart", None, "_Wind Chart...", "<Alt><Shift>w", None, lambda x: self.show_chart_wind(event = "ignore", data = data)),
+            ("humidity_chart", None, "_Humidity Chart...", "<Alt><Shift>h", None, lambda x: self.show_chart_humi(event = "ignore", data = data)),
+            ("air_pressure_chart", None, "_Air Pressure Chart...", "<Alt><Shift>a", None, lambda x: self.show_chart_airp(event = "ignore", data = data)),
         ])
         
+        
+        
+        ### INCOMPLETE, NEEDS TESTING ##############################################################################
+        
+        
         # Create the Weather -> Charts in Range submenu.
-        action_weather_charts_group = Gtk.Action("info_charts_range_menu", "C_harts in Range", None, None)
-        action_group.add_action(action_weather_charts_group)
-        action_group.add_actions([
-            ("temperature_range_chart", None, "_Temperature Chart in Range...", None, None, None),
-            ("precipitation_range_chart", None, "_Precipitation Chart in Range...", None, None, None),
-            ("wind_range_chart", None, "_Wind Chart in Range...", None, None, None),
-            ("humidity_range_chart", None, "_Humidity Chart in Range...", None, None, None),
-            ("air_pressure_range_chart", None, "_Air Pressure Chart in Range...", None, None, None),
-        ])
+        #action_weather_charts_group = Gtk.Action("info_charts_range_menu", "C_harts in Range", None, None)
+        #action_group.add_action(action_weather_charts_group)
+        #action_group.add_actions([
+        #    ("temperature_range_chart", None, "_Temperature Chart in Range...", None, None, lambda x: self.chart_range("Temperature")),
+        #    ("precipitation_range_chart", None, "_Precipitation Chart in Range...", None, None, lambda x: self.chart_range("Precipitation")),
+        #    ("wind_range_chart", None, "_Wind Chart in Range...", None, None, lambda x: self.chart_range("Wind")),
+        #    ("humidity_range_chart", None, "_Humidity Chart in Range...", None, None, lambda x: self.chart_range("Humidity")),
+        #    ("air_pressure_range_chart", None, "_Air Pressure Chart in Range...", None, None, lambda x: self.chart_range("Air Pressure")),
+        #])
+        
+        
+        #############################################################################################################
         
         # Create the Profiles menu.
         action_group.add_actions([
@@ -1162,6 +1172,131 @@ class Weather(Gtk.Window):
         # Close the dialog. The response can be ignored.
         note_dlg.destroy()
     
+    
+    def chart_range(self, info):
+        """Gets the range for the chart to display."""
+        
+        # If there is no data, tell the user and don't show the info dialog.
+        if len(data) == 0:
+            
+            # Show the dialog.
+            show_no_data_dialog(self, "%s Chart - %s" % (info, last_profile))
+            return
+        
+        # Get the first entered date.
+        days, months, years = data[0][0].split("/")
+        days = int(days)
+        months = int(months) - 1
+        years = int(years)
+        
+        # Get the last entered date.
+        daye, monthe, yeare = data[len(data) - 1][0].split("/")
+        daye = int(daye)
+        monthe = int(monthe) - 1
+        yeare = int(yeare)
+        
+        # Get the start date.
+        start_dlg = InfoRangeDialog(self, last_profile, info, "starting", days, months, years)
+        
+        # Get the response.
+        response1 = start_dlg.run()
+        
+        # If the user clicked OK:
+        if response1 == Gtk.ResponseType.OK:
+            
+            # Get the date.
+            year1, month1, day1 = start_dlg.info_cal.get_date()
+            date1 = "%d/%d/%d" % (day1, month1 + 1, year1)
+            
+            # Check to make sure this date is valid, and cancel the action if not.
+            if date1 not in utility_functions.get_column(data, 0):
+                
+                # Show the dialog.
+                show_error_dialog(self, "%s Chart in Range - %s" % (info, last_profile), "%s is not a valid date." % date1)
+                
+                # Close the dialog.
+                start_dlg.destroy()
+                
+                return
+        
+        # Otherwise, cancel the action.
+        else:
+            
+            # Close the dialog.
+            start_dlg.destroy()
+            
+            return
+        
+        # Close the dialog.
+        start_dlg.destroy()
+        
+        # Get the end date.
+        end_dlg = InfoRangeDialog(self, last_profile, info, "ending", daye, monthe, yeare)
+        
+        # Get the response.
+        response2 = end_dlg.run()
+        
+        # If the user clicked OK:
+        if response2 == Gtk.ResponseType.OK:
+            
+            # Get the date.
+            year2, month2, day2 = end_dlg.info_cal.get_date()
+            date2 = "%d/%d/%d" % (day2, month2 + 1, year2)
+            
+            # Check to make sure this date is valid, and cancel the action if not.
+            if date2 not in utility_functions.get_column(data, 0):
+                
+                # Show the dialog.
+                show_error_dialog(self, "%s Chart in Range - %s" % (info, last_profile), "%s is not a valid date." % date2)
+                
+                # Close the dialog.
+                end_dlg.destroy()
+                
+                return
+            
+            # Check to make sure this date is not the same as or earlier than the starting date,
+            # and canel the action if it is.
+            elif date2 == date1 or (day1, month1 + 1, year1) > (day2, month2 + 1, year2):
+                
+                # Show the dialog.
+                show_error_dialog(self, "%s Chart in Range - %s" % (info, last_profile), "The ending date must not be before or the same as the starting date.")
+                
+                # Close the dialog.
+                end_dlg.destroy()
+                
+                return
+        
+        # Otherwise, cancel the action.
+        else:
+            
+            # Close the dialog.
+            end_dlg.destroy()
+            
+            return
+        
+        # Close the dialog.
+        end_dlg.destroy()
+        
+        # Get the indices.
+        date_col = utility_functions.get_column(data, 0)
+        index1 = date_col.index(date1)
+        index2 = date_col.index(date2)
+        
+        # Get the new list.
+        data2 = data[index1:index2 + 1]
+        
+        # Pass the data to the appropriate function.
+        if info == "Temperature":
+            self.show_chart_temp(False, data2)
+        elif info == "Precipitation":
+            self.show_chart_prec(False, data2)
+        elif info == "Wind":
+            self.show_chart_wind(False, data2)
+        elif info == "Humidity":
+            self.show_chart_humi(False, data2)
+        elif info == "Air Pressure":
+            self.show_chart_airp(False, data2)
+    
 
     def show_chart_temp(self, event, data = data):
         """Shows chart about the temperature data."""
@@ -1202,6 +1337,170 @@ class Weather(Gtk.Window):
         
         # Close the dialog. The response can be ignored.
         temp_dlg.destroy()
+    
+    
+    def show_chart_prec(self, event, data = data):
+        """Shows chart about the precipitation data."""
+        
+        # If there is no data, tell the user and don't show the chart dialog.
+        if len(data) == 0:
+            
+            # Show the dialog.
+            show_no_data_dialog(self, "Precipitation Info - %s" % last_profile)
+            return
+        
+        # Get the chart data.
+        data2 = charts.prec_chart(data, units)
+        
+        # Show the dialog and get the response.
+        prec_dlg = GenericChartDialog(self, "Precipitation Chart - %s" % last_profile, data2)
+        response = prec_dlg.run()
+        
+        # If the user clicked Export:
+        if response == 9:
+            
+            # Create the dialog.
+            export_dlg = Gtk.FileChooserDialog("Export Precipitation Chart - %s" % last_profile, self, Gtk.FileChooserAction.SAVE, (Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL, Gtk.STOCK_OPEN, Gtk.ResponseType.OK))
+            export_dlg.set_do_overwrite_confirmation(True)
+            
+            # Get the response.
+            response2 = export_dlg.run()
+            if response2 == Gtk.ResponseType.OK:
+                
+                # Get the filename.
+                filename = export_dlg.get_filename()
+                
+                # Export the info.
+                export_info.export_chart(data2, filename)
+                
+            # Close the dialog.
+            export_dlg.destroy()
+        
+        # Close the dialog. The response can be ignored.
+        prec_dlg.destroy()
+    
+    
+    def show_chart_wind(self, event, data = data):
+        """Shows chart about the wind data."""
+        
+        # If there is no data, tell the user and don't show the chart dialog.
+        if len(data) == 0:
+            
+            # Show the dialog.
+            show_no_data_dialog(self, "Wind Info - %s" % last_profile)
+            return
+        
+        # Get the chart data.
+        data2 = charts.wind_chart(data, units)
+        
+        # Show the dialog and get the response.
+        wind_dlg = GenericChartDialog(self, "Wind Chart - %s" % last_profile, data2)
+        response = wind_dlg.run()
+        
+        # If the user clicked Export:
+        if response == 9:
+            
+            # Create the dialog.
+            export_dlg = Gtk.FileChooserDialog("Export Wind Chart - %s" % last_profile, self, Gtk.FileChooserAction.SAVE, (Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL, Gtk.STOCK_OPEN, Gtk.ResponseType.OK))
+            export_dlg.set_do_overwrite_confirmation(True)
+            
+            # Get the response.
+            response2 = export_dlg.run()
+            if response2 == Gtk.ResponseType.OK:
+                
+                # Get the filename.
+                filename = export_dlg.get_filename()
+                
+                # Export the info.
+                export_info.export_chart(data2, filename)
+                
+            # Close the dialog.
+            export_dlg.destroy()
+        
+        # Close the dialog. The response can be ignored.
+        wind_dlg.destroy()
+    
+    
+    def show_chart_humi(self, event, data = data):
+        """Shows chart about the humidity data."""
+        
+        # If there is no data, tell the user and don't show the chart dialog.
+        if len(data) == 0:
+            
+            # Show the dialog.
+            show_no_data_dialog(self, "Humidity Info - %s" % last_profile)
+            return
+        
+        # Get the chart data.
+        data2 = charts.humi_chart(data, units)
+        
+        # Show the dialog and get the response.
+        humi_dlg = GenericChartDialog(self, "Humidity Chart - %s" % last_profile, data2)
+        response = humi_dlg.run()
+        
+        # If the user clicked Export:
+        if response == 9:
+            
+            # Create the dialog.
+            export_dlg = Gtk.FileChooserDialog("Export Humidity Chart - %s" % last_profile, self, Gtk.FileChooserAction.SAVE, (Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL, Gtk.STOCK_OPEN, Gtk.ResponseType.OK))
+            export_dlg.set_do_overwrite_confirmation(True)
+            
+            # Get the response.
+            response2 = export_dlg.run()
+            if response2 == Gtk.ResponseType.OK:
+                
+                # Get the filename.
+                filename = export_dlg.get_filename()
+                
+                # Export the info.
+                export_info.export_chart(data2, filename)
+                
+            # Close the dialog.
+            export_dlg.destroy()
+        
+        # Close the dialog. The response can be ignored.
+        humi_dlg.destroy()
+    
+    
+    def show_chart_airp(self, event, data = data):
+        """Shows chart about the air pressure data."""
+        
+        # If there is no data, tell the user and don't show the chart dialog.
+        if len(data) == 0:
+            
+            # Show the dialog.
+            show_no_data_dialog(self, "Air Pressure Info - %s" % last_profile)
+            return
+        
+        # Get the chart data.
+        data2 = charts.airp_chart(data, units)
+        
+        # Show the dialog and get the response.
+        airp_dlg = GenericChartDialog(self, "Air Pressure Chart - %s" % last_profile, data2)
+        response = airp_dlg.run()
+        
+        # If the user clicked Export:
+        if response == 9:
+            
+            # Create the dialog.
+            export_dlg = Gtk.FileChooserDialog("Export Air Pressure Chart - %s" % last_profile, self, Gtk.FileChooserAction.SAVE, (Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL, Gtk.STOCK_OPEN, Gtk.ResponseType.OK))
+            export_dlg.set_do_overwrite_confirmation(True)
+            
+            # Get the response.
+            response2 = export_dlg.run()
+            if response2 == Gtk.ResponseType.OK:
+                
+                # Get the filename.
+                filename = export_dlg.get_filename()
+                
+                # Export the info.
+                export_info.export_chart(data2, filename)
+                
+            # Close the dialog.
+            export_dlg.destroy()
+        
+        # Close the dialog. The response can be ignored.
+        airp_dlg.destroy()
     
     
     def import_file(self, event):

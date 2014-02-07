@@ -132,20 +132,8 @@ def info_html(data):
     return html.lstrip()
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-def info_html(data):
-    """Converts the info data to HTML."""
+def chart_html(data):
+    """Converts the chart data to HTML."""
     
     # Build the string.
     html = """
@@ -160,10 +148,10 @@ def info_html(data):
 <tr>
 <th>Day</th>
 <th>Value</th>
-<th>Average Diff.</th>
-<th>Low Diff.</th>
-<th>High Diff.</th>
-<th>Median Diff.</th>
+<th>Average Difference</th>
+<th>Low Difference</th>
+<th>High Difference</th>
+<th>Median Difference</th>
 </tr>"""
     
     # Add the data. Loop through each list, and add it as a table row.
@@ -189,7 +177,7 @@ def info_html(data):
 <td>%s</td>
 <td>%s</td>
 <td>%s</td>
-</tr>""" % (i[0], i[1])
+</tr>""" % (i[0], i[1], i[2], i[3], i[4], i[5])
     
     # Add the closing tags.
     html += """

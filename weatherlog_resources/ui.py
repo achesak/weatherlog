@@ -57,6 +57,7 @@ MENU_DATA = """
         <menuitem action="humidity_chart" />
         <menuitem action="air_pressure_chart" />
       </menu>
+      <!--
       <menu action="info_charts_range_menu">
         <menuitem action="temperature_range_chart" />
         <menuitem action="precipitation_range_chart" />
@@ -64,6 +65,7 @@ MENU_DATA = """
         <menuitem action="humidity_range_chart" />
         <menuitem action="air_pressure_range_chart" />
       </menu>
+      -->
       <separator />
       <menuitem action="clear_data" />
       <menuitem action="clear_all" />
