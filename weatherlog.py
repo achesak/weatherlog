@@ -776,6 +776,10 @@ class Weather(Gtk.Window):
             year2, month2, day2 = end_dlg.info_cal.get_date()
             date2 = "%d/%d/%d" % (day2, month2 + 1, year2)
             
+            # Convert the dates to ISO notation for comparison.
+            nDate1 = str(year1) + "-" + (str(month1) if month1 > 9 else "0" + str(month1)) + "-" + (str(day1) if day1 > 9 else "0" + str(day1))
+            nDate2 = str(year2) + "-" + (str(month2) if month2 > 9 else "0" + str(month2)) + "-" + (str(day2) if day2 > 9 else "0" + str(day2))
+            
             # Check to make sure this date is valid, and cancel the action if not.
             if date2 not in utility_functions.get_column(data, 0):
                 
@@ -789,7 +793,7 @@ class Weather(Gtk.Window):
             
             # Check to make sure this date is not the same as or earlier than the starting date,
             # and canel the action if it is.
-            elif date2 == date1 or (day1, month1 + 1, year1) > (day2, month2 + 1, year2):
+            elif date1 == date2 or nDate1 > nDate2:
                 
                 # Show the dialog.
                 show_error_dialog(self, "%s Info in Range - %s" % (info, last_profile), "The ending date must not be before or the same as the starting date.")
@@ -1235,6 +1239,10 @@ class Weather(Gtk.Window):
             year2, month2, day2 = end_dlg.info_cal.get_date()
             date2 = "%d/%d/%d" % (day2, month2 + 1, year2)
             
+            # Convert the dates to ISO notation for comparison.
+            nDate1 = str(year1) + "-" + (str(month1) if month1 > 9 else "0" + str(month1)) + "-" + (str(day1) if day1 > 9 else "0" + str(day1))
+            nDate2 = str(year2) + "-" + (str(month2) if month2 > 9 else "0" + str(month2)) + "-" + (str(day2) if day2 > 9 else "0" + str(day2))
+            
             # Check to make sure this date is valid, and cancel the action if not.
             if date2 not in utility_functions.get_column(data, 0):
                 
@@ -1248,7 +1256,7 @@ class Weather(Gtk.Window):
             
             # Check to make sure this date is not the same as or earlier than the starting date,
             # and canel the action if it is.
-            elif date2 == date1 or (day1, month1 + 1, year1) > (day2, month2 + 1, year2):
+            elif date1 == date2 or nDate1 > nDate2:
                 
                 # Show the dialog.
                 show_error_dialog(self, "%s Chart in Range - %s" % (info, last_profile), "The ending date must not be before or the same as the starting date.")
