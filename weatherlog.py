@@ -446,24 +446,16 @@ class Weather(Gtk.Window):
             ("air_pressure_chart", None, "_Air Pressure Chart...", "<Alt><Shift>a", None, lambda x: self.show_chart_airp(event = "ignore", data = data)),
         ])
         
-        
-        
-        ### INCOMPLETE, NEEDS TESTING ##############################################################################
-        
-        
         # Create the Weather -> Charts in Range submenu.
-        #action_weather_charts_group = Gtk.Action("info_charts_range_menu", "C_harts in Range", None, None)
-        #action_group.add_action(action_weather_charts_group)
-        #action_group.add_actions([
-        #    ("temperature_range_chart", None, "_Temperature Chart in Range...", None, None, lambda x: self.chart_range("Temperature")),
-        #    ("precipitation_range_chart", None, "_Precipitation Chart in Range...", None, None, lambda x: self.chart_range("Precipitation")),
-        #    ("wind_range_chart", None, "_Wind Chart in Range...", None, None, lambda x: self.chart_range("Wind")),
-        #    ("humidity_range_chart", None, "_Humidity Chart in Range...", None, None, lambda x: self.chart_range("Humidity")),
-        #    ("air_pressure_range_chart", None, "_Air Pressure Chart in Range...", None, None, lambda x: self.chart_range("Air Pressure")),
-        #])
-        
-        
-        #############################################################################################################
+        action_weather_charts_group = Gtk.Action("info_charts_range_menu", "C_harts in Range", None, None)
+        action_group.add_action(action_weather_charts_group)
+        action_group.add_actions([
+            ("temperature_range_chart", None, "_Temperature Chart in Range...", None, None, lambda x: self.chart_range("Temperature")),
+            ("precipitation_range_chart", None, "_Precipitation Chart in Range...", None, None, lambda x: self.chart_range("Precipitation")),
+            ("wind_range_chart", None, "_Wind Chart in Range...", None, None, lambda x: self.chart_range("Wind")),
+            ("humidity_range_chart", None, "_Humidity Chart in Range...", None, None, lambda x: self.chart_range("Humidity")),
+            ("air_pressure_range_chart", None, "_Air Pressure Chart in Range...", None, None, lambda x: self.chart_range("Air Pressure")),
+        ])
         
         # Create the Profiles menu.
         action_group.add_actions([
