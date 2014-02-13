@@ -385,7 +385,7 @@ class Weather(Gtk.Window):
         action_group.add_actions([
             ("weather_menu", None, "_Weather"),
             ("add_new", Gtk.STOCK_ADD, "Add _New...", "<Control>n", "Add a new day to the list", self.add_new),
-            ("edit", None, "_Edit...", "<Control>e", None, None),
+            ("edit", None, "_Edit...", "<Control>e", None, self.edit),
             ("remove", Gtk.STOCK_REMOVE, "Remo_ve...", "<Control>r", "Remove a day from the list", self.remove),
             ("import", Gtk.STOCK_OPEN, "_Import...", None, "Import data from a file", self.import_file),
             ("import_profile", None, "Import as New _Profile...", "<Control><Shift>o", None, self.import_new_profile),
@@ -659,6 +659,37 @@ class Weather(Gtk.Window):
         
         # Save the data.
         self.save(show_dialog = False)
+    
+    
+    def edit(self, event):
+        """Edits a row of data."""
+        
+        # Get the selected date.
+        try:
+            tree_sel = self.treeview.get_selection()
+            tm, ti = tree_sel.get_selected()
+            date = tm.get_value(ti, 0)
+        
+        except:
+            # If nothing was selected, show a dialog and don't continue.
+            
+            # Tell the user there is nothing selected.
+            show_error_dialog(self, "Edit - %s" % last_profile, "No date selected.")
+            
+            return
+        
+        # Get the index of the date.
+        index = utility_functions.get_column(data, 0).index(date)
+        
+        # Show the dialog.
+        edit_dlg = EditDialog(self, last_profile, data[index], date, units)
+        # Get the response.
+        response = edit_dlg.run()
+        
+        # TODO: HANDLE RESPONSE
+        
+        # Close the dialog.
+        edit_dlg.destroy()
     
     
     def remove(self, event):

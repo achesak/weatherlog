@@ -12,11 +12,11 @@ from misc_dialogs import *
 
 class EditDialog(Gtk.Dialog):
     """Shows the "Edit" dialog."""
-    def __init__(self, parent, profile, units):
+    def __init__(self, parent, profile, data, date, units):
         """Create the dialog."""
         
         # This window should be modal.
-        Gtk.Dialog.__init__(self, "Edit - %s" % profile, parent, Gtk.DialogFlags.MODAL)
+        Gtk.Dialog.__init__(self, "Edit %s - %s" % (date, profile), parent, Gtk.DialogFlags.MODAL)
         # Don't allow the user to resize the window.
         self.set_resizable(False)
         
@@ -35,6 +35,8 @@ class EditDialog(Gtk.Dialog):
         date_lbl.set_alignment(0, 0.5)
         new_grid.add(date_lbl)
         self.date_ent = Gtk.Entry()
+        self.date_ent.set_text(date)
+        self.date_ent.set_editable(False)
         new_grid.attach_next_to(self.date_ent, date_lbl, Gtk.PositionType.RIGHT, 2, 1)
         
         # Create the Temperature label and spinbutton.
@@ -107,7 +109,6 @@ class EditDialog(Gtk.Dialog):
         self.airp_com.set_active(0)
         new_grid.attach_next_to(self.airp_com, self.airp_sbtn, Gtk.PositionType.RIGHT, 1, 1)
         
-        
         # Create the Cloud Cover label and combobox.
         clou_lbl = Gtk.Label("Cloud Cover: ")
         clou_lbl.set_alignment(0, 0.5)
@@ -128,6 +129,39 @@ class EditDialog(Gtk.Dialog):
         # Bind the events for enabling the comboboxes.
         self.prec_com.connect("changed", self.enable_prec)
         self.wind_com.connect("changed", self.enable_wind)
+        
+        # Set the values.
+        self.temp_sbtn.set_value(float(data[1]))
+        if data[2] != "None":
+            d2 = data[2].split(" ")
+            prec_list = ["None", "Rain", "Snow", "Hail", "Sleet"]
+            for i in range(0, len(prec_list)):
+                if d2[1] == prec_list[i]:
+                    self.prec_com.set_active(i)
+                    break
+            self.prec_sbtn.set_value(float(d2[0]))
+        if data[3] != "None":
+            d3 = data[3].split(" ")
+            wind_list = ["None", "N", "NNE", "NE", "ENE", "E", "ESE", "SE", "SSE", "S", "SSW", "SW", "WSW", "W", "WNW", "NW", "NNW"]
+            for i in range(0, len(wind_list)):
+                if d3[1] == wind_list[i]:
+                    self.wind_com.set_active(i)
+                    break
+            self.wind_sbtn.set_value(float(d3[0]))
+        self.humi_sbtn.set_value(float(data[4]))
+        d5 = data[5].split(" ")
+        airp_list = ["Steady", "Rising", "Falling"]
+        for i in range(0, len(airp_list)):
+            if d5[1] == airp_list[i]:
+                self.airp_com.set_active(i)
+                break
+        self.airp_sbtn.set_value(float(d5[0]))
+        clou_list = ["Sunny", "Mostly Sunny", "Partly Cloudy", "Mostly Cloudy", "Cloudy"]
+        for i in range(0, len(clou_list)):
+            if data[6] == clou_list[i]:
+                self.clou_com.set_active(i)
+                break
+        self.note_ent.set_text(data[7])
         
         # Show the dialog. The response gets handled by the function
         # in the main class.
