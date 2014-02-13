@@ -2,6 +2,7 @@
   <menubar name="menubar">
     <menu action="weather_menu">
       <menuitem action="add_new" />
+      <menuitem action="edit" />
       <menuitem action="remove" />
       <separator />
       <menuitem action="import" />

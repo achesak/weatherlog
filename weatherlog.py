@@ -98,6 +98,8 @@ import weatherlog_resources.charts as charts
 import weatherlog_resources.command_line as command_line
 # Import the dialog for getting new data.
 from weatherlog_resources.dialogs.new_dialog import AddNewDialog
+# Import the dialog for editing a row of data.
+from weatherlog_resources.dialogs.edit_dialog import EditDialog
 # Import the dialog for displaying information.
 from weatherlog_resources.dialogs.info_dialog import GenericInfoDialog
 # Import the dialog for telling the user there is no data.
@@ -383,6 +385,7 @@ class Weather(Gtk.Window):
         action_group.add_actions([
             ("weather_menu", None, "_Weather"),
             ("add_new", Gtk.STOCK_ADD, "Add _New...", "<Control>n", "Add a new day to the list", self.add_new),
+            ("edit", None, "_Edit...", "<Control>e", None, None),
             ("remove", Gtk.STOCK_REMOVE, "Remo_ve...", "<Control>r", "Remove a day from the list", self.remove),
             ("import", Gtk.STOCK_OPEN, "_Import...", None, "Import data from a file", self.import_file),
             ("import_profile", None, "Import as New _Profile...", "<Control><Shift>o", None, self.import_new_profile),
@@ -417,7 +420,7 @@ class Weather(Gtk.Window):
         ])
         
         # Create the Weather -> More Info in Range submenu.
-        action_weather_info_range_group = Gtk.Action("info_range_menu", "More Info in Ran_ge", None, None)
+        action_weather_info_range_group = Gtk.Action("info_range_menu", "More In_fo in Range", None, None)
         action_group.add_action(action_weather_info_range_group)
         action_group.add_actions([
             ("temperature_range", None, "_Temperature in Range...", "<Control><Shift>t", None, lambda x: self.info_range("Temperature")),
