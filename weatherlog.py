@@ -686,7 +686,38 @@ class Weather(Gtk.Window):
         # Get the response.
         response = edit_dlg.run()
         
-        # TODO: HANDLE RESPONSE
+        
+        # If the user clicked the OK button, add the data.
+        if response == Gtk.ResponseType.OK:
+            
+            # Get the data from the entries and comboboxes.
+            temp = edit_dlg.temp_sbtn.get_value()
+            prec = edit_dlg.prec_sbtn.get_value()
+            prec_type = edit_dlg.prec_com.get_active_text()
+            wind = edit_dlg.wind_sbtn.get_value()
+            wind_dir = edit_dlg.wind_com.get_active_text()
+            humi = edit_dlg.humi_sbtn.get_value()
+            airp = edit_dlg.airp_sbtn.get_value()
+            airp_read = edit_dlg.airp_com.get_active_text()
+            clou = edit_dlg.clou_com.get_active_text()
+            note = edit_dlg.note_ent.get_text()
+            
+            # If the precipitation or wind are zero, set the appropriate type/direction to "None".
+            if not prec:
+                prec_type = "None"
+            if not wind:
+                wind_dir = "None"
+            
+            # Create the edited list of data.
+            new_data = [date, ("%.2f" % temp), "%s%s" % ((("%.2f" % prec) + " " if prec_type != "None" else ""), prec_type), "%s%s" % ((("%.2f" % wind) + " " if wind_dir != "None" else ""), wind_dir), ("%.2f" % humi), ("%.2f %s" % (airp, airp_read)), clou, note]
+            
+            # Store the edited data.
+            data[index] = new_data
+            
+            # Update the ListStore.
+            self.liststore.clear()
+            for i in data:
+                self.liststore.append(i)
         
         # Close the dialog.
         edit_dlg.destroy()
