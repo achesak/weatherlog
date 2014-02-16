@@ -985,7 +985,7 @@ class Weather(Gtk.Window):
         yeare = int(yeare)
         
         # Get the start date.
-        start_dlg = InfoRangeDialog(self, last_profile, info, "starting", days, months, years)
+        start_dlg = ChartRangeDialog(self, last_profile, info, "starting", days, months, years)
         
         # Get the response.
         response1 = start_dlg.run()
@@ -1020,7 +1020,7 @@ class Weather(Gtk.Window):
         start_dlg.destroy()
         
         # Get the end date.
-        end_dlg = InfoRangeDialog(self, last_profile, info, "ending", daye, monthe, yeare)
+        end_dlg = ChartRangeDialog(self, last_profile, info, "ending", daye, monthe, yeare)
         
         # Get the response.
         response2 = end_dlg.run()
