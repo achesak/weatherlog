@@ -2253,6 +2253,9 @@ class Weather(Gtk.Window):
             # Update the ListStore.
             for i in data:
                 self.liststore.append(i)
+        
+        # Tell the user the data has been reloaded.
+        show_alert_dialog(self, "Reload Current Data - %s" % last_profile, "Data has been reloaded.")
     
     
     def show_about(self, event):
