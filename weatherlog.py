@@ -2216,8 +2216,11 @@ class Weather(Gtk.Window):
         
         global data
         
-        # Show the confirmation dialog.
-        response = show_question_dialog(self, "Reload Current Data - %s" % last_profile, "Are you sure you want to reload the current data?\n\nUnsaved changes will be lost.")
+        # Show the confirmation dialog, but only if auto-saving isn't turned on.
+        if config["auto_save"] == False:
+            response = show_question_dialog(self, "Reload Current Data - %s" % last_profile, "Are you sure you want to reload the current data?\n\nUnsaved changes will be lost.")
+        else:
+            response = Gtk.ResponseType.OK
         
         # If the user wants to continue:
         if response == Gtk.ResponseType.OK:
