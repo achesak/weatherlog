@@ -370,7 +370,10 @@ def note_info(data, units):
     
     # Loop through the list, appending the dates and notes.
     for i in range(0, len(data)):
-        data2.append([data[i][0], data[i][7]])
+        
+        # Only append the date if there is a note for that date.
+        if data[i][7] != "":
+            data2.append([data[i][0], data[i][7]])
     
     # Retun the data list.
     return data2
