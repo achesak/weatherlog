@@ -615,7 +615,7 @@ class Weather(Gtk.Window):
             airp = new_dlg.airp_sbtn.get_value()
             airp_read = new_dlg.airp_com.get_active_text()
             clou = new_dlg.clou_com.get_active_text()
-            note = new_dlg.note_ent.get_text()
+            note = new_dlg.note_ent.get_text().strip()
             
             # If the precipitation or wind are zero, set the appropriate type/direction to "None".
             if not prec:
@@ -700,7 +700,7 @@ class Weather(Gtk.Window):
             airp = edit_dlg.airp_sbtn.get_value()
             airp_read = edit_dlg.airp_com.get_active_text()
             clou = edit_dlg.clou_com.get_active_text()
-            note = edit_dlg.note_ent.get_text()
+            note = edit_dlg.note_ent.get_text().strip()
             
             # If the precipitation or wind are zero, set the appropriate type/direction to "None".
             if not prec:
