@@ -402,20 +402,20 @@ class Weather(Gtk.Window):
             ("export_pastebin", None, "Export to Paste_bin...", None, None, lambda x: self.export_pastebin("raw")),
             ("export_pastebin_html", None, "_Export to Pastebin (HTML)...", None, None, lambda x: self.export_pastebin("html")),
             ("export_pastebin_csv", None, "E_xport to Pastebin (CSV)...", None, None, lambda x: self.export_pastebin("csv")),
-            ("info", Gtk.STOCK_INFO, "_Info...", "<Control>i", "Show info about the data", lambda x: self.show_info(event = "ignore", data = data))
+            ("info", Gtk.STOCK_INFO, "_Info...", "<Control>i", "Show info about the data", lambda x: self.show_info_generic(event = "ignore", info_type = "General", data = data))
         ])
         
         # Create the Weather -> More Info submenu.
         action_weather_info_group = Gtk.Action("info_menu", "_More Info", None, None)
         action_group.add_action(action_weather_info_group)
         action_group.add_actions([
-            ("temperature", None, "_Temperature...", "<Control>t", None, lambda x: self.show_info_temp(event = "ignore", data = data)),
-            ("precipitation", None, "_Precipitation...", "<Control>p", None, lambda x: self.show_info_prec(event = "ignore", data = data)),
-            ("wind", None, "_Wind...", "<Control>w", None, lambda x: self.show_info_wind(event = "ignore", data = data)),
-            ("humidity", None, "_Humidity...", "<Control>h", None, lambda x: self.show_info_humi(event = "ignore", data = data)),
-            ("air_pressure", None, "_Air Pressure...", "<Control>a", None, lambda x: self.show_info_airp(event = "ignore", data = data)),
-            ("cloud_cover", None, "_Cloud Cover...", "<Control>c", None, lambda x: self.show_info_clou(event = "ignore", data = data)),
-            ("notes", None, "_Notes...", "<Control>e", None, lambda x: self.show_info_note(event = "ignore", data = data)),
+            ("temperature", None, "_Temperature...", "<Control>t", None, lambda x: self.show_info_generic(event = "ignore", info_type = "Temperature", data = data)),
+            ("precipitation", None, "_Precipitation...", "<Control>p", None, lambda x: self.show_info_generic(event = "ignore", info_type = "Precipitation", data = data)),
+            ("wind", None, "_Wind...", "<Control>w", None, lambda x: self.show_info_generic(event = "ignore", info_type = "Wind", data = data)),
+            ("humidity", None, "_Humidity...", "<Control>h", None, lambda x: self.show_info_generic(event = "ignore", info_type = "Humidity", data = data)),
+            ("air_pressure", None, "_Air Pressure...", "<Control>a", None, lambda x: self.show_info_generic(event = "ignore", info_type = "Air Pressure", data = data)),
+            ("cloud_cover", None, "_Cloud Cover...", "<Control>c", None, lambda x: self.show_info_generic(event = "ignore", info_type = "Cloud Cover", data = data)),
+            ("notes", None, "_Notes...", "<Control>e", None, lambda x: self.show_info_generic(event = "ignore", info_type = "Notes", data = data)),
             ("info_range", None, "Info in _Range...", "<Control><Shift>i", None, lambda x: self.info_range("General"))
         ])
         
@@ -889,45 +889,60 @@ class Weather(Gtk.Window):
         
         # Pass the data to the appropriate function.
         if info == "General":
-            self.show_info(False, data2)
+            self.show_info_generic(event = "ignore", info_type = "General", data = data2)
         elif info == "Temperature":
-            self.show_info_temp(False, data2)
+            self.show_info_generic(event = "ignore", info_type = "Temperature", data = data2)
         elif info == "Precipitation":
-            self.show_info_prec(False, data2)
+            self.show_info_generic(event = "ignore", info_type = "Precipitation", data = data2)
         elif info == "Wind":
-            self.show_info_wind(False, data2)
+            self.show_info_generic(event = "ignore", info_type = "Wind", data = data2)
         elif info == "Humidity":
-            self.show_info_humi(False, data2)
+            self.show_info_generic(event = "ignore", info_type = "Humidity", data = data2)
         elif info == "Air Pressure":
-            self.show_info_airp(False, data2)
+            self.show_info_generic(event = "ignore", info_type = "Air Pressure", data = data2)
         elif info == "Cloud Cover":
-            self.show_info_clou(False, data2)
+            self.show_info_generic(event = "ignore", info_type = "Cloud Cover", data = data2)
         elif info == "Notes":
-            self.show_info_note(False, data2)
+            self.show_info_generic(event = "ignore", info_type = "Notes", data = data2)
     
     
-    def show_info(self, event, data = data):
+    def show_info_generic(self, event, info_type = "General", data = data):
         """Shows info about the data."""
         
-        # If there is no data, tell the user and don't show the info dialog.
+        # If there is no data, tell the user and don't show the dialog.
         if len(data) == 0:
             
             # Show the dialog.
-            show_no_data_dialog(self, "General Info - %s" % last_profile)
+            show_no_data_dialog(self, "%s Info - %s" % (info_type, last_profile))
             return
         
         # Get the info.
-        data2 = info.general_info(data, units)
+        if info_type == "General":
+            data2 = info.general_info(data, units)
+        elif info_type == "Temperature":
+            data2 = info.temp_info(data, units)
+        elif info_type == "Precipitation":
+            data2 = info.prec_info(data, units)
+        elif info_type == "Wind":
+            data2 = info.wind_info(data, units)
+        elif info_type == "Humidity":
+            data2 = info.humi_info(data, units)
+        elif info_type == "Air Pressure":
+            data2 = info.airp_info(data, units)
+        elif info_type == "Cloud Cover":
+            data2 = info.clou_info(data, units)
+        elif info_type == "Notes":
+            data2 = info.note_info(data, units)
         
         # Show the dialog and get the response.
-        info_dlg = GenericInfoDialog(self, "General Info - %s" % last_profile, data2)
+        info_dlg = GenericInfoDialog(self, "%s Info - %s" % (info_type, last_profile), data2)
         response = info_dlg.run()
         
         # If the user clicked Export:
         if response == 9:
             
             # Create the dialog.
-            export_dlg = Gtk.FileChooserDialog("Export General Info - %s" % last_profile, self, Gtk.FileChooserAction.SAVE, (Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL, Gtk.STOCK_OPEN, Gtk.ResponseType.OK))
+            export_dlg = Gtk.FileChooserDialog("Export %s Info - %s" % (info_type, last_profile), self, Gtk.FileChooserAction.SAVE, (Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL, Gtk.STOCK_OPEN, Gtk.ResponseType.OK))
             export_dlg.set_do_overwrite_confirmation(True)
             
             # Get the response.
@@ -945,294 +960,7 @@ class Weather(Gtk.Window):
         
         # Close the dialog. The response can be ignored.
         info_dlg.destroy()
-    
-    
-    def show_info_temp(self, event, data = data):
-        """Shows info about the temperature data."""
         
-        # If there is no data, tell the user and don't show the info dialog.
-        if len(data) == 0:
-            
-            # Show the dialog.
-            show_no_data_dialog(self, "Temperature Info - %s" % last_profile)
-            return
-        
-        # Get the info.
-        data2 = info.temp_info(data, units)
-        
-        # Show the dialog and get the response.
-        temp_dlg = GenericInfoDialog(self, "Temperature Info - %s" % last_profile, data2)
-        response = temp_dlg.run()
-        
-        # If the user clicked Export:
-        if response == 9:
-            
-            # Create the dialog.
-            export_dlg = Gtk.FileChooserDialog("Export Temperature Info - %s" % last_profile, self, Gtk.FileChooserAction.SAVE, (Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL, Gtk.STOCK_OPEN, Gtk.ResponseType.OK))
-            export_dlg.set_do_overwrite_confirmation(True)
-            
-            # Get the response.
-            response2 = export_dlg.run()
-            if response2 == Gtk.ResponseType.OK:
-                
-                # Get the filename.
-                filename = export_dlg.get_filename()
-                
-                # Export the info.
-                export_info.export_info(data2, filename)
-                
-            # Close the dialog.
-            export_dlg.destroy()
-        
-        # Close the dialog. The response can be ignored.
-        temp_dlg.destroy()
-    
-    
-    def show_info_prec(self, event, data = data):
-        """Shows info about the precipitation data."""
-        
-        # If there is no data, tell the user and don't show the info dialog.
-        if len(data) == 0:
-            
-            # Show the dialog.
-            show_no_data_dialog(self, "Precipitation Info - %s" % last_profile)
-            return
-        
-        # Get the info.
-        data2 = info.prec_info(data, units)
-        
-        # Show the dialog and get the response.
-        prec_dlg = GenericInfoDialog(self, "Precipitation Info - %s" % last_profile, data2)
-        response = prec_dlg.run()
-        
-        # If the user clicked Export:
-        if response == 9:
-            
-            # Create the dialog.
-            export_dlg = Gtk.FileChooserDialog("Export Precipitation Info - %s" % last_profile, self, Gtk.FileChooserAction.SAVE, (Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL, Gtk.STOCK_OPEN, Gtk.ResponseType.OK))
-            export_dlg.set_do_overwrite_confirmation(True)
-            
-            # Get the response.
-            response2 = export_dlg.run()
-            if response2 == Gtk.ResponseType.OK:
-                
-                # Get the filename.
-                filename = export_dlg.get_filename()
-                
-                # Export the info.
-                export_info.export_info(data2, filename)
-                
-            # Close the dialog.
-            export_dlg.destroy()
-        
-        # Close the dialog. The response can be ignored.
-        prec_dlg.destroy()
-    
-    
-    def show_info_wind(self, event, data = data):
-        """Shows info about the wind data."""
-        
-        # If there is no data, tell the user and don't show the info dialog.
-        if len(data) == 0:
-            
-            # Show the dialog.
-            show_no_data_dialog(self, "Wind Info - %s" % last_profile)
-            return
-        
-        # Get the info.
-        data2 = info.wind_info(data, units)
-        
-        # Show the dialog and get the response.
-        wind_dlg = GenericInfoDialog(self, "Wind Info - %s" % last_profile, data2)
-        response = wind_dlg.run()
-        
-        # If the user clicked Export:
-        if response == 9:
-            
-            # Create the dialog.
-            export_dlg = Gtk.FileChooserDialog("Export Wind Info - %s" % last_profile, self, Gtk.FileChooserAction.SAVE, (Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL, Gtk.STOCK_OPEN, Gtk.ResponseType.OK))
-            export_dlg.set_do_overwrite_confirmation(True)
-            
-            # Get the response.
-            response2 = export_dlg.run()
-            if response2 == Gtk.ResponseType.OK:
-                
-                # Get the filename.
-                filename = export_dlg.get_filename()
-                
-                # Export the info.
-                export_info.export_info(data2, filename)
-                
-            # Close the dialog.
-            export_dlg.destroy()
-        
-        # Close the dialog. The response can be ignored.
-        wind_dlg.destroy()
-    
-    
-    def show_info_humi(self, event, data = data):
-        """Shows info about the humidity data."""
-        
-        # If there is no data, tell the user and don't show the info dialog.
-        if len(data) == 0:
-            
-            # Show the dialog.
-            show_no_data_dialog(self, "Humidity Info - %s" % last_profile)
-            return
-        
-        # Get the info.
-        data2 = info.humi_info(data, units)
-        
-        # Show the dialog and get the response.
-        humi_dlg = GenericInfoDialog(self, "Humidity Info - %s" % last_profile, data2)
-        response = humi_dlg.run()
-        
-        # If the user clicked Export:
-        if response == 9:
-            
-            # Create the dialog.
-            export_dlg = Gtk.FileChooserDialog("Export Humidity Info - %s" % last_profile, self, Gtk.FileChooserAction.SAVE, (Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL, Gtk.STOCK_OPEN, Gtk.ResponseType.OK))
-            export_dlg.set_do_overwrite_confirmation(True)
-            
-            # Get the response.
-            response2 = export_dlg.run()
-            if response2 == Gtk.ResponseType.OK:
-                
-                # Get the filename.
-                filename = export_dlg.get_filename()
-                
-                # Export the info.
-                export_info.export_info(data2, filename)
-                
-            # Close the dialog.
-            export_dlg.destroy()
-        
-        # Close the dialog. The response can be ignored.
-        humi_dlg.destroy()
-    
-    
-    def show_info_airp(self, event, data = data):
-        """Shows info about the air pressure data."""
-        
-        # If there is no data, tell the user and don't show the info dialog.
-        if len(data) == 0:
-            
-            # Show the dialog.
-            show_no_data_dialog(self, "Air Pressure Info - %s" % last_profile)
-            return
-        
-        # Get the info.
-        data2 = info.airp_info(data, units)
-        
-        # Show the dialog and get the response.
-        airp_dlg = GenericInfoDialog(self, "Air Pressure Info - %s" % last_profile, data2)
-        response = airp_dlg.run()
-        
-        # If the user clicked Export:
-        if response == 9:
-            
-            # Create the dialog.
-            export_dlg = Gtk.FileChooserDialog("Export Air Pressure Info - %s" % last_profile, self, Gtk.FileChooserAction.SAVE, (Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL, Gtk.STOCK_OPEN, Gtk.ResponseType.OK))
-            export_dlg.set_do_overwrite_confirmation(True)
-            
-            # Get the response.
-            response2 = export_dlg.run()
-            if response2 == Gtk.ResponseType.OK:
-                
-                # Get the filename.
-                filename = export_dlg.get_filename()
-                
-                # Export the info.
-                export_info.export_info(data2, filename)
-                
-            # Close the dialog.
-            export_dlg.destroy()
-        
-        # Close the dialog. The response can be ignored.
-        airp_dlg.destroy()
-    
-    
-    def show_info_clou(self, event, data = data):
-        """Shows info about the cloud cover data."""
-        
-        # If there is no data, tell the user and don't show the info dialog.
-        if len(data) == 0:
-            
-            # Show the dialog.
-            show_no_data_dialog(self, "Cloud Cover Info - %s" % last_profile)
-            return
-        
-        # Get the info.
-        data2 = info.clou_info(data, units)
-        
-        # Show the dialog.
-        clou_dlg = GenericInfoDialog(self, "Cloud Cover Info - %s" % last_profile, data2)
-        response = clou_dlg.run()
-        
-        # If the user clicked Export:
-        if response == 9:
-            
-            # Create the dialog.
-            export_dlg = Gtk.FileChooserDialog("Export Cloud Cover Info - %s" % last_profile, self, Gtk.FileChooserAction.SAVE, (Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL, Gtk.STOCK_OPEN, Gtk.ResponseType.OK))
-            export_dlg.set_do_overwrite_confirmation(True)
-            
-            # Get the response.
-            response2 = export_dlg.run()
-            if response2 == Gtk.ResponseType.OK:
-                
-                # Get the filename.
-                filename = export_dlg.get_filename()
-                
-                # Export the info.
-                export_info.export_info(data2, filename)
-                
-            # Close the dialog.
-            export_dlg.destroy()
-        
-        # Close the dialog. The response can be ignored.
-        clou_dlg.destroy()
-    
-    
-    def show_info_note(self, event, data = data):
-        """Shows the notes."""
-        
-        # If there is no data, tell the user and don't show the info dialog.
-        if len(data) == 0:
-            
-            # Show the dialog.
-            show_no_data_dialog(self, "Notes Info - %s" % last_profile)
-            return
-        
-        # Get the info.
-        data2 = info.note_info(data, units)
-        
-        # Show the dialog.
-        note_dlg = GenericInfoDialog(self, "Notes Info - %s" % last_profile, data2)
-        response = note_dlg.run()
-        
-        # If the user clicked Export:
-        if response == 9:
-            
-            # Create the dialog.
-            export_dlg = Gtk.FileChooserDialog("Export Notes Info - %s" % last_profile, self, Gtk.FileChooserAction.SAVE, (Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL, Gtk.STOCK_OPEN, Gtk.ResponseType.OK))
-            export_dlg.set_do_overwrite_confirmation(True)
-            
-            # Get the response.
-            response2 = export_dlg.run()
-            if response2 == Gtk.ResponseType.OK:
-                
-                # Get the filename.
-                filename = export_dlg.get_filename()
-                
-                # Export the info.
-                export_info.export_info(data2, filename)
-                
-            # Close the dialog.
-            export_dlg.destroy()
-        
-        # Close the dialog. The response can be ignored.
-        note_dlg.destroy()
-    
     
     def chart_range(self, info):
         """Gets the range for the chart to display."""
