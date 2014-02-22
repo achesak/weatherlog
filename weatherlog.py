@@ -118,6 +118,10 @@ from weatherlog_resources.dialogs.chart_range_dialog import ChartRangeDialog
 from weatherlog_resources.dialogs.options_dialog import OptionsDialog
 # Import the dialog for displaying the charts.
 from weatherlog_resources.dialogs.chart_dialog import GenericChartDialog
+# Import the dialog for selecting dates to show information about.
+from weatherlog_resources.dialogs.info_selected_dialog import InfoSelectedDialog
+# Import the dialog for selecting dates to show a chart about.
+from weatherlog_resources.dialogs.chart_selected_dialog import ChartSelectedDialog
 # Import the miscellaneous dialogs.
 from weatherlog_resources.dialogs.misc_dialogs import show_alert_dialog, show_error_dialog, show_question_dialog
 
@@ -430,20 +434,20 @@ class Weather(Gtk.Window):
             ("air_pressure_range", None, "_Air Pressure in Range...", "<Control><Shift>a", None, lambda x: self.info_range("Air Pressure")),
             ("cloud_cover_range", None, "_Cloud Cover in Range...", "<Control><Shift>c", None, lambda x: self.info_range("Cloud Cover")),
             ("notes_range", None, "_Notes in Range...", "<Control><Shift>e", None, lambda x: self.info_range("Notes")),
-            ("info_selected", None, "Info for Se_lected Dates...", None, None, None)
+            ("info_selected", None, "Info for Se_lected Dates...", None, None, lambda x: self.info_selected("General"))
         ])
         
         # Create the Weather -> More Info for Selected Dates submenu.
         action_weather_info_selected_group = Gtk.Action("info_selected_menu", "More Info for Selec_ted Dates", None, None)
         action_group.add_action(action_weather_info_selected_group)
         action_group.add_actions([
-            ("temperature_selected", None, "_Temperature for Selected Dates...", None, None, None),
-            ("precipitation_selected", None, "_Precipitation for Selected Dates...", None, None, None),
-            ("wind_selected", None, "_Wind for Selected Dates...", None, None, None),
-            ("humidity_selected", None, "_Humidity for Selected Dates...", None, None, None),
-            ("air_pressure_selected", None, "_Air Pressure for Selected Dates...", None, None, None),
-            ("cloud_cover_selected", None, "_Cloud Cover for Selected Dates...", None, None, None),
-            ("notes_selected", None, "_Notes for Selected Dates...", None, None, None),
+            ("temperature_selected", None, "_Temperature for Selected Dates...", None, None, lambda x: self.info_selected("Temperature")),
+            ("precipitation_selected", None, "_Precipitation for Selected Dates...", None, None, lambda x: self.info_selected("Precipitation")),
+            ("wind_selected", None, "_Wind for Selected Dates...", None, None, lambda x: self.info_selected("Wind")),
+            ("humidity_selected", None, "_Humidity for Selected Dates...", None, None, lambda x: self.info_selected("Humidity")),
+            ("air_pressure_selected", None, "_Air Pressure for Selected Dates...", None, None, lambda x: self.info_selected("Air Pressure")),
+            ("cloud_cover_selected", None, "_Cloud Cover for Selected Dates...", None, None, lambda x: self.info_selected("Cloud Cover")),
+            ("notes_selected", None, "_Notes for Selected Dates...", None, None, lambda x: self.info_selected("Notes")),
             ("clear_data", Gtk.STOCK_CLEAR, "Clear Current _Data...", "<Control>d", "Clear the data", self.clear),
             ("clear_all", None, "Clear _All Data...", "<Control><Alt>d", None, self.clear_all),
             ("reload_current", None, "Reload _Current Data...", "F5", None, self.reload_current),
@@ -929,6 +933,35 @@ class Weather(Gtk.Window):
             self.show_info_generic(event = "ignore", info_type = "Cloud Cover", data = data2)
         elif info == "Notes":
             self.show_info_generic(event = "ignore", info_type = "Notes", data = data2)
+    
+    
+    def info_selected(self, info = "General"):
+        """Gets the selected dates to for the info to display."""
+        
+        # If there is no data, tell the user and don't show the info dialog.
+        if len(data) == 0:
+            
+            # Show the dialog.
+            show_no_data_dialog(self, "%s Info - %s" % (info, last_profile))
+            return
+        
+        # Get the dates.
+        dates = []
+        for i in data:
+            dates.append([i[0]])
+        
+        # Show the dialog and get the response.
+        info_dlg = InfoSelectedDialog(self, info, last_profile, dates)
+        response = info_dlg.run()
+        
+        ## HANDLE RESPONSE!!
+        ## ALSO, IF NO DATES ARE SELECTED DON"T DO ANYTHING
+        
+        # Close the dialog.
+        info_dlg.destroy()
+        
+        
+        ## HANDLE DATES!!!
     
     
     def show_info_generic(self, event, info_type = "General", data = data):
