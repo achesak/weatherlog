@@ -954,14 +954,44 @@ class Weather(Gtk.Window):
         info_dlg = InfoSelectedDialog(self, info, last_profile, dates)
         response = info_dlg.run()
         
-        ## HANDLE RESPONSE!!
-        ## ALSO, IF NO DATES ARE SELECTED DON"T DO ANYTHING
+        # If the user clicked OK:
+        if response == Gtk.ResponseType.OK:
+            
+            # Get the selected items.
+            model, treeiter = info_dlg.treeview.get_selection().get_selected_rows()
+            
+            # If nothing was selected, don't continue.
+            if treeiter == None:
+                
+                # Close the dialog.
+                info_dlg.destroy()
+                
+                return
+            
+            # Get the dates.
+            ndates = []
+            for i in treeiter:
+                ndates.append(model[i][0])
+            
+            # Get the data.
+            ndata = []
+            for i in range(0, len(data)):
+                if data[i][0] in ndates:
+                    ndata.append(data[i])
+        
+        # Otherwise, cancel the action.
+        else:
+            
+            # Close the dialog.
+            info_dlg.destroy()
+            
+            return
         
         # Close the dialog.
         info_dlg.destroy()
         
-        
-        ## HANDLE DATES!!!
+        # Pass the data to the appropriate function.
+        self.show_info_generic(event = "ignore", info_type = info, data = ndata)
     
     
     def show_info_generic(self, event, info_type = "General", data = data):
