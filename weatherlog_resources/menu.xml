@@ -38,6 +38,16 @@
         <menuitem action="cloud_cover_range" />
         <menuitem action="notes_range" />
       </menu>
+      <menuitem action="info_selected" />
+      <menu action="info_selected_menu">
+        <menuitem action="temperature_selected" />
+        <menuitem action="precipitation_selected" />
+        <menuitem action="wind_selected" />
+        <menuitem action="humidity_selected" />
+        <menuitem action="air_pressure_selected" />
+        <menuitem action="cloud_cover_selected" />
+        <menuitem action="notes_selected" />
+      </menu>
       <separator />
       <menu action="info_charts_menu">
         <menuitem action="temperature_chart" />
@@ -52,6 +62,13 @@
         <menuitem action="wind_range_chart" />
         <menuitem action="humidity_range_chart" />
         <menuitem action="air_pressure_range_chart" />
+      </menu>
+      <menu action="info_charts_selected_menu">
+        <menuitem action="temperature_selected_chart" />
+        <menuitem action="precipitation_selected_chart" />
+        <menuitem action="wind_selected_chart" />
+        <menuitem action="humidity_selected_chart" />
+        <menuitem action="air_pressure_selected_chart" />
       </menu>
       <separator />
       <menuitem action="clear_data" />

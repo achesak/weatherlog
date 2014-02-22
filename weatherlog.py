@@ -430,6 +430,20 @@ class Weather(Gtk.Window):
             ("air_pressure_range", None, "_Air Pressure in Range...", "<Control><Shift>a", None, lambda x: self.info_range("Air Pressure")),
             ("cloud_cover_range", None, "_Cloud Cover in Range...", "<Control><Shift>c", None, lambda x: self.info_range("Cloud Cover")),
             ("notes_range", None, "_Notes in Range...", "<Control><Shift>e", None, lambda x: self.info_range("Notes")),
+            ("info_selected", None, "Info for Se_lected Dates...", None, None, None)
+        ])
+        
+        # Create the Weather -> More Info for Selected Dates submenu.
+        action_weather_info_selected_group = Gtk.Action("info_selected_menu", "More Info for Selec_ted Dates", None, None)
+        action_group.add_action(action_weather_info_selected_group)
+        action_group.add_actions([
+            ("temperature_selected", None, "_Temperature for Selected Dates...", None, None, None),
+            ("precipitation_selected", None, "_Precipitation for Selected Dates...", None, None, None),
+            ("wind_selected", None, "_Wind for Selected Dates...", None, None, None),
+            ("humidity_selected", None, "_Humidity for Selected Dates...", None, None, None),
+            ("air_pressure_selected", None, "_Air Pressure for Selected Dates...", None, None, None),
+            ("cloud_cover_selected", None, "_Cloud Cover for Selected Dates...", None, None, None),
+            ("notes_selected", None, "_Notes for Selected Dates...", None, None, None),
             ("clear_data", Gtk.STOCK_CLEAR, "Clear Current _Data...", "<Control>d", "Clear the data", self.clear),
             ("clear_all", None, "Clear _All Data...", "<Control><Alt>d", None, self.clear_all),
             ("reload_current", None, "Reload _Current Data...", "F5", None, self.reload_current),
@@ -450,14 +464,25 @@ class Weather(Gtk.Window):
         ])
         
         # Create the Weather -> Charts in Range submenu.
-        action_weather_charts_group = Gtk.Action("info_charts_range_menu", "C_harts in Range", None, None)
-        action_group.add_action(action_weather_charts_group)
+        action_weather_charts_range_group = Gtk.Action("info_charts_range_menu", "C_harts in Range", None, None)
+        action_group.add_action(action_weather_charts_range_group)
         action_group.add_actions([
             ("temperature_range_chart", None, "_Temperature Chart in Range...", None, None, lambda x: self.chart_range("Temperature")),
             ("precipitation_range_chart", None, "_Precipitation Chart in Range...", None, None, lambda x: self.chart_range("Precipitation")),
             ("wind_range_chart", None, "_Wind Chart in Range...", None, None, lambda x: self.chart_range("Wind")),
             ("humidity_range_chart", None, "_Humidity Chart in Range...", None, None, lambda x: self.chart_range("Humidity")),
             ("air_pressure_range_chart", None, "_Air Pressure Chart in Range...", None, None, lambda x: self.chart_range("Air Pressure")),
+        ])
+        
+        # Create the Weather -> Charts for Selected Dates submenu.
+        action_weather_charts_selected_group = Gtk.Action("info_charts_selected_menu", "Charts for Selec_ted Dates", None, None)
+        action_group.add_action(action_weather_charts_selected_group)
+        action_group.add_actions([
+            ("temperature_selected_chart", None, "_Temperature for Selected Dates...", None, None, None),
+            ("precipitation_selected_chart", None, "_Precipitation for Selected Dates...", None, None, None),
+            ("wind_selected_chart", None, "_Wind for Selected Dates...", None, None, None),
+            ("humidity_selected_chart", None, "_Humidity for Selected Dates...", None, None, None),
+            ("air_pressure_selected_chart", None, "_Air Pressure for Selected Dates...", None, None, None)
         ])
         
         # Create the Profiles menu.
