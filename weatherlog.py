@@ -917,22 +917,7 @@ class Weather(Gtk.Window):
         data2 = data[index1:index2 + 1]
         
         # Pass the data to the appropriate function.
-        if info == "General":
-            self.show_info_generic(event = "ignore", info_type = "General", data = data2)
-        elif info == "Temperature":
-            self.show_info_generic(event = "ignore", info_type = "Temperature", data = data2)
-        elif info == "Precipitation":
-            self.show_info_generic(event = "ignore", info_type = "Precipitation", data = data2)
-        elif info == "Wind":
-            self.show_info_generic(event = "ignore", info_type = "Wind", data = data2)
-        elif info == "Humidity":
-            self.show_info_generic(event = "ignore", info_type = "Humidity", data = data2)
-        elif info == "Air Pressure":
-            self.show_info_generic(event = "ignore", info_type = "Air Pressure", data = data2)
-        elif info == "Cloud Cover":
-            self.show_info_generic(event = "ignore", info_type = "Cloud Cover", data = data2)
-        elif info == "Notes":
-            self.show_info_generic(event = "ignore", info_type = "Notes", data = data2)
+        self.show_info_generic(event = "ignore", info_type = info, data = data2)
     
     
     def info_selected(self, info = "General"):
@@ -1167,16 +1152,7 @@ class Weather(Gtk.Window):
         data2 = data[index1:index2 + 1]
         
         # Pass the data to the appropriate function.
-        if info == "Temperature":
-            self.show_chart_generic(event = "ignore", info_type = "Temperature", data = data2)
-        elif info == "Precipitation":
-            self.show_chart_generic(event = "ignore", info_type = "Precipitation", data = data2)
-        elif info == "Wind":
-            self.show_chart_generic(event = "ignore", info_type = "Wind", data = data2)
-        elif info == "Humidity":
-            self.show_chart_generic(event = "ignore", info_type = "Humidity", data = data2)
-        elif info == "Air Pressure":
-            self.show_chart_generic(event = "ignore", info_type = "Air Pressure", data = data2)
+        self.show_chart_generic(event = "ignore", info_type = info, data = data2)
     
     
     def show_chart_generic(self, event, info_type, data = data):
