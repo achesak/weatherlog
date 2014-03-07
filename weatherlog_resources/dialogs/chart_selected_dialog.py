@@ -10,12 +10,12 @@ from gi.repository import Gtk
 
 class ChartSelectedDialog(Gtk.Dialog):
     """Shows the charts for selected dates dialog."""
-    def __init__(self, parent, profile, dates):
+    def __init__(self, parent, info, profile, dates):
         """Create the dialog."""
         
         # This window should be modal.
         Gtk.Dialog.__init__(self, "%s Chart for Selected Dates - %s" % (info, profile), parent, Gtk.DialogFlags.MODAL)
-        self.set_default_size(200, 300)
+        self.set_default_size(300, 300)
         # Don't allow the user to resize the window.
         #self.set_resizable(False)
         

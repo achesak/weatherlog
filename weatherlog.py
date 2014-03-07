@@ -482,11 +482,11 @@ class Weather(Gtk.Window):
         action_weather_charts_selected_group = Gtk.Action("info_charts_selected_menu", "Charts for Selec_ted Dates", None, None)
         action_group.add_action(action_weather_charts_selected_group)
         action_group.add_actions([
-            ("temperature_selected_chart", None, "_Temperature for Selected Dates...", None, None, None),
-            ("precipitation_selected_chart", None, "_Precipitation for Selected Dates...", None, None, None),
-            ("wind_selected_chart", None, "_Wind for Selected Dates...", None, None, None),
-            ("humidity_selected_chart", None, "_Humidity for Selected Dates...", None, None, None),
-            ("air_pressure_selected_chart", None, "_Air Pressure for Selected Dates...", None, None, None)
+            ("temperature_selected_chart", None, "_Temperature for Selected Dates...", None, None, lambda x: self.chart_selected("Temperature")),
+            ("precipitation_selected_chart", None, "_Precipitation for Selected Dates...", None, None, lambda x: self.chart_selected("Precipitation")),
+            ("wind_selected_chart", None, "_Wind for Selected Dates...", None, None, lambda x: self.chart_selected("Wind")),
+            ("humidity_selected_chart", None, "_Humidity for Selected Dates...", None, None, lambda x: self.chart_selected("Humidity")),
+            ("air_pressure_selected_chart", None, "_Air Pressure for Selected Dates...", None, None, lambda x: self.chart_selected("Air Pressure"))
         ])
         
         # Create the Profiles menu.
@@ -963,6 +963,14 @@ class Weather(Gtk.Window):
             for i in range(0, len(data)):
                 if data[i][0] in ndates:
                     ndata.append(data[i])
+            
+            # If there is no data, don't continue.
+            if len(ndata) == 0:
+                
+                # Close the dialog.
+                info_dlg.destroy()
+                
+                return
         
         # Otherwise, cancel the action.
         else:
@@ -1153,6 +1161,73 @@ class Weather(Gtk.Window):
         
         # Pass the data to the appropriate function.
         self.show_chart_generic(event = "ignore", info_type = info, data = data2)
+    
+    
+    def chart_selected(self, info = "General"):
+        """Gets the selected dates to for the charts to display."""
+        
+        # If there is no data, tell the user and don't show the info dialog.
+        if len(data) == 0:
+            
+            # Show the dialog.
+            show_no_data_dialog(self, "%s Chart - %s" % (info, last_profile))
+            return
+        
+        # Get the dates.
+        dates = []
+        for i in data:
+            dates.append([i[0]])
+        
+        # Show the dialog and get the response.
+        info_dlg = ChartSelectedDialog(self, info, last_profile, dates)
+        response = info_dlg.run()
+        
+        # If the user clicked OK:
+        if response == Gtk.ResponseType.OK:
+            
+            # Get the selected items.
+            model, treeiter = info_dlg.treeview.get_selection().get_selected_rows()
+            
+            # If nothing was selected, don't continue.
+            if treeiter == None:
+                
+                # Close the dialog.
+                info_dlg.destroy()
+                
+                return
+            
+            # Get the dates.
+            ndates = []
+            for i in treeiter:
+                ndates.append(model[i][0])
+            
+            # Get the data.
+            ndata = []
+            for i in range(0, len(data)):
+                if data[i][0] in ndates:
+                    ndata.append(data[i])
+            
+            # If there is no data, don't continue.
+            if len(ndata) == 0:
+                
+                # Close the dialog.
+                info_dlg.destroy()
+                
+                return
+        
+        # Otherwise, cancel the action.
+        else:
+            
+            # Close the dialog.
+            info_dlg.destroy()
+            
+            return
+        
+        # Close the dialog.
+        info_dlg.destroy()
+        
+        # Pass the data to the appropriate function.
+        self.show_chart_generic(event = "ignore", info_type = info, data = ndata)
     
     
     def show_chart_generic(self, event, info_type, data = data):

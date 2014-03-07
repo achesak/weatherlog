@@ -15,7 +15,7 @@ class InfoSelectedDialog(Gtk.Dialog):
         
         # This window should be modal.
         Gtk.Dialog.__init__(self, "%s Info for Selected Dates - %s" % (info, profile), parent, Gtk.DialogFlags.MODAL)
-        self.set_default_size(200, 300)
+        self.set_default_size(300, 300)
         # Don't allow the user to resize the window.
         #self.set_resizable(False)
         
