@@ -1976,7 +1976,7 @@ class Weather(Gtk.Window):
         # If the OK button was pressed:
         if response == Gtk.ResponseType.OK:
             
-            # Validate the name. If it contains a non-alphanumeric character or is just space,
+            # Validate the name. If it contains a non-alphanumeric character, starts with a period, or is just space,
             # show a dialog and cancel the action.
             if re.compile("[^a-zA-Z1-90 \.\-\+\(\)\?\!]").match(name) or not name or name.lstrip().rstrip() == "" or name.startswith("."):
                 
@@ -1991,6 +1991,9 @@ class Weather(Gtk.Window):
             
             # Otherwise if there are no problems with the name, add the profile.
             else:
+                
+                # Strip leading and trailing whitespace.
+                name = name.lstrip().rstrip()
                 
                 # Create the directory and file.
                 last_profile = name
@@ -2089,43 +2092,62 @@ class Weather(Gtk.Window):
         # If the OK button was pressed:
         if response == Gtk.ResponseType.OK:
             
-            # Rename the directory.
-            os.rename("%s/profiles/%s" % (main_dir, last_profile), "%s/profiles/%s" % (main_dir, name))
-            
-            # Clear the old data.
-            data[:] = []
-            self.liststore.clear()
-            
-            # Load the data.   
-            try:
+            # Validate the name. If it contains a non-alphanumeric character, starts with a period, or is just space,
+            # show a dialog and cancel the action.
+            if re.compile("[^a-zA-Z1-90 \.\-\+\(\)\?\!]").match(name) or not name or name.lstrip().rstrip() == "" or name.startswith("."):
                 
-                # This should be ~/.weatherlog/[profile name]/weather.json on Linux.
-                data_file = open("%s/profiles/%s/weather.json" % (main_dir, name), "r")
-                data = json.load(data_file)
-                data_file.close()
+                # Create the error dialog.
+                show_error_dialog(ren_dlg, "Rename Profile", "The profile name \"%s\" is not valid.\n\n1. Profile names may not be blank.\n2. Profile names may not be all spaces.\n3. Profile names may only be letters, numbers, and spaces.\n4. Profile names may not start with a period (\".\")." % name)
+            
+            # If the profile name is already in use, show a dialog and cancel the action.
+            elif os.path.isdir("%s/profiles/%s" % (main_dir, name)):
                 
-            except IOError:
-                # Show the error message, and close the application.
-                # This one shows if there was a problem reading the file.
-                print("Error importing data (IOError).")
-                data = []
+                # Create the error dialog.
+                show_error_dialog(ren_dlg, "Rename Profile", "The profile name \"%s\" is already in use." % name)
             
-            except (TypeError, ValueError):
-                # Show the error message, and close the application.
-                # This one shows if there was a problem with the data type.
-                print("Error importing data (TypeError or ValueError).")
-                data = []
-            
-            # Switch to the new profile.
-            last_profile = name
-            for i in data:
-                self.liststore.append(i)
-            
-            # Set the new title.
-            if config["show_dates"]:
-                self.set_title("WeatherLog - %s - %s to %s" % (last_profile, (data[0][0] if len(data) != 0 else "None"), (data[len(data)-1][0] if len(data) != 0 else "None")))
+            # Otherwise if there are no problems with the name, add the profile.
             else:
-                self.set_title("WeatherLog - %s" % last_profile)
+                
+                # Strip leading and trailing whitespace.
+                name = name.lstrip().rstrip()
+            
+                # Rename the directory.
+                os.rename("%s/profiles/%s" % (main_dir, last_profile), "%s/profiles/%s" % (main_dir, name))
+                
+                # Clear the old data.
+                data[:] = []
+                self.liststore.clear()
+                
+                # Load the data.   
+                try:
+                    
+                    # This should be ~/.weatherlog/[profile name]/weather.json on Linux.
+                    data_file = open("%s/profiles/%s/weather.json" % (main_dir, name), "r")
+                    data = json.load(data_file)
+                    data_file.close()
+                    
+                except IOError:
+                    # Show the error message, and close the application.
+                    # This one shows if there was a problem reading the file.
+                    print("Error importing data (IOError).")
+                    data = []
+                
+                except (TypeError, ValueError):
+                    # Show the error message, and close the application.
+                    # This one shows if there was a problem with the data type.
+                    print("Error importing data (TypeError or ValueError).")
+                    data = []
+                
+                # Switch to the new profile.
+                last_profile = name
+                for i in data:
+                    self.liststore.append(i)
+                
+                # Set the new title.
+                if config["show_dates"]:
+                    self.set_title("WeatherLog - %s - %s to %s" % (last_profile, (data[0][0] if len(data) != 0 else "None"), (data[len(data)-1][0] if len(data) != 0 else "None")))
+                else:
+                    self.set_title("WeatherLog - %s" % last_profile)
     
         # Close the dialog.
         ren_dlg.destroy()
