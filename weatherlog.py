@@ -406,10 +406,21 @@ class Weather(Gtk.Window):
             ("export_pastebin", None, "Export to Paste_bin...", None, None, lambda x: self.export_pastebin("raw")),
             ("export_pastebin_html", None, "_Export to Pastebin (HTML)...", None, None, lambda x: self.export_pastebin("html")),
             ("export_pastebin_csv", None, "E_xport to Pastebin (CSV)...", None, None, lambda x: self.export_pastebin("csv")),
+            ("clear_data", Gtk.STOCK_CLEAR, "Clear Current _Data...", "<Control>d", "Clear the data", self.clear),
+            ("clear_all", None, "Clear _All Data...", "<Control><Alt>d", None, self.clear_all),
+            ("reload_current", None, "Reload _Current Data...", "F5", None, self.reload_current),
+            ("manual_save", None, "Man_ual Save...", "<Control>m", None, lambda x: self.save(show_dialog = True, automatic = False)),
+            ("fullscreen", Gtk.STOCK_FULLSCREEN, "Toggle _Fullscreen", "F11", "Toggle fullscreen", self.toggle_fullscreen),
+            ("exit", Gtk.STOCK_QUIT, "_Quit...", None, "Close the application", lambda x: self.exit("ignore", "this"))
+        ])
+        
+        # Create the Info menu.
+        action_group.add_actions([
+            ("info_global_menu", None, "_Info"),
             ("info", Gtk.STOCK_INFO, "_Info...", "<Control>i", "Show info about the data", lambda x: self.show_info_generic(event = "ignore", info_type = "General", data = data))
         ])
         
-        # Create the Weather -> More Info submenu.
+        # Create the Info -> More Info submenu.
         action_weather_info_group = Gtk.Action("info_menu", "_More Info", None, None)
         action_group.add_action(action_weather_info_group)
         action_group.add_actions([
@@ -423,7 +434,7 @@ class Weather(Gtk.Window):
             ("info_range", None, "Info in _Range...", "<Control><Shift>i", None, lambda x: self.info_range("General"))
         ])
         
-        # Create the Weather -> More Info in Range submenu.
+        # Create the Info -> More Info in Range submenu.
         action_weather_info_range_group = Gtk.Action("info_range_menu", "More In_fo in Range", None, None)
         action_group.add_action(action_weather_info_range_group)
         action_group.add_actions([
@@ -437,8 +448,8 @@ class Weather(Gtk.Window):
             ("info_selected", None, "Info for Se_lected Dates...", None, None, lambda x: self.info_selected("General"))
         ])
         
-        # Create the Weather -> More Info for Selected Dates submenu.
-        action_weather_info_selected_group = Gtk.Action("info_selected_menu", "More Info for Selec_ted Dates", None, None)
+        # Create the Info -> More Info for Selected Dates submenu.
+        action_weather_info_selected_group = Gtk.Action("info_selected_menu", "More Info for Selected _Dates", None, None)
         action_group.add_action(action_weather_info_selected_group)
         action_group.add_actions([
             ("temperature_selected", None, "_Temperature for Selected Dates...", None, None, lambda x: self.info_selected("Temperature")),
@@ -447,16 +458,10 @@ class Weather(Gtk.Window):
             ("humidity_selected", None, "_Humidity for Selected Dates...", None, None, lambda x: self.info_selected("Humidity")),
             ("air_pressure_selected", None, "_Air Pressure for Selected Dates...", None, None, lambda x: self.info_selected("Air Pressure")),
             ("cloud_cover_selected", None, "_Cloud Cover for Selected Dates...", None, None, lambda x: self.info_selected("Cloud Cover")),
-            ("notes_selected", None, "_Notes for Selected Dates...", None, None, lambda x: self.info_selected("Notes")),
-            ("clear_data", Gtk.STOCK_CLEAR, "Clear Current _Data...", "<Control>d", "Clear the data", self.clear),
-            ("clear_all", None, "Clear _All Data...", "<Control><Alt>d", None, self.clear_all),
-            ("reload_current", None, "Reload _Current Data...", "F5", None, self.reload_current),
-            ("manual_save", None, "Man_ual Save...", "<Control>m", None, lambda x: self.save(show_dialog = True, automatic = False)),
-            ("fullscreen", Gtk.STOCK_FULLSCREEN, "Toggle _Fullscreen", "F11", "Toggle fullscreen", self.toggle_fullscreen),
-            ("exit", Gtk.STOCK_QUIT, "_Quit...", None, "Close the application", lambda x: self.exit("ignore", "this"))
+            ("notes_selected", None, "_Notes for Selected Dates...", None, None, lambda x: self.info_selected("Notes"))
         ])
         
-        # Create the Weather -> Charts submenu.
+        # Create the Info -> Charts submenu.
         action_weather_charts_group = Gtk.Action("info_charts_menu", "Chart_s", None, None)
         action_group.add_action(action_weather_charts_group)
         action_group.add_actions([
@@ -467,7 +472,7 @@ class Weather(Gtk.Window):
             ("air_pressure_chart", None, "_Air Pressure Chart...", "<Alt><Shift>a", None, lambda x: self.show_chart_generic(event = "ignore", info_type = "Air Pressure", data = data)),
         ])
         
-        # Create the Weather -> Charts in Range submenu.
+        # Create the Info -> Charts in Range submenu.
         action_weather_charts_range_group = Gtk.Action("info_charts_range_menu", "C_harts in Range", None, None)
         action_group.add_action(action_weather_charts_range_group)
         action_group.add_actions([
@@ -478,7 +483,7 @@ class Weather(Gtk.Window):
             ("air_pressure_range_chart", None, "_Air Pressure Chart in Range...", None, None, lambda x: self.chart_range("Air Pressure")),
         ])
         
-        # Create the Weather -> Charts for Selected Dates submenu.
+        # Create the Info -> Charts for Selected Dates submenu.
         action_weather_charts_selected_group = Gtk.Action("info_charts_selected_menu", "Charts for Selec_ted Dates", None, None)
         action_group.add_action(action_weather_charts_selected_group)
         action_group.add_actions([

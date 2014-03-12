@@ -18,6 +18,17 @@
         <menuitem action="export_pastebin_csv" />
       </menu>
       <separator />
+      <menuitem action="clear_data" />
+      <menuitem action="clear_all" />
+      <separator />
+      <menuitem action="reload_current" />
+      <menuitem action="manual_save" />
+      <separator />
+      <menuitem action="fullscreen" />
+      <separator />
+      <menuitem action="exit" />
+    </menu>
+    <menu action="info_global_menu">
       <menuitem action="info" />
       <menu action="info_menu">
         <menuitem action="temperature" />
@@ -70,16 +81,6 @@
         <menuitem action="humidity_selected_chart" />
         <menuitem action="air_pressure_selected_chart" />
       </menu>
-      <separator />
-      <menuitem action="clear_data" />
-      <menuitem action="clear_all" />
-      <separator />
-      <menuitem action="reload_current" />
-      <menuitem action="manual_save" />
-      <separator />
-      <menuitem action="fullscreen" />
-      <separator />
-      <menuitem action="exit" />
     </menu>
     <menu action="profiles_menu">
       <menuitem action="switch_profile" />
