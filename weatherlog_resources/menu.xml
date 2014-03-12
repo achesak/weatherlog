@@ -87,6 +87,7 @@
       <separator />
       <menuitem action="add_profile" />
       <menuitem action="remove_profile" />
+      <menuitem action="rename_profile" />
     </menu>
     <menu action="options_menu">
       <menuitem action="options" />

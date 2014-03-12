@@ -110,6 +110,8 @@ from weatherlog_resources.dialogs.add_profile_dialog import AddProfileDialog
 from weatherlog_resources.dialogs.switch_profile_dialog import SwitchProfileDialog
 # Import the dialog for removing profiles.
 from weatherlog_resources.dialogs.remove_profile_dialog import RemoveProfileDialog
+# Import the dialog for renaming profiles.
+from weatherlog_resources.dialogs.rename_profile_dialog import RenameProfileDialog
 # Import the dialog for selecting a range of dates to show information about.
 from weatherlog_resources.dialogs.info_range_dialog import InfoRangeDialog
 # Import the dialog for selecting a range of dates to show a chart about.
@@ -499,7 +501,8 @@ class Weather(Gtk.Window):
             ("profiles_menu", None, "_Profiles"),
             ("switch_profile", None, "_Switch Profile...", "<Control><Shift>s", None, self.switch_profile),
             ("add_profile", None, "_Add Profile...", "<Control><Shift>n", None, self.add_profile),
-            ("remove_profile", None, "_Remove Profile...", "<Control><Shift>d", None, self.remove_profile)
+            ("remove_profile", None, "_Remove Profile...", "<Control><Shift>d", None, self.remove_profile),
+            ("rename_profile", None, "Re_name Profile...", None, None, self.rename_profile)
         ])
         
         # Create the Options menu.
@@ -2068,6 +2071,64 @@ class Weather(Gtk.Window):
         
         # Close the dialog.
         rem_dlg.destroy()
+    
+    
+    def rename_profile(self, event):
+        """Renames the current profile."""
+        
+        global last_profile
+        global data
+        
+        # Show the dialog.
+        ren_dlg = RenameProfileDialog(self)
+        
+        # Get the response.
+        response = ren_dlg.run()
+        name = ren_dlg.ren_ent.get_text()
+        
+        # If the OK button was pressed:
+        if response == Gtk.ResponseType.OK:
+            
+            # Rename the directory.
+            os.rename("%s/profiles/%s" % (main_dir, last_profile), "%s/profiles/%s" % (main_dir, name))
+            
+            # Clear the old data.
+            data[:] = []
+            self.liststore.clear()
+            
+            # Load the data.   
+            try:
+                
+                # This should be ~/.weatherlog/[profile name]/weather.json on Linux.
+                data_file = open("%s/profiles/%s/weather.json" % (main_dir, name), "r")
+                data = json.load(data_file)
+                data_file.close()
+                
+            except IOError:
+                # Show the error message, and close the application.
+                # This one shows if there was a problem reading the file.
+                print("Error importing data (IOError).")
+                data = []
+            
+            except (TypeError, ValueError):
+                # Show the error message, and close the application.
+                # This one shows if there was a problem with the data type.
+                print("Error importing data (TypeError or ValueError).")
+                data = []
+            
+            # Switch to the new profile.
+            last_profile = name
+            for i in data:
+                self.liststore.append(i)
+            
+            # Set the new title.
+            if config["show_dates"]:
+                self.set_title("WeatherLog - %s - %s to %s" % (last_profile, (data[0][0] if len(data) != 0 else "None"), (data[len(data)-1][0] if len(data) != 0 else "None")))
+            else:
+                self.set_title("WeatherLog - %s" % last_profile)
+    
+        # Close the dialog.
+        ren_dlg.destroy()
     
     
     def toggle_fullscreen(self, event):
