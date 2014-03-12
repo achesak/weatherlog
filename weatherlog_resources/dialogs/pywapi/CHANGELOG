@@ -1,3 +1,10 @@
+v0.3.8 (14 February 2014)
+! Set all missing Weather.com XML tag values to an empty string
+
+v0.3.7 (21 January 2014)
+! Updated Weather.com URLs
+! Better handling of Weather.com data when current daytime has passed
+
 v0.3.6 (3 September 2013)
 ! Fix for Py3k compatibility in get_weather_from_weather_com()
 

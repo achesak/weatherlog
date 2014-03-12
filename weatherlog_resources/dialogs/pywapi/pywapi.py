@@ -28,7 +28,7 @@
 
 """ Fetches weather reports from Yahoo! Weather, Weather.com and NOAA """
 
-__version__ = "0.3.6"
+__version__ = "0.3.8"
 
 try:
     # Python 3 imports
@@ -65,11 +65,10 @@ YAHOO_WEATHER_NS     = 'http://xml.weather.yahoo.com/ns/rss/1.0'
 
 NOAA_WEATHER_URL     = 'http://www.weather.gov/xml/current_obs/%s.xml'
 
-WEATHER_COM_URL      = 'http://xml.weather.com/weather/local/%s?' + \
-                       'par=1138276742&key=15ee9c789ccd70f5&' + \
+WEATHER_COM_URL      = 'http://wxdata.weather.com/wxdata/weather/local/%s?' + \
                        'unit=%s&dayf=5&cc=*'
 
-LOCID_SEARCH_URL     = 'http://xml.weather.com/search/search?where=%s'
+LOCID_SEARCH_URL     = 'http://wxdata.weather.com/wxdata/search/search?where=%s'
 
 WOEID_SEARCH_URL     = 'http://query.yahooapis.com/v1/public/yql'
 WOEID_QUERY_STRING   = 'select line1, line2, line3, line4, ' + \
@@ -183,8 +182,12 @@ def get_weather_from_weather_com(location_id, units = 'metric'):
             weather_data[key] = {}
             for tag2 in list_of_tags2:
                 key2 = key_map[tag2]
-                weather_data[key][key2] = weather_dom.getElementsByTagName(
-                    tag)[0].getElementsByTagName(tag2)[0].firstChild.data
+                try:
+                    weather_data[key][key2] = weather_dom.getElementsByTagName(
+                        tag)[0].getElementsByTagName(tag2)[0].firstChild.data
+                except AttributeError:
+                    # current tag has empty value
+                    weather_data[key][key2] = unicode('')
     except IndexError:
         error_data = {'error': 'Error parsing Weather.com response. Full response: %s' % xml_response}
         return error_data
@@ -196,8 +199,12 @@ def get_weather_from_weather_com(location_id, units = 'metric'):
             weather_data['current_conditions'][key] = {}
             for tag2 in list_of_tags2:
                 key2 = key_map[tag2]
-                weather_data['current_conditions'][key][key2] = cc_dom.getElementsByTagName(
-                    tag)[0].getElementsByTagName(tag2)[0].firstChild.data
+                try:
+                    weather_data['current_conditions'][key][key2] = cc_dom.getElementsByTagName(
+                        tag)[0].getElementsByTagName(tag2)[0].firstChild.data
+                except AttributeError:
+                    # current tag has empty value
+                    weather_data['current_conditions'][key][key2] = unicode('')
     
     forecasts = []
     if len(weather_dom.getElementsByTagName('dayf')) > 0:
@@ -208,15 +215,23 @@ def get_weather_from_weather_com(location_id, units = 'metric'):
             tmp_forecast['date'] = forecast.getAttribute('dt')
             for tag in ('hi', 'low', 'sunr', 'suns'):
                 key = key_map[tag]
-                tmp_forecast[key] = forecast.getElementsByTagName(
+                try:
+                    tmp_forecast[key] = forecast.getElementsByTagName(
                     tag)[0].firstChild.data
+                except AttributeError:
+                    # if nighttime on current day, key 'hi' is empty
+                    tmp_forecast[key] = unicode('')
             for part in forecast.getElementsByTagName('part'):
                 time_of_day = time_of_day_map[part.getAttribute('p')]
                 tmp_forecast[time_of_day] = {}
                 for tag2 in ('icon', 't', 'bt', 'ppcp', 'hmid'):
                     key2 = key_map[tag2]
-                    tmp_forecast[time_of_day][
-                        key2] = part.getElementsByTagName(tag2)[0].firstChild.data
+                    try:
+                        tmp_forecast[time_of_day][
+                            key2] = part.getElementsByTagName(tag2)[0].firstChild.data
+                    except AttributeError:
+                        # if nighttime on current day, keys 'icon' and 't' are empty
+                        tmp_forecast[time_of_day][key2] = unicode('')
                 tmp_forecast[time_of_day]['wind'] = {}
                 for tag2 in ('s', 'gust', 'd', 't'):            
                     key2 = key_map[tag2]
