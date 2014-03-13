@@ -88,6 +88,7 @@
       <menuitem action="add_profile" />
       <menuitem action="remove_profile" />
       <menuitem action="rename_profile" />
+      <menuitem action="merge_profiles" />
     </menu>
     <menu action="options_menu">
       <menuitem action="options" />

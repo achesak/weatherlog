@@ -112,6 +112,8 @@ from weatherlog_resources.dialogs.switch_profile_dialog import SwitchProfileDial
 from weatherlog_resources.dialogs.remove_profile_dialog import RemoveProfileDialog
 # Import the dialog for renaming profiles.
 from weatherlog_resources.dialogs.rename_profile_dialog import RenameProfileDialog
+# Import the dialog for merging profiles.
+from weatherlog_resources.dialogs.merge_profiles_dialog import MergeProfilesDialog
 # Import the dialog for selecting a range of dates to show information about.
 from weatherlog_resources.dialogs.info_range_dialog import InfoRangeDialog
 # Import the dialog for selecting a range of dates to show a chart about.
@@ -502,7 +504,8 @@ class Weather(Gtk.Window):
             ("switch_profile", None, "_Switch Profile...", "<Control><Shift>s", None, self.switch_profile),
             ("add_profile", None, "_Add Profile...", "<Control><Shift>n", None, self.add_profile),
             ("remove_profile", None, "_Remove Profile...", "<Control><Shift>d", None, self.remove_profile),
-            ("rename_profile", None, "Re_name Profile...", None, None, self.rename_profile)
+            ("rename_profile", None, "Re_name Profile...", None, None, self.rename_profile),
+            ("merge_profiles", None, "_Merge Profiles...", None, None, self.merge_profiles)
         ])
         
         # Create the Options menu.
@@ -2151,6 +2154,100 @@ class Weather(Gtk.Window):
     
         # Close the dialog.
         ren_dlg.destroy()
+    
+    
+    def merge_profiles(self, event):
+        """Merges two profiles."""
+        
+        global last_profile
+        global data
+        
+        # Remember the currect directory and switch to where the profiles are stored.
+        current_dir = os.getcwd()
+        os.chdir("%s/profiles" % main_dir)
+        
+        # Get the list of profiles.
+        profiles = glob.glob("*")
+        
+        # Remove the current profile from the list.
+        profiles = list(set(profiles) - set([last_profile]))
+        
+        # Sort the profiles.
+        profiles.sort()
+        
+        # Switch back to the previous directory.
+        os.chdir(current_dir)
+        
+        # If there are no other profiles, tell the user and cancel the action.
+        if len(profiles) == 0:
+            
+            # Tell the user there are no other profiles.
+            show_alert_dialog(self, "Merge Profiles", "There are no other profiles.")
+            
+            return
+        
+        # Show the dialog.
+        mer_dlg = MergeProfilesDialog(self, profiles)
+        # Get the response.
+        response = mer_dlg.run()
+        name = mer_dlg.rem_com.get_active_text()
+        
+        # If the OK button was pressed:
+        if response == Gtk.ResponseType.OK:
+            
+            # Read the data.   
+            try:
+                
+                # This should be ~/.weatherlog/[profile name]/weather.json on Linux.
+                data_file = open("%s/profiles/%s/weather.json" % (main_dir, name), "r")
+                data2 = json.load(data_file)
+                data_file.close()
+                
+            except IOError:
+                # Show the error message, and close the application.
+                # This one shows if there was a problem reading the file.
+                print("Error importing data (IOError).")
+                data2 = []
+            
+            except (TypeError, ValueError):
+                # Show the error message, and close the application.
+                # This one shows if there was a problem with the data type.
+                print("Error importing data (TypeError or ValueError).")
+                data2 = []
+            
+            else:
+                
+                # Filter the new data to make sure there are no duplicates.
+                new_data = []
+                date_col = utility_functions.get_column(data, 0)
+                for i in data2:
+                    
+                    # If the date already appears, don't include it.
+                    if i[0] not in date_col:
+                        new_data.append(i)
+                
+                # Append the data.
+                data += new_data
+                
+                # Sort the data.
+                data = sorted(data, key = lambda x: datetime.datetime.strptime(x[0], '%d/%m/%Y'))
+                
+                # Update the ListStore.
+                self.liststore.clear()
+                for i in data:
+                    self.liststore.append(i)
+                
+                # Update the title.
+                if config["show_dates"]:
+                    self.set_title("WeatherLog - %s - %s to %s" % (last_profile, (data[0][0] if len(data) != 0 else "None"), (data[len(data)-1][0] if len(data) != 0 else "None")))
+                else:
+                    self.set_title("WeatherLog - %s" % last_profile)
+                
+                # Delete the directory.
+                shutil.rmtree("%s/profiles/%s" % (main_dir, name))
+        
+        # Close the dialog.
+        mer_dlg.destroy()
     
     
     def toggle_fullscreen(self, event):
