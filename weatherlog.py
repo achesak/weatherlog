@@ -114,6 +114,12 @@ from weatherlog_resources.dialogs.remove_profile_dialog import RemoveProfileDial
 from weatherlog_resources.dialogs.rename_profile_dialog import RenameProfileDialog
 # Import the dialog for merging profiles.
 from weatherlog_resources.dialogs.merge_profiles_dialog import MergeProfilesDialog
+# Import the dialog for selecting dates to copy or move.
+from weatherlog_resources.dialogs.profile_date_dialog import ProfileDateSelectionDialog
+# Import the dialog for adding a new profile when moving/copying data.
+from weatherlog_resources.dialogs.data_profile_new_dialog import ProfileDataNewDialog
+# Import the dialog for choosing a profile when moving/copying data.
+from weatherlog_resources.dialogs.data_profile_existing_dialog import ProfileDataExistingDialog
 # Import the dialog for selecting a range of dates to show information about.
 from weatherlog_resources.dialogs.info_range_dialog import InfoRangeDialog
 # Import the dialog for selecting a range of dates to show a chart about.
@@ -506,6 +512,22 @@ class Weather(Gtk.Window):
             ("remove_profile", None, "_Remove Profile...", "<Control><Shift>d", None, self.remove_profile),
             ("rename_profile", None, "Re_name Profile...", None, None, self.rename_profile),
             ("merge_profiles", None, "_Merge Profiles...", None, None, self.merge_profiles)
+        ])
+        
+        # Create the Profiles -> Copy Data submenu.
+        action_copy_group = Gtk.Action("copy_menu", "_Copy Data", None, None)
+        action_group.add_action(action_copy_group)
+        action_group.add_actions([
+            ("copy_new", None, "To _New Profile...", None, None, None),
+            ("copy_existing", None, "To _Existing Profile...", None, None, None)
+        ])
+        
+        # Create the Profiles -> Move Data submenu.
+        action_move_group = Gtk.Action("move_menu", "Mo_ve Data", None, None)
+        action_group.add_action(action_move_group)
+        action_group.add_actions([
+            ("move_new", None, "To _New Profile...", None, None, None),
+            ("move_existing", None, "To _Existing Profile...", None, None, None)
         ])
         
         # Create the Options menu.
@@ -2248,6 +2270,56 @@ class Weather(Gtk.Window):
         
         # Close the dialog.
         mer_dlg.destroy()
+    
+    
+    def data_profile(self, mode = "Copy", method = "New"):
+        """Copies or moves data to a new or an existing profile."""
+        
+        # If the user wants to copy/move the data to a new profile:
+        if method == "New":
+            
+            # Show the dialog.
+            new_dlg = ProfileDataNewDialog(self, mode)
+            
+            # Get the response.
+            response = new_dlg.run()
+            name = new_dlg.pro_ent.get_text()
+            
+            # If the user pressed OK:
+            if response == Gtk.ResponseType.OK:
+                
+                # Validate the name. If it contains a non-alphanumeric character, starts with a period, or is just space,
+                # show a dialog and cancel the action.
+                if re.compile("[^a-zA-Z1-90 \.\-\+\(\)\?\!]").match(name) or not name or name.lstrip().rstrip() == "" or name.startswith("."):
+                    
+                    # Create the error dialog.
+                    show_error_dialog(new_dlg, "Add Profile", "The profile name \"%s\" is not valid.\n\n1. Profile names may not be blank.\n2. Profile names may not be all spaces.\n3. Profile names may only be letters, numbers, and spaces.\n4. Profile names may not start with a period (\".\")." % name)
+                    
+                    # Close the dialog.
+                    new_dlg.destroy()
+                    
+                # If the profile name is already in use, show a dialog and cancel the action.
+                elif os.path.isdir("%s/profiles/%s" % (main_dir, name)):
+                    
+                    # Create the error dialog.
+                    show_error_dialog(new_dlg, "Add Profile", "The profile name \"%s\" is already in use." % name)
+                    
+                    # Close the dialog.
+                    new_dlg.destroy()
+                    
+                # Strip leading and trailing whitespace.
+                name = name.lstrip().rstrip()
+                
+                # Create the directory and file.
+                last_profile = name
+                os.makedirs("%s/profiles/%s" % (main_dir, name))
+                new_prof_file = open("%s/profiles/%s/weather.json" % (main_dir, name), "w")
+                new_prof_file.write("[]")
+                new_prof_file.close()
+                
+                ## TODO: Get the list of dates, and then either copy or move them to the new profile
+                
+        ## TODO: The entire thing with copying/moving to an existing profile.
     
     
     def toggle_fullscreen(self, event):
