@@ -2087,27 +2087,57 @@ class Weather(Gtk.Window):
         rem_dlg = RemoveProfileDialog(self, profiles)
         # Get the response.
         response = rem_dlg.run()
-        name = rem_dlg.rem_com.get_active_text()
         
         # If the OK button was pressed:
         if response == Gtk.ResponseType.OK:
+            
+            # Get the selected items.
+            model, treeiter = rem_dlg.treeview.get_selection().get_selected_rows()
+            
+            # If nothing was selected, don't continue.
+            if treeiter == None:
+                
+                # Close the dialog.
+                rem_dlg.destroy()
+                
+                return
+            
+            # Get the profiles.
+            profiles = []
+            for i in treeiter:
+                profiles.append(model[i][0])
+            
+            # If nothing was selected, don't continue.
+            # TODO: check if this block is really necessary.
+            if len(profiles) == 0:
+                
+                # Close the dialog.
+                rem_dlg.destroy()
+                
+                return
             
             # Only show the dialog if the user wants that.
             if config["confirm_del"]:
                 
                 # Confirm that the user wants to delete the profile.
-                response = show_question_dialog(rem_dlg, "Confirm Remove Profile", "Are you sure you want to remove the profile?\n\nThis action cannot be undone.")
+                response = show_question_dialog(rem_dlg, "Confirm Remove Profile", "Are you sure you want to remove the profile%s?\n\nThis action cannot be undone." % ("" if len(profiles) == 1 else "s"))
                 
                 # If the user wants to continue:
                 if response == Gtk.ResponseType.OK:
                     
-                    # Delete the directory.
-                    shutil.rmtree("%s/profiles/%s" % (main_dir, name))
+                    # Loop through the profiles and delete them all:
+                    for name in profiles:
+                        
+                        # Delete the directory.
+                        shutil.rmtree("%s/profiles/%s" % (main_dir, name))
             
             else:
                 
-                # Delete the directory.
-                shutil.rmtree("%s/profiles/%s" % (main_dir, name))
+                # Loop through the profiles and delete them all:
+                for name in profiles:
+                    
+                    # Delete the directory.
+                    shutil.rmtree("%s/profiles/%s" % (main_dir, name))
         
         
         # Close the dialog.

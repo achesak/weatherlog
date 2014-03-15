@@ -15,8 +15,9 @@ class RemoveProfileDialog(Gtk.Dialog):
         
         # This window should be modal.
         Gtk.Dialog.__init__(self, "Remove Profile", parent, Gtk.DialogFlags.MODAL)
+        self.set_default_size(300, 300)
         # Don't allow the user to resize the window.
-        self.set_resizable(False)
+        #self.set_resizable(False)
         
         # Add the buttons.
         self.add_button("Cancel", Gtk.ResponseType.CANCEL)
@@ -28,15 +29,38 @@ class RemoveProfileDialog(Gtk.Dialog):
         # Add the grid to the dialog's content area.
         rem_box.add(rem_grid)
         
-        # Create the label and combobox.
-        rem_lbl = Gtk.Label("Choose profile: ")
+        # Create the label.
+        rem_lbl = Gtk.Label("Choose profile:")
         rem_lbl.set_alignment(0, 0.5)
         rem_grid.add(rem_lbl)
-        self.rem_com = Gtk.ComboBoxText()
+        
+        # Create the ListStore for storing the data.
+        self.liststore = Gtk.ListStore(str)
+        # Add the profiles.
         for i in profiles:
-            self.rem_com.append_text(i)
-        self.rem_com.set_active(0)
-        rem_grid.attach_next_to(self.rem_com, rem_lbl, Gtk.PositionType.RIGHT, 1, 1)
+            self.liststore.append([i])
+        
+        # Create the TreeView for displaying the data.
+        self.treeview = Gtk.TreeView(model = self.liststore)
+        
+        # Create the Profile column.
+        rem_text = Gtk.CellRendererText()
+        self.rem_col = Gtk.TreeViewColumn("Profile", rem_text, text = 0)
+        self.treeview.append_column(self.rem_col)
+        
+        # Allow for multiple items to be selected.
+        self.treeview.get_selection().set_mode(Gtk.SelectionMode.MULTIPLE)
+        
+        # Create the ScrolledWindow for displaying the list with a scrollbar.
+        scrolled_win = Gtk.ScrolledWindow()
+        
+        # The container should scroll vertically and horizontally.
+        scrolled_win.set_vexpand(True)
+        scrolled_win.set_hexpand(True)
+        
+        # Display the TreeView.
+        scrolled_win.add(self.treeview)
+        rem_grid.attach_next_to(scrolled_win, rem_lbl, Gtk.PositionType.BOTTOM, 1, 1)
         
         # Show the dialog. The response gets handled by the function
         # in the main class.

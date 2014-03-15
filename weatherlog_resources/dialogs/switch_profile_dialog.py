@@ -30,7 +30,7 @@ class SwitchProfileDialog(Gtk.Dialog):
         swi_box.add(swi_grid)
         
         # Create the label.
-        swi_lbl = Gtk.Label("Select the profile:")
+        swi_lbl = Gtk.Label("Choose profile:")
         swi_lbl.set_alignment(0, 0.5)
         swi_grid.add(swi_lbl)
         
