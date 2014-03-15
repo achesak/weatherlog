@@ -1938,10 +1938,23 @@ class Weather(Gtk.Window):
         swi_dlg = SwitchProfileDialog(self, profiles)
         # Get the response.
         response = swi_dlg.run()
-        name = swi_dlg.swi_com.get_active_text()
         
         # If the OK button was pressed:
         if response == Gtk.ResponseType.OK:
+            
+            # Get the selected item.
+            model, treeiter = swi_dlg.treeview.get_selection().get_selected()
+            
+            # If nothing was selected, don't continue.
+            if treeiter == None:
+                
+                # Close the dialog.
+                swi_dlg.destroy()
+                
+                return
+            
+            # Get the profile name.
+            name = model[treeiter][0]
             
             # Clear the old data.
             data[:] = []
