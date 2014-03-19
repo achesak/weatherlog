@@ -35,10 +35,10 @@ class RemoveProfileDialog(Gtk.Dialog):
         rem_grid.add(rem_lbl)
         
         # Create the ListStore for storing the data.
-        self.liststore = Gtk.ListStore(str)
+        self.liststore = Gtk.ListStore(str, str)
         # Add the profiles.
         for i in profiles:
-            self.liststore.append([i])
+            self.liststore.append(i)
         
         # Create the TreeView for displaying the data.
         self.treeview = Gtk.TreeView(model = self.liststore)
@@ -47,6 +47,11 @@ class RemoveProfileDialog(Gtk.Dialog):
         rem_text = Gtk.CellRendererText()
         self.rem_col = Gtk.TreeViewColumn("Profile", rem_text, text = 0)
         self.treeview.append_column(self.rem_col)
+        
+        # Create the Last Modified column.
+        mod_text = Gtk.CellRendererText()
+        self.mod_col = Gtk.TreeViewColumn("Last Modified", mod_text, text = 1)
+        self.treeview.append_column(self.mod_col)
         
         # Allow for multiple items to be selected.
         self.treeview.get_selection().set_mode(Gtk.SelectionMode.MULTIPLE)

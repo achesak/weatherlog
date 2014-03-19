@@ -35,10 +35,10 @@ class SwitchProfileDialog(Gtk.Dialog):
         swi_grid.add(swi_lbl)
         
         # Create the ListStore for storing the data.
-        self.liststore = Gtk.ListStore(str)
+        self.liststore = Gtk.ListStore(str, str)
         # Add the profiles.
         for i in profiles:
-            self.liststore.append([i])
+            self.liststore.append(i)
         
         # Create the TreeView for displaying the data.
         self.treeview = Gtk.TreeView(model = self.liststore)
@@ -47,6 +47,11 @@ class SwitchProfileDialog(Gtk.Dialog):
         swi_text = Gtk.CellRendererText()
         self.swi_col = Gtk.TreeViewColumn("Profile", swi_text, text = 0)
         self.treeview.append_column(self.swi_col)
+        
+        # Create the Last Modified column.
+        mod_text = Gtk.CellRendererText()
+        self.mod_col = Gtk.TreeViewColumn("Last Modified", mod_text, text = 1)
+        self.treeview.append_column(self.mod_col)
         
         # Create the ScrolledWindow for displaying the list with a scrollbar.
         scrolled_win = Gtk.ScrolledWindow()

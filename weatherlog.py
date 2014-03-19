@@ -62,6 +62,8 @@ import os.path
 import sys
 # Import platform for getting the user's operating system.
 import platform
+# Import time for working with dates and times.
+import time
 # Import urlopen and urlencode for opening a file from a URL.
 # Try importing Python 3 module, then fall back to Python 2 if needed.
 try:
@@ -1923,6 +1925,16 @@ class Weather(Gtk.Window):
         # Sort the profiles.
         profiles.sort()
         
+        # Get the last modified dates.
+        for i in range(0, len(profiles)):
+            
+            # Get the date and format it properly.
+            last_modified = os.path.getmtime("%s/profiles/%s/weather.json" % (main_dir, last_profile))
+            last_modified = time.strftime("%d/%m/%Y", time.localtime(last_modified))
+            
+            # Change the value in the list.
+            profiles[i] = [profiles[i], last_modified]
+        
         # Switch back to the previous directory.
         os.chdir(current_dir)
         
@@ -2071,6 +2083,16 @@ class Weather(Gtk.Window):
         
         # Sort the profiles.
         profiles.sort()
+        
+        # Get the last modified dates.
+        for i in range(0, len(profiles)):
+            
+            # Get the date and format it properly.
+            last_modified = os.path.getmtime("%s/profiles/%s/weather.json" % (main_dir, last_profile))
+            last_modified = time.strftime("%d/%m/%Y", time.localtime(last_modified))
+            
+            # Change the value in the list.
+            profiles[i] = [profiles[i], last_modified]
         
         # Switch back to the previous directory.
         os.chdir(current_dir)
