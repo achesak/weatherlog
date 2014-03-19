@@ -521,7 +521,7 @@ class Weather(Gtk.Window):
         action_group.add_action(action_copy_group)
         action_group.add_actions([
             ("copy_new", None, "To _New Profile...", None, None, lambda x: self.data_profile(mode = "Copy", method = "New")),
-            ("copy_existing", None, "To _Existing Profile...", None, None, None)
+            ("copy_existing", None, "To _Existing Profile...", None, None, lambda x: self.data_profile(mode = "Copy", method = "Existing"))
         ])
         
         # Create the Profiles -> Move Data submenu.
@@ -529,7 +529,7 @@ class Weather(Gtk.Window):
         action_group.add_action(action_move_group)
         action_group.add_actions([
             ("move_new", None, "To _New Profile...", None, None, lambda x: self.data_profile(mode = "Move", method = "New")),
-            ("move_existing", None, "To _Existing Profile...", None, None, None)
+            ("move_existing", None, "To _Existing Profile...", None, None, lambda x: self.data_profile(mode = "Move", method = "Existing"))
         ])
         
         # Create the Options menu.
@@ -2379,6 +2379,32 @@ class Weather(Gtk.Window):
             dates.append([i[0]])
             dates2.append(i[0])
         
+        # Remember the currect directory and switch to where the profiles are stored.
+        current_dir = os.getcwd()
+        os.chdir("%s/profiles" % main_dir)
+        
+        # Get the list of profiles.
+        profiles = glob.glob("*")
+        
+        # Remove the current profile from the list.
+        profiles = list(set(profiles) - set([last_profile]))
+        
+        # Sort the profiles.
+        profiles.sort()
+        
+        # Get the last modified dates.
+        for i in range(0, len(profiles)):
+            
+            # Get the date and format it properly.
+            last_modified = os.path.getmtime("%s/profiles/%s/weather.json" % (main_dir, last_profile))
+            last_modified = time.strftime("%d/%m/%Y", time.localtime(last_modified))
+            
+            # Change the value in the list.
+            profiles[i] = [profiles[i], last_modified]
+        
+        # Switch back to the previous directory.
+        os.chdir(current_dir)
+        
         # If the user wants to copy/move the data to a new profile:
         if method == "New":
             
@@ -2479,16 +2505,16 @@ class Weather(Gtk.Window):
                 
                 data = [x for x in data if x[0] not in ndates]
             
-            # Reset the list.
-            self.liststore.clear()
-            for i in data:
-                self.liststore.append(i)
+                # Reset the list.
+                self.liststore.clear()
+                for i in data:
+                    self.liststore.append(i)
             
-            # Set the new title.
-            if config["show_dates"]:
-                self.set_title("WeatherLog - %s - %s to %s" % (last_profile, (data[0][0] if len(data) != 0 else "None"), (data[len(data)-1][0] if len(data) != 0 else "None")))
-            else:
-                self.set_title("WeatherLog - %s" % last_profile)
+                # Set the new title.
+                if config["show_dates"]:
+                    self.set_title("WeatherLog - %s - %s to %s" % (last_profile, (data[0][0] if len(data) != 0 else "None"), (data[len(data)-1][0] if len(data) != 0 else "None")))
+                else:
+                    self.set_title("WeatherLog - %s" % last_profile)
             
             # Put the data in the new profile.
             try:
@@ -2511,8 +2537,163 @@ class Weather(Gtk.Window):
             date_dlg.destroy()
                 
         else:
-            pass
-            ## TODO: The entire thing with copying/moving to an existing profile.
+            
+            # If there are no other profiles, tell the user and cancel the action.
+            if len(profiles) == 0:
+                
+                # Tell the user there are no other profiles.
+                show_alert_dialog(self, "%s Data to %s Profile" % (mode, method), "There are no other profiles.")
+                
+                return
+            
+            # Show the dialog.
+            exi_dlg = ProfileDataExistingDialog(self, profiles, mode)
+            
+            # Get the response.
+            response = exi_dlg.run()
+            
+            # If the user pressed OK:
+            if response == Gtk.ResponseType.OK:
+                
+                # Get the selected item.
+                model, treeiter = exi_dlg.treeview.get_selection().get_selected()
+                
+                # If nothing was selected, don't continue.
+                if treeiter == None:
+                    
+                    # Close the dialog.
+                    exi_dlg.destroy()
+                    
+                    return
+                
+                # Get the profile name.
+                name = model[treeiter][0]
+            
+            else:
+                
+                # Otherwise, don't continue.
+                exi_dlg.destroy()
+                return
+            
+            # Close the dialog.
+            exi_dlg.destroy()
+            
+            # Show the dialog to get the dates.
+            date_dlg = ProfileDateSelectionDialog(self, mode, method, dates)
+            
+            # Get the response.
+            response = date_dlg.run()
+            
+            # If the user clicked OK:
+            if response == Gtk.ResponseType.OK:
+                
+                # Get the selected items.
+                model, treeiter = date_dlg.treeview.get_selection().get_selected_rows()
+                
+                # If nothing was selected, don't continue.
+                if treeiter == None:
+                    
+                    # Close the dialog.
+                    date_dlg.destroy()
+                    
+                    return
+                
+                # Get the dates.
+                ndates = []
+                for i in treeiter:
+                    ndates.append(model[i][0])
+                
+                # Get the data.
+                ndata = []
+                for i in range(0, len(data)):
+                    if data[i][0] in ndates:
+                        ndata.append(data[i])
+                
+                # If there is no data, don't continue.
+                if len(ndata) == 0:
+                    
+                    # Close the dialog.
+                    date_dlg.destroy()
+                
+                    return
+                
+            else:
+                
+                # Otherwise, don't continue.
+                date_dlg.destroy()
+                return
+            
+            # If the user wants to move the data, delete the items in the current profile.
+            if mode == "Move":
+                
+                data = [x for x in data if x[0] not in ndates]
+            
+                # Reset the list.
+                self.liststore.clear()
+                for i in data:
+                    self.liststore.append(i)
+            
+                # Set the new title.
+                if config["show_dates"]:
+                    self.set_title("WeatherLog - %s - %s to %s" % (last_profile, (data[0][0] if len(data) != 0 else "None"), (data[len(data)-1][0] if len(data) != 0 else "None")))
+                else:
+                    self.set_title("WeatherLog - %s" % last_profile)
+            
+            # Load the data.   
+            try:
+                
+                # This should be ~/.weatherlog/[profile name]/weather.json on Linux.
+                data_file = open("%s/profiles/%s/weather.json" % (main_dir, name), "r")
+                data2 = json.load(data_file)
+                data_file.close()
+                
+            except IOError:
+                # Show the error message, and close the application.
+                # This one shows if there was a problem reading the file.
+                print("Error importing data (IOError).")
+                data2 = []
+            
+            except (TypeError, ValueError):
+                # Show the error message, and close the application.
+                # This one shows if there was a problem with the data type.
+                print("Error importing data (TypeError or ValueError).")
+                data2 = []
+            
+            # Filter the new data to make sure there are no duplicates.
+            new_data = []
+            date_col = utility_functions.get_column(data2, 0)
+            for i in ndata:
+                
+                # If the date already appears, don't include it.
+                if i[0] not in date_col:
+                    new_data.append(i)
+            
+            # Append the data.
+            data2 += new_data
+            
+            # Sort the data.
+            data2 = sorted(data2, key = lambda x: datetime.datetime.strptime(x[0], '%d/%m/%Y'))
+            
+            # Put the data in the profile.
+            try:
+                
+                # This should save to ~/.weatherlog/[profile name]/weather.json on Linux.
+                data_file = open("%s/profiles/%s/weather.json" % (main_dir, name), "w")
+                json.dump(data2, data_file)
+                data_file.close()
+                
+            except IOError:
+                # Show the error message if something happened, but continue.
+                # This one is shown if there was an error writing to the file.
+                print("Error saving data file (IOError).")
+            
+            except (TypeError, ValueError):
+                # Show the error message if something happened, but continue.
+                # This one is shown if there was an error with the data type.
+                print("Error saving data file (TypeError or ValueError).")
+            
+            # Close the dialog.
+            date_dlg.destroy()
     
     
     def toggle_fullscreen(self, event):
