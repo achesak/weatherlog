@@ -2262,6 +2262,16 @@ class Weather(Gtk.Window):
         # Sort the profiles.
         profiles.sort()
         
+        # Get the last modified dates.
+        for i in range(0, len(profiles)):
+            
+            # Get the date and format it properly.
+            last_modified = os.path.getmtime("%s/profiles/%s/weather.json" % (main_dir, last_profile))
+            last_modified = time.strftime("%d/%m/%Y", time.localtime(last_modified))
+            
+            # Change the value in the list.
+            profiles[i] = [profiles[i], last_modified]
+        
         # Switch back to the previous directory.
         os.chdir(current_dir)
         
@@ -2277,10 +2287,23 @@ class Weather(Gtk.Window):
         mer_dlg = MergeProfilesDialog(self, profiles)
         # Get the response.
         response = mer_dlg.run()
-        name = mer_dlg.rem_com.get_active_text()
         
         # If the OK button was pressed:
         if response == Gtk.ResponseType.OK:
+            
+            # Get the selected item.
+            model, treeiter = mer_dlg.treeview.get_selection().get_selected()
+            
+            # If nothing was selected, don't continue.
+            if treeiter == None:
+                
+                # Close the dialog.
+                mer_dlg.destroy()
+                
+                return
+            
+            # Get the profile name.
+            name = model[treeiter][0]
             
             # Read the data.   
             try:
@@ -2455,10 +2478,6 @@ class Weather(Gtk.Window):
             if mode == "Move":
                 
                 data = [x for x in data if x[0] not in ndates]
-                    
-                    ##########################################################################################################################
-    #------->        # THE LOGIC IN THE PREVIOUS PART IS FUCKED UP AND IS NOT WORKING, FIX IT!!
-                    ##########################################################################################################################
             
             # Reset the list.
             self.liststore.clear()
@@ -2491,7 +2510,9 @@ class Weather(Gtk.Window):
             # Close the dialog.
             date_dlg.destroy()
                 
-        ## TODO: The entire thing with copying/moving to an existing profile.
+        else:
+            pass
+            ## TODO: The entire thing with copying/moving to an existing profile.
     
     
     def toggle_fullscreen(self, event):
