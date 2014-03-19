@@ -10,11 +10,11 @@ from gi.repository import Gtk
 
 class ProfileDateSelectionDialog(Gtk.Dialog):
     """Shows the profile date selection dialog."""
-    def __init__(self, parent, mode, dates):
+    def __init__(self, parent, mode, method, dates):
         """Create the dialog."""
         
         # This window should be modal.
-        Gtk.Dialog.__init__(self, "%s Data" % mode, parent, Gtk.DialogFlags.MODAL)
+        Gtk.Dialog.__init__(self, "%s Data to %s Profile" % (mode, method), parent, Gtk.DialogFlags.MODAL)
         self.set_default_size(300, 300)
         # Don't allow the user to resize the window.
         #self.set_resizable(False)

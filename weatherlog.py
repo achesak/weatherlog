@@ -520,7 +520,7 @@ class Weather(Gtk.Window):
         action_copy_group = Gtk.Action("copy_menu", "_Copy Data", None, None)
         action_group.add_action(action_copy_group)
         action_group.add_actions([
-            ("copy_new", None, "To _New Profile...", None, None, None),
+            ("copy_new", None, "To _New Profile...", None, None, lambda x: self.data_profile(mode = "Copy", method = "New")),
             ("copy_existing", None, "To _Existing Profile...", None, None, None)
         ])
         
@@ -528,7 +528,7 @@ class Weather(Gtk.Window):
         action_move_group = Gtk.Action("move_menu", "Mo_ve Data", None, None)
         action_group.add_action(action_move_group)
         action_group.add_actions([
-            ("move_new", None, "To _New Profile...", None, None, None),
+            ("move_new", None, "To _New Profile...", None, None, lambda x: self.data_profile(mode = "Move", method = "New")),
             ("move_existing", None, "To _Existing Profile...", None, None, None)
         ])
         
@@ -2340,6 +2340,22 @@ class Weather(Gtk.Window):
     def data_profile(self, mode = "Copy", method = "New"):
         """Copies or moves data to a new or an existing profile."""
         
+        global data
+        
+        # If there is no data, tell the user and don't show the info dialog.
+        if len(data) == 0:
+            
+            # Show the dialog.
+            show_no_data_dialog(self, "%s Data to %s Profile" % (mode, method))
+            return
+        
+        # Get the dates.
+        dates = []
+        dates2 = []
+        for i in data:
+            dates.append([i[0]])
+            dates2.append(i[0])
+        
         # If the user wants to copy/move the data to a new profile:
         if method == "New":
             
@@ -2358,7 +2374,7 @@ class Weather(Gtk.Window):
                 if re.compile("[^a-zA-Z1-90 \.\-\+\(\)\?\!]").match(name) or not name or name.lstrip().rstrip() == "" or name.startswith("."):
                     
                     # Create the error dialog.
-                    show_error_dialog(new_dlg, "Add Profile", "The profile name \"%s\" is not valid.\n\n1. Profile names may not be blank.\n2. Profile names may not be all spaces.\n3. Profile names may only be letters, numbers, and spaces.\n4. Profile names may not start with a period (\".\")." % name)
+                    show_error_dialog(new_dlg, "%s Data to %s Profile" % (mode, method), "The profile name \"%s\" is not valid.\n\n1. Profile names may not be blank.\n2. Profile names may not be all spaces.\n3. Profile names may only be letters, numbers, and spaces.\n4. Profile names may not start with a period (\".\")." % name)
                     
                     # Close the dialog.
                     new_dlg.destroy()
@@ -2367,7 +2383,7 @@ class Weather(Gtk.Window):
                 elif os.path.isdir("%s/profiles/%s" % (main_dir, name)):
                     
                     # Create the error dialog.
-                    show_error_dialog(new_dlg, "Add Profile", "The profile name \"%s\" is already in use." % name)
+                    show_error_dialog(new_dlg, "%s Data to %s Profile" % (mode, method), "The profile name \"%s\" is already in use." % name)
                     
                     # Close the dialog.
                     new_dlg.destroy()
@@ -2376,13 +2392,104 @@ class Weather(Gtk.Window):
                 name = name.lstrip().rstrip()
                 
                 # Create the directory and file.
-                last_profile = name
                 os.makedirs("%s/profiles/%s" % (main_dir, name))
                 new_prof_file = open("%s/profiles/%s/weather.json" % (main_dir, name), "w")
                 new_prof_file.write("[]")
                 new_prof_file.close()
                 
-                ## TODO: Get the list of dates, and then either copy or move them to the new profile
+                # Close the dialog.
+                new_dlg.destroy()
+                
+            else:
+                
+                # Otherwise, don't continue.
+                new_dlg.destroy()
+                return
+            
+            # Show the dialog to get the dates.
+            date_dlg = ProfileDateSelectionDialog(self, mode, method, dates)
+            
+            # Get the response.
+            response = date_dlg.run()
+            
+            # If the user clicked OK:
+            if response == Gtk.ResponseType.OK:
+                
+                # Get the selected items.
+                model, treeiter = date_dlg.treeview.get_selection().get_selected_rows()
+                
+                # If nothing was selected, don't continue.
+                if treeiter == None:
+                    
+                    # Close the dialog.
+                    date_dlg.destroy()
+                    
+                    return
+                
+                # Get the dates.
+                ndates = []
+                for i in treeiter:
+                    ndates.append(model[i][0])
+                
+                # Get the data.
+                ndata = []
+                for i in range(0, len(data)):
+                    if data[i][0] in ndates:
+                        ndata.append(data[i])
+                
+                # If there is no data, don't continue.
+                if len(ndata) == 0:
+                    
+                    # Close the dialog.
+                    date_dlg.destroy()
+                
+                    return
+                
+            else:
+                
+                # Otherwise, don't continue.
+                date_dlg.destroy()
+                return
+            
+            # If the user wants to move the data, delete the items in the current profile.
+            if mode == "Move":
+                
+                data = [x for x in data if x[0] not in ndates]
+                    
+                    ##########################################################################################################################
+    #------->        # THE LOGIC IN THE PREVIOUS PART IS FUCKED UP AND IS NOT WORKING, FIX IT!!
+                    ##########################################################################################################################
+            
+            # Reset the list.
+            self.liststore.clear()
+            for i in data:
+                self.liststore.append(i)
+            
+            # Set the new title.
+            if config["show_dates"]:
+                self.set_title("WeatherLog - %s - %s to %s" % (last_profile, (data[0][0] if len(data) != 0 else "None"), (data[len(data)-1][0] if len(data) != 0 else "None")))
+            else:
+                self.set_title("WeatherLog - %s" % last_profile)
+            
+            # Put the data in the new profile.
+            try:
+                # This should save to ~/.weatherlog/[profile name]/weather.json on Linux.
+                data_file = open("%s/profiles/%s/weather.json" % (main_dir, name), "w")
+                json.dump(ndata, data_file)
+                data_file.close()
+                
+            except IOError:
+                # Show the error message if something happened, but continue.
+                # This one is shown if there was an error writing to the file.
+                print("Error saving data file (IOError).")
+            
+            except (TypeError, ValueError):
+                # Show the error message if something happened, but continue.
+                # This one is shown if there was an error with the data type.
+                print("Error saving data file (TypeError or ValueError).")
+            
+            # Close the dialog.
+            date_dlg.destroy()
                 
         ## TODO: The entire thing with copying/moving to an existing profile.
     
@@ -2773,6 +2880,9 @@ class Weather(Gtk.Window):
 
     def exit(self, x, y):
         """Closes the application."""
+        
+        # Save the data.
+        self.save(show_dialog = False)
         
         # Show the confirmation dialog, if the user wants that.
         if config["confirm_exit"]:
