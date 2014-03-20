@@ -326,7 +326,7 @@ class Weather(Gtk.Window):
             ("precipitation_range_chart", None, "_Precipitation Chart in Range...", None, None, lambda x: self.chart_range("Precipitation")),
             ("wind_range_chart", None, "_Wind Chart in Range...", None, None, lambda x: self.chart_range("Wind")),
             ("humidity_range_chart", None, "_Humidity Chart in Range...", None, None, lambda x: self.chart_range("Humidity")),
-            ("air_pressure_range_chart", None, "_Air Pressure Chart in Range...", None, None, lambda x: self.chart_range("Air Pressure")),
+            ("air_pressure_range_chart", None, "_Air Pressure Chart in Range...", None, None, lambda x: self.chart_range("Air Pressure"))
         ])
         
         # Create the Info -> Charts for Selected Dates submenu.
@@ -407,10 +407,7 @@ class Weather(Gtk.Window):
         self.show_all()
         
         # Set the new title.
-        if config["show_dates"]:
-            self.set_title("WeatherLog - %s - %s to %s" % (last_profile, (data[0][0] if len(data) != 0 else "None"), (data[len(data)-1][0] if len(data) != 0 else "None")))
-        else:
-            self.set_title("WeatherLog - %s" % last_profile)
+        self.update_title()
         
         # Bind the events.
         self.connect("key-press-event", self.keypress)
@@ -440,7 +437,6 @@ class Weather(Gtk.Window):
         # If the Escape key was pressed and the application is in fullscreen:
         if Gdk.keyval_name(event.keyval) == "Escape" and self.fullscreen_state:
             
-            # Do whatever the user wants:
             # Ignore:
             if config["escape_fullscreen"].lower() == "ignore":
                 return
@@ -456,7 +452,6 @@ class Weather(Gtk.Window):
         # If the Escape key was pressed and the application isn't in fullscreen:
         elif Gdk.keyval_name(event.keyval) == "Escape" and not self.fullscreen_state:
             
-            # Do whatever the user wants:
             # Ignore:
             if config["escape_windowed"].lower() == "ignore":
                 return
@@ -521,15 +516,14 @@ class Weather(Gtk.Window):
             if not wind:
                 wind_dir = "None"
             
-            # If the date is already used, show the dialog.
+            # If the date is already used, tell the user and don't continue.
             if date in utility_functions.get_column(data, 0):
                 
                 # Show the error dialog.
                 show_error_dialog(new_dlg, "Add New", "The date %s has already been entered." % date)
                 
-                # Close the error dialog and the "Add New" dialog. The second one
-                # is needed because of a bug where the window will stop responding
-                # to events, making it useless. Fix later!
+                # Close the "Add New" dialog. This is needed because the window
+                # will stop responding to events, making it useless. Seriously, what the hell Gtk?
                 new_dlg.destroy()
                 
             else:
@@ -539,7 +533,7 @@ class Weather(Gtk.Window):
                 data.append(new_data)
                 
                 # Sort the list.
-                data = sorted(data, key = lambda x: datetime.datetime.strptime(x[0], '%d/%m/%Y'))
+                data = sorted(data, key = lambda x: datetime.datetime.strptime(x[0], "%d/%m/%Y"))
                 
                 # Update the ListStore.
                 self.liststore.clear()
@@ -547,10 +541,7 @@ class Weather(Gtk.Window):
                     self.liststore.append(i)
         
         # Update the title.
-        if config["show_dates"]:
-            self.set_title("WeatherLog - %s - %s to %s" % (last_profile, (data[0][0] if len(data) != 0 else "None"), (data[len(data)-1][0] if len(data) != 0 else "None")))
-        else:
-            self.set_title("WeatherLog - %s" % last_profile)
+        self.update_title()
         
         # Close the dialog.
         new_dlg.destroy() 
@@ -660,10 +651,7 @@ class Weather(Gtk.Window):
             self.liststore.append(i)
         
         # Update the title.
-        if config["show_dates"]:
-            self.set_title("WeatherLog - %s - %s to %s" % (last_profile, (data[0][0] if len(data) != 0 else "None"), (data[len(data)-1][0] if len(data) != 0 else "None")))
-        else:
-            self.set_title("WeatherLog - %s" % last_profile)
+        self.update_title()
             
         # Save the data.
         self.save(show_dialog = False)
@@ -1281,10 +1269,7 @@ class Weather(Gtk.Window):
                     self.liststore.append(i)
                 
                 # Update the title.
-                if config["show_dates"]:
-                    self.set_title("WeatherLog - %s - %s to %s" % (last_profile, (data[0][0] if len(data) != 0 else "None"), (data[len(data)-1][0] if len(data) != 0 else "None")))
-                else:
-                    self.set_title("WeatherLog - %s" % last_profile)
+                self.update_title()
                     
         # Close the dialog.
         import_dlg.destroy()        
@@ -1341,10 +1326,8 @@ class Weather(Gtk.Window):
                 self.liststore.clear()
                 
                 # Set the new title.
-                if config["show_dates"]:
-                    self.set_title("WeatherLog - %s - %s to %s" % (last_profile, (data[0][0] if len(data) != 0 else "None"), (data[len(data)-1][0] if len(data) != 0 else "None")))
-                else:
-                    self.set_title("WeatherLog - %s" % last_profile)
+                self.update_title()
+                
             # Close the dialog.
             new_dlg.destroy()
         
@@ -1624,10 +1607,7 @@ class Weather(Gtk.Window):
             self.liststore.clear()
         
         # Update the title.
-        if config["show_dates"]:
-            self.set_title("WeatherLog - %s - %s to %s" % (last_profile, (data[0][0] if len(data) != 0 else "None"), (data[len(data)-1][0] if len(data) != 0 else "None")))
-        else:
-            self.set_title("WeatherLog - %s" % last_profile)
+        self.update_title()
         
         # Save the data.
         self.save(show_dialog = False)
@@ -1731,10 +1711,7 @@ class Weather(Gtk.Window):
                 self.airp_col.set_title("Air Pressure (%s)" % units["airp"])
             
             # Set the new title.
-            if config["show_dates"]:
-                self.set_title("WeatherLog - %s - %s to %s" % (last_profile, (data[0][0] if len(data) != 0 else "None"), (data[len(data)-1][0] if len(data) != 0 else "None")))
-            else:
-                self.set_title("WeatherLog - %s" % last_profile)
+            self.update_title()
             
             # Save the data.
             self.save(show_dialog = False, from_options = True)
@@ -1832,10 +1809,7 @@ class Weather(Gtk.Window):
                 self.liststore.append(i)
             
             # Set the new title.
-            if config["show_dates"]:
-                self.set_title("WeatherLog - %s - %s to %s" % (last_profile, (data[0][0] if len(data) != 0 else "None"), (data[len(data)-1][0] if len(data) != 0 else "None")))
-            else:
-                self.set_title("WeatherLog - %s" % last_profile)
+            self.update_title()
             
             # Save the data.
             self.save(show_dialog = False)
@@ -1891,10 +1865,7 @@ class Weather(Gtk.Window):
                 self.liststore.clear()
                 
                 # Set the new title.
-                if config["show_dates"]:
-                    self.set_title("WeatherLog - %s - %s to %s" % (last_profile, (data[0][0] if len(data) != 0 else "None"), (data[len(data)-1][0] if len(data) != 0 else "None")))
-                else:
-                    self.set_title("WeatherLog - %s" % last_profile)
+                self.update_title()
                     
         # Close the dialog.
         new_dlg.destroy()
@@ -2068,10 +2039,7 @@ class Weather(Gtk.Window):
                     self.liststore.append(i)
                 
                 # Set the new title.
-                if config["show_dates"]:
-                    self.set_title("WeatherLog - %s - %s to %s" % (last_profile, (data[0][0] if len(data) != 0 else "None"), (data[len(data)-1][0] if len(data) != 0 else "None")))
-                else:
-                    self.set_title("WeatherLog - %s" % last_profile)
+                self.update_title()
     
         # Close the dialog.
         ren_dlg.destroy()
@@ -2182,10 +2150,7 @@ class Weather(Gtk.Window):
                     self.liststore.append(i)
                 
                 # Update the title.
-                if config["show_dates"]:
-                    self.set_title("WeatherLog - %s - %s to %s" % (last_profile, (data[0][0] if len(data) != 0 else "None"), (data[len(data)-1][0] if len(data) != 0 else "None")))
-                else:
-                    self.set_title("WeatherLog - %s" % last_profile)
+                self.update_title()
                 
                 # Delete the directory.
                 shutil.rmtree("%s/profiles/%s" % (main_dir, name))
@@ -2345,10 +2310,7 @@ class Weather(Gtk.Window):
                     self.liststore.append(i)
             
                 # Set the new title.
-                if config["show_dates"]:
-                    self.set_title("WeatherLog - %s - %s to %s" % (last_profile, (data[0][0] if len(data) != 0 else "None"), (data[len(data)-1][0] if len(data) != 0 else "None")))
-                else:
-                    self.set_title("WeatherLog - %s" % last_profile)
+                self.update_title()
             
             # Put the data in the new profile.
             try:
@@ -2468,10 +2430,7 @@ class Weather(Gtk.Window):
                     self.liststore.append(i)
             
                 # Set the new title.
-                if config["show_dates"]:
-                    self.set_title("WeatherLog - %s - %s to %s" % (last_profile, (data[0][0] if len(data) != 0 else "None"), (data[len(data)-1][0] if len(data) != 0 else "None")))
-                else:
-                    self.set_title("WeatherLog - %s" % last_profile)
+                self.update_title()
             
             # Load the data.   
             try:
@@ -2647,10 +2606,7 @@ class Weather(Gtk.Window):
                 self.airp_col.set_title("Air Pressure (%s)" % units["airp"])
             
             # Set the title, if desired:
-            if config["show_dates"]:
-                self.set_title("WeatherLog - %s - %s to %s" % (last_profile, (data[0][0] if len(data) != 0 else "None"), (data[len(data)-1][0] if len(data) != 0 else "None")))
-            else:
-                self.set_title("WeatherLog - %s" % last_profile)
+            self.update_title()
             
             # Save the data.
             self.save(show_dialog = False, from_options = True)
@@ -2743,10 +2699,7 @@ class Weather(Gtk.Window):
                 self.airp_col.set_title("Air Pressure (%s)" % units["airp"])
             
             # Set the title, if desired:
-            if config["show_dates"]:
-                self.set_title("WeatherLog - %s - %s to %s" % (last_profile, (data[0][0] if len(data) != 0 else "None"), (data[len(data)-1][0] if len(data) != 0 else "None")))
-            else:
-                self.set_title("WeatherLog - %s" % last_profile)
+            self.update_title()
             
             # Save the data.
             self.save(show_dialog = False, from_options = True)
@@ -2813,6 +2766,16 @@ class Weather(Gtk.Window):
             
             # Show the dialog.
             show_alert_dialog(self, "Manual Save - %s" % last_profile, "Data has been saved.")
+    
+    
+    def update_title(self):
+        """Updates the window title."""
+        
+        # Update the title.
+        if config["show_dates"]:
+            self.set_title("WeatherLog - %s - %s to %s" % (last_profile, (data[0][0] if len(data) != 0 else "None"), (data[len(data)-1][0] if len(data) != 0 else "None")))
+        else:
+            self.set_title("WeatherLog - %s" % last_profile)
     
     
     def reload_current(self, event):
