@@ -4,6 +4,8 @@
 # This file defines the functions for launching and setting up the application.
 
 
+# Import json for loading and saving the data.
+import json
 # Import platform for getting the user's operating system.
 import platform
 # Import os for creating a directory and other tasks.
@@ -106,3 +108,133 @@ def get_last_profile(main_dir):
     
     return last_profile, original_profile, profile_exists
 
+
+def get_config(main_dir):
+    """Loads the settings."""
+    
+    # Get the configuration.
+    try:
+        # Load the configuration file.
+        config_file = open("%s/config" % main_dir, "r")
+        config = json.load(config_file)
+        config_file.close()
+    
+    except IOError:
+        # Continue.
+        config = {"pre-fill": False,
+                  "restore": True,
+                  "location": "",
+                  "units": "metric",
+                  "pastebin": "d2314ff616133e54f728918b8af1500e",
+                  "show_units": True,
+                  "show_dates": True,
+                  "escape_fullscreen": "exit fullscreen",
+                  "escape_windowed": "minimize",
+                  "auto_save": True,
+                  "confirm_del": True,
+                  "show_pre-fill": True,
+                  "confirm_exit": False}
+    
+    # If there is missing configuration options, then add them.
+    # This is for compatability with upgrades from previous versions.
+    if not "restore" in config:
+        config["restore"] = True
+    if not "show_units" in config:
+        config["show_units"] = True
+    if not "show_dates" in config:
+        config["show_dates"] = True
+    if not "escape_windowed" in config:
+        config["escape_windowed"] = "minimize"
+    if not "escape_fullscreen" in config:
+        config["escape_fullscreen"] = "exit fullscreen"
+    if not "auto_save" in config:
+        config["auto_save"] = True
+    if not "confirm_del" in config: 
+        config["confirm_del"] = True
+    if not "show_pre-fill" in config:
+        config["show_pre-fill"] = True
+    if not "confirm_exit" in config:
+        config["confirm_exit"] = False
+    
+    return config
+
+
+def get_window_size(main_dir, config):
+    """Gets the last window size."""
+    
+    # Get the previous window size.
+    try:
+        # Load the window size file.
+        wins_file = open("%s/window_size" % main_dir, "r")
+        last_width = int(wins_file.readline())
+        last_height = int(wins_file.readline())
+        wins_file.close()
+    
+    except IOError:
+        # Continue.
+        last_width = 900
+        last_height = 500
+    
+    # If the user doesn't want to restore the window size, set the size to the defaults.
+    if not config["restore"]:
+        last_width = 900
+        last_height = 500
+    
+    return last_width, last_height
+
+
+def get_units(config):
+    """Gets the units."""
+    
+    # Configure the units.
+    # Metric:
+    if config["units"] == "metric":
+        
+        # Temperature is Celsius.
+        # Precipitation is centimeters.
+        # Wind speed is kilometers per hour.
+        # Air pressure is hecto-pascals.
+        units = {"temp": "°C",
+                 "prec": "cm",
+                 "wind": "kph",
+                 "airp": "hPa"}
+    
+    # Imperial:
+    elif config["units"] == "imperial":
+        
+        # Temperature is Fahrenheit.
+        # Precipitation is inches.
+        # Wind speed is miles per hour
+        # Air pressure is millibars.
+        units = {"temp": "°F",
+                 "prec": "in",
+                 "wind": "mph",
+                 "airp": "mbar"}
+    
+    return units
+
+
+def get_data(main_dir, last_profile):
+    """Gets the data."""
+    
+    # Load the data.   
+    try:
+        # This should be ~/.weatherlog/[profile name]/weather.json on Linux.
+        data_file = open("%s/profiles/%s/weather.json" % (main_dir, last_profile), "r")
+        data = json.load(data_file)
+        data_file.close()
+        
+    except IOError:
+        # Show the error message, and close the application.
+        # This one shows if there was a problem reading the file.
+        print("Error importing data (IOError).")
+        sys.exit()
+        
+    except (TypeError, ValueError):
+        # Show the error message, and close the application.
+        # This one shows if there was a problem with the data type.
+        print("Error importing data (TypeError or ValueError).")
+        sys.exit()
+    
+    return data
+    
