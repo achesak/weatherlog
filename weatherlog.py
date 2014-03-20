@@ -397,45 +397,37 @@ class Weather(Gtk.Window):
         # Create the action group for the menus.
         action_group = Gtk.ActionGroup("actions")
         
-        # Create the Weather menu.
+        # Create the menus.
         action_group.add_actions([
             ("weather_menu", None, "_Weather"),
             ("add_new", Gtk.STOCK_ADD, "Add _New...", "<Control>n", "Add a new day to the list", self.add_new),
             ("edit", None, "_Edit...", "<Control>e", None, self.edit),
             ("remove", Gtk.STOCK_REMOVE, "Remo_ve...", "<Control>r", "Remove a day from the list", self.remove),
+            
             ("import", Gtk.STOCK_OPEN, "_Import...", None, "Import data from a file", self.import_file),
             ("import_profile", None, "Import as New _Profile...", "<Control><Shift>o", None, self.import_new_profile),
             ("import_append", None, "Imp_ort and Merge...", "<Alt><Shift>o", None, self.import_append),
-            ("export", Gtk.STOCK_SAVE, "_Export...", None, "Export data to a file", self.export_file)
-        ])
-        
-        # Create the Weather -> Export to submenu.
-        action_weather_export_group = Gtk.Action("export_menu", "E_xport to", None, None)
-        action_group.add_action(action_weather_export_group)
-        action_group.add_actions([
+            ("export", Gtk.STOCK_SAVE, "_Export...", None, "Export data to a file", self.export_file),
+            
+            ("export_menu", "E_xport to", None, None),
             ("export_html", None, "Export to _HTML...", "<Control><Alt>h", None, self.export_file_html),
             ("export_csv", None, "Export to _CSV...", "<Control><Alt>c", None, self.export_file_csv),
             ("export_pastebin", None, "Export to Paste_bin...", None, None, lambda x: self.export_pastebin("raw")),
             ("export_pastebin_html", None, "_Export to Pastebin (HTML)...", None, None, lambda x: self.export_pastebin("html")),
             ("export_pastebin_csv", None, "E_xport to Pastebin (CSV)...", None, None, lambda x: self.export_pastebin("csv")),
+            
             ("clear_data", Gtk.STOCK_CLEAR, "Clear Current _Data...", "<Control>d", "Clear the data", self.clear),
             ("clear_all", None, "Clear _All Data...", "<Control><Alt>d", None, self.clear_all),
+            
             ("reload_current", None, "Reload _Current Data...", "F5", None, self.reload_current),
             ("manual_save", None, "Man_ual Save...", "<Control>m", None, lambda x: self.save(show_dialog = True, automatic = False)),
+            
             ("fullscreen", Gtk.STOCK_FULLSCREEN, "Toggle _Fullscreen", "F11", "Toggle fullscreen", self.toggle_fullscreen),
-            ("exit", Gtk.STOCK_QUIT, "_Quit...", None, "Close the application", lambda x: self.exit("ignore", "this"))
-        ])
-        
-        # Create the Info menu.
-        action_group.add_actions([
+            ("exit", Gtk.STOCK_QUIT, "_Quit...", None, "Close the application", lambda x: self.exit("ignore", "this")),
+            
             ("info_global_menu", None, "_Info"),
-            ("info", Gtk.STOCK_INFO, "_Info...", "<Control>i", "Show info about the data", lambda x: self.show_info_generic(event = "ignore", info_type = "General", data = data))
-        ])
-        
-        # Create the Info -> More Info submenu.
-        action_weather_info_group = Gtk.Action("info_menu", "_More Info", None, None)
-        action_group.add_action(action_weather_info_group)
-        action_group.add_actions([
+            ("info", Gtk.STOCK_INFO, "_Info...", "<Control>i", "Show info about the data", lambda x: self.show_info_generic(event = "ignore", info_type = "General", data = data)),
+            ("info_menu", "_More Info", None, None),
             ("temperature", None, "_Temperature...", "<Control>t", None, lambda x: self.show_info_generic(event = "ignore", info_type = "Temperature", data = data)),
             ("precipitation", None, "_Precipitation...", "<Control>p", None, lambda x: self.show_info_generic(event = "ignore", info_type = "Precipitation", data = data)),
             ("wind", None, "_Wind...", "<Control>w", None, lambda x: self.show_info_generic(event = "ignore", info_type = "Wind", data = data)),
@@ -443,13 +435,9 @@ class Weather(Gtk.Window):
             ("air_pressure", None, "_Air Pressure...", "<Control>a", None, lambda x: self.show_info_generic(event = "ignore", info_type = "Air Pressure", data = data)),
             ("cloud_cover", None, "_Cloud Cover...", "<Control>c", None, lambda x: self.show_info_generic(event = "ignore", info_type = "Cloud Cover", data = data)),
             ("notes", None, "_Notes...", "<Control>e", None, lambda x: self.show_info_generic(event = "ignore", info_type = "Notes", data = data)),
-            ("info_range", None, "Info in _Range...", "<Control><Shift>i", None, lambda x: self.info_range("General"))
-        ])
-        
-        # Create the Info -> More Info in Range submenu.
-        action_weather_info_range_group = Gtk.Action("info_range_menu", "More In_fo in Range", None, None)
-        action_group.add_action(action_weather_info_range_group)
-        action_group.add_actions([
+            ("info_range", None, "Info in _Range...", "<Control><Shift>i", None, lambda x: self.info_range("General")),
+            
+            ("info_range_menu", "More In_fo in Range", None, None),
             ("temperature_range", None, "_Temperature in Range...", "<Control><Shift>t", None, lambda x: self.info_range("Temperature")),
             ("precipitation_range", None, "_Precipitation in Range...", "<Control><Shift>p", None, lambda x: self.info_range("Precipitation")),
             ("wind_range", None, "_Wind in Range...", "<Control><Shift>w", None, lambda x: self.info_range("Wind")),
@@ -457,89 +445,56 @@ class Weather(Gtk.Window):
             ("air_pressure_range", None, "_Air Pressure in Range...", "<Control><Shift>a", None, lambda x: self.info_range("Air Pressure")),
             ("cloud_cover_range", None, "_Cloud Cover in Range...", "<Control><Shift>c", None, lambda x: self.info_range("Cloud Cover")),
             ("notes_range", None, "_Notes in Range...", "<Control><Shift>e", None, lambda x: self.info_range("Notes")),
-            ("info_selected", None, "Info for Se_lected Dates...", None, None, lambda x: self.info_selected("General"))
-        ])
-        
-        # Create the Info -> More Info for Selected Dates submenu.
-        action_weather_info_selected_group = Gtk.Action("info_selected_menu", "More Info for Selected _Dates", None, None)
-        action_group.add_action(action_weather_info_selected_group)
-        action_group.add_actions([
+            ("info_selected", None, "Info for Se_lected Dates...", None, None, lambda x: self.info_selected("General")),
+            
+            ("info_selected_menu", "More Info for Selected _Dates", None, None),
             ("temperature_selected", None, "_Temperature for Selected Dates...", None, None, lambda x: self.info_selected("Temperature")),
             ("precipitation_selected", None, "_Precipitation for Selected Dates...", None, None, lambda x: self.info_selected("Precipitation")),
             ("wind_selected", None, "_Wind for Selected Dates...", None, None, lambda x: self.info_selected("Wind")),
             ("humidity_selected", None, "_Humidity for Selected Dates...", None, None, lambda x: self.info_selected("Humidity")),
             ("air_pressure_selected", None, "_Air Pressure for Selected Dates...", None, None, lambda x: self.info_selected("Air Pressure")),
             ("cloud_cover_selected", None, "_Cloud Cover for Selected Dates...", None, None, lambda x: self.info_selected("Cloud Cover")),
-            ("notes_selected", None, "_Notes for Selected Dates...", None, None, lambda x: self.info_selected("Notes"))
-        ])
-        
-        # Create the Info -> Charts submenu.
-        action_weather_charts_group = Gtk.Action("info_charts_menu", "Chart_s", None, None)
-        action_group.add_action(action_weather_charts_group)
-        action_group.add_actions([
+            ("notes_selected", None, "_Notes for Selected Dates...", None, None, lambda x: self.info_selected("Notes")),
+            
+            ("info_charts_menu", "Chart_s", None, None),
             ("temperature_chart", None, "_Temperature Chart...", "<Alt><Shift>t", None, lambda x: self.show_chart_generic(event = "ignore", info_type = "Temperature", data = data)),
             ("precipitation_chart", None, "_Precipitation Chart...", "<Alt><Shift>p", None, lambda x: self.show_chart_generic(event = "ignore", info_type = "Precipitation", data = data)),
             ("wind_chart", None, "_Wind Chart...", "<Alt><Shift>w", None, lambda x: self.show_chart_generic(event = "ignore", info_type = "Wind", data = data)),
             ("humidity_chart", None, "_Humidity Chart...", "<Alt><Shift>h", None, lambda x: self.show_chart_generic(event = "ignore", info_type = "Humidity", data = data)),
             ("air_pressure_chart", None, "_Air Pressure Chart...", "<Alt><Shift>a", None, lambda x: self.show_chart_generic(event = "ignore", info_type = "Air Pressure", data = data)),
-        ])
-        
-        # Create the Info -> Charts in Range submenu.
-        action_weather_charts_range_group = Gtk.Action("info_charts_range_menu", "C_harts in Range", None, None)
-        action_group.add_action(action_weather_charts_range_group)
-        action_group.add_actions([
+            
+            ("info_charts_range_menu", "C_harts in Range", None, None),
             ("temperature_range_chart", None, "_Temperature Chart in Range...", None, None, lambda x: self.chart_range("Temperature")),
             ("precipitation_range_chart", None, "_Precipitation Chart in Range...", None, None, lambda x: self.chart_range("Precipitation")),
             ("wind_range_chart", None, "_Wind Chart in Range...", None, None, lambda x: self.chart_range("Wind")),
             ("humidity_range_chart", None, "_Humidity Chart in Range...", None, None, lambda x: self.chart_range("Humidity")),
             ("air_pressure_range_chart", None, "_Air Pressure Chart in Range...", None, None, lambda x: self.chart_range("Air Pressure")),
-        ])
-        
-        # Create the Info -> Charts for Selected Dates submenu.
-        action_weather_charts_selected_group = Gtk.Action("info_charts_selected_menu", "Charts for Selec_ted Dates", None, None)
-        action_group.add_action(action_weather_charts_selected_group)
-        action_group.add_actions([
+            
+            ("info_charts_selected_menu", "Charts for Selec_ted Dates", None, None),
             ("temperature_selected_chart", None, "_Temperature for Selected Dates...", None, None, lambda x: self.chart_selected("Temperature")),
             ("precipitation_selected_chart", None, "_Precipitation for Selected Dates...", None, None, lambda x: self.chart_selected("Precipitation")),
             ("wind_selected_chart", None, "_Wind for Selected Dates...", None, None, lambda x: self.chart_selected("Wind")),
             ("humidity_selected_chart", None, "_Humidity for Selected Dates...", None, None, lambda x: self.chart_selected("Humidity")),
-            ("air_pressure_selected_chart", None, "_Air Pressure for Selected Dates...", None, None, lambda x: self.chart_selected("Air Pressure"))
-        ])
-        
-        # Create the Profiles menu.
-        action_group.add_actions([
+            ("air_pressure_selected_chart", None, "_Air Pressure for Selected Dates...", None, None, lambda x: self.chart_selected("Air Pressure")),
+            
             ("profiles_menu", None, "_Profiles"),
             ("switch_profile", None, "_Switch Profile...", "<Control><Shift>s", None, self.switch_profile),
             ("add_profile", None, "_Add Profile...", "<Control><Shift>n", None, self.add_profile),
             ("remove_profile", None, "_Remove Profile...", "<Control><Shift>d", None, self.remove_profile),
             ("rename_profile", None, "Re_name Profile...", None, None, self.rename_profile),
-            ("merge_profiles", None, "_Merge Profiles...", None, None, self.merge_profiles)
-        ])
-        
-        # Create the Profiles -> Copy Data submenu.
-        action_copy_group = Gtk.Action("copy_menu", "_Copy Data", None, None)
-        action_group.add_action(action_copy_group)
-        action_group.add_actions([
+            ("merge_profiles", None, "_Merge Profiles...", None, None, self.merge_profiles),
+            
+            ("copy_menu", "_Copy Data", None, None),
             ("copy_new", None, "To _New Profile...", None, None, lambda x: self.data_profile(mode = "Copy", method = "New")),
-            ("copy_existing", None, "To _Existing Profile...", None, None, lambda x: self.data_profile(mode = "Copy", method = "Existing"))
-        ])
-        
-        # Create the Profiles -> Move Data submenu.
-        action_move_group = Gtk.Action("move_menu", "Mo_ve Data", None, None)
-        action_group.add_action(action_move_group)
-        action_group.add_actions([
+            ("copy_existing", None, "To _Existing Profile...", None, None, lambda x: self.data_profile(mode = "Copy", method = "Existing")),
+            
+            ("move_menu", "Mo_ve Data", None, None),
             ("move_new", None, "To _New Profile...", None, None, lambda x: self.data_profile(mode = "Move", method = "New")),
-            ("move_existing", None, "To _Existing Profile...", None, None, lambda x: self.data_profile(mode = "Move", method = "Existing"))
-        ])
-        
-        # Create the Options menu.
-        action_group.add_actions([
+            ("move_existing", None, "To _Existing Profile...", None, None, lambda x: self.data_profile(mode = "Move", method = "Existing")),
+            
             ("options_menu", None, "_Options"),
-            ("options", None, "_Options...", "F2", None, self.options)
-        ])
-        
-        # Create the Help menu.
-        action_group.add_actions([
+            ("options", None, "_Options...", "F2", None, self.options),
+            
             ("help_menu", None, "_Help"),
             ("about", Gtk.STOCK_ABOUT, "_About...", "<Shift>F1", None, self.show_about),
             ("help", Gtk.STOCK_HELP, "_Help...", None, None, self.show_help)
