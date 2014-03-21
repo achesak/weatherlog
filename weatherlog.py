@@ -86,6 +86,8 @@ import weatherlog_resources.launch as launch
 import weatherlog_resources.utility_functions as utility_functions
 # Import the functions for getting and calculating the data.
 import weatherlog_resources.info_functions as info_functions
+# Import the functions for reading and writing profiles.
+import weatherlog_resources.io as io
 # Import the functions for exporting the data.
 import weatherlog_resources.export as export
 # Import the function for exporting the info.
@@ -1853,14 +1855,11 @@ class Weather(Gtk.Window):
                 # Strip leading and trailing whitespace.
                 name = name.lstrip().rstrip()
                 
-                # Create the directory and file.
-                last_profile = name
-                os.makedirs("%s/profiles/%s" % (main_dir, name))
-                new_prof_file = open("%s/profiles/%s/weather.json" % (main_dir, name), "w")
-                new_prof_file.write("[]")
-                new_prof_file.close()
+                # Create the new profile.
+                io.write_blank_profile(main_dir, name)
                 
                 # Clear the old data.
+                last_profile = name
                 data[:] = []
                 self.liststore.clear()
                 
