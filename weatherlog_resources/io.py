@@ -34,14 +34,17 @@ def write_profile(main_dir, name, data):
         return false
 
 
-def read_profile(main_dir, name):
+def read_profile(main_dir = "", name = "", filename = ""):
     """Reads the data from the profile file."""
+    
+    # Get the filename.
+    filename = filename if filename != "" else "%s/profiles/%s/weather.json" % (main_dir, name)
     
     # Load the data.   
     try:
         
         # This should be ~/.weatherlog/[profile name]/weather.json on Linux.
-        data_file = open("%s/profiles/%s/weather.json" % (main_dir, name), "r")
+        data_file = open(filename, "r")
         data = json.load(data_file)
         data_file.close()
         

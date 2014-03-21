@@ -12,7 +12,7 @@
 
 # Released under the MIT open source license:
 license_text = """
-Copyright (c) 2013 Adam Chesak
+Copyright (c) 2013-2014 Adam Chesak
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -242,7 +242,7 @@ class Weather(Gtk.Window):
             ("remove", Gtk.STOCK_REMOVE, "Remo_ve...", "<Control>r", "Remove a day from the list", self.remove),
             ("import", Gtk.STOCK_OPEN, "_Import...", None, "Import data from a file", self.import_file),
             ("import_profile", None, "Import as New _Profile...", "<Control><Shift>o", None, self.import_new_profile),
-            ("import_append", None, "Imp_ort and Merge...", "<Alt><Shift>o", None, self.import_append),
+            ("import_merge", None, "Imp_ort and Merge...", "<Alt><Shift>o", None, self.import_merge),
             ("export", Gtk.STOCK_SAVE, "_Export...", None, "Export data to a file", self.export_file)
         ])
         
@@ -1206,7 +1206,7 @@ class Weather(Gtk.Window):
         import_dlg.destroy()
     
     
-    def import_append(self, event):
+    def import_merge(self, event):
         """Imports data and merges it into the current list."""
         
         global data
@@ -1234,23 +1234,10 @@ class Weather(Gtk.Window):
             filename = import_dlg.get_filename()
             
             # Read the data.
-            try:
-                # Read from the specified file. 
-                data_file = open(filename, "r")
-                data2 = json.load(data_file)
-                data_file.close()
-                
-            except IOError:
-                # Show the error message, and don't add the data.
-                # This one shows if there was a problem reading the file.
-                print("Error importing data (IOError).")
+            data2 = io.read_profile(filename = filename)
             
-            except (TypeError, ValueError):
-                # Show the error message, and don't add the data.
-                # This one shows if there was a problem with the data type.
-                print("Error importing data (TypeError or ValueError).")
-            
-            else:
+            # Add the data if there was no error.
+            if len(data) > 0:
                 
                 # Filter the new data to make sure there are no duplicates.
                 new_data = []
