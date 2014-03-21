@@ -849,10 +849,8 @@ class Weather(Gtk.Window):
             response2 = export_dlg.run()
             if response2 == Gtk.ResponseType.OK:
                 
-                # Get the filename.
-                filename = export_dlg.get_filename()
-                
                 # Export the info.
+                filename = export_dlg.get_filename()
                 export_info.export_info(data2, filename)
                 
             # Close the dialog.
@@ -1044,10 +1042,8 @@ class Weather(Gtk.Window):
             response2 = export_dlg.run()
             if response2 == Gtk.ResponseType.OK:
                 
-                # Get the filename.
-                filename = export_dlg.get_filename()
-                
                 # Export the info.
+                filename = export_dlg.get_filename()
                 export_info.export_chart(data2, filename)
                 
             # Close the dialog.
@@ -1070,8 +1066,6 @@ class Weather(Gtk.Window):
         filter_json = Gtk.FileFilter()
         filter_json.set_name("WeatherLog data files")
         filter_json.add_pattern("*.json")
-        
-        # Add the filters.
         import_dlg.add_filter(filter_all)
         import_dlg.add_filter(filter_json)
         
@@ -1137,8 +1131,6 @@ class Weather(Gtk.Window):
         filter_json = Gtk.FileFilter()
         filter_json.set_name("WeatherLog data files")
         filter_json.add_pattern("*.json")
-        
-        # Add the filters.
         import_dlg.add_filter(filter_all)
         import_dlg.add_filter(filter_json)
         
@@ -1152,31 +1144,36 @@ class Weather(Gtk.Window):
             # Read the data.
             data2 = io.read_profile(filename = filename)
             
-            # Add the data if there was no error.
-            if len(data) > 0:
+            # If the imported dataset is empty, or if there was an error, don't continue.
+            if len(data) == 0:
                 
-                # Filter the new data to make sure there are no duplicates.
-                new_data = []
-                date_col = utility_functions.get_column(data, 0)
-                for i in data2:
-                    
-                    # If the date already appears, don't include it.
-                    if i[0] not in date_col:
-                        new_data.append(i)
+                # Close the dialog.
+                import_dlg.destroy()
                 
-                # Append the data.
-                data += new_data
+                return
                 
-                # Sort the data.
-                data = sorted(data, key = lambda x: datetime.datetime.strptime(x[0], '%d/%m/%Y'))
+            # Filter the new data to make sure there are no duplicates.
+            new_data = []
+            date_col = utility_functions.get_column(data, 0)
+            for i in data2:
                 
-                # Update the ListStore.
-                self.liststore.clear()
-                for i in data:
-                    self.liststore.append(i)
-                
-                # Update the title.
-                self.update_title()
+                # If the date already appears, don't include it.
+                if i[0] not in date_col:
+                    new_data.append(i)
+            
+            # Append the data.
+            data += new_data
+            
+            # Sort the data.
+            data = sorted(data, key = lambda x: datetime.datetime.strptime(x[0], "%d/%m/%Y"))
+            
+            # Update the ListStore.
+            self.liststore.clear()
+            for i in data:
+                self.liststore.append(i)
+            
+            # Update the title.
+            self.update_title()
                     
         # Close the dialog.
         import_dlg.destroy()        
