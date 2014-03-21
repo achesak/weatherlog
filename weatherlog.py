@@ -171,8 +171,9 @@ class Weather(Gtk.Window):
         # Use this variable to store the fullscreen state.
         self.fullscreen_state = False
         
-        # Create the ListStore for storing the data.
+        # Create the ListStore for storing the data. ListStore has 8 columns, all strings.
         self.liststore = Gtk.ListStore(str, str, str, str, str, str, str, str)
+        
         # Add the data.
         for i in data:
             self.liststore.append(i)
@@ -411,11 +412,11 @@ class Weather(Gtk.Window):
         # Set the new title.
         self.update_title()
         
-        # Bind the events.
+        # Bind the events for keypresses and window closes.
         self.connect("key-press-event", self.keypress)
         self.connect("delete-event", self.delete_event)
         
-        # Change the titles, if needed.
+        # Change the titles, if the user doesn't want units to be displayed.
         if not config["show_units"]:
             self.temp_col.set_title("Temperature")
             self.prec_col.set_title("Precipitation")
@@ -518,7 +519,7 @@ class Weather(Gtk.Window):
             if not wind:
                 wind_dir = "None"
             
-            # If the date is already used, tell the user and don't continue.
+            # If the date has already been entered, tell the user and don't continue.
             if date in utility_functions.get_column(data, 0):
                 
                 # Show the error dialog.
@@ -530,17 +531,15 @@ class Weather(Gtk.Window):
                 
             else:
                 
-                # Add the data to the list.
+                # Format the data and add it to the list.
                 new_data = [date, ("%.2f" % temp), "%s%s" % ((("%.2f" % prec) + " " if prec_type != "None" else ""), prec_type), "%s%s" % ((("%.2f" % wind) + " " if wind_dir != "None" else ""), wind_dir), ("%.2f" % humi), ("%.2f %s" % (airp, airp_read)), clou, note]
                 data.append(new_data)
                 
-                # Sort the list.
+                # Sort the list by date.
                 data = sorted(data, key = lambda x: datetime.datetime.strptime(x[0], "%d/%m/%Y"))
                 
-                # Update the ListStore.
-                self.liststore.clear()
-                for i in data:
-                    self.liststore.append(i)
+                # Add the new row to the interface.
+                self.liststore.append(new_data)
         
         # Update the title.
         self.update_title()
