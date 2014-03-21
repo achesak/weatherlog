@@ -671,103 +671,70 @@ class Weather(Gtk.Window):
             show_no_data_dialog(self, "%s Info - %s" % (info, last_profile))
             return
         
-        # Get the first entered date.
-        days, months, years = data[0][0].split("/")
-        days = int(days)
-        months = int(months) - 1
-        years = int(years)
+        # Get the first and last entered dates.
+        days, months, years = utility_functions.split_date(data[0][0])
+        daye, monthe, yeare = utility_functions.split_date(data[len(data) - 1][0])
         
-        # Get the last entered date.
-        daye, monthe, yeare = data[len(data) - 1][0].split("/")
-        daye = int(daye)
-        monthe = int(monthe) - 1
-        yeare = int(yeare)
-        
-        # Get the start date.
+        # Show the dialog to get the starting date.
         start_dlg = InfoRangeDialog(self, last_profile, info, "starting", days, months, years)
-        
-        # Get the response.
         response1 = start_dlg.run()
         
-        # If the user clicked OK:
-        if response1 == Gtk.ResponseType.OK:
-            
-            # Get the date.
-            year1, month1, day1 = start_dlg.info_cal.get_date()
-            date1 = "%d/%d/%d" % (day1, month1 + 1, year1)
-            
-            # Check to make sure this date is valid, and cancel the action if not.
-            if date1 not in utility_functions.get_column(data, 0):
-                
-                # Show the dialog.
-                show_error_dialog(self, "%s Info in Range - %s" % (info, last_profile), "%s is not a valid date." % date1)
-                
-                # Close the dialog.
-                start_dlg.destroy()
-                
-                return
-        
-        # Otherwise, cancel the action.
-        else:
-            
-            # Close the dialog.
-            start_dlg.destroy()
-            
-            return
+        # Get the date.
+        year1, month1, day1 = start_dlg.info_cal.get_date()
+        date1 = "%d/%d/%d" % (day1, month1 + 1, year1)
         
         # Close the dialog.
         start_dlg.destroy()
         
-        # Get the end date.
-        end_dlg = InfoRangeDialog(self, last_profile, info, "ending", daye, monthe, yeare)
-        
-        # Get the response.
-        response2 = end_dlg.run()
-        
-        # If the user clicked OK:
-        if response2 == Gtk.ResponseType.OK:
+        # If the user did not click OK, don't continue.
+        if response1 != Gtk.ResponseType.OK:
             
-            # Get the date.
-            year2, month2, day2 = end_dlg.info_cal.get_date()
-            date2 = "%d/%d/%d" % (day2, month2 + 1, year2)
+            return
             
-            # Convert the dates to ISO notation for comparison.
-            nDate1 = str(year1) + "-" + (str(month1) if month1 > 9 else "0" + str(month1)) + "-" + (str(day1) if day1 > 9 else "0" + str(day1))
-            nDate2 = str(year2) + "-" + (str(month2) if month2 > 9 else "0" + str(month2)) + "-" + (str(day2) if day2 > 9 else "0" + str(day2))
+        # Check to make sure this date is valid, and cancel the action if not.
+        if date1 not in utility_functions.get_column(data, 0):
             
-            # Check to make sure this date is valid, and cancel the action if not.
-            if date2 not in utility_functions.get_column(data, 0):
-                
-                # Show the dialog.
-                show_error_dialog(self, "%s Info in Range - %s" % (info, last_profile), "%s is not a valid date." % date2)
-                
-                # Close the dialog.
-                end_dlg.destroy()
-                
-                return
-            
-            # Check to make sure this date is not the same as or earlier than the starting date,
-            # and canel the action if it is.
-            elif date1 == date2 or nDate1 > nDate2:
-                
-                # Show the dialog.
-                show_error_dialog(self, "%s Info in Range - %s" % (info, last_profile), "The ending date must not be before or the same as the starting date.")
-                
-                # Close the dialog.
-                end_dlg.destroy()
-                
-                return
-        
-        # Otherwise, cancel the action.
-        else:
-            
-            # Close the dialog.
-            end_dlg.destroy()
+            # Show the dialog.
+            show_error_dialog(self, "%s Info in Range - %s" % (info, last_profile), "%s is not a valid date." % date1)
             
             return
         
+        # Show the dialog to get the ending date.
+        end_dlg = InfoRangeDialog(self, last_profile, info, "ending", daye, monthe, yeare)
+        response2 = end_dlg.run()
+        
+        # Get the date.
+        year2, month2, day2 = end_dlg.info_cal.get_date()
+        date2 = "%d/%d/%d" % (day2, month2 + 1, year2)
+        
         # Close the dialog.
         end_dlg.destroy()
+        
+        # If the user did not click OK, don't continue.
+        if response2 != Gtk.ResponseType.OK:
+            
+            return
+
+        # Convert the dates to ISO notation for comparison.
+        nDate1 = utility_functions.date_to_iso(day1, month1, year1)
+        nDate2 = utility_functions.date_to_iso(day2, month2, year2)
+        
+        # Check to make sure this date is valid, and cancel the action if not.
+        if date2 not in utility_functions.get_column(data, 0):
+            
+            # Show the dialog.
+            show_error_dialog(self, "%s Info in Range - %s" % (info, last_profile), "%s is not a valid date." % date2)
+            
+            return
+        
+        # Check to make sure this date is later than the starting date, 
+        # and cancel the action if not.
+        elif date1 == date2 or nDate1 > nDate2:
+            
+            # Show the dialog.
+            show_error_dialog(self, "%s Info in Range - %s" % (info, last_profile), "The ending date must later than the starting date.")
+            
+            return
         
         # Get the indices.
         date_col = utility_functions.get_column(data, 0)
@@ -914,103 +881,70 @@ class Weather(Gtk.Window):
             show_no_data_dialog(self, "%s Chart - %s" % (info, last_profile))
             return
         
-        # Get the first entered date.
-        days, months, years = data[0][0].split("/")
-        days = int(days)
-        months = int(months) - 1
-        years = int(years)
+        # Get the first and last entered dates.
+        days, months, years = utility_functions.split_date(data[0][0])
+        daye, monthe, yeare = utility_functions.split_date(data[len(data) - 1][0])
         
-        # Get the last entered date.
-        daye, monthe, yeare = data[len(data) - 1][0].split("/")
-        daye = int(daye)
-        monthe = int(monthe) - 1
-        yeare = int(yeare)
-        
-        # Get the start date.
+        # Show the dialog to get the starting date.
         start_dlg = ChartRangeDialog(self, last_profile, info, "starting", days, months, years)
-        
-        # Get the response.
         response1 = start_dlg.run()
         
-        # If the user clicked OK:
-        if response1 == Gtk.ResponseType.OK:
-            
-            # Get the date.
-            year1, month1, day1 = start_dlg.info_cal.get_date()
-            date1 = "%d/%d/%d" % (day1, month1 + 1, year1)
-            
-            # Check to make sure this date is valid, and cancel the action if not.
-            if date1 not in utility_functions.get_column(data, 0):
-                
-                # Show the dialog.
-                show_error_dialog(self, "%s Chart in Range - %s" % (info, last_profile), "%s is not a valid date." % date1)
-                
-                # Close the dialog.
-                start_dlg.destroy()
-                
-                return
-        
-        # Otherwise, cancel the action.
-        else:
-            
-            # Close the dialog.
-            start_dlg.destroy()
-            
-            return
+        # Get the date.
+        year1, month1, day1 = start_dlg.info_cal.get_date()
+        date1 = "%d/%d/%d" % (day1, month1 + 1, year1)
         
         # Close the dialog.
         start_dlg.destroy()
         
-        # Get the end date.
-        end_dlg = ChartRangeDialog(self, last_profile, info, "ending", daye, monthe, yeare)
-        
-        # Get the response.
-        response2 = end_dlg.run()
-        
-        # If the user clicked OK:
-        if response2 == Gtk.ResponseType.OK:
+        # If the user did not click OK, cancel the action.
+        if response1 != Gtk.ResponseType.OK:
             
-            # Get the date.
-            year2, month2, day2 = end_dlg.info_cal.get_date()
-            date2 = "%d/%d/%d" % (day2, month2 + 1, year2)
+            return
             
-            # Convert the dates to ISO notation for comparison.
-            nDate1 = str(year1) + "-" + (str(month1) if month1 > 9 else "0" + str(month1)) + "-" + (str(day1) if day1 > 9 else "0" + str(day1))
-            nDate2 = str(year2) + "-" + (str(month2) if month2 > 9 else "0" + str(month2)) + "-" + (str(day2) if day2 > 9 else "0" + str(day2))
+        # Check to make sure this date is valid, and cancel the action if not.
+        if date1 not in utility_functions.get_column(data, 0):
             
-            # Check to make sure this date is valid, and cancel the action if not.
-            if date2 not in utility_functions.get_column(data, 0):
-                
-                # Show the dialog.
-                show_error_dialog(self, "%s Chart in Range - %s" % (info, last_profile), "%s is not a valid date." % date2)
-                
-                # Close the dialog.
-                end_dlg.destroy()
-                
-                return
-            
-            # Check to make sure this date is not the same as or earlier than the starting date,
-            # and canel the action if it is.
-            elif date1 == date2 or nDate1 > nDate2:
-                
-                # Show the dialog.
-                show_error_dialog(self, "%s Chart in Range - %s" % (info, last_profile), "The ending date must not be before or the same as the starting date.")
-                
-                # Close the dialog.
-                end_dlg.destroy()
-                
-                return
-        
-        # Otherwise, cancel the action.
-        else:
-            
-            # Close the dialog.
-            end_dlg.destroy()
+            # Show the dialog.
+            show_error_dialog(self, "%s Chart in Range - %s" % (info, last_profile), "%s is not a valid date." % date1)
             
             return
         
+        # Show the dialog to get the ending date.
+        end_dlg = ChartRangeDialog(self, last_profile, info, "ending", daye, monthe, yeare)
+        response2 = end_dlg.run()
+        
+        # Get the date.
+        year2, month2, day2 = end_dlg.info_cal.get_date()
+        date2 = "%d/%d/%d" % (day2, month2 + 1, year2)
+        
         # Close the dialog.
         end_dlg.destroy()
+        
+        # If the user did not click OK, don't continue.
+        if response2 != Gtk.ResponseType.OK:
+            
+            return
+
+        # Convert the dates to ISO notation for comparison.
+        nDate1 = utility_functions.date_to_iso(day1, month1, year1)
+        nDate2 = utility_functions.date_to_iso(day2, month2, year2)
+        
+        # Check to make sure this date is valid, and cancel the action if not.
+        if date2 not in utility_functions.get_column(data, 0):
+            
+            # Show the dialog.
+            show_error_dialog(self, "%s Chart in Range - %s" % (info, last_profile), "%s is not a valid date." % date2)
+            
+            return
+        
+        # Check to make sure this date is later than the starting date, 
+        # and cancel the action if not.
+        elif date1 == date2 or nDate1 > nDate2:
+            
+            # Show the dialog.
+            show_error_dialog(self, "%s Chart in Range - %s" % (info, last_profile), "The ending date must be later than the starting date.")
+            
+            return
         
         # Get the indices.
         date_col = utility_functions.get_column(data, 0)
