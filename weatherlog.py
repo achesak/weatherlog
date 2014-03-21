@@ -767,49 +767,40 @@ class Weather(Gtk.Window):
         info_dlg = InfoSelectedDialog(self, info, last_profile, dates)
         response = info_dlg.run()
         
-        # If the user clicked OK:
-        if response == Gtk.ResponseType.OK:
-            
-            # Get the selected items.
-            model, treeiter = info_dlg.treeview.get_selection().get_selected_rows()
-            
-            # If nothing was selected, don't continue.
-            if treeiter == None:
-                
-                # Close the dialog.
-                info_dlg.destroy()
-                
-                return
-            
-            # Get the dates.
-            ndates = []
-            for i in treeiter:
-                ndates.append(model[i][0])
-            
-            # Get the data.
-            ndata = []
-            for i in range(0, len(data)):
-                if data[i][0] in ndates:
-                    ndata.append(data[i])
-            
-            # If there is no data, don't continue.
-            if len(ndata) == 0:
-                
-                # Close the dialog.
-                info_dlg.destroy()
-                
-                return
+        # Get the selected items.
+        model, treeiter = info_dlg.treeview.get_selection().get_selected_rows()
         
-        # Otherwise, cancel the action.
-        else:
+        # Close the dialog.
+        info_dlg.destroy()
+        
+        # If the user did not click OK, don't continue.
+        if response != Gtk.ResponseType.OK:
+            
+            return
+        
+        # If nothing was selected, don't continue.
+        if treeiter == None:
             
             # Close the dialog.
             info_dlg.destroy()
             
             return
         
-        # Close the dialog.
-        info_dlg.destroy()
+        # Get the dates.
+        ndates = []
+        for i in treeiter:
+            ndates.append(model[i][0])
+        
+        # Get the data.
+        ndata = []
+        for i in range(0, len(data)):
+            if data[i][0] in ndates:
+                ndata.append(data[i])
+        
+        # If there is no data, don't continue.
+        if len(ndata) == 0:
+            
+            return
         
         # Pass the data to the appropriate function.
         self.show_info_generic(event = "ignore", info_type = info, data = ndata)
@@ -977,49 +968,40 @@ class Weather(Gtk.Window):
         info_dlg = ChartSelectedDialog(self, info, last_profile, dates)
         response = info_dlg.run()
         
-        # If the user clicked OK:
-        if response == Gtk.ResponseType.OK:
-            
-            # Get the selected items.
-            model, treeiter = info_dlg.treeview.get_selection().get_selected_rows()
-            
-            # If nothing was selected, don't continue.
-            if treeiter == None:
-                
-                # Close the dialog.
-                info_dlg.destroy()
-                
-                return
-            
-            # Get the dates.
-            ndates = []
-            for i in treeiter:
-                ndates.append(model[i][0])
-            
-            # Get the data.
-            ndata = []
-            for i in range(0, len(data)):
-                if data[i][0] in ndates:
-                    ndata.append(data[i])
-            
-            # If there is no data, don't continue.
-            if len(ndata) == 0:
-                
-                # Close the dialog.
-                info_dlg.destroy()
-                
-                return
+        # Get the selected items.
+        model, treeiter = info_dlg.treeview.get_selection().get_selected_rows()
         
-        # Otherwise, cancel the action.
-        else:
+        # Close the dialog.
+        info_dlg.destroy()
+        
+        # If the user did not click OK, don't continue.
+        if response != Gtk.ResponseType.OK:
+            
+            return
+        
+        # If nothing was selected, don't continue.
+        if treeiter == None:
             
             # Close the dialog.
             info_dlg.destroy()
             
             return
         
-        # Close the dialog.
-        info_dlg.destroy()
+        # Get the dates.
+        ndates = []
+        for i in treeiter:
+            ndates.append(model[i][0])
+        
+        # Get the data.
+        ndata = []
+        for i in range(0, len(data)):
+            if data[i][0] in ndates:
+                ndata.append(data[i])
+        
+        # If there is no data, don't continue.
+        if len(ndata) == 0:
+            
+            return
         
         # Pass the data to the appropriate function.
         self.show_chart_generic(event = "ignore", info_type = info, data = ndata)
