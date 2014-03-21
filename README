@@ -12,6 +12,6 @@ WeatherLog is released under the MIT open source license (http://opensource.org/
 
 ----
 
-WeatherLog uses pywapi (http://code.google.com/p/python-weather-api/) to get data from weather APIs. See the README and LICENSE files in resources/dialogs/pywapi for more information.
+WeatherLog uses pywapi (https://launchpad.net/python-weather-api) to get data from weather APIs. See the README and LICENSE files in resources/dialogs/pywapi for more information.
 
 The program icon is from an icon set by Indestudio (http://indestudio.org), available at http://www.iconfinder.com/icondetails/89157/128/weather_icon.
