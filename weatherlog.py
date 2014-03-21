@@ -611,6 +611,9 @@ class Weather(Gtk.Window):
         
         # Close the dialog.
         edit_dlg.destroy()
+        
+        # Save the data.
+        self.save(show_dialog = False)
     
     
     def remove(self, event):
