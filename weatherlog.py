@@ -1187,59 +1187,44 @@ class Weather(Gtk.Window):
         
         # Show the dialog.
         new_dlg = AddProfileDialog(self)
+        
         # Get the response.
         response = new_dlg.run()
         name = new_dlg.add_ent.get_text()
         
-        # If the OK button was pressed:
-        if response == Gtk.ResponseType.OK:
-            
-            # Validate the name. If it contains a non-alphanumeric character or is just space,
-            # show a dialog and cancel the action.
-            if re.compile("[^a-zA-Z1-90 \.\-\+\(\)\?\!]").match(name) or not name or name.lstrip().rstrip() == "" or name.startswith("."):
-                
-                # Create the error dialog.
-                show_error_dialog(new_dlg, "Add Profile", "The profile name \"%s\" is not valid.\n\n1. Profile names may not be blank.\n2. Profile names may not be all spaces.\n3. Profile names may only be letters, numbers, and spaces.\n4. Profile names may not start with a period (\".\")." % name)
-                
-                # Close the dialog.
-                new_dlg.destroy()
-                
-                return
-            
-            # If the profile name is already in use, show a dialog and cancel the action.
-            elif os.path.isdir("%s/profiles/%s" % (main_dir, name)):
-                
-                # Create the error dialog.
-                show_error_dialog(new_dlg, "Add Profile", "The profile name \"%s\" is already in use." % name)
-                
-                # Close the dialog.
-                new_dlg.destroy()
-                
-                return
-            
-            # Otherwise if there are no problems with the name, add the profile.
-            else:
-                
-                # Create the directory and file.
-                last_profile = name
-                os.makedirs("%s/profiles/%s" % (main_dir, name))
-                open("%s/profiles/%s/weather.json" % (main_dir, name), "w").close()
-                
-                # Clear the old data.
-                data[:] = []
-                self.liststore.clear()
-                
-                # Set the new title.
-                self.update_title()
-                
-            # Close the dialog.
-            new_dlg.destroy()
+        # Close the dialog.
+        new_dlg.destroy()
         
-        # Otherwise, close the dialog and don't go any further.
+        # If the user did not press OK, don't continue.
+        if response != Gtk.ResponseType.OK:
+            
+            return
+            
+        # Validate the name. If it contains a non-alphanumeric character or is just space,
+        # show a dialog and cancel the action.
+        validate = utility_functions.validate_profile(main_dir, name)
+        if validate != "":
+            
+            # Show the error dialog.
+            show_error_dialog(self, "Add Profile", validate)
+            
+            return
+        
+        # Otherwise if there are no problems with the name, add the profile.
         else:
             
-            new_dlg.destroy()
-            return
+            # Create the directory and file.
+            last_profile = name
+            os.makedirs("%s/profiles/%s" % (main_dir, name))
+            open("%s/profiles/%s/weather.json" % (main_dir, name), "w").close()
+            
+            # Clear the old data.
+            data[:] = []
+            self.liststore.clear()
+            
+            # Set the new title.
+            self.update_title()
+
         
         # Create the dialog.
         import_dlg = Gtk.FileChooserDialog("Import - %s" % last_profile, self, Gtk.FileChooserAction.OPEN, (Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL, Gtk.STOCK_OPEN, Gtk.ResponseType.OK))
