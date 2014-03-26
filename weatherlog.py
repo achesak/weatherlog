@@ -137,7 +137,7 @@ from weatherlog_resources.dialogs.info_selected_dialog import InfoSelectedDialog
 # Import the dialog for selecting dates to show a chart about.
 from weatherlog_resources.dialogs.chart_selected_dialog import ChartSelectedDialog
 # Import the miscellaneous dialogs.
-from weatherlog_resources.dialogs.misc_dialogs import show_alert_dialog, show_error_dialog, show_question_dialog
+from weatherlog_resources.dialogs.misc_dialogs import show_alert_dialog, show_error_dialog, show_question_dialog, show_file_dialog
 
 
 # Get any required variables and set up the application.
@@ -1091,26 +1091,11 @@ class Weather(Gtk.Window):
             self.liststore.clear()
             
             # Read the data.
-            try:
-                # Read from the specified file. 
-                data_file = open(filename, "r")
-                data = json.load(data_file)
-                data_file.close()
-                
-            except IOError:
-                # Show the error message, and don't add the data.
-                # This one shows if there was a problem reading the file.
-                print("Error importing data (IOError).")
+            data = io.read_profile(filename = filename)
             
-            except (TypeError, ValueError):
-                # Show the error message, and don't add the data.
-                # This one shows if there was a problem with the data type.
-                print("Error importing data (TypeError or ValueError).")
-            
-            else:
-                # Add the new data.
-                for i in data:
-                    self.liststore.append(i)
+            # Add the new data.
+            for i in data:
+                self.liststore.append(i)
             
         # Close the dialog.
         import_dlg.destroy()
