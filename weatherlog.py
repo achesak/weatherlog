@@ -1086,6 +1086,9 @@ class Weather(Gtk.Window):
             # Add the new data.
             for i in data:
                 self.liststore.append(i)
+            
+            # Set the new title.
+            self.update_title()
     
     
     def import_merge(self, event):
