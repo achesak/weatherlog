@@ -108,20 +108,16 @@ from weatherlog_resources.dialogs.edit_dialog import EditDialog
 from weatherlog_resources.dialogs.info_dialog import GenericInfoDialog
 # Import the dialog for telling the user there is no data.
 from weatherlog_resources.dialogs.data_dialog import show_no_data_dialog
-# Import the dialog for adding a profile.
-from weatherlog_resources.dialogs.add_profile_dialog import AddProfileDialog
+# Import the dialog for entering a profile name.
+from weatherlog_resources.dialogs.profile_name_dialog import ProfileNameDialog
 # Import the dialog for switching profiles.
 from weatherlog_resources.dialogs.switch_profile_dialog import SwitchProfileDialog
 # Import the dialog for removing profiles.
 from weatherlog_resources.dialogs.remove_profile_dialog import RemoveProfileDialog
-# Import the dialog for renaming profiles.
-from weatherlog_resources.dialogs.rename_profile_dialog import RenameProfileDialog
 # Import the dialog for merging profiles.
 from weatherlog_resources.dialogs.merge_profiles_dialog import MergeProfilesDialog
 # Import the dialog for selecting dates to copy or move.
 from weatherlog_resources.dialogs.profile_date_dialog import ProfileDateSelectionDialog
-# Import the dialog for adding a new profile when moving/copying data.
-from weatherlog_resources.dialogs.data_profile_new_dialog import ProfileDataNewDialog
 # Import the dialog for choosing a profile when moving/copying data.
 from weatherlog_resources.dialogs.data_profile_existing_dialog import ProfileDataExistingDialog
 # Import the dialog for selecting a range of dates to show information about.
@@ -1116,11 +1112,11 @@ class Weather(Gtk.Window):
         global data
         
         # Show the dialog.
-        new_dlg = AddProfileDialog(self)
+        new_dlg = ProfileNameDialog(self, "Add Profile")
         
         # Get the response.
         response = new_dlg.run()
-        name = new_dlg.add_ent.get_text()
+        name = new_dlg.nam_ent.get_text()
         
         # Strip leading and trailing whitespace from the name.
         name = name.lstrip().rstrip()
@@ -1398,11 +1394,11 @@ class Weather(Gtk.Window):
         global data
         
         # Show the dialog.
-        new_dlg = AddProfileDialog(self)
+        new_dlg = ProfileNameDialog(self, "Add Profile")
         response = new_dlg.run()
         
         # Get the profile name.
-        name = new_dlg.add_ent.get_text()
+        name = new_dlg.nam_ent.get_text()
         
         # Close the dialog.
         new_dlg.destroy()
@@ -1490,11 +1486,11 @@ class Weather(Gtk.Window):
         global data
         
         # Show the dialog.
-        ren_dlg = RenameProfileDialog(self)
+        ren_dlg = ProfileNameDialog(self, "Rename Profile")
         response = ren_dlg.run()
         
         # Get the new profile name.
-        name = ren_dlg.ren_ent.get_text()
+        name = ren_dlg.nam_ent.get_text()
         
         # Close the dialog.
         ren_dlg.destroy()
@@ -1614,9 +1610,9 @@ class Weather(Gtk.Window):
             dates2.append(i[0])
         
         # Get the profile name.
-        new_dlg = ProfileDataNewDialog(self, mode)
+        new_dlg = ProfileNameDialog(self, "%s Data to New Profile" % mode)
         response = new_dlg.run()
-        name = new_dlg.pro_ent.get_text()
+        name = new_dlg.nam_ent.get_text()
         
         # Close the dialog.
         new_dlg.destroy()
