@@ -493,59 +493,55 @@ class Weather(Gtk.Window):
         
         # Show the dialog.
         new_dlg = AddNewDialog(self, last_profile, config["location"], config["pre-fill"], config["show_pre-fill"], units)
-        # Get the response.
         response = new_dlg.run()
         
-        # If the user clicked the OK button, add the data.
-        if response == Gtk.ResponseType.OK:
+        # Get the data from the entries and comboboxes.
+        year, month, day = new_dlg.date_cal.get_date()
+        date = "%d/%d/%d" % (day, month + 1, year)
+        temp = new_dlg.temp_sbtn.get_value()
+        prec = new_dlg.prec_sbtn.get_value()
+        prec_type = new_dlg.prec_com.get_active_text()
+        wind = new_dlg.wind_sbtn.get_value()
+        wind_dir = new_dlg.wind_com.get_active_text()
+        humi = new_dlg.humi_sbtn.get_value()
+        airp = new_dlg.airp_sbtn.get_value()
+        airp_read = new_dlg.airp_com.get_active_text()
+        clou = new_dlg.clou_com.get_active_text()
+        note = new_dlg.note_ent.get_text().strip()
+        
+        # Close the dialog.
+        new_dlg.destroy()
+        
+        # If the user did not click OK, don't continue:
+        if response != Gtk.ResponseType.OK:
+            return
             
-            # Get the data from the entries and comboboxes.
-            year, month, day = new_dlg.date_cal.get_date()
-            date = "%d/%d/%d" % (day, month + 1, year)
-            temp = new_dlg.temp_sbtn.get_value()
-            prec = new_dlg.prec_sbtn.get_value()
-            prec_type = new_dlg.prec_com.get_active_text()
-            wind = new_dlg.wind_sbtn.get_value()
-            wind_dir = new_dlg.wind_com.get_active_text()
-            humi = new_dlg.humi_sbtn.get_value()
-            airp = new_dlg.airp_sbtn.get_value()
-            airp_read = new_dlg.airp_com.get_active_text()
-            clou = new_dlg.clou_com.get_active_text()
-            note = new_dlg.note_ent.get_text().strip()
+        # If the precipitation or wind are zero, set the appropriate type/direction to "None".
+        if not prec:
+            prec_type = "None"
+        if not wind:
+            wind_dir = "None"
+        
+        # If the date has already been entered, tell the user and don't continue.
+        if date in utility_functions.get_column(data, 0):
             
-            # If the precipitation or wind are zero, set the appropriate type/direction to "None".
-            if not prec:
-                prec_type = "None"
-            if not wind:
-                wind_dir = "None"
+            # Show the error dialog.
+            show_error_dialog(self, "Add New", "The date %s has already been entered." % date)
             
-            # If the date has already been entered, tell the user and don't continue.
-            if date in utility_functions.get_column(data, 0):
-                
-                # Show the error dialog.
-                show_error_dialog(new_dlg, "Add New", "The date %s has already been entered." % date)
-                
-                # Close the "Add New" dialog. This is needed because the window
-                # will stop responding to events, making it useless. Seriously, what the hell Gtk?
-                new_dlg.destroy()
-                
-            else:
-                
-                # Format the data and add it to the list.
-                new_data = [date, ("%.2f" % temp), "%s%s" % ((("%.2f" % prec) + " " if prec_type != "None" else ""), prec_type), "%s%s" % ((("%.2f" % wind) + " " if wind_dir != "None" else ""), wind_dir), ("%.2f" % humi), ("%.2f %s" % (airp, airp_read)), clou, note]
-                data.append(new_data)
-                
-                # Sort the list by date.
-                data = sorted(data, key = lambda x: datetime.datetime.strptime(x[0], "%d/%m/%Y"))
-                
-                # Add the new row to the interface.
-                self.liststore.append(new_data)
+        else:
+            
+            # Format the data and add it to the list.
+            new_data = [date, ("%.2f" % temp), "%s%s" % ((("%.2f" % prec) + " " if prec_type != "None" else ""), prec_type), "%s%s" % ((("%.2f" % wind) + " " if wind_dir != "None" else ""), wind_dir), ("%.2f" % humi), ("%.2f %s" % (airp, airp_read)), clou, note]
+            data.append(new_data)
+            
+            # Sort the list by date.
+            data = sorted(data, key = lambda x: datetime.datetime.strptime(x[0], "%d/%m/%Y"))
+            
+            # Add the new row to the interface.
+            self.liststore.append(new_data)
         
         # Update the title.
         self.update_title()
-        
-        # Close the dialog.
-        new_dlg.destroy() 
         
         # Save the data.
         self.save(show_dialog = False)
@@ -561,11 +557,9 @@ class Weather(Gtk.Window):
             date = tm.get_value(ti, 0)
         
         except:
-            # If nothing was selected, show a dialog and don't continue.
             
             # Tell the user there is nothing selected.
             show_error_dialog(self, "Edit - %s" % last_profile, "No date selected.")
-            
             return
         
         # Get the index of the date.
@@ -630,10 +624,9 @@ class Weather(Gtk.Window):
             
             # Tell the user there is nothing selected.
             show_error_dialog(self, "Remove - %s" % last_profile, "No date selected.")
-            
             return
         
-        # Only show the dialog if the user wants that.
+        # Only show the confirmation dialog if the user wants that.
         if config["confirm_del"]:
             
             # Confirm that the user wants to delete the row.
@@ -688,7 +681,6 @@ class Weather(Gtk.Window):
         
         # If the user did not click OK, don't continue.
         if response1 != Gtk.ResponseType.OK:
-            
             return
             
         # Check to make sure this date is valid, and cancel the action if not.
@@ -696,7 +688,6 @@ class Weather(Gtk.Window):
             
             # Show the dialog.
             show_error_dialog(self, "%s Info in Range - %s" % (info, last_profile), "%s is not a valid date." % date1)
-            
             return
         
         # Show the dialog to get the ending date.
@@ -712,7 +703,6 @@ class Weather(Gtk.Window):
         
         # If the user did not click OK, don't continue.
         if response2 != Gtk.ResponseType.OK:
-            
             return
 
         # Convert the dates to ISO notation for comparison.
@@ -724,7 +714,6 @@ class Weather(Gtk.Window):
             
             # Show the dialog.
             show_error_dialog(self, "%s Info in Range - %s" % (info, last_profile), "%s is not a valid date." % date2)
-            
             return
         
         # Check to make sure this date is later than the starting date, 
@@ -733,7 +722,6 @@ class Weather(Gtk.Window):
             
             # Show the dialog.
             show_error_dialog(self, "%s Info in Range - %s" % (info, last_profile), "The ending date must later than the starting date.")
-            
             return
         
         # Get the indices.
@@ -775,15 +763,10 @@ class Weather(Gtk.Window):
         
         # If the user did not click OK, don't continue.
         if response != Gtk.ResponseType.OK:
-            
             return
         
         # If nothing was selected, don't continue.
         if treeiter == None:
-            
-            # Close the dialog.
-            info_dlg.destroy()
-            
             return
         
         # Get the dates.
@@ -799,7 +782,6 @@ class Weather(Gtk.Window):
         
         # If there is no data, don't continue.
         if len(ndata) == 0:
-            
             return
         
         # Pass the data to the appropriate function.
@@ -887,7 +869,6 @@ class Weather(Gtk.Window):
         
         # If the user did not click OK, cancel the action.
         if response1 != Gtk.ResponseType.OK:
-            
             return
             
         # Check to make sure this date is valid, and cancel the action if not.
@@ -895,7 +876,6 @@ class Weather(Gtk.Window):
             
             # Show the dialog.
             show_error_dialog(self, "%s Chart in Range - %s" % (info, last_profile), "%s is not a valid date." % date1)
-            
             return
         
         # Show the dialog to get the ending date.
@@ -911,7 +891,6 @@ class Weather(Gtk.Window):
         
         # If the user did not click OK, don't continue.
         if response2 != Gtk.ResponseType.OK:
-            
             return
 
         # Convert the dates to ISO notation for comparison.
@@ -923,7 +902,6 @@ class Weather(Gtk.Window):
             
             # Show the dialog.
             show_error_dialog(self, "%s Chart in Range - %s" % (info, last_profile), "%s is not a valid date." % date2)
-            
             return
         
         # Check to make sure this date is later than the starting date, 
@@ -932,7 +910,6 @@ class Weather(Gtk.Window):
             
             # Show the dialog.
             show_error_dialog(self, "%s Chart in Range - %s" % (info, last_profile), "The ending date must be later than the starting date.")
-            
             return
         
         # Get the indices.
@@ -974,15 +951,10 @@ class Weather(Gtk.Window):
         
         # If the user did not click OK, don't continue.
         if response != Gtk.ResponseType.OK:
-            
             return
         
         # If nothing was selected, don't continue.
         if treeiter == None:
-            
-            # Close the dialog.
-            info_dlg.destroy()
-            
             return
         
         # Get the dates.
@@ -998,7 +970,6 @@ class Weather(Gtk.Window):
         
         # If there is no data, don't continue.
         if len(ndata) == 0:
-            
             return
         
         # Pass the data to the appropriate function.
@@ -1072,7 +1043,6 @@ class Weather(Gtk.Window):
             
                 # If the user doesn't want to overwrite, cancel the action.
                 if response2 != Gtk.ResponseType.OK:
-                    
                     return
             
             # Clear the data.
@@ -1110,7 +1080,6 @@ class Weather(Gtk.Window):
             
             # If the imported dataset is empty, or if there was an error, don't continue.
             if len(data) == 0:
-                
                 return
                 
             # Filter the new data to make sure there are no duplicates.
@@ -1158,7 +1127,6 @@ class Weather(Gtk.Window):
         
         # If the user did not press OK, don't continue.
         if response != Gtk.ResponseType.OK:
-            
             return
             
         # Validate the name. If it contains a non-alphanumeric character or is just space,
@@ -1168,7 +1136,6 @@ class Weather(Gtk.Window):
             
             # Show the error dialog.
             show_error_dialog(self, "Add Profile", validate)
-            
             return
         
         # Otherwise if there are no problems with the name, add the profile.
@@ -1219,7 +1186,6 @@ class Weather(Gtk.Window):
             
             # Tell the user there is no data to export.
             show_alert_dialog(self, title, "There is no data to export.")
-            
             return
         
         # Get the filename.
@@ -1249,7 +1215,6 @@ class Weather(Gtk.Window):
             
             # Tell the user there is no data to export.
             show_alert_dialog(self, "Export to Pastebin - %s" % last_profile, "There is no data to export.")
-            
             return
         
         # Convert the data.
@@ -1378,100 +1343,49 @@ class Weather(Gtk.Window):
         global last_profile
         global data
         
-        # Remember the currect directory and switch to where the profiles are stored.
-        current_dir = os.getcwd()
-        os.chdir("%s/profiles" % main_dir)
+        # Get the list of profiles
+        profiles = io.get_profile_list(main_dir, last_profile)
         
-        # Get the list of profiles.
-        profiles = glob.glob("*")
-        
-        # Remove the current profile from the list.
-        profiles = list(set(profiles) - set([last_profile]))
-        
-        # Sort the profiles.
-        profiles.sort()
-        
-        # Get the last modified dates.
-        for i in range(0, len(profiles)):
-            
-            # Get the date and format it properly.
-            last_modified = os.path.getmtime("%s/profiles/%s/weather.json" % (main_dir, last_profile))
-            last_modified = time.strftime("%d/%m/%Y", time.localtime(last_modified))
-            
-            # Change the value in the list.
-            profiles[i] = [profiles[i], last_modified]
-        
-        # Switch back to the previous directory.
-        os.chdir(current_dir)
-        
-        # If there are no other profiles, tell the user and cancel the action.
+        # If there are no other profiles, cancel the action.
         if len(profiles) == 0:
             
             # Tell the user there are no other profiles.
             show_alert_dialog(self, "Switch Profile", "There are no other profiles.")
-            
-            return
         
         # Show the dialog.
         swi_dlg = SwitchProfileDialog(self, profiles)
-        # Get the response.
         response = swi_dlg.run()
         
-        # If the OK button was pressed:
-        if response == Gtk.ResponseType.OK:
-            
-            # Get the selected item.
-            model, treeiter = swi_dlg.treeview.get_selection().get_selected()
-            
-            # If nothing was selected, don't continue.
-            if treeiter == None:
-                
-                # Close the dialog.
-                swi_dlg.destroy()
-                
-                return
-            
-            # Get the profile name.
-            name = model[treeiter][0]
-            
-            # Clear the old data.
-            data[:] = []
-            self.liststore.clear()
-            
-            # Load the data.   
-            try:
-                
-                # This should be ~/.weatherlog/[profile name]/weather.json on Linux.
-                data_file = open("%s/profiles/%s/weather.json" % (main_dir, name), "r")
-                data = json.load(data_file)
-                data_file.close()
-                
-            except IOError:
-                # Show the error message, and close the application.
-                # This one shows if there was a problem reading the file.
-                print("Error importing data (IOError).")
-                data = []
-            
-            except (TypeError, ValueError):
-                # Show the error message, and close the application.
-                # This one shows if there was a problem with the data type.
-                print("Error importing data (TypeError or ValueError).")
-                data = []
-            
-            # Switch to the new profile.
-            last_profile = name
-            for i in data:
-                self.liststore.append(i)
-            
-            # Set the new title.
-            self.update_title()
-            
-            # Save the data.
-            self.save(show_dialog = False)
-            
-                
+        # Get the selected item.
+        model, treeiter = swi_dlg.treeview.get_selection().get_selected()
+        
         # Close the dialog.
         swi_dlg.destroy()
+        
+        # If the user did not press OK or nothing was selected, don't continue:
+        if response != Gtk.ResponseType.OK or treeiter == None:
+            return
+        
+        # Get the profile name.
+        name = model[treeiter][0]
+        
+        # Clear the old data.
+        data[:] = []
+        self.liststore.clear()
+        
+        # Load the data.  
+        data = io.read_profile(main_dir = main_dir, name = name)
+        
+        # Switch to the new profile.
+        last_profile = name
+        for i in data:
+            self.liststore.append(i)
+        
+        # Set the new title.
+        self.update_title()
+        
+        # Save the data.
+        self.save(show_dialog = False)
     
     
     def add_profile(self, event):

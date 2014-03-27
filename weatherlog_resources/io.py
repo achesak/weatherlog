@@ -8,6 +8,10 @@
 import json
 # Import os for creating directories.
 import os
+# Import glob for getting a list of the profiles.
+import glob
+# Import time for formatting times.
+import time
 
 
 def write_profile(main_dir = "", name = "", filename = "", data = []):
@@ -90,3 +94,36 @@ def write_standard_file(filename, data):
         # Show the error message.
         # This only shows if the error occurred when writing to the file.
         print("Error saving data file (IOError).")
+
+
+def get_profile_list(main_dir, last_profile):
+    """Gets the list of profiles."""
+    
+    # Remember the currect directory and switch to where the profiles are stored.
+    current_dir = os.getcwd()
+    os.chdir("%s/profiles" % main_dir)
+    
+    # Get the list of profiles.
+    profiles = glob.glob("*")
+    
+    # Remove the current profile from the list.
+    profiles = list(set(profiles) - set([last_profile]))
+    
+    # Sort the profiles.
+    profiles.sort()
+    
+    # Get the last modified dates.
+    for i in range(0, len(profiles)):
+        
+        # Get the date and format it properly.
+        last_modified = os.path.getmtime("%s/profiles/%s/weather.json" % (main_dir, last_profile))
+        last_modified = time.strftime("%d/%m/%Y", time.localtime(last_modified))
+        
+        # Change the value in the list.
+        profiles[i] = [profiles[i], last_modified]
+    
+    # Switch back to the previous directory.
+    os.chdir(current_dir)
+    
+    # Return the profiles.
+    return profiles
