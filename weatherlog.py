@@ -1180,59 +1180,19 @@ class Weather(Gtk.Window):
             # Set the new title.
             self.update_title()
 
+        # Get the filename.
+        response, filename = show_file_dialog(self, "Import - %s" % last_profile)
         
-        # Create the dialog.
-        import_dlg = Gtk.FileChooserDialog("Import - %s" % last_profile, self, Gtk.FileChooserAction.OPEN, (Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL, Gtk.STOCK_OPEN, Gtk.ResponseType.OK))
-        
-        # Set the filters.
-        filter_all = Gtk.FileFilter()
-        filter_all.set_name("All files")
-        filter_all.add_pattern("*")
-        filter_json = Gtk.FileFilter()
-        filter_json.set_name("WeatherLog data files")
-        filter_json.add_pattern("*.json")
-        
-        # Add the filters.
-        import_dlg.add_filter(filter_all)
-        import_dlg.add_filter(filter_json)
-        
-        # Get the response.
-        response = import_dlg.run()
+        # If the user pressed OK, import the data:
         if response == Gtk.ResponseType.OK:
             
-            # Get the filename.
-            filename = import_dlg.get_filename()
-            
-            # Clear the data.
-            data[:] = []
-            # Clear the ListStore.
-            self.liststore.clear()
-            
             # Read the data.
-            try:
-                # Read from the specified file. 
-                data_file = open(filename, "rb")
-                data = json.load(data_file)
-                data_file.close()
-                
-            except IOError:
-                # Show the error message, and don't add the data.
-                # This one shows if there was a problem reading the file.
-                print("Error importing data (IOError).")
+            data = io.read_profile(filename = filename)
             
-            except (TypeError, ValueError):
-                # Show the error message, and don't add the data.
-                # This one shows if there was a problem with the data type.
-                print("Error importing data (TypeError or ValueError).")
-            
-            else:
-                # Add the new data.
-                for i in data:
-                    self.liststore.append(i)
-            
-        # Close the dialog.
-        import_dlg.destroy()
-        
+            # Add the new data.
+            for i in data:
+                self.liststore.append(i)
+    
     
     def export_file(self, event):
         """Exports the data to a file."""

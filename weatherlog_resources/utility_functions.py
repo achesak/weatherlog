@@ -7,6 +7,7 @@
 # Import re for pattern matching.
 import re
 # Import os.path for checking if a directory exists.
+import os.path
 
 
 def extract_numbers(data):
