@@ -1439,99 +1439,48 @@ class Weather(Gtk.Window):
         
         global last_profile
         
-        # Remember the currect directory and switch to where the profiles are stored.
-        current_dir = os.getcwd()
-        os.chdir("%s/profiles" % main_dir)
-        
         # Get the list of profiles.
-        profiles = glob.glob("*")
+        profiles = io.get_profile_list(main_dir, last_profile)
         
-        # Remove the current profile from the list.
-        profiles = list(set(profiles) - set([last_profile]))
-        
-        # Sort the profiles.
-        profiles.sort()
-        
-        # Get the last modified dates.
-        for i in range(0, len(profiles)):
-            
-            # Get the date and format it properly.
-            last_modified = os.path.getmtime("%s/profiles/%s/weather.json" % (main_dir, last_profile))
-            last_modified = time.strftime("%d/%m/%Y", time.localtime(last_modified))
-            
-            # Change the value in the list.
-            profiles[i] = [profiles[i], last_modified]
-        
-        # Switch back to the previous directory.
-        os.chdir(current_dir)
-        
-        # If there are no other profiles, tell the user and cancel the action.
+        # If there are no other profiles, cancel the action.
         if len(profiles) == 0:
             
             # Tell the user there are no other profiles.
             show_alert_dialog(self, "Remove Profile", "There are no other profiles.")
-            
             return
         
         # Show the dialog.
         rem_dlg = RemoveProfileDialog(self, profiles)
-        # Get the response.
         response = rem_dlg.run()
         
-        # If the OK button was pressed:
-        if response == Gtk.ResponseType.OK:
-            
-            # Get the selected items.
-            model, treeiter = rem_dlg.treeview.get_selection().get_selected_rows()
-            
-            # If nothing was selected, don't continue.
-            if treeiter == None:
-                
-                # Close the dialog.
-                rem_dlg.destroy()
-                
-                return
-            
-            # Get the profiles.
-            profiles = []
-            for i in treeiter:
-                profiles.append(model[i][0])
-            
-            # If nothing was selected, don't continue.
-            # TODO: check if this block is really necessary.
-            if len(profiles) == 0:
-                
-                # Close the dialog.
-                rem_dlg.destroy()
-                
-                return
-            
-            # Only show the dialog if the user wants that.
-            if config["confirm_del"]:
-                
-                # Confirm that the user wants to delete the profile.
-                response = show_question_dialog(rem_dlg, "Confirm Remove Profile", "Are you sure you want to remove the profile%s?\n\nThis action cannot be undone." % ("" if len(profiles) == 1 else "s"))
-                
-                # If the user wants to continue:
-                if response == Gtk.ResponseType.OK:
-                    
-                    # Loop through the profiles and delete them all:
-                    for name in profiles:
-                        
-                        # Delete the directory.
-                        shutil.rmtree("%s/profiles/%s" % (main_dir, name))
-            
-            else:
-                
-                # Loop through the profiles and delete them all:
-                for name in profiles:
-                    
-                    # Delete the directory.
-                    shutil.rmtree("%s/profiles/%s" % (main_dir, name))
-        
+        # Get the selected items.
+        model, treeiter = rem_dlg.treeview.get_selection().get_selected_rows()
         
         # Close the dialog.
         rem_dlg.destroy()
+        
+        # If the user did not press OK or nothing was selected, don't continue:
+        if response != Gtk.ResponseType.OK or treeiter == None:
+            return
+        
+        # Get the profiles.
+        profiles = []
+        for i in treeiter:
+            profiles.append(model[i][0])
+        
+        # Only show the confirmation dialog if the user wants that.
+        if config["confirm_del"]:
+            
+            # Confirm that the user wants to delete the profile.
+            response = show_question_dialog(rem_dlg, "Confirm Remove Profile", "Are you sure you want to remove the profile%s?\n\nThis action cannot be undone." % ("" if len(profiles) == 1 else "s"))
+            if response != Gtk.ResponseType.OK:
+                return
+        
+        # Delete the selected profiles.
+        for name in profiles:
+            
+            # Delete the directory.
+            shutil.rmtree("%s/profiles/%s" % (main_dir, name))
     
     
     def rename_profile(self, event):
