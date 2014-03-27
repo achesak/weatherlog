@@ -120,10 +120,8 @@ from weatherlog_resources.dialogs.merge_profiles_dialog import MergeProfilesDial
 from weatherlog_resources.dialogs.profile_date_dialog import ProfileDateSelectionDialog
 # Import the dialog for choosing a profile when moving/copying data.
 from weatherlog_resources.dialogs.data_profile_existing_dialog import ProfileDataExistingDialog
-# Import the dialog for selecting a range of dates to show information about.
-from weatherlog_resources.dialogs.info_range_dialog import InfoRangeDialog
-# Import the dialog for selecting a range of dates to show a chart about.
-from weatherlog_resources.dialogs.chart_range_dialog import ChartRangeDialog
+# Import the dialog for selecting a date.
+from weatherlog_resources.dialogs.calendar_dialog import CalendarDialog
 # Import the dialog for changing the options.
 from weatherlog_resources.dialogs.options_dialog import OptionsDialog
 # Import the dialog for displaying the charts.
@@ -665,7 +663,7 @@ class Weather(Gtk.Window):
         daye, monthe, yeare = utility_functions.split_date(data[len(data) - 1][0])
         
         # Show the dialog to get the starting date.
-        start_dlg = InfoRangeDialog(self, last_profile, info, "starting", days, months, years)
+        start_dlg = CalendarDialog(self, "%s Info in Range - %s" % (info, last_profile), "Select the starting date:", days, months, years)
         response1 = start_dlg.run()
         
         # Get the date.
@@ -687,7 +685,7 @@ class Weather(Gtk.Window):
             return
         
         # Show the dialog to get the ending date.
-        end_dlg = InfoRangeDialog(self, last_profile, info, "ending", daye, monthe, yeare)
+        end_dlg = CalendarDialog(self, "%s Info in Range - %s" % (info, last_profile), "Select the ending date:", daye, monthe, yeare)
         response2 = end_dlg.run()
         
         # Get the date.
@@ -853,7 +851,7 @@ class Weather(Gtk.Window):
         daye, monthe, yeare = utility_functions.split_date(data[len(data) - 1][0])
         
         # Show the dialog to get the starting date.
-        start_dlg = ChartRangeDialog(self, last_profile, info, "starting", days, months, years)
+        start_dlg = CalendarDialog(self, "%s Chart in Range - %s" % (info, last_profile), "Select the starting date:", days, months, years)
         response1 = start_dlg.run()
         
         # Get the date.
@@ -875,7 +873,7 @@ class Weather(Gtk.Window):
             return
         
         # Show the dialog to get the ending date.
-        end_dlg = ChartRangeDialog(self, last_profile, info, "ending", daye, monthe, yeare)
+        end_dlg = CalendarDialog(self, "%s Chart in Range - %s" % (info, last_profile), "Select the ending date:", daye, monthe, yeare)
         response2 = end_dlg.run()
         
         # Get the date.

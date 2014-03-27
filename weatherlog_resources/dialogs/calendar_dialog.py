@@ -1,20 +1,20 @@
 # -*- coding: utf-8 -*-
 
 
-# This file defines the Info Range dialog.
+# This file defines the generic calendar dialog.
 
 
 # Import GTK for the dialog.
 from gi.repository import Gtk
 
 
-class InfoRangeDialog(Gtk.Dialog):
-    """Shows the info range dialog."""
-    def __init__(self, parent, profile, info, which, day, month, year):
+class CalendarDialog(Gtk.Dialog):
+    """Shows the calendar dialog."""
+    def __init__(self, parent, title, label, day, month, year):
         """Create the dialog."""
         
         # This window should be modal.
-        Gtk.Dialog.__init__(self, "%s Info in Range - %s" % (info, profile), parent, Gtk.DialogFlags.MODAL)
+        Gtk.Dialog.__init__(self, title, parent, Gtk.DialogFlags.MODAL)
         # Don't allow the user to resize the window.
         self.set_resizable(False)
         
@@ -29,7 +29,7 @@ class InfoRangeDialog(Gtk.Dialog):
         info_box.add(info_grid)
         
         # Create the label.
-        info_lbl = Gtk.Label("Select the %s date:" % which)
+        info_lbl = Gtk.Label(label)
         info_lbl.set_alignment(0, 0.5)
         info_grid.add(info_lbl)
         
