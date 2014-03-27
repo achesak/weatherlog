@@ -1472,7 +1472,7 @@ class Weather(Gtk.Window):
         if config["confirm_del"]:
             
             # Confirm that the user wants to delete the profile.
-            response = show_question_dialog(rem_dlg, "Confirm Remove Profile", "Are you sure you want to remove the profile%s?\n\nThis action cannot be undone." % ("" if len(profiles) == 1 else "s"))
+            response = show_question_dialog(self, "Confirm Remove Profile", "Are you sure you want to remove the profile%s?\n\nThis action cannot be undone." % ("" if len(profiles) == 1 else "s"))
             if response != Gtk.ResponseType.OK:
                 return
         
