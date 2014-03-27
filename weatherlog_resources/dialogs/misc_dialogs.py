@@ -48,7 +48,7 @@ def show_question_dialog(self, title, msg):
 
 
 def show_file_dialog(self, title):
-    """Shows the file chooser dialog."""
+    """Shows the file chooser (open) dialog."""
     
     # Create the dialog.
     import_dlg = Gtk.FileChooserDialog(title, self, Gtk.FileChooserAction.OPEN, (Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL, Gtk.STOCK_OPEN, Gtk.ResponseType.OK))
@@ -71,3 +71,28 @@ def show_file_dialog(self, title):
     # Return the response.
     return [response, filename]
     
+
+def show_save_dialog(self, title):
+    """Shows the file chooser (save) dialog."""
+    
+    # Create the dialog.
+    export_dlg = Gtk.FileChooserDialog(title, self, Gtk.FileChooserAction.SAVE, (Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL, Gtk.STOCK_OPEN, Gtk.ResponseType.OK))
+    export_dlg.set_do_overwrite_confirmation(True)
+    
+    # Set the filters.
+    filter_json = Gtk.FileFilter()
+    filter_json.set_name("WeatherLog data files (JSON)")
+    filter_json.add_pattern("*.json")
+    filter_all = Gtk.FileFilter()
+    filter_all.set_name("All files")
+    filter_all.add_pattern("*")
+    export_dlg.add_filter(filter_json)
+    export_dlg.add_filter(filter_all)
+    
+    # Get the response and filename then close the dialog.
+    response = export_dlg.run()
+    filename = export_dlg.get_filename()
+    export_dlg.destroy()
+    
+    # Return the response.
+    return [response, filename]

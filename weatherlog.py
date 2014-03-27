@@ -137,7 +137,7 @@ from weatherlog_resources.dialogs.info_selected_dialog import InfoSelectedDialog
 # Import the dialog for selecting dates to show a chart about.
 from weatherlog_resources.dialogs.chart_selected_dialog import ChartSelectedDialog
 # Import the miscellaneous dialogs.
-from weatherlog_resources.dialogs.misc_dialogs import show_alert_dialog, show_error_dialog, show_question_dialog, show_file_dialog
+from weatherlog_resources.dialogs.misc_dialogs import show_alert_dialog, show_error_dialog, show_question_dialog, show_file_dialog, show_save_dialog
 
 
 # Get any required variables and set up the application.
@@ -1205,36 +1205,14 @@ class Weather(Gtk.Window):
             
             return
         
-        # Create the dialog.
-        export_dlg = Gtk.FileChooserDialog("Export - %s" % last_profile, self, Gtk.FileChooserAction.SAVE, (Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL, Gtk.STOCK_OPEN, Gtk.ResponseType.OK))
-        export_dlg.set_do_overwrite_confirmation(True)
+        # Get the filename.
+        response, filename = show_save_dialog(self, "Export - %s" % last_profile)
         
-        # Get the response.
-        response = export_dlg.run()
+        # If the user pressed OK, export the data:
         if response == Gtk.ResponseType.OK:
             
-            # Get the filename.
-            filename = export_dlg.get_filename()
-            
             # Save the data.
-            try:
-                # Write to the specified file.
-                data_file = open(filename, "w")
-                json.dump(data, data_file, indent = 4)
-                data_file.close()
-                
-            except IOError:
-                # Show the error message.
-                # This only shows if the error occurred when writing to the file.
-                print("Error exporting data (IOError).")
-            
-            except (TypeError, ValueError):
-                # Show the error message.
-                # This one is shown if there was an error with the data type.
-                print("Error exporting data (TypeError or ValueError).")
-            
-        # Close the dialog.
-        export_dlg.destroy()
+            io.write_profile(filename = filename, data = data)
     
     
     def export_file_html(self, event):

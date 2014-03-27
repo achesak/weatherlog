@@ -10,28 +10,31 @@ import json
 import os
 
 
-def write_profile(main_dir, name, data):
+def write_profile(main_dir = "", name = "", filename = "", data = []):
     """Writes the data to the profile file."""
+    
+    # Get the filename.
+    filename = filename if filename != "" else "%s/profiles/%s/weather.json" % (main_dir, name)
     
     # Write the data.
     try:
         # This should save to ~/.weatherlog/[profile name]/weather.json on Linux.
-        data_file = open("%s/profiles/%s/weather.json" % (main_dir, name), "w")
+        data_file = open(filename, "w")
         json.dump(data, data_file)
         data_file.close()
-        return true
+        return True
         
     except IOError:
         # Show the error message if something happened, but continue.
         # This one is shown if there was an error writing to the file.
         print("Error saving data file (IOError).")
-        return false
+        return False
     
     except (TypeError, ValueError):
         # Show the error message if something happened, but continue.
         # This one is shown if there was an error with the data type.
         print("Error saving data file (TypeError or ValueError).")
-        return false
+        return False
 
 
 def read_profile(main_dir = "", name = "", filename = ""):
