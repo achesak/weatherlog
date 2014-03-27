@@ -1089,6 +1089,9 @@ class Weather(Gtk.Window):
             
             # Set the new title.
             self.update_title()
+            
+            # Save the data.
+            self.save(show_dialog = False)
     
     
     def import_merge(self, event):
@@ -1132,9 +1135,9 @@ class Weather(Gtk.Window):
             
             # Update the title.
             self.update_title()
-                    
-        # Close the dialog.
-        import_dlg.destroy()        
+            
+            # Save the data.
+            self.save(show_dialog = False)      
     
     
     def import_new_profile(self, event):
@@ -1195,6 +1198,9 @@ class Weather(Gtk.Window):
             
             # Set the new title.
             self.update_title()
+            
+            # Save the data.
+            self.save(show_dialog = False)
     
     
     def export_file(self, mode = "raw"):
