@@ -1093,34 +1093,17 @@ class Weather(Gtk.Window):
         
         global data
         
-        # Create the dialog.
-        import_dlg = Gtk.FileChooserDialog("Import and Merge - %s" % last_profile, self, Gtk.FileChooserAction.OPEN, (Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL, Gtk.STOCK_OPEN, Gtk.ResponseType.OK))
+        # Get the filename.
+        response, filename = show_file_dialog(self, "Import and Merge - %s" % last_profile)
         
-        # Set the filters.
-        filter_all = Gtk.FileFilter()
-        filter_all.set_name("All files")
-        filter_all.add_pattern("*")
-        filter_json = Gtk.FileFilter()
-        filter_json.set_name("WeatherLog data files")
-        filter_json.add_pattern("*.json")
-        import_dlg.add_filter(filter_all)
-        import_dlg.add_filter(filter_json)
-        
-        # Get the response.
-        response = import_dlg.run()
+        # If the user pressed OK, import the data:
         if response == Gtk.ResponseType.OK:
-            
-            # Get the filename.
-            filename = import_dlg.get_filename()
             
             # Read the data.
             data2 = io.read_profile(filename = filename)
             
             # If the imported dataset is empty, or if there was an error, don't continue.
             if len(data) == 0:
-                
-                # Close the dialog.
-                import_dlg.destroy()
                 
                 return
                 
