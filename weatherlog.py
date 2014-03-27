@@ -1539,114 +1539,63 @@ class Weather(Gtk.Window):
         global last_profile
         global data
         
-        # Remember the currect directory and switch to where the profiles are stored.
-        current_dir = os.getcwd()
-        os.chdir("%s/profiles" % main_dir)
-        
         # Get the list of profiles.
-        profiles = glob.glob("*")
-        
-        # Remove the current profile from the list.
-        profiles = list(set(profiles) - set([last_profile]))
-        
-        # Sort the profiles.
-        profiles.sort()
-        
-        # Get the last modified dates.
-        for i in range(0, len(profiles)):
-            
-            # Get the date and format it properly.
-            last_modified = os.path.getmtime("%s/profiles/%s/weather.json" % (main_dir, last_profile))
-            last_modified = time.strftime("%d/%m/%Y", time.localtime(last_modified))
-            
-            # Change the value in the list.
-            profiles[i] = [profiles[i], last_modified]
-        
-        # Switch back to the previous directory.
-        os.chdir(current_dir)
+        profiles = io.get_profile_list(main_dir, last_profile)
         
         # If there are no other profiles, tell the user and cancel the action.
         if len(profiles) == 0:
             
             # Tell the user there are no other profiles.
             show_alert_dialog(self, "Merge Profiles", "There are no other profiles.")
-            
             return
         
         # Show the dialog.
         mer_dlg = MergeProfilesDialog(self, profiles)
-        # Get the response.
         response = mer_dlg.run()
         
-        # If the OK button was pressed:
-        if response == Gtk.ResponseType.OK:
-            
-            # Get the selected item.
-            model, treeiter = mer_dlg.treeview.get_selection().get_selected()
-            
-            # If nothing was selected, don't continue.
-            if treeiter == None:
-                
-                # Close the dialog.
-                mer_dlg.destroy()
-                
-                return
-            
-            # Get the profile name.
-            name = model[treeiter][0]
-            
-            # Read the data.   
-            try:
-                
-                # This should be ~/.weatherlog/[profile name]/weather.json on Linux.
-                data_file = open("%s/profiles/%s/weather.json" % (main_dir, name), "r")
-                data2 = json.load(data_file)
-                data_file.close()
-                
-            except IOError:
-                # Show the error message, and close the application.
-                # This one shows if there was a problem reading the file.
-                print("Error importing data (IOError).")
-                data2 = []
-            
-            except (TypeError, ValueError):
-                # Show the error message, and close the application.
-                # This one shows if there was a problem with the data type.
-                print("Error importing data (TypeError or ValueError).")
-                data2 = []
-            
-            else:
-                
-                # Filter the new data to make sure there are no duplicates.
-                new_data = []
-                date_col = utility_functions.get_column(data, 0)
-                for i in data2:
-                    
-                    # If the date already appears, don't include it.
-                    if i[0] not in date_col:
-                        new_data.append(i)
-                
-                # Append the data.
-                data += new_data
-                
-                # Sort the data.
-                data = sorted(data, key = lambda x: datetime.datetime.strptime(x[0], '%d/%m/%Y'))
-                
-                # Update the ListStore.
-                self.liststore.clear()
-                for i in data:
-                    self.liststore.append(i)
-                
-                # Update the title.
-                self.update_title()
-                
-                # Delete the directory.
-                shutil.rmtree("%s/profiles/%s" % (main_dir, name))
+        # Get the selected item.
+        model, treeiter = mer_dlg.treeview.get_selection().get_selected()
         
         # Close the dialog.
         mer_dlg.destroy()
-    
-    
+        
+        # If the user did not press OK or nothing was selected, don't continue:
+        if response != Gtk.ResponseType.OK or treeiter == None:
+            return
+        
+        # Get the profile name.
+        name = model[treeiter][0]
+        
+        # Read the data.   
+        data2 = io.read_profile(main_dir = main_dir, name = name)
+        
+        # Filter the new data to make sure there are no duplicates.
+        new_data = []
+        date_col = utility_functions.get_column(data, 0)
+        for i in data2:
+            
+            # If the date already appears, don't include it.
+            if i[0] not in date_col:
+                new_data.append(i)
+        
+        # Append the data.
+        data += new_data
+        
+        # Sort the data.
+        data = sorted(data, key = lambda x: datetime.datetime.strptime(x[0], '%d/%m/%Y'))
+        
+        # Update the ListStore.
+        self.liststore.clear()
+        for i in data:
+            self.liststore.append(i)
+        
+        # Update the title.
+        self.update_title()
+        
+        # Delete the directory of the profile that was merged in.
+        shutil.rmtree("%s/profiles/%s" % (main_dir, name))
+        
+        
     def data_profile(self, mode = "Copy", method = "New"):
         """Copies or moves data to a new or an existing profile."""
         
