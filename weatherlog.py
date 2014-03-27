@@ -1122,6 +1122,9 @@ class Weather(Gtk.Window):
         response = new_dlg.run()
         name = new_dlg.add_ent.get_text()
         
+        # Strip leading and trailing whitespace from the name.
+        name = name.lstrip().rstrip()
+        
         # Close the dialog.
         new_dlg.destroy()
         
@@ -1396,45 +1399,39 @@ class Weather(Gtk.Window):
         
         # Show the dialog.
         new_dlg = AddProfileDialog(self)
-        # Get the response.
         response = new_dlg.run()
+        
+        # Get the profile name.
         name = new_dlg.add_ent.get_text()
         
-        # If the OK button was pressed:
-        if response == Gtk.ResponseType.OK:
-            
-            # Validate the name. If it contains a non-alphanumeric character, starts with a period, or is just space,
-            # show a dialog and cancel the action.
-            if re.compile("[^a-zA-Z1-90 \.\-\+\(\)\?\!]").match(name) or not name or name.lstrip().rstrip() == "" or name.startswith("."):
-                
-                # Create the error dialog.
-                show_error_dialog(new_dlg, "Add Profile", "The profile name \"%s\" is not valid.\n\n1. Profile names may not be blank.\n2. Profile names may not be all spaces.\n3. Profile names may only be letters, numbers, and spaces.\n4. Profile names may not start with a period (\".\")." % name)
-            
-            # If the profile name is already in use, show a dialog and cancel the action.
-            elif os.path.isdir("%s/profiles/%s" % (main_dir, name)):
-                
-                # Create the error dialog.
-                show_error_dialog(new_dlg, "Add Profile", "The profile name \"%s\" is already in use." % name)
-            
-            # Otherwise if there are no problems with the name, add the profile.
-            else:
-                
-                # Strip leading and trailing whitespace.
-                name = name.lstrip().rstrip()
-                
-                # Create the new profile.
-                io.write_blank_profile(main_dir, name)
-                
-                # Clear the old data.
-                last_profile = name
-                data[:] = []
-                self.liststore.clear()
-                
-                # Set the new title.
-                self.update_title()
-                    
         # Close the dialog.
         new_dlg.destroy()
+        
+        # If the user did not press OK, don't continue:
+        if response != Gtk.ResponseType.OK:
+            return
+        
+        # Strip leading and trailing whitespace from the name.
+        name = name.lstrip().rstrip()
+        
+        # Validate the name. If the name isn't valid, don't continue.
+        validate = utility_functions.validate_profile(main_dir, name)
+        if validate != "":
+            
+            # Tell the user the profile name isn't valid.
+            show_error_dialog(self, "Add Profile", validate)
+            return
+        
+        # Create the new profile.
+        io.write_blank_profile(main_dir, name)
+        
+        # Clear the old data.
+        last_profile = name
+        data[:] = []
+        self.liststore.clear()
+        
+        # Set the new title.
+        self.update_title()
     
     
     def remove_profile(self, event):
