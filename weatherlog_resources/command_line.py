@@ -355,20 +355,3 @@ def window_size(main_dir, args):
         # Show the error message if something happened, but continue.
         # This one is shown if there was an error writing to the file.
         print("Error saving window size file (IOError).")
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
