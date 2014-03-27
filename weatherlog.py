@@ -1265,7 +1265,7 @@ class Weather(Gtk.Window):
         if config["confirm_del"]:
             
             # Confirm that the user wants to clear the data.
-            response = show_question_dialog(self, "Confirm Clear Current Data - %s" % last_profile, "Are you sure you want to clear the data?\n\nThis action cannot be undone.")
+            response = show_question_dialog(self, "Clear Current Data - %s" % last_profile, "Are you sure you want to clear the data?\n\nThis action cannot be undone.")
             if response != Gtk.ResponseType.OK:
                 return
         
@@ -1291,7 +1291,7 @@ class Weather(Gtk.Window):
         if config["confirm_del"]:
             
             # Confirm that the user wants to clear the data.
-            response = show_question_dialog(self, "Confirm Clear All Data", "Are you sure you want to clear all the data?\n\nThis action cannot be undone.")
+            response = show_question_dialog(self, "Clear All Data", "Are you sure you want to clear all the data?\n\nThis action cannot be undone.")
             if response != Gtk.ResponseType.OK:
                 return
 
@@ -1472,7 +1472,7 @@ class Weather(Gtk.Window):
         if config["confirm_del"]:
             
             # Confirm that the user wants to delete the profile.
-            response = show_question_dialog(self, "Confirm Remove Profile", "Are you sure you want to remove the profile%s?\n\nThis action cannot be undone." % ("" if len(profiles) == 1 else "s"))
+            response = show_question_dialog(self, "Remove Profile", "Are you sure you want to remove the profile%s?\n\nThis action cannot be undone." % ("" if len(profiles) == 1 else "s"))
             if response != Gtk.ResponseType.OK:
                 return
         
