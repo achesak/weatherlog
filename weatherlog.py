@@ -1298,10 +1298,7 @@ class Weather(Gtk.Window):
             
             # Confirm that the user wants to clear the data.
             response = show_question_dialog(self, "Confirm Clear Current Data - %s" % last_profile, "Are you sure you want to clear the data?\n\nThis action cannot be undone.")
-            
-            # If the user does not want to clear the data, don't continue:
             if response != Gtk.ResponseType.OK:
-                
                 return
         
         # Clear the data.
@@ -1322,101 +1319,57 @@ class Weather(Gtk.Window):
         global config
         global units
         
-        # Only show the dialog if the user wants that.
-        clear = True
+        # Only show the confirmation dialog if the user wants that.
         if config["confirm_del"]:
             
             # Confirm that the user wants to clear the data.
             response = show_question_dialog(self, "Confirm Clear All Data", "Are you sure you want to clear all the data?\n\nThis action cannot be undone.")
-            
-            # If the user cancels the clear:
             if response != Gtk.ResponseType.OK:
-                clear = False
+                return
+
+        # Clear the old data.
+        data[:] = []
+        self.liststore.clear()
         
-        # If the user wants to continue:
-        if clear:
-            
-            # Clear the old data.
-            data[:] = []
-            self.liststore.clear()
-            
-            # Delete all the files.
-            shutil.rmtree(main_dir)
-            
-            # Create the directory.
-            os.makedirs(main_dir)
-            
-            # Set the profile name.
-            last_profile = "Main Profile"
-            
-            # Create the last profile file.
-            last_prof = open("%s/lastprofile" % main_dir, "w")
-            last_prof.write("Main Profile")
-            last_prof.close()
-            
-            # Create the Main Profile directory and data file.
-            os.makedirs("%s/profiles/Main Profile" % main_dir)
-            last_prof_data = open("%s/profiles/Main Profile/weather.json" % main_dir, "w")
-            last_prof_data.write("[]")
-            last_prof_data.close()
-            
-            # Set the default config.
-            config = {"pre-fill": False,
-                      "restore": True,
-                      "location": "",
-                      "units": "metric",
-                      "pastebin": "d2314ff616133e54f728918b8af1500e",
-                      "show_units": True,
-                      "show_dates": True,
-                      "escape_fullscreen": "exit fullscreen",
-                      "escape_windowed": "minimize",
-                      "auto_save": True,
-                      "confirm_del": True,
-                      "show_pre-fill": True,
-                      "confirm_exit": False}
-            
-            # Configure the units.
-            # Metric:
-            if config["units"] == "metric":
-                
-                units = {"temp": "°C",
-                         "prec": "cm",
-                         "wind": "kph",
-                         "airp": "hPa"}
-            
-            # Imperial:
-            elif config["units"] == "imperial":
-                
-                units = {"temp": "°F",
-                         "prec": "in",
-                         "wind": "mph",
-                         "airp": "mbar"}
-            
-            # Update the main window.
-            self.temp_col.set_title("Temperature (%s)" % units["temp"])
-            self.prec_col.set_title("Precipitation (%s)" % units["prec"])
-            self.wind_col.set_title("Wind (%s)" % units["wind"])
-            self.airp_col.set_title("Air Pressure (%s)" % units["airp"])
-            
-            # Add/remove the units, if desired:
-            if not config["show_units"]:
-                self.temp_col.set_title("Temperature")
-                self.prec_col.set_title("Precipitation")
-                self.wind_col.set_title("Wind")
-                self.humi_col.set_title("Humidity")
-                self.airp_col.set_title("Air Pressure")
-            else:
-                self.temp_col.set_title("Temperature (%s)" % units["temp"])
-                self.prec_col.set_title("Precipitation (%s)" % units["prec"])
-                self.wind_col.set_title("Wind (%s)" % units["wind"])
-                self.humi_col.set_title("Humidity (%)")
-                self.airp_col.set_title("Air Pressure (%s)" % units["airp"])
-            
-            # Set the new title.
-            self.update_title()
-            
-            # Save the data.
-            self.save(show_dialog = False, from_options = True)
+        # Delete all the files.
+        shutil.rmtree(main_dir)
+        
+        # Set the default profile name.
+        last_profile = "Main Profile"
+        
+        # Recreate the directory and program internal files.
+        launch.check_files_exist(main_dir)
+        
+        # Set the default config.
+        config = {"pre-fill": False,
+                  "restore": True,
+                  "location": "",
+                  "units": "metric",
+                  "pastebin": "d2314ff616133e54f728918b8af1500e",
+                  "show_units": True,
+                  "show_dates": True,
+                  "escape_fullscreen": "exit fullscreen",
+                  "escape_windowed": "minimize",
+                  "auto_save": True,
+                  "confirm_del": True,
+                  "show_pre-fill": True,
+                  "confirm_exit": False}
+        
+        # Configure the units.
+        units = launch.get_units(config)
+        
+        # Update the main window.
+        self.temp_col.set_title("Temperature (%s)" % units["temp"])
+        self.prec_col.set_title("Precipitation (%s)" % units["prec"])
+        self.wind_col.set_title("Wind (%s)" % units["wind"])
+        self.humi_col.set_title("Humidity (%)")
+        self.airp_col.set_title("Air Pressure (%s)" % units["airp"])
+        
+        # Set the new title.
+        self.update_title()
+        
+        # Save the data.
+        self.save(show_dialog = False, from_options = True)
     
     
     def switch_profile(self, event):
