@@ -1491,70 +1491,46 @@ class Weather(Gtk.Window):
         
         # Show the dialog.
         ren_dlg = RenameProfileDialog(self)
-        
-        # Get the response.
         response = ren_dlg.run()
+        
+        # Get the new profile name.
         name = ren_dlg.ren_ent.get_text()
         
-        # If the OK button was pressed:
-        if response == Gtk.ResponseType.OK:
-            
-            # Validate the name. If it contains a non-alphanumeric character, starts with a period, or is just space,
-            # show a dialog and cancel the action.
-            if re.compile("[^a-zA-Z1-90 \.\-\+\(\)\?\!]").match(name) or not name or name.lstrip().rstrip() == "" or name.startswith("."):
-                
-                # Create the error dialog.
-                show_error_dialog(ren_dlg, "Rename Profile", "The profile name \"%s\" is not valid.\n\n1. Profile names may not be blank.\n2. Profile names may not be all spaces.\n3. Profile names may only be letters, numbers, and spaces.\n4. Profile names may not start with a period (\".\")." % name)
-            
-            # If the profile name is already in use, show a dialog and cancel the action.
-            elif os.path.isdir("%s/profiles/%s" % (main_dir, name)):
-                
-                # Create the error dialog.
-                show_error_dialog(ren_dlg, "Rename Profile", "The profile name \"%s\" is already in use." % name)
-            
-            # Otherwise if there are no problems with the name, add the profile.
-            else:
-                
-                # Strip leading and trailing whitespace.
-                name = name.lstrip().rstrip()
-            
-                # Rename the directory.
-                os.rename("%s/profiles/%s" % (main_dir, last_profile), "%s/profiles/%s" % (main_dir, name))
-                
-                # Clear the old data.
-                data[:] = []
-                self.liststore.clear()
-                
-                # Load the data.   
-                try:
-                    
-                    # This should be ~/.weatherlog/[profile name]/weather.json on Linux.
-                    data_file = open("%s/profiles/%s/weather.json" % (main_dir, name), "r")
-                    data = json.load(data_file)
-                    data_file.close()
-                    
-                except IOError:
-                    # Show the error message, and close the application.
-                    # This one shows if there was a problem reading the file.
-                    print("Error importing data (IOError).")
-                    data = []
-                
-                except (TypeError, ValueError):
-                    # Show the error message, and close the application.
-                    # This one shows if there was a problem with the data type.
-                    print("Error importing data (TypeError or ValueError).")
-                    data = []
-                
-                # Switch to the new profile.
-                last_profile = name
-                for i in data:
-                    self.liststore.append(i)
-                
-                # Set the new title.
-                self.update_title()
-    
         # Close the dialog.
         ren_dlg.destroy()
+        
+        # If the user did not press OK, don't continue:
+        if response != Gtk.ResponseType.OK:
+            return
+        
+        # Strip leading and trailing whitespace.
+        name = name.lstrip().rstrip()
+        
+        # Validate the name. If the name isn't valid, don't continue.
+        validate = utility_functions.validate_profile(main_dir, name)
+        if validate != "":
+            
+            # Tell the user the profile name isn't valid.
+            show_error_dialog(self, "Rename Profile", validate)
+            return
+            
+        # Rename the directory.
+        os.rename("%s/profiles/%s" % (main_dir, last_profile), "%s/profiles/%s" % (main_dir, name))
+        
+        # Clear the old data.
+        data[:] = []
+        self.liststore.clear()
+        
+        # Load the data.
+        data = io.read_profile(main_dir = main_dir, name = name)
+        
+        # Switch to the new profile.
+        last_profile = name
+        for i in data:
+            self.liststore.append(i)
+        
+        # Set the new title.
+        self.update_title()
     
     
     def merge_profiles(self, event):
