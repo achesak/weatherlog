@@ -54,14 +54,14 @@ def show_file_dialog(self, title):
     import_dlg = Gtk.FileChooserDialog(title, self, Gtk.FileChooserAction.OPEN, (Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL, Gtk.STOCK_OPEN, Gtk.ResponseType.OK))
     
     # Set the filters.
+    filter_json = Gtk.FileFilter()
+    filter_json.set_name("WeatherLog data files (JSON)")
+    filter_json.add_pattern("*.json")
     filter_all = Gtk.FileFilter()
     filter_all.set_name("All files")
     filter_all.add_pattern("*")
-    filter_json = Gtk.FileFilter()
-    filter_json.set_name("WeatherLog data files")
-    filter_json.add_pattern("*.json")
-    import_dlg.add_filter(filter_all)
     import_dlg.add_filter(filter_json)
+    import_dlg.add_filter(filter_all)
     
     # Get the response and filename then close the dialog.
     response = import_dlg.run()
