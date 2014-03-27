@@ -1299,22 +1299,14 @@ class Weather(Gtk.Window):
             # Confirm that the user wants to clear the data.
             response = show_question_dialog(self, "Confirm Clear Current Data - %s" % last_profile, "Are you sure you want to clear the data?\n\nThis action cannot be undone.")
             
-            # If the user confirms the clear:
-            if response == Gtk.ResponseType.OK:
+            # If the user does not want to clear the data, don't continue:
+            if response != Gtk.ResponseType.OK:
                 
-                # Clear the data.
-                data[:] = []
-                
-                # Clear the ListStore.
-                self.liststore.clear()
+                return
         
-        else:
-            
-            # Clear the data.
-            data[:] = []
-            
-            # Clear the ListStore.
-            self.liststore.clear()
+        # Clear the data.
+        data[:] = []
+        self.liststore.clear()
         
         # Update the title.
         self.update_title()
