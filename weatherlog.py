@@ -1176,9 +1176,6 @@ class Weather(Gtk.Window):
             # Clear the old data.
             data[:] = []
             self.liststore.clear()
-            
-            # Set the new title.
-            self.update_title()
 
         # Get the filename.
         response, filename = show_file_dialog(self, "Import - %s" % last_profile)
@@ -1192,6 +1189,9 @@ class Weather(Gtk.Window):
             # Add the new data.
             for i in data:
                 self.liststore.append(i)
+            
+            # Set the new title.
+            self.update_title()
     
     
     def export_file(self, event):
