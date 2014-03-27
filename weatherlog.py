@@ -1801,26 +1801,27 @@ class Weather(Gtk.Window):
         
         # Create the dialog.
         opt_dlg = OptionsDialog(self, config)
-        
-        # Get the response.
         response = opt_dlg.run()
         
-        # If the user pressed OK:
+        # Get the values.
+        prefill = opt_dlg.pre_chk.get_active()
+        restore = opt_dlg.win_chk.get_active()
+        location = opt_dlg.loc_ent.get_text()
+        units_ = opt_dlg.unit_com.get_active_text().lower()
+        esc_win = opt_dlg.escw_com.get_active_text().lower()
+        esc_ful = opt_dlg.escf_com.get_active_text().lower()
+        show_dates = opt_dlg.date_chk.get_active()
+        show_units = opt_dlg.unit_chk.get_active()
+        auto_save = opt_dlg.sav_chk.get_active()
+        confirm_del = opt_dlg.del_chk.get_active()
+        show_prefill = opt_dlg.pdl_chk.get_active()
+        confirm_exit = opt_dlg.cex_chk.get_active()
+        
+        # Close the dialog.
+        opt_dlg.destroy()
+        
+        # If the user pressed OK, change the options.
         if response == Gtk.ResponseType.OK:
-            
-            # Get the values.
-            prefill = opt_dlg.pre_chk.get_active()
-            restore = opt_dlg.win_chk.get_active()
-            location = opt_dlg.loc_ent.get_text()
-            units_ = opt_dlg.unit_com.get_active_text().lower()
-            esc_win = opt_dlg.escw_com.get_active_text().lower()
-            esc_ful = opt_dlg.escf_com.get_active_text().lower()
-            show_dates = opt_dlg.date_chk.get_active()
-            show_units = opt_dlg.unit_chk.get_active()
-            auto_save = opt_dlg.sav_chk.get_active()
-            confirm_del = opt_dlg.del_chk.get_active()
-            show_prefill = opt_dlg.pdl_chk.get_active()
-            confirm_exit = opt_dlg.cex_chk.get_active()
             
             # Set the configuration.
             config["pre-fill"] = prefill
@@ -1837,27 +1838,7 @@ class Weather(Gtk.Window):
             config["confirm_exit"] = confirm_exit
             
             # Configure the units.
-            # Metric:
-            if config["units"] == "metric":
-                
-                units = {"temp": "°C",
-                         "prec": "cm",
-                         "wind": "kph",
-                         "airp": "hPa"}
-            
-            # Imperial:
-            elif config["units"] == "imperial":
-                
-                units = {"temp": "°F",
-                         "prec": "in",
-                         "wind": "mph",
-                         "airp": "mbar"}
-            
-            # Update the main window.
-            self.temp_col.set_title("Temperature (%s)" % units["temp"])
-            self.prec_col.set_title("Precipitation (%s)" % units["prec"])
-            self.wind_col.set_title("Wind (%s)" % units["wind"])
-            self.airp_col.set_title("Air Pressure (%s)" % units["airp"])
+            units = launch.get_units(config)
             
             # If the units changed, ask the user if they want to convert the data.
             if current_units != units_:
@@ -1905,13 +1886,7 @@ class Weather(Gtk.Window):
             
             # Confirm that the user wants to reset the options.
             reset = show_question_dialog(opt_dlg, "Options", "Are you sure you want to reset the options to the default values?")
-                
-            # If the user doesn't want to, don't continue.
             if response == Gtk.ResponseType.CANCEL:
-                
-                # Close the dialog.
-                opt_dlg.destroy()
-                
                 return
             
             # Set the config variables.
@@ -1930,27 +1905,7 @@ class Weather(Gtk.Window):
                       "confirm_exit": False}
             
             # Configure the units.
-            # Metric:
-            if config["units"] == "metric":
-                
-                units = {"temp": "°C",
-                         "prec": "cm",
-                         "wind": "kph",
-                         "airp": "hPa"}
-            
-            # Imperial:
-            elif config["units"] == "imperial":
-                
-                units = {"temp": "°F",
-                         "prec": "in",
-                         "wind": "mph",
-                         "airp": "mbar"}
-            
-            # Update the main window.
-            self.temp_col.set_title("Temperature (%s)" % units["temp"])
-            self.prec_col.set_title("Precipitation (%s)" % units["prec"])
-            self.wind_col.set_title("Wind (%s)" % units["wind"])
-            self.airp_col.set_title("Air Pressure (%s)" % units["airp"])
+            units = launch.get_units(config)
             
             # If the units changed, ask the user if they want to convert the data.
             if current_units != config["units"]:
@@ -1973,28 +1928,18 @@ class Weather(Gtk.Window):
                     for i in data:
                         self.liststore.append(i)
             
-            # Add/remove the units, if desired:
-            if not config["show_units"]:
-                self.temp_col.set_title("Temperature")
-                self.prec_col.set_title("Precipitation")
-                self.wind_col.set_title("Wind")
-                self.humi_col.set_title("Humidity")
-                self.airp_col.set_title("Air Pressure")
-            else:
-                self.temp_col.set_title("Temperature (%s)" % units["temp"])
-                self.prec_col.set_title("Precipitation (%s)" % units["prec"])
-                self.wind_col.set_title("Wind (%s)" % units["wind"])
-                self.humi_col.set_title("Humidity (%)")
-                self.airp_col.set_title("Air Pressure (%s)" % units["airp"])
+            # Reset the main window.
+            self.temp_col.set_title("Temperature (%s)" % units["temp"])
+            self.prec_col.set_title("Precipitation (%s)" % units["prec"])
+            self.wind_col.set_title("Wind (%s)" % units["wind"])
+            self.humi_col.set_title("Humidity (%)")
+            self.airp_col.set_title("Air Pressure (%s)" % units["airp"])
             
-            # Set the title, if desired:
+            # Set the title.
             self.update_title()
             
             # Save the data.
             self.save(show_dialog = False, from_options = True)
-        
-        # Close the dialog.
-        opt_dlg.destroy()
     
     
     def save(self, show_dialog = True, automatic = True, from_options = False):
