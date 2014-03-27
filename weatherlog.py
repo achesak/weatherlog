@@ -1271,34 +1271,18 @@ class Weather(Gtk.Window):
         elif mode == "raw":
             api["api_paste_format"] = "javascript"
         
-        # Encode the api string.
-        api = urlencode(api)
-        
         # Upload the text.
         try:
             
-            # Send the data.
-            pastebin = urlopen("http://pastebin.com/api/api_post.php", api)
-            
-            # Read the result.
+            # Post the data and get the URL.
+            pastebin = urlopen("http://pastebin.com/api/api_post.php", urlencode(api))
             result = pastebin.read()
-            
-            # Close the connection.
             pastebin.close()
-            
-            success = True
-            
-        except:
-            
-            success = False
-        
-        # Show the dialog telling the user either that there was an error or giving the URL.
-        if success:
             
             # Tell the user the URL.
             show_alert_dialog(self, "Export to Pastebin - %s" % last_profile, "The data has been uploaded to Pastebin, and can be accessed at the following URL:\n\n%s" % result)
-        
-        else:
+            
+        except:
             
             # Tell the user there was an error
             show_error_dialog(self, "Export to Pastebin - %s" % last_profile, "The data could not be uploaded to Pastebin.")
