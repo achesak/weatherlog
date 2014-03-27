@@ -1,20 +1,20 @@
 # -*- coding: utf-8 -*-
 
 
-# This file defines the Copy/Move to Existing Profile dialog.
+# This file defines the generic dialog for selecting a profile.
 
 
 # Import GTK for the dialog.
 from gi.repository import Gtk
 
 
-class ProfileDataExistingDialog(Gtk.Dialog):
-    """Shows the "Copy/Move to Existing Profile" dialog."""
-    def __init__(self, parent, profiles, mode):
+class ProfileSelectionDialog(Gtk.Dialog):
+    """Shows the profile selection dialog."""
+    def __init__(self, parent, title, profiles, select_mode = "single"):
         """Create the dialog."""
         
         # This window should be modal.
-        Gtk.Dialog.__init__(self, "%s Data to Existing Profile" % mode, parent, Gtk.DialogFlags.MODAL)
+        Gtk.Dialog.__init__(self, title, parent, Gtk.DialogFlags.MODAL)
         self.set_default_size(300, 300)
         # Don't allow the user to resize the window.
         #self.set_resizable(False)
@@ -24,15 +24,14 @@ class ProfileDataExistingDialog(Gtk.Dialog):
         self.add_button("OK", Gtk.ResponseType.OK)
         
         # Create the grid.
-        swi_box = self.get_content_area()
-        swi_grid = Gtk.Grid()
-        # Add the grid to the dialog's content area.
-        swi_box.add(swi_grid)
+        sel_box = self.get_content_area()
+        sel_grid = Gtk.Grid()
+        sel_box.add(sel_grid)
         
         # Create the label.
-        swi_lbl = Gtk.Label("Choose profile:")
-        swi_lbl.set_alignment(0, 0.5)
-        swi_grid.add(swi_lbl)
+        sel_lbl = Gtk.Label("Choose profile:")
+        sel_lbl.set_alignment(0, 0.5)
+        sel_grid.add(sel_lbl)
         
         # Create the ListStore for storing the data.
         self.liststore = Gtk.ListStore(str, str)
@@ -44,14 +43,18 @@ class ProfileDataExistingDialog(Gtk.Dialog):
         self.treeview = Gtk.TreeView(model = self.liststore)
         
         # Create the Profile column.
-        swi_text = Gtk.CellRendererText()
-        self.swi_col = Gtk.TreeViewColumn("Profile", swi_text, text = 0)
-        self.treeview.append_column(self.swi_col)
+        pro_text = Gtk.CellRendererText()
+        self.pro_col = Gtk.TreeViewColumn("Profile", pro_text, text = 0)
+        self.treeview.append_column(self.pro_col)
         
         # Create the Last Modified column.
         mod_text = Gtk.CellRendererText()
         self.mod_col = Gtk.TreeViewColumn("Last Modified", mod_text, text = 1)
         self.treeview.append_column(self.mod_col)
+        
+        # Allow for multiple items to be selected, if appropriate.
+        if select_mode == "multiple":
+            self.treeview.get_selection().set_mode(Gtk.SelectionMode.MULTIPLE)
         
         # Create the ScrolledWindow for displaying the list with a scrollbar.
         scrolled_win = Gtk.ScrolledWindow()
@@ -62,7 +65,7 @@ class ProfileDataExistingDialog(Gtk.Dialog):
         
         # Display the TreeView.
         scrolled_win.add(self.treeview)
-        swi_grid.attach_next_to(scrolled_win, swi_lbl, Gtk.PositionType.BOTTOM, 1, 1)
+        sel_grid.attach_next_to(scrolled_win, sel_lbl, Gtk.PositionType.BOTTOM, 1, 1)
         
         # Show the dialog. The response gets handled by the function
         # in the main class.

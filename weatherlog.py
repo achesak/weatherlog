@@ -106,14 +106,8 @@ from weatherlog_resources.dialogs.info_dialog import GenericInfoDialog
 from weatherlog_resources.dialogs.data_dialog import show_no_data_dialog
 # Import the dialog for entering a profile name.
 from weatherlog_resources.dialogs.profile_name_dialog import ProfileNameDialog
-# Import the dialog for switching profiles.
-from weatherlog_resources.dialogs.switch_profile_dialog import SwitchProfileDialog
-# Import the dialog for removing profiles.
-from weatherlog_resources.dialogs.remove_profile_dialog import RemoveProfileDialog
-# Import the dialog for merging profiles.
-from weatherlog_resources.dialogs.merge_profiles_dialog import MergeProfilesDialog
-# Import the dialog for choosing a profile when moving/copying data.
-from weatherlog_resources.dialogs.data_profile_existing_dialog import ProfileDataExistingDialog
+# Import the dialog for selecting a profile from a list.
+from weatherlog_resources.dialogs.profile_selection_dialog import ProfileSelectionDialog
 # Import the dialog for selecting a date from a calendar.
 from weatherlog_resources.dialogs.calendar_dialog import CalendarDialog
 # Import the dialog for selecting a date from a list.
@@ -1342,7 +1336,7 @@ class Weather(Gtk.Window):
             show_alert_dialog(self, "Switch Profile", "There are no other profiles.")
         
         # Show the dialog.
-        swi_dlg = SwitchProfileDialog(self, profiles)
+        swi_dlg = ProfileSelectionDialog(self, "Switch Profile", profiles)
         response = swi_dlg.run()
         
         # Get the selected item.
@@ -1436,7 +1430,7 @@ class Weather(Gtk.Window):
             return
         
         # Show the dialog.
-        rem_dlg = RemoveProfileDialog(self, profiles)
+        rem_dlg = ProfileSelectionDialog(self, "Remove Profile", profiles, select_mode = "multiple")
         response = rem_dlg.run()
         
         # Get the selected items.
@@ -1535,11 +1529,9 @@ class Weather(Gtk.Window):
             show_alert_dialog(self, "Merge Profiles", "There are no other profiles.")
             return
         
-        # Show the dialog.
-        mer_dlg = MergeProfilesDialog(self, profiles)
+        # Get the profile to merge.
+        mer_dlg = ProfileSelectionDialog(self, "Merge Profiles", profiles)
         response = mer_dlg.run()
-        
-        # Get the selected item.
         model, treeiter = mer_dlg.treeview.get_selection().get_selected()
         
         # Close the dialog.
@@ -1694,7 +1686,7 @@ class Weather(Gtk.Window):
             return
         
         # Get the profile.
-        exi_dlg = ProfileDataExistingDialog(self, profiles, mode)
+        exi_dlg = ProfileSelectionDialog(self, "%s Data to Existing Profile" % mode, profiles)
         response = exi_dlg.run()
         model, treeiter = exi_dlg.treeview.get_selection().get_selected()
         
