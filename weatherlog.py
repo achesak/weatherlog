@@ -1056,36 +1056,26 @@ class Weather(Gtk.Window):
     def import_file(self, event):
         """Imports data from a file."""
         
-        # Create the dialog.
-        import_dlg = Gtk.FileChooserDialog("Import - %s" % last_profile, self, Gtk.FileChooserAction.OPEN, (Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL, Gtk.STOCK_OPEN, Gtk.ResponseType.OK))
+        global data
         
-        # Set the filters.
-        filter_all = Gtk.FileFilter()
-        filter_all.set_name("All files")
-        filter_all.add_pattern("*")
-        filter_json = Gtk.FileFilter()
-        filter_json.set_name("WeatherLog data files")
-        filter_json.add_pattern("*.json")
-        import_dlg.add_filter(filter_all)
-        import_dlg.add_filter(filter_json)
+        # Get the filename.
+        response, filename = show_file_dialog(self, "Import - %s" % last_profile)
         
-        # Get the response.
-        response = import_dlg.run()
+        # If the user clicked OK, import the data:
         if response == Gtk.ResponseType.OK:
             
-            # Confirm that the user wants to overwrite the data.
-            response = show_question_dialog(self, "Confirm Import - %s" % last_profile, "Are you sure you want to import the data?\n\nCurrent data will be overwritten.")
+            # Confirm that the user wants to overwrite the data, if the profile isn't blank.
+            if len(data) > 0:
+                
+                # Ask the user for confirmation.
+                response2 = show_question_dialog(self, "Confirm Import - %s" % last_profile, "Are you sure you want to import the data?\n\nCurrent data will be overwritten.")
             
-            # If the user doesn't want to overwrite, cancel the action.
-            if response != Gtk.ResponseType.OK:
-                import_dlg.destroy()
-                return
-            
-            # Get the filename.
-            filename = import_dlg.get_filename()
+                # If the user doesn't want to overwrite, cancel the action.
+                if response2 != Gtk.ResponseType.OK:
+                    
+                    return
             
             # Clear the data.
-            global data
             data[:] = []
             # Clear the ListStore.
             self.liststore.clear()
@@ -1096,9 +1086,6 @@ class Weather(Gtk.Window):
             # Add the new data.
             for i in data:
                 self.liststore.append(i)
-            
-        # Close the dialog.
-        import_dlg.destroy()
     
     
     def import_merge(self, event):

@@ -66,7 +66,7 @@ def show_file_dialog(self, title):
     # Get the response and filename then close the dialog.
     response = import_dlg.run()
     filename = import_dlg.get_filename()
-    import_dld.destroy()
+    import_dlg.destroy()
     
     # Return the response.
     return [response, filename]
