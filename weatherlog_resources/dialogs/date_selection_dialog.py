@@ -1,20 +1,20 @@
 # -*- coding: utf-8 -*-
 
 
-# This file defines the Charts for Selected Dates dialog.
+# This file defines the generic dialog for selecting dates.
 
 
 # Import GTK for the dialog.
 from gi.repository import Gtk
 
 
-class ChartSelectedDialog(Gtk.Dialog):
-    """Shows the charts for selected dates dialog."""
-    def __init__(self, parent, info, profile, dates):
+class DateSelectionDialog(Gtk.Dialog):
+    """Shows the date selection dialog."""
+    def __init__(self, parent, title, dates):
         """Create the dialog."""
         
         # This window should be modal.
-        Gtk.Dialog.__init__(self, "%s Chart for Selected Dates - %s" % (info, profile), parent, Gtk.DialogFlags.MODAL)
+        Gtk.Dialog.__init__(self, title, parent, Gtk.DialogFlags.MODAL)
         self.set_default_size(300, 300)
         # Don't allow the user to resize the window.
         #self.set_resizable(False)

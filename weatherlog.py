@@ -48,10 +48,6 @@ import webbrowser
 # Import datetime for getting the difference between two dates, and 
 # for sorting based on dates.
 import datetime
-# Import re for validating the data.
-import re
-# Import glob for getting a list of directories.
-import glob
 # Import shutil for removing a directory.
 import shutil
 # Import os for creating a directory.
@@ -116,20 +112,16 @@ from weatherlog_resources.dialogs.switch_profile_dialog import SwitchProfileDial
 from weatherlog_resources.dialogs.remove_profile_dialog import RemoveProfileDialog
 # Import the dialog for merging profiles.
 from weatherlog_resources.dialogs.merge_profiles_dialog import MergeProfilesDialog
-# Import the dialog for selecting dates to copy or move.
-from weatherlog_resources.dialogs.profile_date_dialog import ProfileDateSelectionDialog
 # Import the dialog for choosing a profile when moving/copying data.
 from weatherlog_resources.dialogs.data_profile_existing_dialog import ProfileDataExistingDialog
-# Import the dialog for selecting a date.
+# Import the dialog for selecting a date from a calendar.
 from weatherlog_resources.dialogs.calendar_dialog import CalendarDialog
+# Import the dialog for selecting a date from a list.
+from weatherlog_resources.dialogs.date_selection_dialog import DateSelectionDialog
 # Import the dialog for changing the options.
 from weatherlog_resources.dialogs.options_dialog import OptionsDialog
 # Import the dialog for displaying the charts.
 from weatherlog_resources.dialogs.chart_dialog import GenericChartDialog
-# Import the dialog for selecting dates to show information about.
-from weatherlog_resources.dialogs.info_selected_dialog import InfoSelectedDialog
-# Import the dialog for selecting dates to show a chart about.
-from weatherlog_resources.dialogs.chart_selected_dialog import ChartSelectedDialog
 # Import the miscellaneous dialogs.
 from weatherlog_resources.dialogs.misc_dialogs import show_alert_dialog, show_error_dialog, show_question_dialog, show_file_dialog, show_save_dialog
 
@@ -746,7 +738,7 @@ class Weather(Gtk.Window):
             dates.append([i[0]])
         
         # Show the dialog and get the response.
-        info_dlg = InfoSelectedDialog(self, info, last_profile, dates)
+        info_dlg = DateSelectionDialog(self, "%s Info for Selected Dates - %s" % (info, last_profile), dates)
         response = info_dlg.run()
         
         # Get the selected items.
@@ -934,7 +926,7 @@ class Weather(Gtk.Window):
             dates.append([i[0]])
         
         # Show the dialog and get the response.
-        info_dlg = ChartSelectedDialog(self, info, last_profile, dates)
+        info_dlg = DateSelectionDialog(self, "%s Chart for Selected Dates - %s" % (info, last_profile), dates)
         response = info_dlg.run()
         
         # Get the selected items.
@@ -1637,7 +1629,7 @@ class Weather(Gtk.Window):
         new_prof_file.close()
             
         # Get the dates to move or copy.
-        date_dlg = ProfileDateSelectionDialog(self, mode, "New", dates)
+        date_dlg = DateSelectionDialog(self, "%s Data to New Profile" % mode, dates)
         response = date_dlg.run()
         model, treeiter = date_dlg.treeview.get_selection().get_selected_rows()
         
@@ -1717,7 +1709,7 @@ class Weather(Gtk.Window):
         name = model[treeiter][0]
         
         # Get the dates to move or copy.
-        date_dlg = ProfileDateSelectionDialog(self, mode, "Existing", dates)
+        date_dlg = DateSelectionDialog(self, "%s Data to Existing Profile" % mode, dates)
         response = date_dlg.run()
         model, treeiter = date_dlg.treeview.get_selection().get_selected_rows()
         
