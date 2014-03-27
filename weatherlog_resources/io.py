@@ -74,3 +74,19 @@ def write_blank_profile(main_dir, name):
     new_prof_file = open("%s/profiles/%s/weather.json" % (main_dir, name), "w")
     new_prof_file.write("[]")
     new_prof_file.close()
+
+
+def write_standard_file(filename, data):
+    """Writes a file without formatting it as JSON."""
+    
+    # Save the data.
+    try:
+        # Write to the specified file.
+        data_file = open(filename, "w")
+        data_file.write(data)
+        data_file.close()
+        
+    except IOError:
+        # Show the error message.
+        # This only shows if the error occurred when writing to the file.
+        print("Error saving data file (IOError).")

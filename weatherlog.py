@@ -243,15 +243,15 @@ class Weather(Gtk.Window):
             ("import", Gtk.STOCK_OPEN, "_Import...", None, "Import data from a file", self.import_file),
             ("import_profile", None, "Import as New _Profile...", "<Control><Shift>o", None, self.import_new_profile),
             ("import_merge", None, "Imp_ort and Merge...", "<Alt><Shift>o", None, self.import_merge),
-            ("export", Gtk.STOCK_SAVE, "_Export...", None, "Export data to a file", self.export_file)
+            ("export", Gtk.STOCK_SAVE, "_Export...", None, "Export data to a file", lambda x: self.export_file(mode = "raw"))
         ])
         
         # Create the Weather -> Export to submenu.
         action_weather_export_group = Gtk.Action("export_menu", "E_xport to", None, None)
         action_group.add_action(action_weather_export_group)
         action_group.add_actions([
-            ("export_html", None, "Export to _HTML...", "<Control><Alt>h", None, self.export_file_html),
-            ("export_csv", None, "Export to _CSV...", "<Control><Alt>c", None, self.export_file_csv),
+            ("export_html", None, "Export to _HTML...", "<Control><Alt>h", None, lambda x: self.export_file(mode = "html")),
+            ("export_csv", None, "Export to _CSV...", "<Control><Alt>c", None, lambda x: self.export_file(mode = "csv")),
             ("export_pastebin", None, "Export to Paste_bin...", None, None, lambda x: self.export_pastebin("raw")),
             ("export_pastebin_html", None, "_Export to Pastebin (HTML)...", None, None, lambda x: self.export_pastebin("html")),
             ("export_pastebin_csv", None, "E_xport to Pastebin (CSV)...", None, None, lambda x: self.export_pastebin("csv")),
@@ -1197,107 +1197,42 @@ class Weather(Gtk.Window):
             self.update_title()
     
     
-    def export_file(self, event):
+    def export_file(self, mode = "raw"):
         """Exports the data to a file."""
+        
+        # Get the title.
+        title = "Export"
+        if mode == "html":
+            title += "to HTML"
+        elif mode == "csv":
+            title += "to CSV"
+        title += " - %s" % (last_profile)
         
         # If there is no data, tell the user and cancel the action.
         if len(data) == 0:
             
             # Tell the user there is no data to export.
-            show_alert_dialog(self, "Export - %s" % last_profile, "There is no data to export.")
+            show_alert_dialog(self, title, "There is no data to export.")
             
             return
         
         # Get the filename.
-        response, filename = show_save_dialog(self, "Export - %s" % last_profile)
+        response, filename = show_save_dialog(self, title)
         
         # If the user pressed OK, export the data:
         if response == Gtk.ResponseType.OK:
             
-            # Save the data.
-            io.write_profile(filename = filename, data = data)
-    
-    
-    def export_file_html(self, event):
-        """Formats the data into a HTML table, then exports it to a file."""
-        
-        # If there is no data, tell the user and cancel the action.
-        if len(data) == 0:
-            
-            # Tell the user there is no data to export.
-            show_alert_dialog(self, "Export to HTML - %s" % last_profile, "There is no data to export.")
-            
-            return
-        
-        # Create the dialog.
-        export_html_dlg = Gtk.FileChooserDialog("Export to HTML - %s" % last_profile, self, Gtk.FileChooserAction.SAVE, (Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL, Gtk.STOCK_OPEN, Gtk.ResponseType.OK))
-        export_html_dlg.set_do_overwrite_confirmation(True)
-        
-        # Get the response.
-        response = export_html_dlg.run()
-        if response == Gtk.ResponseType.OK:
-            
-            # Convert to data to HTML.
-            html = export.html(data, units)
-            
-            # Get the filename.
-            filename = export_html_dlg.get_filename()
+            # Convert the data if needed.
+            if mode == "html":
+                converted = export.html(data, units)
+            elif mode == "csv":
+                converted = export.csv(data, units)
             
             # Save the data.
-            try:
-                # Write to the specified file.
-                data_file = open(filename, "w")
-                data_file.write(html)
-                data_file.close()
-                
-            except IOError:
-                # Show the error message.
-                # This only shows if the error occurred when writing to the file.
-                print("Error exporting data to HTML (IOError).")
-            
-        # Close the dialog.
-        export_html_dlg.destroy()
-    
-    
-    def export_file_csv(self, event):
-        """Formats the data into CSV, then exports it to a file."""
-        
-        # If there is no data, tell the user and cancel the action.
-        if len(data) == 0:
-            
-            # Tell the user there is no data to export.
-            show_alert_dialog(self, "Export to CSV - %s" % last_profile, "There is no data to export.")
-            
-            return
-        
-        # Create the dialog.
-        export_csv_dlg = Gtk.FileChooserDialog("Export to CSV - %s" % last_profile, self, Gtk.FileChooserAction.SAVE, (Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL, Gtk.STOCK_OPEN, Gtk.ResponseType.OK))
-        export_csv_dlg.set_do_overwrite_confirmation(True)
-        
-        # Get the response.
-        response = export_csv_dlg.run()
-        if response == Gtk.ResponseType.OK:
-            
-            # Convert the data to CSV.
-            csv = export.csv(data, units)
-            
-            # Get the filename.
-            filename = export_csv_dlg.get_filename()
-            
-            # Save the data.
-            try:
-                # Write to the specified file.
-                data_file = open(filename, "w")
-                data_file.write(csv)
-                data_file.close()
-                
-            except IOError:
-                # Show the error.
-                # This only shows if the error occurred when writing to the file.
-                print("Error exporting data to CSV (IOError).")
-            
-        # Close the dialog.
-        export_csv_dlg.destroy()
+            if mode == "raw":
+                io.write_profile(filename = filename, data = data)
+            else:
+                io.write_standard_file(filename = filename, data = converted)
     
     
     def export_pastebin(self, mode):
