@@ -116,6 +116,8 @@ from weatherlog_resources.dialogs.date_selection_dialog import DateSelectionDial
 from weatherlog_resources.dialogs.options_dialog import OptionsDialog
 # Import the dialog for displaying the charts.
 from weatherlog_resources.dialogs.chart_dialog import GenericChartDialog
+# Import the dialog for selecting a data subset.
+from weatherlog_resources.dialogs.select_simple_dialog import SelectDataSimpleDialog
 # Import the miscellaneous dialogs.
 from weatherlog_resources.dialogs.misc_dialogs import show_alert_dialog, show_error_dialog, show_question_dialog, show_file_dialog, show_save_dialog
 
@@ -320,7 +322,9 @@ class Weather(Gtk.Window):
             ("precipitation_selected_chart", None, "_Precipitation for Selected Dates...", None, None, lambda x: self.chart_selected("Precipitation")),
             ("wind_selected_chart", None, "_Wind for Selected Dates...", None, None, lambda x: self.chart_selected("Wind")),
             ("humidity_selected_chart", None, "_Humidity for Selected Dates...", None, None, lambda x: self.chart_selected("Humidity")),
-            ("air_pressure_selected_chart", None, "_Air Pressure for Selected Dates...", None, None, lambda x: self.chart_selected("Air Pressure"))
+            ("air_pressure_selected_chart", None, "_Air Pressure for Selected Dates...", None, None, lambda x: self.chart_selected("Air Pressure")),
+            ("select_data", None, "S_elect Data...", None, None, self.select_data_simple),
+            ("select_data_advanced", None, "Select Data (_Advanced)...", None, None, None)
         ])
         
         # Create the Profiles menu.
@@ -593,34 +597,56 @@ class Weather(Gtk.Window):
     def remove(self, event):
         """Removes a row of data from the list."""
         
-        # Get the selected date.
-        try:
-            tree_sel = self.treeview.get_selection()
-            tm, ti = tree_sel.get_selected()
-            date = tm.get_value(ti, 0)
+        # Get the dates.
+        dates = []
+        for i in data:
+            dates.append([i[0]])
         
-        except:
-            # If nothing was selected, show a dialog and don't continue.
-            
-            # Tell the user there is nothing selected.
-            show_error_dialog(self, "Remove - %s" % last_profile, "No date selected.")
+        # Show the dialog and get the response.
+        rem_dlg = DateSelectionDialog(self, "Remove - %s" % last_profile, dates)
+        response = rem_dlg.run()
+        
+        # Get the selected items.
+        model, treeiter = rem_dlg.treeview.get_selection().get_selected_rows()
+        
+        # Close the dialog.
+        rem_dlg.destroy()
+        
+        # If the user did not click OK, don't continue.
+        if response != Gtk.ResponseType.OK:
+            return
+        
+        # If nothing was selected, don't continue.
+        if treeiter == None:
+            return
+        
+        # Get the dates.
+        ndates = []
+        for i in treeiter:
+            ndates.append(model[i][0])
+        
+        # If there is no data, don't continue.
+        if len(ndates) == 0:
             return
         
         # Only show the confirmation dialog if the user wants that.
         if config["confirm_del"]:
             
             # Confirm that the user wants to delete the row.
-            response = show_question_dialog(self, "Confirm Remove - %s" % last_profile, "Are you sure you want to delete the data for %s?\n\nThis action cannot be undone." % date)
+            response = show_question_dialog(self, "Remove - %s" % last_profile, "Are you sure you want to delete the selected date%s?\n\nThis action cannot be undone." % ("s" if len(ndates) > 1 else ""))
             
             # If the user doesn't want to overwrite, cancel the action.
             if response != Gtk.ResponseType.OK:
                 return
         
-        # Get the index of the date.
-        index = utility_functions.get_column(data, 0).index(date)
-        
-        # Delete the index in the list.
-        del data[index]
+        # Loop through the list of dates and delete them.
+        for i in ndates:
+            
+            # Get the index of the date.
+            index = utility_functions.get_column(data, 0).index(i)
+            
+            # Delete the index in the list.
+            del data[index]
         
         # Refresh the ListStore.
         self.liststore.clear()
@@ -1002,6 +1028,16 @@ class Weather(Gtk.Window):
         
         # Close the dialog. The response can be ignored.
         chart_dlg.destroy()
+    
+    
+    def select_data_simple(self, event):
+        """Shows the simple data selection dialog."""
+        
+        ## NOWHERE NEAR DONE!!!
+        
+        sel_dlg = SelectDataSimpleDialog(self)
+        response = sel_dlg.run()
+        sel_dlg.destroy()
     
     
     def import_file(self, event):

@@ -81,6 +81,9 @@
         <menuitem action="humidity_selected_chart" />
         <menuitem action="air_pressure_selected_chart" />
       </menu>
+      <separator />
+      <menuitem action="select_data" />
+      <menuitem action="select_data_advanced" />
     </menu>
     <menu action="profiles_menu">
       <menuitem action="switch_profile" />
