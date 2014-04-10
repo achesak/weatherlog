@@ -116,8 +116,9 @@ from weatherlog_resources.dialogs.date_selection_dialog import DateSelectionDial
 from weatherlog_resources.dialogs.options_dialog import OptionsDialog
 # Import the dialog for displaying the charts.
 from weatherlog_resources.dialogs.chart_dialog import GenericChartDialog
-# Import the dialog for selecting a data subset.
+# Import the dialogs for selecting data subsets.
 from weatherlog_resources.dialogs.select_simple_dialog import SelectDataSimpleDialog
+from weatherlog_resources.dialogs.select_advanced_dialog import SelectDataAdvancedDialog
 # Import the miscellaneous dialogs.
 from weatherlog_resources.dialogs.misc_dialogs import show_alert_dialog, show_error_dialog, show_question_dialog, show_file_dialog, show_save_dialog
 
@@ -324,7 +325,7 @@ class Weather(Gtk.Window):
             ("humidity_selected_chart", None, "_Humidity for Selected Dates...", None, None, lambda x: self.chart_selected("Humidity")),
             ("air_pressure_selected_chart", None, "_Air Pressure for Selected Dates...", None, None, lambda x: self.chart_selected("Air Pressure")),
             ("select_data", None, "S_elect Data...", None, None, self.select_data_simple),
-            ("select_data_advanced", None, "Select Data (_Advanced)...", None, None, None)
+            ("select_data_advanced", None, "Select Data (_Advanced)...", None, None, self.select_data_advanced)
         ])
         
         # Create the Profiles menu.
@@ -645,7 +646,7 @@ class Weather(Gtk.Window):
             # Get the index of the date.
             index = utility_functions.get_column(data, 0).index(i)
             
-            # Delete the index in the list.
+            # Delete the item at that index in the list.
             del data[index]
         
         # Refresh the ListStore.
@@ -1036,6 +1037,16 @@ class Weather(Gtk.Window):
         ## NOWHERE NEAR DONE!!!
         
         sel_dlg = SelectDataSimpleDialog(self)
+        response = sel_dlg.run()
+        sel_dlg.destroy()
+    
+    
+    def select_data_advanced(self, event):
+        """Shows the advanced data selection dialog."""
+        
+        ## NOWHERE NEAR DONE!!
+        
+        sel_dlg = SelectDataAdvancedDialog(self)
         response = sel_dlg.run()
         sel_dlg.destroy()
     
