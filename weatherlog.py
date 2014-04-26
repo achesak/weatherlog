@@ -96,6 +96,8 @@ import weatherlog_resources.info as info
 import weatherlog_resources.charts as charts
 # Import the functions for handling command line arguments.
 import weatherlog_resources.command_line as command_line
+# Import the functions for filtering the data.
+import weatherlog_resources.filter_data as filter_data
 # Import the dialog for getting new data.
 from weatherlog_resources.dialogs.new_dialog import AddNewDialog
 # Import the dialog for editing a row of data.
