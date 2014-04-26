@@ -86,6 +86,12 @@ def filter_compare(item, operator, value, string_compare):
         for i in range(0, len(value)):
             value[i] = float(value[i])
     
+    # If this is a string comparison, convert everything to lowercase.
+    if string_compare:
+        for i in range(0, len(value)):
+            value[i] = value[i].lower()
+        item = item.lower()
+    
     matches = False
     
     # Compare the item: equal to.
