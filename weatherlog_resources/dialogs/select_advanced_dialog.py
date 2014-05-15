@@ -10,11 +10,11 @@ from gi.repository import Gtk
 
 class SelectDataAdvancedDialog(Gtk.Dialog):
     """Shows the advanced data selection dialog."""
-    def __init__(self, parent):
+    def __init__(self, parent, profile):
         """Create the dialog."""
         
         # This window should be modal.
-        Gtk.Dialog.__init__(self, "Select Data", parent, Gtk.DialogFlags.MODAL)
+        Gtk.Dialog.__init__(self, "Select Data - %s" % profile, parent, Gtk.DialogFlags.MODAL)
         # Don't allow the user to resize the window.
         self.set_resizable(False)
         

@@ -1039,7 +1039,7 @@ class Weather(Gtk.Window):
         """Shows the simple data selection dialog."""
         
         # Show the dialog and get the field, condition, and value.
-        sel_dlg = SelectDataSimpleDialog(self)
+        sel_dlg = SelectDataSimpleDialog(self, last_profile)
         response = sel_dlg.run()
         field = sel_dlg.field_com.get_active_text()
         operator = sel_dlg.op_com.get_active_text()
@@ -1054,6 +1054,13 @@ class Weather(Gtk.Window):
         
         # Filter the list.
         filtered = filter_data.filter_data(data, [field, operator, value])
+        
+        # If an invalid operator was specified, don't continue. Explicitly check for 
+        # False to avoid an empty list passing.
+        if filtered == False:
+            
+            show_error_dialog(self, "Select Data - %s" % (info, last_profile), "The ending date must be later than the starting date.")
+            return
         
         # Show the dialog with the data and get the response.
         sub_dlg = DataSubsetDialog(self, "Data Subset - %s" % last_profile, filtered, config["show_units"], units)
@@ -1086,7 +1093,7 @@ class Weather(Gtk.Window):
         
         ## NOWHERE NEAR DONE!!
         
-        sel_dlg = SelectDataAdvancedDialog(self)
+        sel_dlg = SelectDataAdvancedDialog(self, last_profile)
         response = sel_dlg.run()
         sel_dlg.destroy()
     

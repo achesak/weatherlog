@@ -59,6 +59,12 @@ def filter_data(data, condition):
         string_compare = True
         col = utility_functions.get_column(data, 6)
     
+    # If the column that is being compared is precipitation type, wind direction, air pressure change, 
+    # or cloud cover, and the comparison is numerical, don't continue.
+    if condition[0] == "precipitation type" or condition[0] == "wind direction" or condition[0] == "air pressure change" or condition[0] == "cloud cover":
+        if condition[1] != "equal to" and condition[1] != "not equal to":
+            return False
+    
     # Loop through the data, and add it to the filtered list if it matches the condition.
     for i in range(0, len(data)):
         
@@ -74,7 +80,7 @@ def filter_data(data, condition):
 def filter_compare(item, operator, value, string_compare):
     """Checks whether the item matches the condition. Returns true if it does, and false otherwise."""
     
-    # Remove all whitespace from the value.
+    # Remove all whitespace from the value and the item to compare.
     value = "".join(value.split())
     value = [value]
     
@@ -91,6 +97,7 @@ def filter_compare(item, operator, value, string_compare):
     if string_compare:
         for i in range(0, len(value)):
             value[i] = value[i].lower()
+        item = "".join(item.split())
         item = item.lower()
     
     matches = False
@@ -157,14 +164,14 @@ def filter_compare(item, operator, value, string_compare):
     if operator == "outside":
         
         # Check if the item is outside the values.
-        if item < value[0] and item > value[1]:
+        if item < value[0] or item > value[1]:
             matches = True
     
     # Compare the item: outside (inclusive).
     if operator == "outside (inclusive)":
         
         # Check if the item is outside or equal to the values.
-        if item <= value[0] and item >= value[1]:
+        if item <= value[0] or item >= value[1]:
             matches = True
     
     # Return whether the item matches the condition.
