@@ -1059,7 +1059,11 @@ class Weather(Gtk.Window):
         # False to avoid an empty list passing.
         if filtered == False:
             
-            show_error_dialog(self, "Select Data - %s" % (info, last_profile), "The ending date must be later than the starting date.")
+            # Build the error string.
+            conerr = "Invalid comparison: %s cannot use the \"%s\" operator." % (field, operator)
+            
+            # Tell the user the condition was invalid.
+            show_error_dialog(self, "Select Data - %s" % last_profile, "There were one or more problems with the conditions specified:\n\n%s" % conerr)
             return
         
         # Show the dialog with the data and get the response.
