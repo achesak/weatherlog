@@ -28,3 +28,13 @@ def export_chart(data, filename):
     
     # Save the data.
     io.write_standard_file(filename, data2)
+
+
+def export_subset(data, units, filename):
+    """Exports subset data."""
+    
+    # Convert the data to HTML.
+    data2 = export.html(data, units)
+    
+    # Save the data.
+    io.write_standard_file(filename, data2)

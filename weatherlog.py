@@ -121,6 +121,8 @@ from weatherlog_resources.dialogs.chart_dialog import GenericChartDialog
 # Import the dialogs for selecting data subsets.
 from weatherlog_resources.dialogs.select_simple_dialog import SelectDataSimpleDialog
 from weatherlog_resources.dialogs.select_advanced_dialog import SelectDataAdvancedDialog
+# Import the dialog for displaying data subsets.
+from weatherlog_resources.dialogs.data_subset_dialog import DataSubsetDialog
 # Import the miscellaneous dialogs.
 from weatherlog_resources.dialogs.misc_dialogs import show_alert_dialog, show_error_dialog, show_question_dialog, show_file_dialog, show_save_dialog
 
@@ -847,7 +849,7 @@ class Weather(Gtk.Window):
             # Close the dialog.
             export_dlg.destroy()
         
-        # Close the dialog. The response can be ignored.
+        # Close the dialog.
         info_dlg.destroy()
         
     
@@ -1029,18 +1031,54 @@ class Weather(Gtk.Window):
             # Close the dialog.
             export_dlg.destroy()
         
-        # Close the dialog. The response can be ignored.
+        # Close the dialog.
         chart_dlg.destroy()
     
     
     def select_data_simple(self, event):
         """Shows the simple data selection dialog."""
         
-        ## NOWHERE NEAR DONE!!!
-        
+        # Show the dialog and get the field, condition, and value.
         sel_dlg = SelectDataSimpleDialog(self)
         response = sel_dlg.run()
+        field = sel_dlg.field_com.get_active_text()
+        operator = sel_dlg.op_com.get_active_text()
+        value = sel_dlg.value_ent.get_text()
+        
+        # Close the dialog.
         sel_dlg.destroy()
+        
+        # If the user did not press OK, don't continue.
+        if response != Gtk.ResponseType.OK:
+            return
+        
+        # Filter the list.
+        filtered = filter_data.filter_data(data, [field, operator, value])
+        
+        # Show the dialog with the data and get the response.
+        sub_dlg = DataSubsetDialog(self, "Data Subset - %s" % last_profile, filtered, config["show_units"], units)
+        response = sub_dlg.run()
+        
+        # If the user clicked Export:
+        if response == 9:
+            
+            # Create the dialog.
+            export_dlg = Gtk.FileChooserDialog("Export Data Subset - %s" % last_profile, self, Gtk.FileChooserAction.SAVE, (Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL, Gtk.STOCK_OPEN, Gtk.ResponseType.OK))
+            export_dlg.set_do_overwrite_confirmation(True)
+            
+            # Get the response.
+            response2 = export_dlg.run()
+            if response2 == Gtk.ResponseType.OK:
+                
+                # Export the info.
+                filename = export_dlg.get_filename()
+                export_info.export_subset(filtered, units, filename)
+                
+            # Close the dialog.
+            export_dlg.destroy()
+        
+        # Close the dialog.
+        sub_dlg.destroy()
     
     
     def select_data_advanced(self, event):

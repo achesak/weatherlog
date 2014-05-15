@@ -19,6 +19,7 @@ def filter_data(data, condition):
     
     # Get the column of the data that is being filtered.
     string_compare = False
+    col = []
     if condition[0] == "temperature":
         col = utility_functions.convert_float(utility_functions.get_column(data, 1))
     elif condition[0] == "precipitation amount":
