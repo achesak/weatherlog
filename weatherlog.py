@@ -1052,18 +1052,28 @@ class Weather(Gtk.Window):
         if response != Gtk.ResponseType.OK:
             return
         
+        # If the column that is being compared is precipitation type, wind direction, air pressure change, 
+        # or cloud cover, and the comparison is numerical, don't continue.
+        if field == "precipitation type" or field == "wind direction" or field == "air pressure change" or field == "cloud cover":
+            if operator != "equal to" and operator != "not equal to":
+                
+                # Tell the user the condition was invalid.
+                show_error_dialog(self, "Select Data - %s" % last_profile, "Invalid comparison: %s cannot use the \"%s\" operator." % (field, operator))
+                return
+        
+        # If the value was left blank, show and error message and don't continue.
+        if value.lstrip().rstrip() == "":
+            
+            show_error_dialog(self, "Select Data - %s" % last_profile, "Value field cannot be left blank.")
+            return
+        
         # Filter the list.
         filtered = filter_data.filter_data(data, [field, operator, value])
         
-        # If an invalid operator was specified, don't continue. Explicitly check for 
-        # False to avoid an empty list passing.
-        if filtered == False:
+        # If there are no items that match the condition, don't show the main dialog.
+        if len(filtered) == 0:
             
-            # Build the error string.
-            conerr = "Invalid comparison: %s cannot use the \"%s\" operator." % (field, operator)
-            
-            # Tell the user the condition was invalid.
-            show_error_dialog(self, "Select Data - %s" % last_profile, "There were one or more problems with the conditions specified:\n\n%s" % conerr)
+            show_alert_dialog(self, "Data Subset - %s" % last_profile, "No data matches the specified condition.")
             return
         
         # Show the dialog with the data and get the response.
@@ -1095,11 +1105,121 @@ class Weather(Gtk.Window):
     def select_data_advanced(self, event):
         """Shows the advanced data selection dialog."""
         
-        ## NOWHERE NEAR DONE!!
-        
+        # Show the dialog.
         sel_dlg = SelectDataAdvancedDialog(self, last_profile)
         response = sel_dlg.run()
+        
+        # Get all the values.
+        sel_mode = sel_dlg.mode_com.get_active_text()
+        temp_chk = sel_dlg.sel_chk1.get_active()
+        temp_op = sel_dlg.op_com1.get_active_text()
+        temp_val = sel_dlg.value_ent1.get_text()
+        prec_chk = sel_dlg.sel_chk2.get_active()
+        prec_op = sel_dlg.op_com2.get_active_text()
+        prec_val = sel_dlg.value_ent2.get_text()
+        prect_chk = sel_dlg.sel_chk3.get_active()
+        prect_op = sel_dlg.op_com3.get_active_text()
+        prect_val = sel_dlg.value_ent3.get_text()
+        wind_chk = sel_dlg.sel_chk4.get_active()
+        wind_op = sel_dlg.op_com4.get_active_text()
+        wind_val = sel_dlg.value_ent4.get_text()
+        windd_chk = sel_dlg.sel_chk5.get_active()
+        windd_op = sel_dlg.op_com5.get_active_text()
+        windd_val = sel_dlg.value_ent5.get_text()
+        humi_chk = sel_dlg.sel_chk6.get_active()
+        humi_op = sel_dlg.op_com6.get_active_text()
+        humi_val = sel_dlg.value_ent6.get_text()
+        airp_chk = sel_dlg.sel_chk7.get_active()
+        airp_op = sel_dlg.op_com7.get_active_text()
+        airp_val = sel_dlg.value_ent7.get_text()
+        airpc_chk = sel_dlg.sel_chk8.get_active()
+        airpc_op = sel_dlg.op_com8.get_active_text()
+        airpc_val = sel_dlg.value_ent8.get_text()
+        clou_chk = sel_dlg.sel_chk9.get_active()
+        clou_op = sel_dlg.op_com9.get_active_text()
+        clou_val = sel_dlg.value_ent9.get_text()
+        
+        # Close the dialog.
         sel_dlg.destroy()
+        
+        # If the user did not press OK, don't continue.
+        if response != Gtk.ResponseType.OK:
+            return
+        
+        # Put the values into a list to work with them more easily.
+        conditions = []
+        conditions.append(["temperature", temp_chk if temp_val.lstrip().rstrip() != "" else False, temp_op, temp_val])
+        conditions.append(["precipitation amount", prec_chk if prec_val.lstrip().rstrip() != "" else False, prec_op, prec_val])
+        conditions.append(["precipitation type", prect_chk if prect_val.lstrip().rstrip() != "" else False, prect_op, prect_val])
+        conditions.append(["wind speed", wind_chk if wind_val.lstrip().rstrip() != "" else False, wind_op, wind_val])
+        conditions.append(["wind direction", windd_chk if windd_val.lstrip().rstrip() != "" else False, windd_op, windd_val])
+        conditions.append(["humidity", humi_chk if humi_val.lstrip().rstrip() != "" else False, humi_op, humi_val])
+        conditions.append(["air pressure", airp_chk if airp_val.lstrip().rstrip() != "" else False, airp_op, airp_val])
+        conditions.append(["air pressure change", airpc_chk if airpc_val.lstrip().rstrip() != "" else False, airpc_op, airpc_val])
+        conditions.append(["cloud cover", clou_chk if clou_val.lstrip().rstrip() != "" else False, clou_op, clou_val])
+        
+        # Create the list for the filtered items.
+        filtered = []
+        first = True
+        
+        # Loop through the conditions and filter the data.
+        for i in conditions:
+            
+            # If this condition isn't being checked, continue to the next.
+            if not i[1]:
+                continue
+            
+            # Get the filtered list.
+            subset = filter_data.filter_data(data, [i[0], i[2], i[3]])
+            
+            # If this is the first condition, add all the data to the filtered list.
+            if first:
+                filtered += subset
+                first = False
+            
+            # Otherwise, make sure it is combined correctly.
+            # AND combination mode:
+            elif sel_mode == "match all":
+                filtered = filter_data.filter_and(filtered, subset)
+            
+            # OR combination mode or NOT combination mode:
+            elif sel_mode == "match at least one" or sel_mode == "match none":
+                filtered = filter_data.filter_or(filtered, subset)
+        
+        # If the NOT combination mode is used, apply that filter as well.
+        if sel_mode == "match none":
+            filtered = filter_data.filter_not(filtered, data)
+        
+        # If there are no items that match the condition, don't show the main dialog.
+        if len(filtered) == 0:
+            
+            show_alert_dialog(self, "Data Subset - %s" % last_profile, "No data matches the specified condition(s).")
+            return
+        
+        # Show the dialog with the data and get the response.
+        sub_dlg = DataSubsetDialog(self, "Data Subset - %s" % last_profile, filtered, config["show_units"], units)
+        response = sub_dlg.run()
+        
+        # If the user clicked Export:
+        if response == 9:
+            
+            # Create the dialog.
+            export_dlg = Gtk.FileChooserDialog("Export Data Subset - %s" % last_profile, self, Gtk.FileChooserAction.SAVE, (Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL, Gtk.STOCK_OPEN, Gtk.ResponseType.OK))
+            export_dlg.set_do_overwrite_confirmation(True)
+            
+            # Get the response.
+            response2 = export_dlg.run()
+            if response2 == Gtk.ResponseType.OK:
+                
+                # Export the info.
+                filename = export_dlg.get_filename()
+                export_info.export_subset(filtered, units, filename)
+                
+            # Close the dialog.
+            export_dlg.destroy()
+        
+        # Close the dialog.
+        sub_dlg.destroy()
     
     
     def import_file(self, event):

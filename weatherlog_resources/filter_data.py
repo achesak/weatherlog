@@ -7,6 +7,8 @@
 
 # Import the utility functions.
 import utility_functions
+# Import datetime for sorting the data.
+import datetime
 
 
 # condition parameter is a list with the format:
@@ -58,12 +60,6 @@ def filter_data(data, condition):
     elif condition[0] == "cloud cover":
         string_compare = True
         col = utility_functions.get_column(data, 6)
-    
-    # If the column that is being compared is precipitation type, wind direction, air pressure change, 
-    # or cloud cover, and the comparison is numerical, don't continue.
-    if condition[0] == "precipitation type" or condition[0] == "wind direction" or condition[0] == "air pressure change" or condition[0] == "cloud cover":
-        if condition[1] != "equal to" and condition[1] != "not equal to":
-            return False
     
     # Loop through the data, and add it to the filtered list if it matches the condition.
     for i in range(0, len(data)):
@@ -176,3 +172,56 @@ def filter_compare(item, operator, value, string_compare):
     
     # Return whether the item matches the condition.
     return matches
+
+
+def filter_and(set1, set2):
+    """Returns a list of the items that are in both set1 and set2."""
+    
+    # Get the date column of the second list for the comparison.
+    filtered = []
+    date_list = utility_functions.get_column(set2, 0)
+    
+    # Loop through the first set, and only add the item to the filtered list if it's also in the second set.
+    for i in set1:
+        if i[0] in date_list:
+            filtered.append(i)
+    
+    # Return the filtered list.
+    return filtered
+
+
+def filter_not(set1, data):
+    """Returns a list of the items in data that are not in set1."""
+    
+    # Get the date column of the set for the comparison.
+    filtered = []
+    date_list = utility_functions.get_column(set1, 0)
+    
+    # Loop through the data list, and only add the item to the filtered list if it's not in the other set.
+    for i in data:
+        if i[0] not in date_list:
+            filtered.append(i)
+    
+    # Return the filtered list.
+    return filtered
+
+
+def filter_or(set1, set2):
+    """Returns a list of the items that are in either set1 or set2."""
+    
+    # Get the date column of the first set for the comparison.
+    date_list = utility_functions.get_column(set1, 0)
+    
+    # Set the filtered list to all of the items of the first set.
+    filtered = set1[:]
+    
+    # Loop through the second list, and add the item if it isn't already in the first list.
+    for i in set2:
+        if i[0] not in date_list:
+            filtered.append(i)
+    
+    # Sort the filtered list.
+    filtered = sorted(filtered, key = lambda x: datetime.datetime.strptime(x[0], "%d/%m/%Y"))
+    
+    # Return the filtered list.
+    return filtered
