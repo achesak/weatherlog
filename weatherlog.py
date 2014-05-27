@@ -154,7 +154,7 @@ class Weather(Gtk.Window):
         # Set the window size.
         self.set_default_size(last_width, last_height)
         # Set the icon.
-        self.set_icon_from_file("weatherlog_resources/images/icon.png")
+        self.set_icon_from_file("weatherlog_resources/images/icon_small.png")
         # Use this variable to store the fullscreen state.
         self.fullscreen_state = False
         
@@ -2259,7 +2259,7 @@ class Weather(Gtk.Window):
         """Shows the About dialog."""
         
         # Load the icon.
-        img_file = open("weatherlog_resources/images/icon.png", "rb")
+        img_file = open("weatherlog_resources/images/icon_med.png", "rb")
         img_bin = img_file.read()
         img_file.close()
         
