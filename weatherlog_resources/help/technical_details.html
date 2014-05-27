@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <title>Technical Details - WeatherLog Help</title>
+    <link rel="stylesheet" type="text/css" href="help.css" />
+</head>
+
+<body>
+    
+    <div class="main_content">
+        
+        <h1>Technical Details</h1>
+        
+        <p>This page contains miscellaneous technical details about WeatherLog internals. This information is given mostly for debugging and
+        development purposes.<p>
+        
+        <ul>
+            <li>WeatherLog has the following dependencies:
+            <ul>
+                <li>Python - As it is written in Python, WeatherLog requires the Python interpreter to run. Development is done using Python 2.7.x, but 
+                Python 3.x should work as well. Any version earlier than 2.7 has not been tested, and WeatherLog may not run on these versions.</li>
+                <li>GTK+ 3 - WeatherLog uses GTK+ 3 for the GUI. GTK+ 3.0 is the minimum version required, as no UI features from more recent versions
+                are used.</li>
+            </ul></li>
+            <li>WeatherLog uses the following libraries:
+            <ul>
+                <li><a href="https://launchpad.net/python-weather-api">pywapi (python-weather-api)</a> - WeatherLog uses the python-weather-api library 
+                to retrieve weather data from the Yahoo! Weather service. The library is provided with the application to remove an extra external
+                dependency.</li>
+            </ul></li>
+            <li>Data files are stored in <code>$HOME/.weatherlog</code>. The following is a full list of subdirectories and files, with descriptions:
+            <ul>
+                <li><code>$HOME/.weatherlog</code> - Main directory, contains all other files.</li>
+                <li><code>$HOME/.weatherlog/config</code> - Configuration file, contains the program options stored as JSON. If the user has not changed
+                any options from the defaults yet then this file may not exist.</li>
+                <li><code>$HOME/.weatherlog/lastprofile</code> - Configuration file, contains the last used profile. This file is read when the program
+                starts, and the profile that was used last in the previous session is reopened.</li>
+                <li><code>$HOME/.weatherlog/window_size</code> - Configuration file, contains the last window size. This file is read when the program starts,
+                and the window is set to the last used dimensions. The first line contains the window's width, and the second contains the height (both in 
+                pixels).</li>
+                <li><code>$HOME/.weatherlog/profiles</code> - Profiles directory, contains all the data files. Each profile is represented by a subdirectory
+                within this one.</li>
+                <li><code>$HOME/.weatherlog/profiles/[PROFILE_NAME]/weather.json</code> - Data files, contains the user-entered data for that profile. Data is 
+                stored as JSON, with each list within the main one representing a row of data. It is not recommended to manually change these, as WeatherLog
+                assumes some fields to be certain values or within a certain range, and setting the value to something outside of that criteria could break
+                calculations.</li>
+            </ul></li>
+        </ul>
+        
+    </div>
+    
+    <div class="sidebar">
+        
+        <h3 class="toc_title">Table of Contents</h3>
+        
+        <ul>
+            <li><a href="help.html">Main Page</a></li>
+            <li><a href="adding_data.html">Adding Data</a></li>
+            <li><a href="removing_data.html">Removing Data</a></li>
+            <li><a href="viewing_info.html">Viewing Info</a></li>
+            <li><a href="viewing_charts.html">Viewing Charts</a></li>
+            <li><a href="viewing_subsets.html">Viewing Subsets</a></li>
+            <li><a href="profiles.html">Using Profiles</a></li>
+            <li><a href="exporting_data.html">Exporting Data</a></li>
+            <li><a href="importing_data.html">Importing Data</a></li>
+            <li><a href="command_line.html">Command Line Interface</a></li>
+            <li><a href="technical_details.html">Technical Details</a></li>
+        </ul>
+        
+    </div>
+    
+</body>
+
+</html>

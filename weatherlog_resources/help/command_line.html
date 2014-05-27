@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <title>Command Line Interface - WeatherLog Help</title>
+    <link rel="stylesheet" type="text/css" href="help.css" />
+</head>
+
+<body>
+    
+    <div class="main_content">
+        
+        <h1>Command Line Interface</h1>
+        
+        <p>WeatherLog has command line arguments, so the application can be used without opening the graphical interface.</p>
+        
+        <ul>
+            
+            <li><p><code>add <em>date temperature precipitation wind humidity air_pressure cloud_cover notes</em></code><br />
+            Adds a row of data. All the fields are required, with the exceptions of the notes. Also, units should not be included
+            but the wind direction and precipitation type should.</p>
+            <p>Example:<br />
+            <code>python weatherlog.py add 12/14/2013 10 None "3.20 NNW" 65 "1013.40 Steady" "Mostly Cloudy" "This is an example"</code></p>
+            </li>
+            
+            <li><p><code>remove <em>index</em></code><br />
+            Removes the row of data at <em>index</em>.</p>
+            <p>Example:<br />
+            <code>python weatherlog.py remove 1</code></p>
+            </li>
+            
+            <li><p><code>clear</code><br />
+            Clears the data in the current profile.</p>
+            <p>Example:<br />
+            <code>python weatherlog.py clear</code></p>
+            </li>
+            
+            <li><p><code>clear_all</code><br />
+            Deletes all the data.</p>
+            <p>Example:<br />
+            <code>python weatherlog.py clear_all</code></p>
+            </li>
+            
+            <li><p><code>switch_profile <em>profile</em></code><br />
+            Switches to profile <em>profile</em>.</p>
+            <p>Example:<br />
+            <code>python weatherlog.py switch_profile "test profile"</code></p>
+            </li>
+            
+            <li><p><code>add_profile <em>profile</em></code><br />
+            Adds a new profile <em>profile</em>.</p>
+            <p>Example:<br />
+            <code>python weatherlog.py add_profile "test profile"</code></p>
+            </li>
+            
+            <li><p><code>remove_profile <em>profile</em></code><br />
+            Removes profile <em>profile</em>.</p>
+            <p>Example:<br />
+            <code>python weatherlog.py remove_profile "test profile"</code></p>
+            </li>
+            
+            <li><p><code>options</code><br />
+            Allows the user to change the options. Shows a list of the options, along with the possible values and the current settings.</p>
+            <p>Example:<br />
+            <code>python weatherlog.py options</code></p>
+            </li>
+            
+            <li><p><code>reset_options</code><br />
+            Resets the options to the default values.</p>
+            <p>Example:<br />
+            <code>python weatherlog.py reset_options</code></p>
+            </li>
+            
+            <li><p><code>help</code><br />
+            Shows the help page in the user's web browser.</p>
+            <p>Example:<br />
+            <code>python weatherlog.py help</code></p>
+            </li>
+            
+            <li><p><code>window_size <em>width height</em></code><br />
+            Sets the size of the window for the next time the application is opened.</p>
+            <p>Example:<br />
+            <code>python weatherlog.py window_size 900 400</code></p>
+            </li>
+            
+        </ul>
+        
+    </div>
+    
+    <div class="sidebar">
+        
+        <h3 class="toc_title">Table of Contents</h3>
+        
+        <ul>
+            <li><a href="help.html">Main Page</a></li>
+            <li><a href="adding_data.html">Adding Data</a></li>
+            <li><a href="removing_data.html">Removing Data</a></li>
+            <li><a href="viewing_info.html">Viewing Info</a></li>
+            <li><a href="viewing_charts.html">Viewing Charts</a></li>
+            <li><a href="viewing_subsets.html">Viewing Subsets</a></li>
+            <li><a href="profiles.html">Using Profiles</a></li>
+            <li><a href="exporting_data.html">Exporting Data</a></li>
+            <li><a href="importing_data.html">Importing Data</a></li>
+            <li><a href="command_line.html">Command Line Interface</a></li>
+            <li><a href="technical_details.html">Technical Details</a></li>
+        </ul>
+        
+    </div>
+    
+</body>
+
+</html>

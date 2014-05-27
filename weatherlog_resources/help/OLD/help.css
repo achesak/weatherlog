@@ -1,0 +1,62 @@
+/* all document:
+ * no margin, use sans-serif fonts
+ */
+body {
+    margin: 0px;
+    font-family: Verdana, Arial, sans-serif;
+}
+
+/* images:
+ * center the images on the page
+ */
+img {
+    display: block;
+    margin-right: auto;
+    margin-left: auto;
+}
+
+/* links:
+ * use a dark-ish gray color
+ */
+a {
+    color: #666666;
+}
+
+/* headers:
+ * full page underline
+ */
+h1 {
+    width: 100%;
+    border-bottom: 1px solid black;
+}
+
+/* odd divs:
+ * use a darker gray background color
+ */
+.box1 {
+    background-color: #EBEBEB;
+}
+
+/* even divs:
+ * use a lighter gray background color
+ */
+.box2 {
+    background-color: #C9C9C9;
+}
+
+/* all divs:
+ * no margin, 10px padding
+ */
+.box1, .box2 {
+    margin: 0px;
+    padding: 10px;
+}
+
+/* "back to top" links:
+ * italic font, 80% font size
+ * (use relative font to for accessability reasons)
+ */
+.top {
+    font-style: italic;
+    font-size: 0.8em;
+}

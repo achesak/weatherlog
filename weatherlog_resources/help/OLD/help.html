@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+
+<html lang="en">
+    
+    <head>
+        
+        <meta charset="utf-8" />
+        
+        <link rel="stylesheet" type="text/css" href="help.css" />
+        
+        <title>WeatherLog Help</title>
+        
+    </head>
+    
+    <body>
+        
+        <!-- Table of Contents -->
+        <div class="box2" id="toc">
+            
+            <h1>Table of Contents</h1>
+            
+            <ol>
+                <li><a href="#basics">Basics</a></li>
+                <li><a href="#info">Getting Information</a></li>
+                <li><a href="#import">Importing and Exporting</a></li>
+                <li><a href="#profiles">Profiles</a></li>
+                <li><a href="#clearing">Clearing Data</a></li>
+                <li><a href="#editing">Editing Data</a></li>
+                <li><a href="#prefill">Pre-filling Data</a></li>
+                <li><a href="#commandline">Command Line Arguments</a></li>
+            </ol>
+            
+        </div>
+        
+        <!-- Basics -->
+        <div class="box1" id="basics">
+        
+            <h1>1. Basics</h1>
+        
+            <p>The first time you start WeatherLog you will be presented with a basic interface that should look similar to this:</p>
+            
+            <p><img src="images/main_profile_none.png" /></p>
+        
+            <p>No data is shown, just a couple menus, a toolbar, and the column titles. To add data, click the button with the plus sign on the toolbar. Alternatively, you can also select the Add New option in the File menu or press Control-N. This will show the Add New window.</p>
+        
+            <p><img src="images/add_new.png" /></p>
+            
+            <p>All entries are required, except for the notes. Precipitation and wind values cannot be changed unless the type/direction is set to something other than "None".</p>
+        
+            <p>If you want to delete a row of data, simply select it and choose Remove from the Weather menu, or press the toolbar button with the minus sign.</p>
+            
+            <p class="top"><a href="#toc">(Back to top)</a></p>
+            
+        </div>
+        
+        <!-- Getting Information -->
+        <div class="box2" id="info">
+            
+            <h1>2. Getting Information</h1>
+            
+            <p>After you have a few days of data entered, the program should look something like this (though this is all just example data):</p>
+            
+            <p><img src="images/main_profile_example.png" /></p>
+            
+            <p>This isn't really useful, though. You already know the data, so what's the point of entering it into the program when you could have just kept track of it on paper? WeatherLog isn't completely useless, however, as it can tell you info about the weather data.</p>
+            
+            <p>Clicking on the toolbar button with the letter "i" on it will show a window with info about the data (selecting Info from the Info menu or pressing Control-I will work as well):</p>
+            
+            <p><img src="images/general_info.png" /></p>
+            
+            <p>Here you can see an overview of the info. But what if you need something more specific that isn't shown here? You can also see information about each column by going into the More Info submenu in the Weather menu, or by pressing the appropriate key combination:</p>
+
+            <p><img src="images/humidity_info.png" /></p>
+            
+            <p>Each window will show different types of information, depending on the column.</p>
+            
+            <p>If you want to store this data, click on the Export button to export the data to an HTML file.</p>
+            
+            <p class="top"><a href="#toc">(Back to top)</a></p>
+            
+        </div>
+        
+        <!-- Importing and Exporting -->
+        <div class="box1" id="import">
+            
+            <h1>3. Importing and Exporting</h1>
+            
+            <p>WeatherLog can also import and export data. These are useful for backup or sharing with other people. To export data, either click the save button on the toolbar, select Export from the Weather menu, or press Control-S. Importing data is just as simple; click the open button in the toolbar, select Import from the Weather menu, or press Control-O. Import as New Profile, in the same menu, is slightly different; it will import data in a new profile, instead of in the current one. See the next section for more details on profiles.</p>
+            
+            <p>However, these are only really useful if the only application you want to use this data with is WeatherLog. That's why there are two more options, for exporting data to HTML or CSV. Export to HTML, available from the Weather -&gt; Export to menu, formats the data into a table that can be viewed in a web browser. Export to CSV, in the same menu, formats the data as CSV (comma-separated values) for use in a spreadsheet program. If you want to easily share the data with others, you can also export the data to Pastebin, as either raw data or formatted as HTML or CSV.</p>
+            
+            <p class="top"><a href="#toc">(Back to top)</a></p>
+            
+        </div>
+        
+        <!-- Profiles -->
+        <div class="box2" id="profiles">
+            
+            <h1>4. Profiles</h1>
+            
+            <p>If you want to have multiple lists of data, you can use profiles to easily edit and keep track of them.</p>
+            
+            <p>To add a profile, select Add Profile from the Profiles menu or press Control-Shift-N. You will be presented with a window to enter the profile name in:</p>
+            
+            <p><img src="images/add_profile.png" /></p>
+            
+            </p>You will automatically switch to the new profile. If you want to go back to the previous one, the Switch Profile window (accessible from the Profiles menu, or by pressing Control-Shift-S) allows you to choose from the existing profiles.</p>
+            
+            <p><img src="images/switch_profile.png" /></p>
+            
+            <p>If you created a profile you no longer want, you can delete it from the Remove Profile window, available from the Profiles menu or by pressing Control-Shift-D. Note that you cannot delete the current profile.</p>
+            
+            <p class="top"><a href="#toc">(Back to top)</a></p>
+            
+        </div>
+        
+        <!-- Clearing Data -->
+        <div class="box1" id="clearing">
+            
+            <h1>5. Clearing Data</h1>
+            
+            <p>If you decide you want to start over, choosing Clear Current Data from the Weather menu will delete the data in the current profile. Make sure you want to do this first, as it cannot be reversed unless you have backed up the data.</p>
+
+            <p>If you want to delete <em>all</em> the data, you can choose Clear All Data, also located in the Weather menu. This will remove all profiles, as well as any other data files used.</p>
+            
+            <p class="top"><a href="#toc">(Back to top)</a></p>
+            
+        </div>
+        
+        <!-- Editing Data -->
+        <div class="box2" id="editing">
+            
+            <h1>5. Editing Data</h1>
+            
+            <p>Sometimes you may accidently enter data incorrectly, or forget to put something in. If that happens, you can edit the data after it has been saved.</p>
+            
+            <p>In this image, when the user added the data they forgot to add that it had snowed on this day as well:</p>
+            
+            <p><img src="images/edit1.png" /></p>
+            
+            <p>To edit the data, select the Edit item in the Weather menu, or press Control-E to open the edit window.</p>
+            
+            <p><img src="images/edit2.png" /></p>
+            
+            <p>It is then possible to change the data. Every field can be changed, with the exception of the date. The next image show the the precipitation has been changed to 2.5 cm of snow.</p>
+            
+            <p><img src="images/edit3.png" /></p>
+
+            <p>The data is then changed!</p>
+            
+            <p><img src="images/edit4.png" /></p>
+            
+            <p class="top"><a href="#toc">(Back to top)</a></p>
+            
+        </div>
+        
+        <!-- Pre-filling Data -->
+        <div class="box1" id="prefill">
+            
+            <h1>6. Pre-filling Data</h1>
+            
+            <p>WeatherLog can pre-fill some data, to make it easier to enter. To enable pre-filling, select Options from the Options menu, or press F2. Then make sure the checkbox next to "Pre-fill data" is selected, and enter a five digit US zip code into the location entry.</p>
+            
+            <p><img src="images/options.png" /></p>
+            
+            <p>Next time you open up the Add New window, this will appear to tell you data has been pre-filled:</p>
+            
+            <p><img src="images/prefill.png" /></p>
+            
+            <p>The temperature, wind, humidity, and air pressure fields will then have the correct data already entered, though cloud cover and precipitation still have to be entered manually.</p>
+
+            <p>Currently pre-filling data only works in the United States using the Yahoo! Weather API; in the future it will be available worldwide through a choice of different services.</p>
+            
+            <p class="top"><a href="#toc">(Back to top)</a></p>
+            
+        </div>
+        
+        <!-- Command Line Arguments -->
+        <div class="box2" id="commandline">
+            
+            <h1>7. Command Line Arguments</h1>
+            
+            <p>WeatherLog has command line arguments, so the application can be used without opening the graphical interface.</p>
+            
+            <ul>
+                
+                <li><p><code>add <em>date temperature precipitation wind humidity air_pressure cloud_cover notes</em></code><br />
+                Adds a row of data. All the fields are required, with the exceptions of the notes. Also, units should not be included but the wind direction and precipitation type should.</p>
+                <p>Example:<br />
+                <code>python weatherlog.py add 12/14/2013 10 None "3.20 NNW" 65 "1013.40 Steady" "Mostly Cloudy" "This is an example"</code></p>
+                </li>
+                
+                <li><p><code>remove <em>index</em></code><br />
+                Removes the row of data at <em>index</em>.</p>
+                <p>Example:<br />
+                <code>python weatherlog.py remove 1</code></p>
+                </li>
+                
+                <li><p><code>clear</code><br />
+                Clears the data in the current profile.</p>
+                <p>Example:<br />
+                <code>python weatherlog.py clear</code></p>
+                </li>
+                
+                <li><p><code>clear_all</code><br />
+                Deletes all the data.</p>
+                <p>Example:<br />
+                <code>python weatherlog.py clear_all</code></p>
+                </li>
+                
+                <li><p><code>switch_profile <em>profile</em></code><br />
+                Switches to profile <em>profile</em>.</p>
+                <p>Example:<br />
+                <code>python weatherlog.py switch_profile "test profile"</code></p>
+                </li>
+                
+                <li><p><code>add_profile <em>profile</em></code><br />
+                Adds a new profile <em>profile</em>.</p>
+                <p>Example:<br />
+                <code>python weatherlog.py add_profile "test profile"</code></p>
+                </li>
+                
+                <li><p><code>remove_profile <em>profile</em></code><br />
+                Removes profile <em>profile</em>.</p>
+                <p>Example:<br />
+                <code>python weatherlog.py remove_profile "test profile"</code></p>
+                </li>
+                
+                <li><p><code>options</code><br />
+                Allows the user to change the options. Shows a list of the options, along with the possible values and the current settings.</p>
+                <p>Example:<br />
+                <code>python weatherlog.py options</code></p>
+                </li>
+                
+                <li><p><code>reset_options</code><br />
+                Resets the options to the default values.</p>
+                <p>Example:<br />
+                <code>python weatherlog.py reset_options</code></p>
+                </li>
+                
+                <li><p><code>help</code><br />
+                Shows the help page in the user's web browser.</p>
+                <p>Example:<br />
+                <code>python weatherlog.py help</code></p>
+                </li>
+                
+                <li><p><code>window_size <em>width height</em></code><br />
+                Sets the size of the window for the next time the application is opened.</p>
+                <p>Example:<br />
+                <code>python weatherlog.py window_size 900 400</code></p>
+                </li>
+                
+            </ul>
+            
+            <p class="top"><a href="#toc">(Back to top)</a></p>
+        
+        </div>
+        
+    </body>
+
+</html>
