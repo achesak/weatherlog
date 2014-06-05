@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <title>Viewing Subsets - WeatherLog Help</title>
+    <link rel="stylesheet" type="text/css" href="help.css" />
+</head>
+
+<body>
+    
+    <div class="main_content">
+        
+        <h1>Viewing Subsets</h1>
+        
+        <p>WeatherLog can show subsets of data determined by user-specified conditions. This allows for filtering of data to see specific values.</p>
+        
+        <p><img src="images/subset.png" /></p>
+        
+        <h1>Getting a Subset - Simple</h1>
+        
+        <p>The simplest way to get a subset is to specify a single condition. To do this, choose the Select Data item in the Info menu. This will show
+        the simple subset window.</p>
+        
+        <p><img src="images/subset_simple.png" /></p>
+        
+        <p>You can then choose the field and the comparison, and then set the value. Note that "equal to" and "not equal to" can accept multiple values,
+        separated by a comma. In addition, "between", "between (inclusive)", "outside", and "outside (inclusive)" require two values, also comma separated.</p>
+        
+        <p>Note that the precipitation type, wind direction, air pressure change, and cloud cover can only work with "equal to" and "not equal to", as these
+        fields are not numerical values.</p>
+        
+        <h1>Getting a Subset - Advanced</h1>
+        
+        <p>If you want to specify more than one condition, you can use the advanced subset window, accessable from Select Data (Advanced) in the Info menu.</p>
+        
+        <p><img src="images/subset_advanced.png" /></p>
+        
+        <p>The selection mode determines how the data is combined. If it is set to "match all", the filtered data must match all the conditions. If it is set to
+        "match at least one", the data must match one or more of the conditions. Finally, if it is set to "match none" the data cannot match any specified
+        conditions.</p>
+        
+        <p>The conditions will only be used if the checkbox next to them is filled. In addition, the same rules specified above regarding multiple values still
+        apply.</p>
+        
+        <p>The following screenshots shows example conditions. The user specified that they want all of the conditions to match, the temperature has to
+        be between 0 and 10 degrees including those two values, the precipitation type has to be snow, the wind speed must have been 15.5 or greater, and 
+        it must not have been sunny.</p>
+        
+        <p><img src="images/subset_advanced_conditions.png" /></p>
+        
+    </div>
+    
+    <div class="sidebar">
+        
+        <h3 class="toc_title">Table of Contents</h3>
+        
+        <ul>
+            <li><a href="help.html">Main Page</a></li>
+            <li><a href="adding_data.html">Adding Data</a></li>
+            <li><a href="removing_data.html">Removing Data</a></li>
+            <li><a href="editing_data.html">Editing Data</a></li>
+            <li><a href="viewing_info.html">Viewing Info</a></li>
+            <li><a href="viewing_charts.html">Viewing Charts</a></li>
+            <li><a href="viewing_subsets.html">Viewing Subsets</a></li>
+            <li><a href="profiles.html">Using Profiles</a></li>
+            <li><a href="exporting_data.html">Exporting Data</a></li>
+            <li><a href="importing_data.html">Importing Data</a></li>
+            <li><a href="command_line.html">Command Line Interface</a></li>
+            <li><a href="technical_details.html">Technical Details</a></li>
+        </ul>
+        
+    </div>
+    
+</body>
+
+</html>
