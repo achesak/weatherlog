@@ -2352,7 +2352,7 @@ if __name__ == "__main__" and len(sys.argv) == 1:
     win.show_all()
     Gtk.main()
 
-# If there are arguments, add them to the data list and don't show the interface
+# If there are arguments, run the application from the command line.
 elif __name__ == "__main__" and len(sys.argv) > 1:
     
     # Add a row of data:
