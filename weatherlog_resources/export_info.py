@@ -13,28 +13,19 @@ import io
 def export_info(data, filename):
     """"Exports info data."""
     
-    # Convert the data to HTML.
     data2 = export.info_html(data)
-    
-    # Save the data.
     io.write_standard_file(filename, data2)
 
 
 def export_chart(data, filename):
     """Exports chart data."""
     
-    # Convert the data to HTML.
     data2 = export.chart_html(data)
-    
-    # Save the data.
     io.write_standard_file(filename, data2)
 
 
 def export_subset(data, units, filename):
     """Exports subset data."""
     
-    # Convert the data to HTML.
     data2 = export.html(data, units)
-    
-    # Save the data.
     io.write_standard_file(filename, data2)

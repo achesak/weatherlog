@@ -33,12 +33,8 @@ def html(data2, units):
     
     # Add the data. Loop through each list, and add it as a table row.
     for i in data:
-        
-        # Convert the data to utf-8.
         for j in range(0, len(i)):
             i[j] = i[j].encode("utf-8")
-        
-        # Add the row of data.
         html += """
 <tr>
 <td>%s</td>
@@ -57,7 +53,6 @@ def html(data2, units):
 </body>
 </html>"""
     
-    # Return the HTML.
     return html.lstrip()
 
 
@@ -72,18 +67,13 @@ def csv(data2, units):
     
     # Add the data. Loop through each list, and add it as a row.
     for i in data:
-        
-        # Convert the data to utf-8.
         for j in range(0, len(i)):
             i[j] = i[j].encode("utf-8")
-        
-        # Add the row of data.
         csv += """"%s","%s","%s","%s","%s","%s","%s","%s"\n""" % (i[0], i[1], i[2], i[3], i[4], i[5], i[6], i[7])
     
     # Remove the last newline character.
     csv = csv[:-1]
     
-    # Return the CSV.
     return csv
 
 
@@ -107,15 +97,11 @@ def info_html(data):
     
     # Add the data. Loop through each list, and add it as a table row.
     for i in data:
-        
-        # Convert the data to utf-8.
         try:
             i[0] = i[0].encode("utf-8")
             i[1] = i[1].encode("utf-8")
         except:
             pass
-        
-        # Add the row of data.
         html += """
 <tr>
 <td>%s</td>
@@ -128,7 +114,6 @@ def info_html(data):
 </body>
 </html>"""
     
-    # Return the HTML.
     return html.lstrip()
 
 
@@ -156,8 +141,6 @@ def chart_html(data):
     
     # Add the data. Loop through each list, and add it as a table row.
     for i in data:
-        
-        # Convert the data to utf-8.
         try:
             i[0] = i[0].encode("utf-8")
             i[1] = i[1].encode("utf-8")
@@ -167,8 +150,6 @@ def chart_html(data):
             i[5] = i[5].encode("utf-8")
         except:
             pass
-        
-        # Add the row of data.
         html += """
 <tr>
 <td>%s</td>
@@ -185,5 +166,4 @@ def chart_html(data):
 </body>
 </html>"""
     
-    # Return the HTML.
     return html.lstrip()

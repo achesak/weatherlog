@@ -23,10 +23,8 @@ def temp_chart(data, units):
     temp_avg = info_functions.mean(temp_data)
     temp_median = info_functions.median(temp_data)
     
-    # Create the data list.
-    data2 = []
-    
     # Calculate and add the data.
+    data2 = []
     for i in range(0, len(data)):
         
         temp = [data[i][0], "%.2f %s" % (temp_data[i], units["temp"])]
@@ -57,7 +55,6 @@ def temp_chart(data, units):
         
         data2.append(temp)
     
-    # Return the data list.
     return data2
 
 
@@ -74,10 +71,8 @@ def prec_chart(data, units):
     prec_avg = info_functions.mean(prec_data1)
     prec_median = info_functions.median(prec_data1)
     
-    # Create the data list.
-    data2 = []
-    
     # Calculate and add the data.
+    data2 = []
     for i in range(0, len(data)):
         
         prec = [data[i][0], "%.2f %s" % (prec_data1[i], units["prec"])]
@@ -108,7 +103,6 @@ def prec_chart(data, units):
         
         data2.append(prec)
     
-    # Return the data list.
     return data2
 
 
@@ -124,10 +118,8 @@ def wind_chart(data, units):
     wind_avg = info_functions.mean(wind_data1)
     wind_median = info_functions.median(wind_data1)
     
-    # Create the data list.
-    data2 = []
-    
     # Calculate and add the data.
+    data2 = []
     for i in range(0, len(data)):
         
         wind = [data[i][0], "%.2f %s" % (wind_data1[i], units["wind"])]
@@ -158,7 +150,6 @@ def wind_chart(data, units):
         
         data2.append(wind)
     
-    # Return the data list.
     return data2
 
 
@@ -172,10 +163,8 @@ def humi_chart(data, units):
     humi_avg = info_functions.mean(humi_data)
     humi_median = info_functions.median(humi_data)
     
-    # Create the data list.
-    data2 = []
-    
     # Calculate and add the data.
+    data2 = []
     for i in range(0, len(data)):
         
         humi = [data[i][0], "%.2f%%" % (humi_data[i])]
@@ -206,7 +195,6 @@ def humi_chart(data, units):
         
         data2.append(humi)
     
-    # Return the data list.
     return data2
 
 
@@ -221,10 +209,8 @@ def airp_chart(data, units):
     airp_avg = info_functions.mean(airp_data1)
     airp_median = info_functions.median(airp_data1)
     
-    # Create the data list.
-    data2 = []
-    
     # Calculate and add the data.
+    data2 = []
     for i in range(0, len(data)):
         
         airp = [data[i][0], "%.2f %s" % (airp_data1[i], units["airp"])]
@@ -255,5 +241,4 @@ def airp_chart(data, units):
         
         data2.append(airp)
     
-    # Return the data list.
     return data2

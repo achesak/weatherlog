@@ -15,7 +15,6 @@ class SelectDataAdvancedDialog(Gtk.Dialog):
         
         # This window should be modal.
         Gtk.Dialog.__init__(self, "Select Data - %s" % profile, parent, Gtk.DialogFlags.MODAL)
-        # Don't allow the user to resize the window.
         self.set_resizable(False)
         
         # Add the buttons.

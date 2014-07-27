@@ -106,7 +106,6 @@ def general_info(data, units):
         ["Most common cloud cover", "%s" % clou_mode]
     ]
     
-    # Return the data list.
     return data2
 
 
@@ -132,7 +131,6 @@ def temp_info(data, units):
         ["Most common", "%.2f %s" % (temp_mode, units["temp"])]
     ]
     
-    # Return the data list.
     return data2
 
 
@@ -212,7 +210,6 @@ def prec_info(data, units):
         ["Most common type", "%s" % (prec_mode if prec_mode != "" else "None")]
     ]
     
-    # Return the data list.
     return data2
 
 
@@ -254,7 +251,6 @@ def wind_info(data, units):
         ["Most common direction", "%s" % (wind_mode if wind_mode != "" else "None")]
     ]
     
-    # Return the data list.
     return data2
 
 
@@ -280,7 +276,6 @@ def humi_info(data, units):
         ["Most common", "%.2f%%" % humi_mode]
     ]
     
-    # Return the data list.
     return data2
 
 
@@ -320,7 +315,6 @@ def airp_info(data, units):
         ["Falling", "%d day%s" % (airp_falling, "" if airp_falling == 1 else "s")]
     ]
     
-    # Return the data list.
     return data2
 
 
@@ -358,7 +352,6 @@ def clou_info(data, units):
         ["Cloudy", "%s day%s" % (m_dict["Cloudy"], "" if m_dict["Cloudy"] == 1 else "s")]
     ]
     
-    # Return the data list.
     return data2
 
 
@@ -370,10 +363,7 @@ def note_info(data, units):
     
     # Loop through the list, appending the dates and notes.
     for i in range(0, len(data)):
-        
-        # Only append the date if there is a note for that date.
         if data[i][7] != "":
             data2.append([data[i][0], data[i][7]])
     
-    # Retun the data list.
     return data2

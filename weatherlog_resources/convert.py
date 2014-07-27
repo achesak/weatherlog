@@ -81,5 +81,4 @@ def convert(data2, units):
                 
                 data[i][3] = " ".join(split)
     
-    # Return the new data.
     return data

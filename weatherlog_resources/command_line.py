@@ -32,13 +32,10 @@ def add(data, main_dir, last_profile, args):
     else:
         note = ""
     
-    # Save to the file.
     try:
         
-        # Append the data.
+        # Append the data and sort the list.
         data.append([date, temp, prec, wind, humi, airp, clou, note])
-        
-        # Sort the list.
         data = sorted(data, key = lambda x: datetime.datetime.strptime(x[0], '%d/%m/%Y'))
         
         # Save the data.
@@ -68,13 +65,10 @@ def remove(data, main_dir, last_profile, args):
     # Get the index.
     index = int(args[2])
     
-    # Save to the file.
     try:
         
-        # Remove the row.
+        # Remove the row and sort the list.
         del data[index]
-        
-        # Sort the list.
         data = sorted(data, key = lambda x: datetime.datetime.strptime(x[0], '%d/%m/%Y'))
         
         # Save the data.
@@ -103,8 +97,6 @@ def clear(main_dir, last_profile):
     
     # Clear the file.
     try:
-        
-        # Get the data.
         data_file = open("%s/profiles/%s/weather.json" % (main_dir, last_profile), "w")
         data_file.write("[]")
         data_file.close()
@@ -141,12 +133,10 @@ def add_profile(main_dir, profile):
     
     # If the profile name is already in use, cancel the action.
     if os.path.isdir("%s/profiles/%s" % (main_dir, profile)):
-            
         print("Profile name is already is use.")
         
     # Otherwise if there are no problems with the name, add the profile.
     else:
-        
         # Create the directory and file.
         os.makedirs("%s/profiles/%s" % (main_dir, profile))
         new_prof_file = open("%s/profiles/%s/weather.json" % (main_dir, profile), "w")
@@ -171,7 +161,6 @@ def remove_profile(main_dir, last_profile, profile):
     
     # If this profile is the current one, cancel the action.
     if profile == last_profile:
-        
         print("Profile is currently in use.")
     
     # Otherwise, remove the profile.
@@ -286,7 +275,6 @@ def options(py_version, config, main_dir):
     
     # Save the configuration.
     try:
-        # Save the configuration file.
         config_file = open("%s/config" % main_dir, "w")
         json.dump(config, config_file)
         config_file.close()
@@ -322,7 +310,6 @@ def reset_options(config, main_dir):
     
     # Save the configuration.
     try:
-        # Save the configuration file.
         config_file = open("%s/config" % main_dir, "w")
         json.dump(config, config_file)
         config_file.close()

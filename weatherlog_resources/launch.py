@@ -90,8 +90,6 @@ def get_last_profile(main_dir):
         
         # If the default profile exists, switch to that.
         if "Main Profile" in profiles_list:
-            
-            # Set the profile name.
             last_profile = "Main Profile"
         
         # Otherwise, create the profile:
@@ -114,7 +112,6 @@ def get_config(main_dir):
     
     # Get the configuration.
     try:
-        # Load the configuration file.
         config_file = open("%s/config" % main_dir, "r")
         config = json.load(config_file)
         config_file.close()
@@ -135,7 +132,7 @@ def get_config(main_dir):
                   "show_pre-fill": True,
                   "confirm_exit": False}
     
-    # If there is missing configuration options, then add them.
+    # If there are missing configuration options, then add them.
     # This is for compatability with upgrades from previous versions.
     if not "restore" in config:
         config["restore"] = True
@@ -164,7 +161,6 @@ def get_window_size(main_dir, config):
     
     # Get the previous window size.
     try:
-        # Load the window size file.
         wins_file = open("%s/window_size" % main_dir, "r")
         last_width = int(wins_file.readline())
         last_height = int(wins_file.readline())

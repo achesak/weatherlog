@@ -49,7 +49,6 @@ def read_profile(main_dir = "", name = "", filename = ""):
     
     # Load the data.   
     try:
-        
         # This should be ~/.weatherlog/[profile name]/weather.json on Linux.
         data_file = open(filename, "r")
         data = json.load(data_file)
@@ -85,7 +84,6 @@ def write_standard_file(filename, data):
     
     # Save the data.
     try:
-        # Write to the specified file.
         data_file = open(filename, "w")
         data_file.write(data)
         data_file.close()
@@ -103,13 +101,9 @@ def get_profile_list(main_dir, last_profile):
     current_dir = os.getcwd()
     os.chdir("%s/profiles" % main_dir)
     
-    # Get the list of profiles.
+    # Get the list of profiles, remove the current profile, and sort the list.
     profiles = glob.glob("*")
-    
-    # Remove the current profile from the list.
     profiles = list(set(profiles) - set([last_profile]))
-    
-    # Sort the profiles.
     profiles.sort()
     
     # Get the last modified dates.
@@ -125,5 +119,4 @@ def get_profile_list(main_dir, last_profile):
     # Switch back to the previous directory.
     os.chdir(current_dir)
     
-    # Return the profiles.
     return profiles

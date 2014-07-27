@@ -63,13 +63,10 @@ def filter_data(data, condition):
     
     # Loop through the data, and add it to the filtered list if it matches the condition.
     for i in range(0, len(data)):
-        
-        # Check if the item matches the criteria, and add it to the filtered list if it does.
         matches = filter_compare(col[i], condition[1], condition[2], string_compare)
         if matches:
             filtered.append(data[i])
     
-    # Return the filtered list.
     return filtered
 
 
@@ -100,77 +97,56 @@ def filter_compare(item, operator, value, string_compare):
     
     # Compare the item: equal to.
     if operator == "equal to":
-        
-        # Check if the item is equal to the value(s).
         for i in value:
             if item == i:
                 matches = True
     
     # Compare the item: not equal to.
     if operator == "not equal to":
-        
-        # Check if the item is not equal to the value(s).
         for i in value:
             if item != i:
                 matches = True
     
     # Compare the item: greater than.
     if operator == "greater than":
-        
-        # Check if the item is greater than the value.
         if item > value[0]:
             matches = True
     
     # Compare the item: less than.
     if operator == "less than":
-        
-        # Check if the item is less than the value.
         if item < value[0]:
             matches = True
     
     # Compare the item: greater than or equal to.
     if operator == "greater than or equal to":
-        
-        # Check if the item is greater than or equal to the value.
         if item >= value[0]:
             matches = True
     
     # Compare the item: less than or equal to.
     if operator == "less than or equal to":
-        
-        # Check if the item is less than or equal to the value.
         if item <= value[0]:
             matches = True
     
     # Compare the item: between.
     if operator == "between":
-        
-        # Check if the item is between the values.
         if item > value[0] and item < value[1]:
             matches = True
     
     # Compare the item: between (inclusive).
     if operator == "between (inclusive)":
-        
-        # Check if the item is between or equal to the values.
         if item >= value[0] and item <= value[1]:
             matches = True
     
     # Compare the item: outside.
     if operator == "outside":
-        
-        # Check if the item is outside the values.
         if item < value[0] or item > value[1]:
             matches = True
     
     # Compare the item: outside (inclusive).
     if operator == "outside (inclusive)":
-        
-        # Check if the item is outside or equal to the values.
         if item <= value[0] or item >= value[1]:
             matches = True
     
-    # Return whether the item matches the condition.
     return matches
 
 
@@ -186,7 +162,6 @@ def filter_and(set1, set2):
         if i[0] in date_list:
             filtered.append(i)
     
-    # Return the filtered list.
     return filtered
 
 
@@ -202,7 +177,6 @@ def filter_not(set1, data):
         if i[0] not in date_list:
             filtered.append(i)
     
-    # Return the filtered list.
     return filtered
 
 
@@ -223,5 +197,4 @@ def filter_or(set1, set2):
     # Sort the filtered list.
     filtered = sorted(filtered, key = lambda x: datetime.datetime.strptime(x[0], "%d/%m/%Y"))
     
-    # Return the filtered list.
     return filtered
