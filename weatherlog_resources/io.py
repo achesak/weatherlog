@@ -4,14 +4,20 @@
 # This file defines the functions for reading and writing profiles.
 
 
-# Import json for loading and saving the data.
-import json
 # Import os for creating directories.
 import os
 # Import glob for getting a list of the profiles.
 import glob
 # Import time for formatting times.
 import time
+# Import pickle for loading and saving the data.
+# Try importing cPickle (for most Python 2 implementations), then
+# fall back to pickle (for Python 2 implementations lacking this module
+# and Python 3) if needed.
+try:
+    import cPickle as pickle
+except ImportError:
+    import pickle
 
 
 def write_profile(main_dir = "", name = "", filename = "", data = []):
@@ -24,7 +30,7 @@ def write_profile(main_dir = "", name = "", filename = "", data = []):
     try:
         # This should save to ~/.weatherlog/[profile name]/weather.json on Linux.
         data_file = open(filename, "w")
-        json.dump(data, data_file)
+        pickle.dump(data, data_file)
         data_file.close()
         return True
         
@@ -51,7 +57,7 @@ def read_profile(main_dir = "", name = "", filename = ""):
     try:
         # This should be ~/.weatherlog/[profile name]/weather.json on Linux.
         data_file = open(filename, "r")
-        data = json.load(data_file)
+        data = pickle.load(data_file)
         data_file.close()
         
     except IOError:

@@ -16,6 +16,14 @@ import os.path
 import sys
 # Import glob for getting a list of directories.
 import glob
+# Import pickle for loading and saving the data.
+# Try importing cPickle (for most Python 2 implementations), then
+# fall back to pickle (for Python 2 implementations lacking this module
+# and Python 3) if needed.
+try:
+    import cPickle as pickle
+except ImportError:
+    import pickle
 
 
 def get_main_dir():
@@ -46,7 +54,7 @@ def check_files_exist(main_dir):
         # Create the Main Profile directory and data file.
         os.makedirs("%s/profiles/Main Profile" % main_dir)
         last_prof_data = open("%s/profiles/Main Profile/weather.json" % main_dir, "w")
-        last_prof_data.write("[]")
+        pickle.dump([], last_prof_data)
         last_prof_data.close()
 
 
@@ -217,7 +225,7 @@ def get_data(main_dir, last_profile):
     try:
         # This should be ~/.weatherlog/[profile name]/weather.json on Linux.
         data_file = open("%s/profiles/%s/weather.json" % (main_dir, last_profile), "r")
-        data = json.load(data_file)
+        data = pickle.load(data_file)
         data_file.close()
         
     except IOError:

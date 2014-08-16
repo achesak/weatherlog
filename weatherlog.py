@@ -58,15 +58,21 @@ import os.path
 import sys
 # Import time for working with dates and times.
 import time
+# Import pickle for loading and saving the data.
+# Try importing cPickle (for most Python 2 implementations), then
+# fall back to pickle (for Python 2 implementations lacking this module
+# and Python 3) if needed.
+try:
+    import cPickle as pickle
+except ImportError:
+    import pickle
 # Import urlopen and urlencode for opening a file from a URL.
 # Try importing Python 3 module, then fall back to Python 2 if needed.
 try:
-    # Try importing for Python 3.
     from urllib.request import urlopen
     from urllib.parse import urlencode
     py_version = 3
 except ImportError:
-    # Fall back to Python 2.
     from urllib import urlopen, urlencode
     py_version = 2
 
@@ -1849,7 +1855,7 @@ class Weather(Gtk.Window):
         try:
             # This should save to ~/.weatherlog/[profile name]/weather.json on Linux.
             data_file = open("%s/profiles/%s/weather.json" % (main_dir, last_profile), "w")
-            json.dump(data, data_file)
+            pickle.dump(data, data_file)
             data_file.close()
             
         except IOError:
@@ -1927,7 +1933,7 @@ class Weather(Gtk.Window):
             try:
                 # This should be ~/.weatherlog/[profile name]/weather.json on Linux.
                 data_file = open("%s/profiles/%s/weather.json" % (main_dir, last_profile), "r")
-                data = json.load(data_file)
+                data = pickle.load(data_file)
                 data_file.close()
                 
             except IOError:
