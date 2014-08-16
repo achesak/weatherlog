@@ -81,7 +81,7 @@ def write_blank_profile(main_dir, name):
     # Create the directory and file.
     os.makedirs("%s/profiles/%s" % (main_dir, name))
     new_prof_file = open("%s/profiles/%s/weather.json" % (main_dir, name), "w")
-    new_prof_file.write("[]")
+    pickle.dump([], new_prof_file)
     new_prof_file.close()
 
 
