@@ -5,6 +5,12 @@
       <menuitem action="edit" />
       <menuitem action="remove" />
       <separator />
+      <menuitem action="clear_data" />
+      <menuitem action="clear_all" />
+      <separator />
+      <menuitem action="exit" />
+    </menu>
+    <menu action="file_menu">
       <menuitem action="import" />
       <menuitem action="import_merge" />
       <menuitem action="import_profile" />
@@ -18,13 +24,8 @@
         <menuitem action="export_pastebin_csv" />
       </menu>
       <separator />
-      <menuitem action="clear_data" />
-      <menuitem action="clear_all" />
-      <separator />
       <menuitem action="reload_current" />
       <menuitem action="manual_save" />
-      <separator />
-      <menuitem action="exit" />
     </menu>
     <menu action="info_global_menu">
       <menuitem action="info" />

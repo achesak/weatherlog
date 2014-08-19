@@ -209,6 +209,12 @@ class Weather(Gtk.Window):
             ("add_new", Gtk.STOCK_ADD, "Add _New...", "<Control>n", "Add a new day to the list", self.add_new),
             ("edit", None, "_Edit...", "<Control>e", None, self.edit),
             ("remove", Gtk.STOCK_REMOVE, "Remo_ve...", "<Control>r", "Remove a day from the list", self.remove),
+            ("clear_data", Gtk.STOCK_CLEAR, "Clear Current _Data...", "<Control>d", "Clear the data", self.clear),
+            ("clear_all", None, "Clear _All Data...", "<Control><Alt>d", None, self.clear_all),
+            ("exit", Gtk.STOCK_QUIT, "_Quit...", None, "Close the application", lambda x: self.exit("ignore", "this"))
+        ])
+        action_group.add_actions([
+            ("file_menu", None, "_File"),
             ("import", Gtk.STOCK_OPEN, "_Import...", None, "Import data from a file", self.import_file),
             ("import_profile", None, "Import as New _Profile...", "<Control><Shift>o", None, self.import_new_profile),
             ("import_merge", None, "Imp_ort and Merge...", "<Alt><Shift>o", None, self.import_merge),
@@ -222,11 +228,8 @@ class Weather(Gtk.Window):
             ("export_pastebin", None, "Export to Paste_bin...", None, None, lambda x: self.export_pastebin("raw")),
             ("export_pastebin_html", None, "_Export to Pastebin (HTML)...", None, None, lambda x: self.export_pastebin("html")),
             ("export_pastebin_csv", None, "E_xport to Pastebin (CSV)...", None, None, lambda x: self.export_pastebin("csv")),
-            ("clear_data", Gtk.STOCK_CLEAR, "Clear Current _Data...", "<Control>d", "Clear the data", self.clear),
-            ("clear_all", None, "Clear _All Data...", "<Control><Alt>d", None, self.clear_all),
             ("reload_current", None, "Reload _Current Data...", "F5", None, self.reload_current),
-            ("manual_save", None, "Man_ual Save...", "<Control>m", None, lambda x: self.save(show_dialog = True, automatic = False)),
-            ("exit", Gtk.STOCK_QUIT, "_Quit...", None, "Close the application", lambda x: self.exit("ignore", "this"))
+            ("manual_save", None, "Man_ual Save...", "<Control>m", None, lambda x: self.save(show_dialog = True, automatic = False))
         ])
         action_group.add_actions([
             ("info_global_menu", None, "_Info"),
