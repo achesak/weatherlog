@@ -105,6 +105,7 @@
     </menu>
     <menu action="help_menu">
       <menuitem action="about" />
+      <menuitem action="mobile_link" />
       <separator />
       <menuitem action="help" />
     </menu>

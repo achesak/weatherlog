@@ -323,6 +323,7 @@ class Weather(Gtk.Window):
         action_group.add_actions([
             ("help_menu", None, "_Help"),
             ("about", Gtk.STOCK_ABOUT, "_About...", "<Shift>F1", None, self.show_about),
+            ("mobile_link", None, "_Firefox OS App...", None, None, lambda x: webbrowser.open("https://marketplace.firefox.com/app/weatherfire")),
             ("help", Gtk.STOCK_HELP, "_Help...", None, None, self.show_help)
         ])
         
