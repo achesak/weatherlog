@@ -80,6 +80,9 @@ def csv(data2, units):
 def info_html(data):
     """Converts the info data to HTML."""
     
+    title_list = ["General Info", "Temperature Info", "Precipitation Info", "Wind Info", "Humidity Info",
+                  "Air Pressure Info", "Cloud Cover Info", "Notes Info"]
+    
     # Build the string.
     html = """
 <!DOCTYPE html>
@@ -88,29 +91,37 @@ def info_html(data):
 <title>Data exported from WeatherLog</title>
 <meta charset="utf-8" />
 </head>
-<body>
+<body>"""
+    
+    # Add the data. Loop through the list, and add each sublist as a new table.
+    for j in range(0, len(data)):
+        html += """
+<h1>""" + title_list[j] + """</h1>
 <table>
 <tr>
 <th>Field</th>
 <th>Value</th>
 </tr>"""
     
-    # Add the data. Loop through each list, and add it as a table row.
-    for i in data:
-        try:
-            i[0] = i[0].encode("utf-8")
-            i[1] = i[1].encode("utf-8")
-        except:
-            pass
-        html += """
+        # Add the data. Loop through each list, and add it as a table row.
+        for i in data[j]:
+            try:
+                i[0] = i[0].encode("utf-8")
+                i[1] = i[1].encode("utf-8")
+            except:
+                pass
+            html += """
 <tr>
 <td>%s</td>
 <td>%s</td>
 </tr>""" % (i[0], i[1])
+        
+        # Close the table.
+        html += """
+</table>"""
     
     # Add the closing tags.
     html += """
-</table>
 </body>
 </html>"""
     
@@ -120,6 +131,8 @@ def info_html(data):
 def chart_html(data):
     """Converts the chart data to HTML."""
     
+    title_list = ["Temperature Chart", "Precipitation Chart", "Wind Chart", "Humidity Chart", "Air Pressure Chart"]
+    
     # Build the string.
     html = """
 <!DOCTYPE html>
@@ -128,7 +141,12 @@ def chart_html(data):
 <title>Data exported from WeatherLog</title>
 <meta charset="utf-8" />
 </head>
-<body>
+<body>"""
+    
+        # Add the data. Loop through the list, and add each sublist as a new table.
+    for j in range(0, len(data)):
+        html += """
+<h1>""" + title_list[j] + """</h1>
 <table>
 <tr>
 <th>Day</th>
@@ -139,18 +157,18 @@ def chart_html(data):
 <th>Median Difference</th>
 </tr>"""
     
-    # Add the data. Loop through each list, and add it as a table row.
-    for i in data:
-        try:
-            i[0] = i[0].encode("utf-8")
-            i[1] = i[1].encode("utf-8")
-            i[2] = i[2].encode("utf-8")
-            i[3] = i[3].encode("utf-8")
-            i[4] = i[4].encode("utf-8")
-            i[5] = i[5].encode("utf-8")
-        except:
-            pass
-        html += """
+        # Add the data. Loop through each list, and add it as a table row.
+        for i in data[j]:
+            try:
+                i[0] = i[0].encode("utf-8")
+                i[1] = i[1].encode("utf-8")
+                i[2] = i[2].encode("utf-8")
+                i[3] = i[3].encode("utf-8")
+                i[4] = i[4].encode("utf-8")
+                i[5] = i[5].encode("utf-8")
+            except:
+                pass
+            html += """
 <tr>
 <td>%s</td>
 <td>%s</td>
@@ -159,10 +177,13 @@ def chart_html(data):
 <td>%s</td>
 <td>%s</td>
 </tr>""" % (i[0], i[1], i[2], i[3], i[4], i[5])
+        
+        # Close the table.
+        html += """
+</table>"""
     
     # Add the closing tags.
     html += """
-</table>
 </body>
 </html>"""
     

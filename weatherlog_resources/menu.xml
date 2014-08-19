@@ -29,57 +29,12 @@
     </menu>
     <menu action="info_global_menu">
       <menuitem action="info" />
-      <menu action="info_menu">
-        <menuitem action="temperature" />
-        <menuitem action="precipitation" />
-        <menuitem action="wind" />
-        <menuitem action="humidity" />
-        <menuitem action="air_pressure" />
-        <menuitem action="cloud_cover" />
-        <menuitem action="notes" />
-      </menu>
       <menuitem action="info_range" />
-      <menu action="info_range_menu">
-        <menuitem action="temperature_range" />
-        <menuitem action="precipitation_range" />
-        <menuitem action="wind_range" />
-        <menuitem action="humidity_range" />
-        <menuitem action="air_pressure_range" />
-        <menuitem action="cloud_cover_range" />
-        <menuitem action="notes_range" />
-      </menu>
       <menuitem action="info_selected" />
-      <menu action="info_selected_menu">
-        <menuitem action="temperature_selected" />
-        <menuitem action="precipitation_selected" />
-        <menuitem action="wind_selected" />
-        <menuitem action="humidity_selected" />
-        <menuitem action="air_pressure_selected" />
-        <menuitem action="cloud_cover_selected" />
-        <menuitem action="notes_selected" />
-      </menu>
       <separator />
-      <menu action="info_charts_menu">
-        <menuitem action="temperature_chart" />
-        <menuitem action="precipitation_chart" />
-        <menuitem action="wind_chart" />
-        <menuitem action="humidity_chart" />
-        <menuitem action="air_pressure_chart" />
-      </menu>
-      <menu action="info_charts_range_menu">
-        <menuitem action="temperature_range_chart" />
-        <menuitem action="precipitation_range_chart" />
-        <menuitem action="wind_range_chart" />
-        <menuitem action="humidity_range_chart" />
-        <menuitem action="air_pressure_range_chart" />
-      </menu>
-      <menu action="info_charts_selected_menu">
-        <menuitem action="temperature_selected_chart" />
-        <menuitem action="precipitation_selected_chart" />
-        <menuitem action="wind_selected_chart" />
-        <menuitem action="humidity_selected_chart" />
-        <menuitem action="air_pressure_selected_chart" />
-      </menu>
+      <menuitem action="charts" />
+      <menuitem action="charts_range" />
+      <menuitem action="charts_selected" />
       <separator />
       <menuitem action="select_data" />
       <menuitem action="select_data_advanced" />

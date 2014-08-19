@@ -233,70 +233,13 @@ class Weather(Gtk.Window):
         ])
         action_group.add_actions([
             ("info_global_menu", None, "_Info"),
-            ("info", Gtk.STOCK_INFO, "_Info...", "<Control>i", "Show info about the data", lambda x: self.show_info_generic(event = "ignore", info_type = "General", data = data))
-        ])
-        action_weather_info_group = Gtk.Action("info_menu", "_More Info", None, None)
-        action_group.add_action(action_weather_info_group)
-        action_group.add_actions([
-            ("temperature", None, "_Temperature...", "<Control>t", None, lambda x: self.show_info_generic(event = "ignore", info_type = "Temperature", data = data)),
-            ("precipitation", None, "_Precipitation...", "<Control>p", None, lambda x: self.show_info_generic(event = "ignore", info_type = "Precipitation", data = data)),
-            ("wind", None, "_Wind...", "<Control>w", None, lambda x: self.show_info_generic(event = "ignore", info_type = "Wind", data = data)),
-            ("humidity", None, "_Humidity...", "<Control>h", None, lambda x: self.show_info_generic(event = "ignore", info_type = "Humidity", data = data)),
-            ("air_pressure", None, "_Air Pressure...", "<Control>a", None, lambda x: self.show_info_generic(event = "ignore", info_type = "Air Pressure", data = data)),
-            ("cloud_cover", None, "_Cloud Cover...", "<Control>c", None, lambda x: self.show_info_generic(event = "ignore", info_type = "Cloud Cover", data = data)),
-            ("notes", None, "_Notes...", "<Control>e", None, lambda x: self.show_info_generic(event = "ignore", info_type = "Notes", data = data)),
-            ("info_range", None, "Info in _Range...", "<Control><Shift>i", None, lambda x: self.info_range("General"))
-        ])
-        action_weather_info_range_group = Gtk.Action("info_range_menu", "More In_fo in Range", None, None)
-        action_group.add_action(action_weather_info_range_group)
-        action_group.add_actions([
-            ("temperature_range", None, "_Temperature in Range...", "<Control><Shift>t", None, lambda x: self.info_range("Temperature")),
-            ("precipitation_range", None, "_Precipitation in Range...", "<Control><Shift>p", None, lambda x: self.info_range("Precipitation")),
-            ("wind_range", None, "_Wind in Range...", "<Control><Shift>w", None, lambda x: self.info_range("Wind")),
-            ("humidity_range", None, "_Humidity in Range...", "<Control><Shift>h", None, lambda x: self.info_range("Humidity")),
-            ("air_pressure_range", None, "_Air Pressure in Range...", "<Control><Shift>a", None, lambda x: self.info_range("Air Pressure")),
-            ("cloud_cover_range", None, "_Cloud Cover in Range...", "<Control><Shift>c", None, lambda x: self.info_range("Cloud Cover")),
-            ("notes_range", None, "_Notes in Range...", "<Control><Shift>e", None, lambda x: self.info_range("Notes")),
-            ("info_selected", None, "Info for Se_lected Dates...", None, None, lambda x: self.info_selected("General"))
-        ])
-        action_weather_info_selected_group = Gtk.Action("info_selected_menu", "More Info for Selected _Dates", None, None)
-        action_group.add_action(action_weather_info_selected_group)
-        action_group.add_actions([
-            ("temperature_selected", None, "_Temperature for Selected Dates...", None, None, lambda x: self.info_selected("Temperature")),
-            ("precipitation_selected", None, "_Precipitation for Selected Dates...", None, None, lambda x: self.info_selected("Precipitation")),
-            ("wind_selected", None, "_Wind for Selected Dates...", None, None, lambda x: self.info_selected("Wind")),
-            ("humidity_selected", None, "_Humidity for Selected Dates...", None, None, lambda x: self.info_selected("Humidity")),
-            ("air_pressure_selected", None, "_Air Pressure for Selected Dates...", None, None, lambda x: self.info_selected("Air Pressure")),
-            ("cloud_cover_selected", None, "_Cloud Cover for Selected Dates...", None, None, lambda x: self.info_selected("Cloud Cover")),
-            ("notes_selected", None, "_Notes for Selected Dates...", None, None, lambda x: self.info_selected("Notes"))
-        ])
-        action_weather_charts_group = Gtk.Action("info_charts_menu", "Chart_s", None, None)
-        action_group.add_action(action_weather_charts_group)
-        action_group.add_actions([
-            ("temperature_chart", None, "_Temperature Chart...", "<Alt><Shift>t", None, lambda x: self.show_chart_generic(event = "ignore", info_type = "Temperature", data = data)),
-            ("precipitation_chart", None, "_Precipitation Chart...", "<Alt><Shift>p", None, lambda x: self.show_chart_generic(event = "ignore", info_type = "Precipitation", data = data)),
-            ("wind_chart", None, "_Wind Chart...", "<Alt><Shift>w", None, lambda x: self.show_chart_generic(event = "ignore", info_type = "Wind", data = data)),
-            ("humidity_chart", None, "_Humidity Chart...", "<Alt><Shift>h", None, lambda x: self.show_chart_generic(event = "ignore", info_type = "Humidity", data = data)),
-            ("air_pressure_chart", None, "_Air Pressure Chart...", "<Alt><Shift>a", None, lambda x: self.show_chart_generic(event = "ignore", info_type = "Air Pressure", data = data)),
-        ])
-        action_weather_charts_range_group = Gtk.Action("info_charts_range_menu", "C_harts in Range", None, None)
-        action_group.add_action(action_weather_charts_range_group)
-        action_group.add_actions([
-            ("temperature_range_chart", None, "_Temperature Chart in Range...", None, None, lambda x: self.chart_range("Temperature")),
-            ("precipitation_range_chart", None, "_Precipitation Chart in Range...", None, None, lambda x: self.chart_range("Precipitation")),
-            ("wind_range_chart", None, "_Wind Chart in Range...", None, None, lambda x: self.chart_range("Wind")),
-            ("humidity_range_chart", None, "_Humidity Chart in Range...", None, None, lambda x: self.chart_range("Humidity")),
-            ("air_pressure_range_chart", None, "_Air Pressure Chart in Range...", None, None, lambda x: self.chart_range("Air Pressure"))
-        ])
-        action_weather_charts_selected_group = Gtk.Action("info_charts_selected_menu", "Charts for Selec_ted Dates", None, None)
-        action_group.add_action(action_weather_charts_selected_group)
-        action_group.add_actions([
-            ("temperature_selected_chart", None, "_Temperature for Selected Dates...", None, None, lambda x: self.chart_selected("Temperature")),
-            ("precipitation_selected_chart", None, "_Precipitation for Selected Dates...", None, None, lambda x: self.chart_selected("Precipitation")),
-            ("wind_selected_chart", None, "_Wind for Selected Dates...", None, None, lambda x: self.chart_selected("Wind")),
-            ("humidity_selected_chart", None, "_Humidity for Selected Dates...", None, None, lambda x: self.chart_selected("Humidity")),
-            ("air_pressure_selected_chart", None, "_Air Pressure for Selected Dates...", None, None, lambda x: self.chart_selected("Air Pressure")),
-            ("select_data", None, "S_elect Data...", None, None, self.select_data_simple),
+            ("info", Gtk.STOCK_INFO, "_Info...", "<Control>i", "Show info about the data", lambda x: self.show_info_generic()),
+            ("info_range", None, "Info in _Range...", "<Control><Shift>i", None, lambda x: self.info_range()),
+            ("info_selected", None, "Info for _Selected Dates...", None, None, lambda x: self.info_selected()),
+            ("charts", None, "_Charts...", "<Control>c", None, lambda x: self.show_chart_generic()),
+            ("charts_range", None, "Charts _in Range...", "<Control><Shift>c", None, lambda x: self.chart_range()),
+            ("charts_selected", None, "Charts _for Selected Dates...", None, None, lambda x: self.chart_selected()),
+            ("select_data", None, "Select _Data...", None, None, self.select_data_simple),
             ("select_data_advanced", None, "Select Data (_Advanced)...", None, None, self.select_data_advanced)
         ])
         action_group.add_actions([
@@ -544,12 +487,12 @@ class Weather(Gtk.Window):
         self.save(show_dialog = False)
         
     
-    def info_range(self, info):
+    def info_range(self):
         """Gets the range for the info to display."""
         
         # If there is no data, tell the user and don't show the info dialog.
         if len(data) == 0:
-            show_no_data_dialog(self, "%s Info - %s" % (info, last_profile))
+            show_no_data_dialog(self, "Info - %s" % last_profile)
             return
         
         # Get the first and last entered dates.
@@ -557,7 +500,7 @@ class Weather(Gtk.Window):
         daye, monthe, yeare = utility_functions.split_date(data[len(data) - 1][0])
         
         # Get the starting date.
-        start_dlg = CalendarDialog(self, "%s Info in Range - %s" % (info, last_profile), "Select the starting date:", days, months, years)
+        start_dlg = CalendarDialog(self, "Info in Range - %s" % last_profile, "Select the starting date:", days, months, years)
         response1 = start_dlg.run()
         year1, month1, day1 = start_dlg.info_cal.get_date()
         date1 = "%d/%d/%d" % (day1, month1 + 1, year1)
@@ -569,11 +512,11 @@ class Weather(Gtk.Window):
             
         # Check to make sure this date is valid, and cancel the action if not.
         if date1 not in utility_functions.get_column(data, 0):
-            show_error_dialog(self, "%s Info in Range - %s" % (info, last_profile), "%s is not a valid date." % date1)
+            show_error_dialog(self, "%s Info in Range - %s" % last_profile, "%s is not a valid date." % date1)
             return
         
         # Get the ending date.
-        end_dlg = CalendarDialog(self, "%s Info in Range - %s" % (info, last_profile), "Select the ending date:", daye, monthe, yeare)
+        end_dlg = CalendarDialog(self, "Info in Range - %s" % last_profile, "Select the ending date:", daye, monthe, yeare)
         response2 = end_dlg.run()
         year2, month2, day2 = end_dlg.info_cal.get_date()
         date2 = "%d/%d/%d" % (day2, month2 + 1, year2)
@@ -585,7 +528,7 @@ class Weather(Gtk.Window):
         
         # Check to make sure this date is valid, and cancel the action if not.
         if date2 not in utility_functions.get_column(data, 0):
-            show_error_dialog(self, "%s Info in Range - %s" % (info, last_profile), "%s is not a valid date." % date2)
+            show_error_dialog(self, "Info in Range - %s" % last_profile, "%s is not a valid date." % date2)
             return
         
         # Convert the dates to ISO notation for comparison.
@@ -595,7 +538,7 @@ class Weather(Gtk.Window):
         # Check to make sure this date is later than the starting date, 
         # and cancel the action if not.
         if date1 == date2 or nDate1 > nDate2:
-            show_error_dialog(self, "%s Info in Range - %s" % (info, last_profile), "The ending date must later than the starting date.")
+            show_error_dialog(self, "Info in Range - %s" % last_profile, "The ending date must later than the starting date.")
             return
         
         # Get the indices.
@@ -606,16 +549,16 @@ class Weather(Gtk.Window):
         # Get the new list.
         data2 = data[index1:index2 + 1]
         
-        # Pass the data to the appropriate function.
-        self.show_info_generic(event = "ignore", info_type = info, data = data2)
+        # Pass the data to the info dialog.
+        self.show_info_generic(data = data2)
     
     
-    def info_selected(self, info = "General"):
+    def info_selected(self):
         """Gets the selected dates to for the info to display."""
         
         # If there is no data, tell the user and don't show the info dialog.
         if len(data) == 0:
-            show_no_data_dialog(self, "%s Info - %s" % (info, last_profile))
+            show_no_data_dialog(self, "Info - %s" % last_profile)
             return
         
         # Get the dates.
@@ -624,7 +567,7 @@ class Weather(Gtk.Window):
             dates.append([i[0]])
         
         # Get the selected dates.
-        info_dlg = DateSelectionDialog(self, "%s Info for Selected Dates - %s" % (info, last_profile), dates)
+        info_dlg = DateSelectionDialog(self, "Info for Selected Dates - %s" % last_profile, dates)
         response = info_dlg.run()
         model, treeiter = info_dlg.treeview.get_selection().get_selected_rows()
         info_dlg.destroy()
@@ -648,45 +591,39 @@ class Weather(Gtk.Window):
         if len(ndata) == 0:
             return
         
-        # Pass the data to the appropriate function.
-        self.show_info_generic(event = "ignore", info_type = info, data = ndata)
+        # Pass the data to the info dialog.
+        self.show_info_generic(data = ndata)
     
     
-    def show_info_generic(self, event, info_type = "General", data = data):
+    def show_info_generic(self, data = data):
         """Shows info about the data."""
         
         # If there is no data, tell the user and don't show the dialog.
         if len(data) == 0:
-            show_no_data_dialog(self, "%s Info - %s" % (info_type, last_profile))
+            show_no_data_dialog(self, "Info - %s" % last_profile)
             return
         
         # Get the info.
-        if info_type == "General":
-            data2 = info.general_info(data, units)
-        elif info_type == "Temperature":
-            data2 = info.temp_info(data, units)
-        elif info_type == "Precipitation":
-            data2 = info.prec_info(data, units)
-        elif info_type == "Wind":
-            data2 = info.wind_info(data, units)
-        elif info_type == "Humidity":
-            data2 = info.humi_info(data, units)
-        elif info_type == "Air Pressure":
-            data2 = info.airp_info(data, units)
-        elif info_type == "Cloud Cover":
-            data2 = info.clou_info(data, units)
-        elif info_type == "Notes":
-            data2 = info.note_info(data, units)
+        data2 = [
+            info.general_info(data, units),
+            info.temp_info(data, units),
+            info.prec_info(data, units),
+            info.wind_info(data, units),
+            info.humi_info(data, units),
+            info.airp_info(data, units),
+            info.clou_info(data, units),
+            info.note_info(data, units)
+        ]
         
         # Show the info.
-        info_dlg = GenericInfoDialog(self, "%s Info - %s" % (info_type, last_profile), data2)
+        info_dlg = GenericInfoDialog(self, "Info - %s" % last_profile, data2)
         response = info_dlg.run()
         
         # If the user clicked Export:
         if response == 9:
             
             # Create the dialog.
-            export_dlg = Gtk.FileChooserDialog("Export %s Info - %s" % (info_type, last_profile), self, Gtk.FileChooserAction.SAVE, (Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL, Gtk.STOCK_OPEN, Gtk.ResponseType.OK))
+            export_dlg = Gtk.FileChooserDialog("Export Info - %s" % last_profile, self, Gtk.FileChooserAction.SAVE, (Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL, Gtk.STOCK_OPEN, Gtk.ResponseType.OK))
             export_dlg.set_do_overwrite_confirmation(True)
             
             # Get the response.
@@ -704,14 +641,14 @@ class Weather(Gtk.Window):
         info_dlg.destroy()
         
     
-    def chart_range(self, info):
+    def chart_range(self):
         """Gets the range for the chart to display."""
         
         # If there is no data, tell the user and don't show the info dialog.
         if len(data) == 0:
             
             # Show the dialog.
-            show_no_data_dialog(self, "%s Chart - %s" % (info, last_profile))
+            show_no_data_dialog(self, "Charts - %s" % last_profile)
             return
         
         # Get the first and last entered dates.
@@ -719,7 +656,7 @@ class Weather(Gtk.Window):
         daye, monthe, yeare = utility_functions.split_date(data[len(data) - 1][0])
         
         # Get the starting date.
-        start_dlg = CalendarDialog(self, "%s Chart in Range - %s" % (info, last_profile), "Select the starting date:", days, months, years)
+        start_dlg = CalendarDialog(self, "Charts in Range - %s" % last_profile, "Select the starting date:", days, months, years)
         response1 = start_dlg.run()
         year1, month1, day1 = start_dlg.info_cal.get_date()
         date1 = "%d/%d/%d" % (day1, month1 + 1, year1)
@@ -731,11 +668,11 @@ class Weather(Gtk.Window):
             
         # Check to make sure this date is valid, and cancel the action if not.
         if date1 not in utility_functions.get_column(data, 0):
-            show_error_dialog(self, "%s Chart in Range - %s" % (info, last_profile), "%s is not a valid date." % date1)
+            show_error_dialog(self, "Charts in Range - %s" % last_profile, "%s is not a valid date." % date1)
             return
         
         # Get the ending date.
-        end_dlg = CalendarDialog(self, "%s Chart in Range - %s" % (info, last_profile), "Select the ending date:", daye, monthe, yeare)
+        end_dlg = CalendarDialog(self, "Charts in Range - %s" % last_profile, "Select the ending date:", daye, monthe, yeare)
         response2 = end_dlg.run()
         year2, month2, day2 = end_dlg.info_cal.get_date()
         date2 = "%d/%d/%d" % (day2, month2 + 1, year2)
@@ -747,7 +684,7 @@ class Weather(Gtk.Window):
         
         # Check to make sure this date is valid, and cancel the action if not.
         if date2 not in utility_functions.get_column(data, 0):
-            show_error_dialog(self, "%s Chart in Range - %s" % (info, last_profile), "%s is not a valid date." % date2)
+            show_error_dialog(self, "Charts in Range - %s" % last_profile, "%s is not a valid date." % date2)
             return
         
         # Convert the dates to ISO notation for comparison.
@@ -757,7 +694,7 @@ class Weather(Gtk.Window):
         # Check to make sure this date is later than the starting date, 
         # and cancel the action if not.
         if date1 == date2 or nDate1 > nDate2:
-            show_error_dialog(self, "%s Chart in Range - %s" % (info, last_profile), "The ending date must be later than the starting date.")
+            show_error_dialog(self, "Charts in Range - %s" % last_profile, "The ending date must be later than the starting date.")
             return
         
         # Get the indices.
@@ -768,16 +705,16 @@ class Weather(Gtk.Window):
         # Get the new list.
         data2 = data[index1:index2 + 1]
         
-        # Pass the data to the appropriate function.
-        self.show_chart_generic(event = "ignore", info_type = info, data = data2)
+        # Pass the data to the charts dialog.
+        self.show_chart_generic(data = data2)
     
     
-    def chart_selected(self, info = "General"):
+    def chart_selected(self):
         """Gets the selected dates to for the charts to display."""
         
         # If there is no data, tell the user and don't show the info dialog.
         if len(data) == 0:
-            show_no_data_dialog(self, "%s Chart - %s" % (info, last_profile))
+            show_no_data_dialog(self, "Charts - %s" % last_profile)
             return
         
         # Get the dates.
@@ -786,7 +723,7 @@ class Weather(Gtk.Window):
             dates.append([i[0]])
         
         # Get the selected dates.
-        info_dlg = DateSelectionDialog(self, "%s Chart for Selected Dates - %s" % (info, last_profile), dates)
+        info_dlg = DateSelectionDialog(self, "Charts for Selected Dates - %s" % last_profile, dates)
         response = info_dlg.run()
         model, treeiter = info_dlg.treeview.get_selection().get_selected_rows()
         info_dlg.destroy()
@@ -810,39 +747,36 @@ class Weather(Gtk.Window):
         if len(ndata) == 0:
             return
         
-        # Pass the data to the appropriate function.
-        self.show_chart_generic(event = "ignore", info_type = info, data = ndata)
+        # Pass the data to the charts dialog.
+        self.show_chart_generic(data = ndata)
     
     
-    def show_chart_generic(self, event, info_type, data = data):
+    def show_chart_generic(self, data = data):
         """Shows a chart about the data."""
         
         # If there is no data, tell the user and don't show the chart dialog.
         if len(data) == 0:
-            show_no_data_dialog(self, "%s Chart - %s" % (info_type, last_profile))
+            show_no_data_dialog(self, "Charts - %s" % last_profile)
             return
         
         # Get the chart data.
-        if info_type == "Temperature":
-            data2 = charts.temp_chart(data, units)
-        elif info_type == "Precipitation":
-            data2 = charts.prec_chart(data, units)
-        elif info_type == "Wind":
-            data2 = charts.wind_chart(data, units)
-        elif info_type == "Humidity":
-            data2 = charts.humi_chart(data, units)
-        elif info_type == "Air Pressure":
-            data2 = charts.airp_chart(data, units)
+        data2 = [
+            charts.temp_chart(data, units),
+            charts.prec_chart(data, units),
+            charts.wind_chart(data, units),
+            charts.humi_chart(data, units),
+            charts.airp_chart(data, units)
+        ]
         
         # Show the chart.
-        chart_dlg = GenericChartDialog(self, "%s Chart - %s" % (info_type, last_profile), data2)
+        chart_dlg = GenericChartDialog(self, "Charts - %s" % last_profile, data2)
         response = chart_dlg.run()
         
         # If the user clicked Export:
         if response == 9:
             
             # Create the dialog.
-            export_dlg = Gtk.FileChooserDialog("Export %s Chart - %s" % (info_type, last_profile), self, Gtk.FileChooserAction.SAVE, (Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL, Gtk.STOCK_OPEN, Gtk.ResponseType.OK))
+            export_dlg = Gtk.FileChooserDialog("Export Charts - %s" % last_profile, self, Gtk.FileChooserAction.SAVE, (Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL, Gtk.STOCK_OPEN, Gtk.ResponseType.OK))
             export_dlg.set_do_overwrite_confirmation(True)
             
             # Get the response.

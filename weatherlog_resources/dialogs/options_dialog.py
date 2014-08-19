@@ -17,9 +17,8 @@ class OptionsDialog(Gtk.Dialog):
         Gtk.Dialog.__init__(self, "Options", parent, Gtk.DialogFlags.MODAL)
         self.set_resizable(False)
         
-        # Create the notebook.
+        # Create the tab notebook.
         notebook = Gtk.Notebook()
-        # Set tab position to top.
         notebook.set_tab_pos(Gtk.PositionType.TOP)
         
         # Add the buttons.
