@@ -1352,10 +1352,8 @@ class Weather(Gtk.Window):
         if response != Gtk.ResponseType.OK or treeiter == None:
             return
         
-        # Get the profile name.
+        # Get the profile name and clear the old data.
         name = model[treeiter][0]
-        
-        # Clear the old data.
         data[:] = []
         self.liststore.clear()
         
@@ -1392,10 +1390,8 @@ class Weather(Gtk.Window):
             show_error_dialog(self, "Add Profile", validate)
             return
         
-        # Create the new profile.
+        # Create the new profile and clear the old data.
         io.write_blank_profile(main_dir, name)
-        
-        # Clear the old data.
         last_profile = name
         data[:] = []
         self.liststore.clear()
@@ -1506,10 +1502,8 @@ class Weather(Gtk.Window):
         if response != Gtk.ResponseType.OK or treeiter == None:
             return
         
-        # Get the profile name.
+        # Get the profile name and read the data.
         name = model[treeiter][0]
-        
-        # Read the data.   
         data2 = io.read_profile(main_dir = main_dir, name = name)
         
         # Filter the new data to make sure there are no duplicates.
