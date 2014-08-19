@@ -24,11 +24,11 @@ def write_profile(main_dir = "", name = "", filename = "", data = []):
     """Writes the data to the profile file."""
     
     # Get the filename.
-    filename = filename if filename != "" else "%s/profiles/%s/weather.json" % (main_dir, name)
+    filename = filename if filename != "" else "%s/profiles/%s/weather" % (main_dir, name)
     
     # Write the data.
     try:
-        # This should save to ~/.weatherlog/[profile name]/weather.json on Linux.
+        # This should save to ~/.weatherlog/[profile name]/weather on Linux.
         data_file = open(filename, "w")
         pickle.dump(data, data_file)
         data_file.close()
@@ -51,11 +51,11 @@ def read_profile(main_dir = "", name = "", filename = ""):
     """Reads the data from the profile file."""
     
     # Get the filename.
-    filename = filename if filename != "" else "%s/profiles/%s/weather.json" % (main_dir, name)
+    filename = filename if filename != "" else "%s/profiles/%s/weather" % (main_dir, name)
     
     # Load the data.   
     try:
-        # This should be ~/.weatherlog/[profile name]/weather.json on Linux.
+        # This should be ~/.weatherlog/[profile name]/weather on Linux.
         data_file = open(filename, "r")
         data = pickle.load(data_file)
         data_file.close()
@@ -80,7 +80,7 @@ def write_blank_profile(main_dir, name):
     
     # Create the directory and file.
     os.makedirs("%s/profiles/%s" % (main_dir, name))
-    new_prof_file = open("%s/profiles/%s/weather.json" % (main_dir, name), "w")
+    new_prof_file = open("%s/profiles/%s/weather" % (main_dir, name), "w")
     pickle.dump([], new_prof_file)
     new_prof_file.close()
 
@@ -116,7 +116,7 @@ def get_profile_list(main_dir, last_profile):
     for i in range(0, len(profiles)):
         
         # Get the date and format it properly.
-        last_modified = os.path.getmtime("%s/profiles/%s/weather.json" % (main_dir, last_profile))
+        last_modified = os.path.getmtime("%s/profiles/%s/weather" % (main_dir, last_profile))
         last_modified = time.strftime("%d/%m/%Y", time.localtime(last_modified))
         
         # Change the value in the list.

@@ -53,7 +53,7 @@ def check_files_exist(main_dir):
         
         # Create the Main Profile directory and data file.
         os.makedirs("%s/profiles/Main Profile" % main_dir)
-        last_prof_data = open("%s/profiles/Main Profile/weather.json" % main_dir, "w")
+        last_prof_data = open("%s/profiles/Main Profile/weather" % main_dir, "w")
         pickle.dump([], last_prof_data)
         last_prof_data.close()
 
@@ -105,8 +105,8 @@ def get_last_profile(main_dir):
             
             # Create the Main Profile directory and data file.
             os.makedirs("%s/profiles/Main Profile" % main_dir)
-            last_prof_data = open("%s/profiles/Main Profile/weather.json" % main_dir, "w")
-            last_prof_data.write("[]")
+            last_prof_data = open("%s/profiles/Main Profile/weather" % main_dir, "w")
+            pickle.dump([], last_prof_data)
             last_prof_data.close()
             
             # Set the profile name.
@@ -217,8 +217,8 @@ def get_data(main_dir, last_profile):
     
     # Load the data.   
     try:
-        # This should be ~/.weatherlog/[profile name]/weather.json on Linux.
-        data_file = open("%s/profiles/%s/weather.json" % (main_dir, last_profile), "r")
+        # This should be ~/.weatherlog/[profile name]/weather on Linux.
+        data_file = open("%s/profiles/%s/weather" % (main_dir, last_profile), "r")
         data = pickle.load(data_file)
         data_file.close()
         

@@ -1129,7 +1129,7 @@ class Weather(Gtk.Window):
         # Otherwise if there are no problems with the name, create the directory and file.
         last_profile = name
         os.makedirs("%s/profiles/%s" % (main_dir, name))
-        open("%s/profiles/%s/weather.json" % (main_dir, name), "w").close()
+        open("%s/profiles/%s/weather" % (main_dir, name), "w").close()
         
         # Clear the old data.
         data[:] = []
@@ -1529,8 +1529,8 @@ class Weather(Gtk.Window):
         
         # Create the directory and file.
         os.makedirs("%s/profiles/%s" % (main_dir, name))
-        new_prof_file = open("%s/profiles/%s/weather.json" % (main_dir, name), "w")
-        new_prof_file.write("[]")
+        new_prof_file = open("%s/profiles/%s/weather" % (main_dir, name), "w")
+        pickle.dump([], new_prof_file)
         new_prof_file.close()
             
         # Get the dates to move or copy.
@@ -1792,8 +1792,8 @@ class Weather(Gtk.Window):
         
         # Save to the file.
         try:
-            # This should save to ~/.weatherlog/[profile name]/weather.json on Linux.
-            data_file = open("%s/profiles/%s/weather.json" % (main_dir, last_profile), "w")
+            # This should save to ~/.weatherlog/[profile name]/weather on Linux.
+            data_file = open("%s/profiles/%s/weather" % (main_dir, last_profile), "w")
             pickle.dump(data, data_file)
             data_file.close()
             
@@ -1870,8 +1870,8 @@ class Weather(Gtk.Window):
             
             # Load the data.   
             try:
-                # This should be ~/.weatherlog/[profile name]/weather.json on Linux.
-                data_file = open("%s/profiles/%s/weather.json" % (main_dir, last_profile), "r")
+                # This should be ~/.weatherlog/[profile name]/weather on Linux.
+                data_file = open("%s/profiles/%s/weather" % (main_dir, last_profile), "r")
                 data = pickle.load(data_file)
                 data_file.close()
                 
