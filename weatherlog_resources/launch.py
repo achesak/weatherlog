@@ -133,8 +133,6 @@ def get_config(main_dir):
                   "pastebin": "d2314ff616133e54f728918b8af1500e",
                   "show_units": True,
                   "show_dates": True,
-                  "escape_fullscreen": "exit fullscreen",
-                  "escape_windowed": "minimize",
                   "auto_save": True,
                   "confirm_del": True,
                   "show_pre-fill": True,
@@ -148,10 +146,6 @@ def get_config(main_dir):
         config["show_units"] = True
     if not "show_dates" in config:
         config["show_dates"] = True
-    if not "escape_windowed" in config:
-        config["escape_windowed"] = "minimize"
-    if not "escape_fullscreen" in config:
-        config["escape_fullscreen"] = "exit fullscreen"
     if not "auto_save" in config:
         config["auto_save"] = True
     if not "confirm_del" in config: 

@@ -159,7 +159,6 @@ class Weather(Gtk.Window):
         Gtk.Window.__init__(self, title = "WeatherLog")
         self.set_default_size(last_width, last_height)
         self.set_icon_from_file("weatherlog_resources/images/icon_small.png")
-        self.fullscreen_state = False
         
         # Create the ListStore for storing the data. ListStore has 8 columns, all strings.
         self.liststore = Gtk.ListStore(str, str, str, str, str, str, str, str)
@@ -227,7 +226,6 @@ class Weather(Gtk.Window):
             ("clear_all", None, "Clear _All Data...", "<Control><Alt>d", None, self.clear_all),
             ("reload_current", None, "Reload _Current Data...", "F5", None, self.reload_current),
             ("manual_save", None, "Man_ual Save...", "<Control>m", None, lambda x: self.save(show_dialog = True, automatic = False)),
-            ("fullscreen", Gtk.STOCK_FULLSCREEN, "Toggle _Fullscreen", "F11", "Toggle fullscreen", self.toggle_fullscreen),
             ("exit", Gtk.STOCK_QUIT, "_Quit...", None, "Close the application", lambda x: self.exit("ignore", "this"))
         ])
         action_group.add_actions([
@@ -348,8 +346,7 @@ class Weather(Gtk.Window):
         # Set the new title.
         self.update_title()
         
-        # Bind the events for keypresses and window closes.
-        self.connect("key-press-event", self.keypress)
+        # Bind the event for window close.
         self.connect("delete-event", self.delete_event)
         
         # Change the titles, if the user doesn't want units to be displayed.
@@ -364,40 +361,6 @@ class Weather(Gtk.Window):
         if not profile_exists:
             show_alert_dialog(self, "WeatherLog", "The profile \"%s\" could not be found." % original_profile)
             self.save(show_dialog = False)
-    
-    
-    def keypress(self, widget, event):
-        """Handles keypresses."""
-        
-        # If the Escape key was pressed and the application is in fullscreen:
-        if Gdk.keyval_name(event.keyval) == "Escape" and self.fullscreen_state:
-            
-            # Ignore:
-            if config["escape_fullscreen"].lower() == "ignore":
-                return
-            
-            # Exit fullscreen:
-            elif config["escape_fullscreen"].lower() == "exit fullscreen":
-                self.toggle_fullscreen("ignore")
-            
-            # Close:
-            elif config["escape_fullscreen"].lower() == "close":
-                self.exit("ignore", "this")
-        
-        # If the Escape key was pressed and the application isn't in fullscreen:
-        elif Gdk.keyval_name(event.keyval) == "Escape" and not self.fullscreen_state:
-            
-            # Ignore:
-            if config["escape_windowed"].lower() == "ignore":
-                return
-            
-            # Minimize:
-            elif config["escape_windowed"].lower() == "minimize":
-                self.iconify()
-            
-            # Close:
-            elif config["escape_windowed"].lower() == "close":
-                self.exit("ignore", "this")
     
     
     def delete_event(self, widget, event):
@@ -1307,8 +1270,6 @@ class Weather(Gtk.Window):
                   "pastebin": "d2314ff616133e54f728918b8af1500e",
                   "show_units": True,
                   "show_dates": True,
-                  "escape_fullscreen": "exit fullscreen",
-                  "escape_windowed": "minimize",
                   "auto_save": True,
                   "confirm_del": True,
                   "show_pre-fill": True,
@@ -1698,20 +1659,6 @@ class Weather(Gtk.Window):
         io.write_profile(main_dir = main_dir, name = name, data = data2)
     
     
-    def toggle_fullscreen(self, event):
-        """Toggles fullscreen window."""
-        
-        # Turn fullscreen off:
-        if self.fullscreen_state:
-            self.unfullscreen()
-            self.fullscreen_state = False
-        
-        # Turn fullscreen on:
-        else:
-            self.fullscreen()
-            self.fullscreen_state = True
-    
-    
     def options(self, event):
         """Shows the Options dialog."""
         
@@ -1726,8 +1673,6 @@ class Weather(Gtk.Window):
         restore = opt_dlg.win_chk.get_active()
         location = opt_dlg.loc_ent.get_text()
         units_ = opt_dlg.unit_com.get_active_text().lower()
-        esc_win = opt_dlg.escw_com.get_active_text().lower()
-        esc_ful = opt_dlg.escf_com.get_active_text().lower()
         show_dates = opt_dlg.date_chk.get_active()
         show_units = opt_dlg.unit_chk.get_active()
         auto_save = opt_dlg.sav_chk.get_active()
@@ -1744,8 +1689,6 @@ class Weather(Gtk.Window):
             config["restore" ] = restore
             config["location"] = location
             config["units"] = units_
-            config["escape_windowed"] = esc_win
-            config["escape_fullscreen"] = esc_ful
             config["show_dates"] = show_dates
             config["show_units"] = show_units
             config["auto_save"] = auto_save
@@ -1801,8 +1744,6 @@ class Weather(Gtk.Window):
                       "pastebin": "d2314ff616133e54f728918b8af1500e",
                       "show_units": True,
                       "show_dates": True,
-                      "escape_fullscreen": "exit fullscreen",
-                      "escape_windowed": "minimize",
                       "auto_save": True,
                       "confirm_del": True,
                       "show_pre-fill": True,

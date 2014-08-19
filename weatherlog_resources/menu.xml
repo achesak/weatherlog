@@ -24,8 +24,6 @@
       <menuitem action="reload_current" />
       <menuitem action="manual_save" />
       <separator />
-      <menuitem action="fullscreen" />
-      <separator />
       <menuitem action="exit" />
     </menu>
     <menu action="info_global_menu">

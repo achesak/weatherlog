@@ -67,30 +67,6 @@ class OptionsDialog(Gtk.Dialog):
         self.unit_com.set_active(["Metric", "Imperial"].index(config["units"].title()))
         opt_grid1.attach_next_to(self.unit_com, unit_lbl, Gtk.PositionType.RIGHT, 1, 1)
         
-        # Create the second grid.
-        opt_grid2 = Gtk.Grid()
-        opt_grid2_lbl = Gtk.Label("Keys")
-        
-        # Create the Escape Windowed label and entry.
-        escw_lbl = Gtk.Label("Escape windowed: ")
-        escw_lbl.set_alignment(0, 0.5)
-        opt_grid2.attach(escw_lbl, 0, 0, 1, 1)
-        self.escw_com = Gtk.ComboBoxText()
-        for i in ["Ignore", "Minimize", "Close"]:
-            self.escw_com.append_text(i)
-        self.escw_com.set_active(["Ignore", "Minimize", "Close"].index(config["escape_windowed"].title()))
-        opt_grid2.attach_next_to(self.escw_com, escw_lbl, Gtk.PositionType.RIGHT, 1, 1)
-        
-        # Create the Escape Fullscreen label and entry.
-        escf_lbl = Gtk.Label("Escape fullscreen: ")
-        escf_lbl.set_alignment(0, 0.5)
-        opt_grid2.attach_next_to(escf_lbl, escw_lbl, Gtk.PositionType.BOTTOM, 1, 1)
-        self.escf_com = Gtk.ComboBoxText()
-        for i in ["Ignore", "Exit Fullscreen", "Close"]:
-            self.escf_com.append_text(i)
-        self.escf_com.set_active(["Ignore", "Exit Fullscreen", "Close"].index(config["escape_fullscreen"].title()))
-        opt_grid2.attach_next_to(self.escf_com, escf_lbl, Gtk.PositionType.RIGHT, 1, 1)
-        
         # Create the third grid.
         opt_grid3 = Gtk.Grid()
         opt_grid3_lbl = Gtk.Label("Interface")
@@ -125,7 +101,6 @@ class OptionsDialog(Gtk.Dialog):
         
         # Add the tabs to the notebook.
         notebook.append_page(opt_grid1, opt_grid1_lbl)
-        notebook.append_page(opt_grid2, opt_grid2_lbl)
         notebook.append_page(opt_grid3, opt_grid3_lbl)
         
         # Show the dialog. The response gets handled by the function
