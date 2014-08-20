@@ -15,7 +15,7 @@ class GenericInfoDialog(Gtk.Dialog):
         
         # This window should be modal.
         Gtk.Dialog.__init__(self, title, parent, Gtk.DialogFlags.MODAL)
-        self.set_default_size(600, 500)
+        self.set_default_size(600, 350)
         
         # Create the tab notebook.
         notebook = Gtk.Notebook()

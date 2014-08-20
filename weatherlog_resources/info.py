@@ -123,12 +123,12 @@ def temp_info(data, units):
     
     # Create the data list.
     data2 = [
-        ["Lowest", "%.2f %s" % (temp_low, units["temp"])],
-        ["Highest", "%.2f %s" % (temp_high, units["temp"])],
-        ["Average", "%.2f %s" % (temp_avg, units["temp"])],
-        ["Median", "%.2f %s" % (temp_median, units["temp"])],
-        ["Range", "%.2f %s" % (temp_range, units["temp"])],
-        ["Most common", "%.2f %s" % (temp_mode, units["temp"])]
+        ["Lowest temperature", "%.2f %s" % (temp_low, units["temp"])],
+        ["Highest temperature", "%.2f %s" % (temp_high, units["temp"])],
+        ["Average temperature", "%.2f %s" % (temp_avg, units["temp"])],
+        ["Median temperature", "%.2f %s" % (temp_median, units["temp"])],
+        ["Range of temperatures", "%.2f %s" % (temp_range, units["temp"])],
+        ["Most common temperature", "%.2f %s" % (temp_mode, units["temp"])]
     ]
     
     return data2
@@ -192,22 +192,22 @@ def prec_info(data, units):
     
     # Create the data list.
     data2 = [
-        ["Lowest", prec_low],
-        ["Highest", prec_high],
-        ["Average", prec_avg],
-        ["Median", prec_median],
-        ["Range", prec_range],
-        ["Total (all)", "%.2f %s" % (prec_total, units["prec"])],
-        ["Total (rain)", "%.2f %s" % (prec_total_rain, units["prec"])],
-        ["Total (snow)", "%.2f %s" % (prec_total_snow, units["prec"])],
-        ["Total (hail)", "%.2f %s" % (prec_total_hail, units["prec"])],
-        ["Total (sleet)", "%.2f %s" % (prec_total_sleet, units["prec"])],
-        ["None", "%d day%s" % (prec_none, "" if prec_none == 1 else "s")],
-        ["Rain", "%d day%s" % (prec_rain, "" if prec_rain == 1 else "s")],
-        ["Snow", "%d day%s" % (prec_snow, "" if prec_snow == 1 else "s")],
-        ["Hail", "%d day%s" % (prec_hail, "" if prec_hail == 1 else "s")],
-        ["Sleet", "%d day%s" % (prec_sleet, "" if prec_sleet == 1 else "s")],
-        ["Most common type", "%s" % (prec_mode if prec_mode != "" else "None")]
+        ["Lowest precipitation", prec_low],
+        ["Highest precipitation", prec_high],
+        ["Average precipitation", prec_avg],
+        ["Median precipitation", prec_median],
+        ["Range precipitation", prec_range],
+        ["Total precipitation", "%.2f %s" % (prec_total, units["prec"])],
+        ["Total rain", "%.2f %s" % (prec_total_rain, units["prec"])],
+        ["Total snow", "%.2f %s" % (prec_total_snow, units["prec"])],
+        ["Total hail", "%.2f %s" % (prec_total_hail, units["prec"])],
+        ["Total sleet", "%.2f %s" % (prec_total_sleet, units["prec"])],
+        ["Days with no precipitation", "%d day%s" % (prec_none, "" if prec_none == 1 else "s")],
+        ["Days with rain", "%d day%s" % (prec_rain, "" if prec_rain == 1 else "s")],
+        ["Days with snow", "%d day%s" % (prec_snow, "" if prec_snow == 1 else "s")],
+        ["Days with hail", "%d day%s" % (prec_hail, "" if prec_hail == 1 else "s")],
+        ["Days with sleet", "%d day%s" % (prec_sleet, "" if prec_sleet == 1 else "s")],
+        ["Most common type of precipitation", "%s" % (prec_mode if prec_mode != "" else "None")]
     ]
     
     return data2
@@ -243,12 +243,12 @@ def wind_info(data, units):
     
     # Create the data list.
     data2 = [
-        ["Lowest", wind_low],
-        ["Highest", wind_high],
-        ["Average", wind_avg],
-        ["Median", wind_median],
-        ["Range", wind_range],
-        ["Most common direction", "%s" % (wind_mode if wind_mode != "" else "None")]
+        ["Lowest wind speed", wind_low],
+        ["Highest wind speed", wind_high],
+        ["Average wind speed", wind_avg],
+        ["Median wind speed", wind_median],
+        ["Range of wind speeds", wind_range],
+        ["Most common wind direction", "%s" % (wind_mode if wind_mode != "" else "None")]
     ]
     
     return data2
@@ -268,12 +268,12 @@ def humi_info(data, units):
     
     # Create the data list.
     data2 = [
-        ["Lowest", "%.2f%%" % humi_low],
-        ["Highest", "%.2f%%" % humi_high],
-        ["Average", "%.2f%%" % humi_avg],
-        ["Median", "%.2f%%" % humi_median],
-        ["Range", "%.2f%%" % humi_range],
-        ["Most common", "%.2f%%" % humi_mode]
+        ["Lowest humidity", "%.2f%%" % humi_low],
+        ["Highest humidity", "%.2f%%" % humi_high],
+        ["Average humidity", "%.2f%%" % humi_avg],
+        ["Median humidity", "%.2f%%" % humi_median],
+        ["Range of humidity", "%.2f%%" % humi_range],
+        ["Most common humidity", "%.2f%%" % humi_mode]
     ]
     
     return data2
@@ -304,15 +304,15 @@ def airp_info(data, units):
     
     # Create the data list.
     data2 = [
-        ["Lowest", "%.2f %s" % (airp_low, units["airp"])],
-        ["Highest", "%.2f %s" % (airp_high, units["airp"])],
-        ["Average", "%.2f %s" % (airp_avg, units["airp"])],
-        ["Median", "%.2f %s" % (airp_median, units["airp"])],
-        ["Range", "%.2f %s" % (airp_range, units["airp"])],
-        ["Most common", "%.2f %s" % (airp_mode, units["airp"])],
-        ["Steady", "%d day%s" % (airp_steady, "" if airp_steady == 1 else "s")],
-        ["Rising", "%d day%s" % (airp_rising, "" if airp_rising == 1 else "s")],
-        ["Falling", "%d day%s" % (airp_falling, "" if airp_falling == 1 else "s")]
+        ["Lowest air pressure", "%.2f %s" % (airp_low, units["airp"])],
+        ["Highest air pressure", "%.2f %s" % (airp_high, units["airp"])],
+        ["Average air pressure", "%.2f %s" % (airp_avg, units["airp"])],
+        ["Median air pressure", "%.2f %s" % (airp_median, units["airp"])],
+        ["Range of air pressures", "%.2f %s" % (airp_range, units["airp"])],
+        ["Most common air pressure", "%.2f %s" % (airp_mode, units["airp"])],
+        ["Days with steady pressure", "%d day%s" % (airp_steady, "" if airp_steady == 1 else "s")],
+        ["Days with rising pressure", "%d day%s" % (airp_rising, "" if airp_rising == 1 else "s")],
+        ["Days with falling pressure", "%d day%s" % (airp_falling, "" if airp_falling == 1 else "s")]
     ]
     
     return data2
@@ -345,11 +345,11 @@ def clou_info(data, units):
     
     # Create the data list.
     data2 = [
-        ["Sunny", "%s day%s" % (m_dict["Sunny"], "" if m_dict["Sunny"] == 1 else "s")],
-        ["Mostly Sunny", "%s day%s" % (m_dict["Mostly Sunny"], "" if m_dict["Mostly Sunny"] == 1 else "s")],
-        ["Partly Cloudy", "%s day%s" % (m_dict["Partly Cloudy"], "" if m_dict["Partly Cloudy"] == 1 else "s")],
-        ["Mostly Cloudy", "%s day%s" % (m_dict["Mostly Cloudy"], "" if m_dict["Mostly Cloudy"] == 1 else "s")],
-        ["Cloudy", "%s day%s" % (m_dict["Cloudy"], "" if m_dict["Cloudy"] == 1 else "s")]
+        ["Days of sunny", "%s day%s" % (m_dict["Sunny"], "" if m_dict["Sunny"] == 1 else "s")],
+        ["Days of mostly sunny", "%s day%s" % (m_dict["Mostly Sunny"], "" if m_dict["Mostly Sunny"] == 1 else "s")],
+        ["Days of partly cloudy", "%s day%s" % (m_dict["Partly Cloudy"], "" if m_dict["Partly Cloudy"] == 1 else "s")],
+        ["Days of mostly cloudy", "%s day%s" % (m_dict["Mostly Cloudy"], "" if m_dict["Mostly Cloudy"] == 1 else "s")],
+        ["Days of cloudy", "%s day%s" % (m_dict["Cloudy"], "" if m_dict["Cloudy"] == 1 else "s")]
     ]
     
     return data2
