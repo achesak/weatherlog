@@ -38,6 +38,10 @@ class GenericInfoDialog(Gtk.Dialog):
         valu_col1 = Gtk.TreeViewColumn("Value", valu_text1, text = 1)
         self.treeview1.append_column(valu_col1)
         info_box1.pack_start(self.treeview1, fill = True, expand = True, padding = 0)
+        scrolled_win1 = Gtk.ScrolledWindow()
+        scrolled_win1.set_hexpand(True)
+        scrolled_win1.set_vexpand(True)
+        scrolled_win1.add(info_box1)
         
         # Tab 2: Temperature info.
         info_box2 = Gtk.Box()
@@ -51,6 +55,10 @@ class GenericInfoDialog(Gtk.Dialog):
         valu_col2 = Gtk.TreeViewColumn("Value", valu_text2, text = 1)
         self.treeview2.append_column(valu_col2)
         info_box2.pack_start(self.treeview2, fill = True, expand = True, padding = 0)
+        scrolled_win2 = Gtk.ScrolledWindow()
+        scrolled_win2.set_hexpand(True)
+        scrolled_win2.set_vexpand(True)
+        scrolled_win2.add(info_box2)
         
         # Tab 3: Precipitation info.
         info_box3 = Gtk.Box()
@@ -64,6 +72,10 @@ class GenericInfoDialog(Gtk.Dialog):
         valu_col3 = Gtk.TreeViewColumn("Value", valu_text3, text = 1)
         self.treeview3.append_column(valu_col3)
         info_box3.pack_start(self.treeview3, fill = True, expand = True, padding = 0)
+        scrolled_win3 = Gtk.ScrolledWindow()
+        scrolled_win3.set_hexpand(True)
+        scrolled_win3.set_vexpand(True)
+        scrolled_win3.add(info_box3)
         
         # Tab 4: Wind info.
         info_box4 = Gtk.Box()
@@ -77,6 +89,10 @@ class GenericInfoDialog(Gtk.Dialog):
         valu_col4 = Gtk.TreeViewColumn("Value", valu_text4, text = 1)
         self.treeview4.append_column(valu_col4)
         info_box4.pack_start(self.treeview4, fill = True, expand = True, padding = 0)
+        scrolled_win4 = Gtk.ScrolledWindow()
+        scrolled_win4.set_hexpand(True)
+        scrolled_win4.set_vexpand(True)
+        scrolled_win4.add(info_box4)
         
         # Tab 5: Humidity info.
         info_box5 = Gtk.Box()
@@ -90,6 +106,10 @@ class GenericInfoDialog(Gtk.Dialog):
         valu_col5 = Gtk.TreeViewColumn("Value", valu_text5, text = 1)
         self.treeview5.append_column(valu_col5)
         info_box5.pack_start(self.treeview5, fill = True, expand = True, padding = 0)
+        scrolled_win5 = Gtk.ScrolledWindow()
+        scrolled_win5.set_hexpand(True)
+        scrolled_win5.set_vexpand(True)
+        scrolled_win5.add(info_box5)
         
         # Tab 6: Air Pressure info.
         info_box6 = Gtk.Box()
@@ -103,6 +123,10 @@ class GenericInfoDialog(Gtk.Dialog):
         valu_col6 = Gtk.TreeViewColumn("Value", valu_text6, text = 1)
         self.treeview6.append_column(valu_col6)
         info_box6.pack_start(self.treeview6, fill = True, expand = True, padding = 0)
+        scrolled_win6 = Gtk.ScrolledWindow()
+        scrolled_win6.set_hexpand(True)
+        scrolled_win6.set_vexpand(True)
+        scrolled_win6.add(info_box6)
         
         # Tab 7: Cloud Cover info.
         info_box7 = Gtk.Box()
@@ -116,6 +140,10 @@ class GenericInfoDialog(Gtk.Dialog):
         valu_col7 = Gtk.TreeViewColumn("Value", valu_text7, text = 1)
         self.treeview7.append_column(valu_col7)
         info_box7.pack_start(self.treeview7, fill = True, expand = True, padding = 0)
+        scrolled_win7 = Gtk.ScrolledWindow()
+        scrolled_win7.set_hexpand(True)
+        scrolled_win7.set_vexpand(True)
+        scrolled_win7.add(info_box7)
         
         # Tab 8: Notes info.
         info_box8 = Gtk.Box()
@@ -129,23 +157,21 @@ class GenericInfoDialog(Gtk.Dialog):
         valu_col8 = Gtk.TreeViewColumn("Value", valu_text8, text = 1)
         self.treeview8.append_column(valu_col8)
         info_box8.pack_start(self.treeview8, fill = True, expand = True, padding = 0)
-        
-        # Create the ScrolledWindow for displaying the lists with scrollbars.
-        scrolled_win = Gtk.ScrolledWindow()
-        scrolled_win.set_hexpand(True)
-        scrolled_win.set_vexpand(True)
-        scrolled_win.add(notebook)
-        info_box.add(scrolled_win)
+        scrolled_win8 = Gtk.ScrolledWindow()
+        scrolled_win8.set_hexpand(True)
+        scrolled_win8.set_vexpand(True)
+        scrolled_win8.add(info_box8)
         
         # Add the tabs to the notebook.
-        notebook.append_page(info_box1, info_box1_lbl)
-        notebook.append_page(info_box2, info_box2_lbl)
-        notebook.append_page(info_box3, info_box3_lbl)
-        notebook.append_page(info_box4, info_box4_lbl)
-        notebook.append_page(info_box5, info_box5_lbl)
-        notebook.append_page(info_box6, info_box6_lbl)
-        notebook.append_page(info_box7, info_box7_lbl)
-        notebook.append_page(info_box8, info_box8_lbl)
+        notebook.append_page(scrolled_win1, info_box1_lbl)
+        notebook.append_page(scrolled_win2, info_box2_lbl)
+        notebook.append_page(scrolled_win3, info_box3_lbl)
+        notebook.append_page(scrolled_win4, info_box4_lbl)
+        notebook.append_page(scrolled_win5, info_box5_lbl)
+        notebook.append_page(scrolled_win6, info_box6_lbl)
+        notebook.append_page(scrolled_win7, info_box7_lbl)
+        notebook.append_page(scrolled_win8, info_box8_lbl)
+        info_box.add(notebook)
         
         # Add the data.
         for i in data[0]:
