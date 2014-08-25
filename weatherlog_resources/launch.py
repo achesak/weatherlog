@@ -30,14 +30,20 @@ def get_main_dir():
     """Returns the main directory."""
     
     # The main directory is C:\.weatherlog on Windows,
-    # and /home/[username]/.weatherlog on Linux.
+    # and /home/[username]/.share/local/weatherlog for data files,
+    # and /home/[username]/.config/weatherlog/ for configuration files on Linux.
+    #
+    # NOTE: this has not been tested on Windows after the change to follow
+    # the XDG Base Directory Specification.
+    # TODO: make sure this still works!
     if platform.system().lower() == "windows":
-        return "C:\\.weatherlog"
+        return "C:\\.weatherlog", "C:\\.weatherlog"
     else:
-        return "%s/.weatherlog" % os.path.expanduser("~")
+        base = os.path.expanduser("~")
+        return base + "/.local/share/weatherlog", base + "/.config/weatherlog"
 
 
-def check_files_exist(main_dir):
+def check_files_exist(main_dir, conf_dir):
     """Checks to see if the base files exist, and create them if they don't."""
     
     # Check to see if the directory exists, and create it if it doesn't.
@@ -47,7 +53,7 @@ def check_files_exist(main_dir):
         os.makedirs(main_dir)
         
         # Create the last profile file.
-        last_prof = open("%s/lastprofile" % main_dir, "w")
+        last_prof = open("%s/lastprofile" % conf_dir, "w")
         last_prof.write("Main Profile")
         last_prof.close()
         
@@ -58,13 +64,13 @@ def check_files_exist(main_dir):
         last_prof_data.close()
 
 
-def get_last_profile(main_dir):
+def get_last_profile(main_dir, conf_dir):
     """Returns the last profile, the original profile to be loaded, and whether the profile exists. Creates the profile if it doesn't exist."""
     
     # Get the last profile.
     try:
         # Load the last profile file.
-        prof_file = open("%s/lastprofile" % main_dir, "r")
+        prof_file = open("%s/lastprofile" % conf_dir, "r")
         last_profile = prof_file.read().rstrip()
         prof_file.close()
         
@@ -115,12 +121,12 @@ def get_last_profile(main_dir):
     return last_profile, original_profile, profile_exists
 
 
-def get_config(main_dir):
+def get_config(conf_dir):
     """Loads the settings."""
     
     # Get the configuration.
     try:
-        config_file = open("%s/config" % main_dir, "r")
+        config_file = open("%s/config" % conf_dir, "r")
         config = json.load(config_file)
         config_file.close()
     
@@ -158,12 +164,12 @@ def get_config(main_dir):
     return config
 
 
-def get_window_size(main_dir, config):
+def get_window_size(conf_dir, config):
     """Gets the last window size."""
     
     # Get the previous window size.
     try:
-        wins_file = open("%s/window_size" % main_dir, "r")
+        wins_file = open("%s/window_size" % conf_dir, "r")
         last_width = int(wins_file.readline())
         last_height = int(wins_file.readline())
         wins_file.close()
@@ -217,7 +223,7 @@ def get_data(main_dir, last_profile):
     
     # Load the data.   
     try:
-        # This should be ~/.weatherlog/[profile name]/weather on Linux.
+        # This should be ~/.local/share/weatherlog/[profile name]/weather on Linux.
         data_file = open("%s/profiles/%s/weather" % (main_dir, last_profile), "r")
         data = pickle.load(data_file)
         data_file.close()

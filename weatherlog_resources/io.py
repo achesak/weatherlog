@@ -28,7 +28,7 @@ def write_profile(main_dir = "", name = "", filename = "", data = []):
     
     # Write the data.
     try:
-        # This should save to ~/.weatherlog/[profile name]/weather on Linux.
+        # This should save to ~/.local/share/weatherlog/[profile name]/weather on Linux.
         data_file = open(filename, "w")
         pickle.dump(data, data_file)
         data_file.close()
@@ -55,7 +55,7 @@ def read_profile(main_dir = "", name = "", filename = ""):
     
     # Load the data.   
     try:
-        # This should be ~/.weatherlog/[profile name]/weather on Linux.
+        # This should be ~/.local/share/weatherlog/[profile name]/weather on Linux.
         data_file = open(filename, "r")
         data = pickle.load(data_file)
         data_file.close()
