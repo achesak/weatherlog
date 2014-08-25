@@ -1046,7 +1046,7 @@ class Weather(Gtk.Window):
         global data
         
         # Get the new profile name.
-        new_dlg = ProfileNameDialog(self, "Add Profile")
+        new_dlg = ProfileNameDialog(self, "Import as New Profile")
         response = new_dlg.run()
         name = new_dlg.nam_ent.get_text().lstrip().rstrip()
         new_dlg.destroy()
@@ -1059,7 +1059,7 @@ class Weather(Gtk.Window):
         # show a dialog and cancel the action.
         validate = utility_functions.validate_profile(main_dir, name)
         if validate != "":
-            show_error_dialog(self, "Add Profile", validate)
+            show_error_dialog(self, "Import as New Profile", validate)
             return
 
         # Get the filename.
