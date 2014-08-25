@@ -209,22 +209,22 @@ class Weather(Gtk.Window):
             ("add_new", Gtk.STOCK_ADD, "Add _New...", "<Control>n", "Add a new day to the list", self.add_new),
             ("edit", None, "_Edit...", "<Control>e", None, self.edit),
             ("remove", Gtk.STOCK_REMOVE, "Remo_ve...", "<Control>r", "Remove a day from the list", self.remove),
-            ("clear_data", Gtk.STOCK_CLEAR, "Clear Current _Data...", "<Control>d", "Clear the data", self.clear),
-            ("clear_all", None, "Clear _All Data...", "<Control><Alt>d", None, self.clear_all),
+            ("clear_data", Gtk.STOCK_CLEAR, "Clear Current _Data...", None, "Clear the data", self.clear),
+            ("clear_all", None, "Clear _All Data...", None, None, self.clear_all),
             ("exit", Gtk.STOCK_QUIT, "_Quit...", None, "Close the application", lambda x: self.exit("ignore", "this"))
         ])
         action_group.add_actions([
             ("file_menu", None, "_File"),
             ("import", Gtk.STOCK_OPEN, "_Import...", None, "Import data from a file", self.import_file),
-            ("import_profile", None, "Import as New _Profile...", "<Control><Shift>o", None, self.import_new_profile),
-            ("import_merge", None, "Imp_ort and Merge...", "<Alt><Shift>o", None, self.import_merge),
+            ("import_merge", None, "Imp_ort and Merge...", "<Control><Shift>o", None, self.import_merge),
+            ("import_profile", None, "Import as New _Profile...", None, None, self.import_new_profile),
             ("export", Gtk.STOCK_SAVE, "_Export...", None, "Export data to a file", lambda x: self.export_file(mode = "raw"))
         ])
         action_weather_export_group = Gtk.Action("export_menu", "E_xport to", None, None)
         action_group.add_action(action_weather_export_group)
         action_group.add_actions([
-            ("export_html", None, "Export to _HTML...", "<Control><Alt>h", None, lambda x: self.export_file(mode = "html")),
-            ("export_csv", None, "Export to _CSV...", "<Control><Alt>c", None, lambda x: self.export_file(mode = "csv")),
+            ("export_html", None, "Export to _HTML...", None, None, lambda x: self.export_file(mode = "html")),
+            ("export_csv", None, "Export to _CSV...", None, None, lambda x: self.export_file(mode = "csv")),
             ("export_pastebin", None, "Export to Paste_bin...", None, None, lambda x: self.export_pastebin("raw")),
             ("export_pastebin_html", None, "_Export to Pastebin (HTML)...", None, None, lambda x: self.export_pastebin("html")),
             ("export_pastebin_csv", None, "E_xport to Pastebin (CSV)...", None, None, lambda x: self.export_pastebin("csv")),
@@ -239,14 +239,14 @@ class Weather(Gtk.Window):
             ("charts", None, "_Charts...", "<Control>c", None, lambda x: self.show_chart_generic()),
             ("charts_range", None, "Charts _in Range...", "<Control><Shift>c", None, lambda x: self.chart_range()),
             ("charts_selected", None, "Charts _for Selected Dates...", None, None, lambda x: self.chart_selected()),
-            ("select_data", None, "Select _Data...", None, None, self.select_data_simple),
-            ("select_data_advanced", None, "Select Data (_Advanced)...", None, None, self.select_data_advanced)
+            ("select_data", None, "Select _Data...", "<Control>d", None, self.select_data_simple),
+            ("select_data_advanced", None, "Select Data (_Advanced)...", "<Control><Shift>d", None, self.select_data_advanced)
         ])
         action_group.add_actions([
             ("profiles_menu", None, "_Profiles"),
             ("switch_profile", None, "_Switch Profile...", "<Control><Shift>s", None, self.switch_profile),
             ("add_profile", None, "_Add Profile...", "<Control><Shift>n", None, self.add_profile),
-            ("remove_profile", None, "_Remove Profile...", "<Control><Shift>d", None, self.remove_profile),
+            ("remove_profile", None, "_Remove Profile...", None, None, self.remove_profile),
             ("rename_profile", None, "Re_name Profile...", None, None, self.rename_profile),
             ("merge_profiles", None, "_Merge Profiles...", None, None, self.merge_profiles)
         ])
