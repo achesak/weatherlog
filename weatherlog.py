@@ -129,6 +129,8 @@ from weatherlog_resources.dialogs.select_simple_dialog import SelectDataSimpleDi
 from weatherlog_resources.dialogs.select_advanced_dialog import SelectDataAdvancedDialog
 # Import the dialog for displaying data subsets.
 from weatherlog_resources.dialogs.data_subset_dialog import DataSubsetDialog
+# Import the dialog for selecting dates to import.
+from weatherlog_resources.dialogs.import_selection_dialog import ImportSelectionDialog
 # Import the miscellaneous dialogs.
 from weatherlog_resources.dialogs.misc_dialogs import show_alert_dialog, show_error_dialog, show_question_dialog, show_file_dialog, show_save_dialog
 
@@ -984,13 +986,45 @@ class Weather(Gtk.Window):
             if response2 != Gtk.ResponseType.OK:
                 return
         
+        # Read and add the data.
+        ndata = io.read_profile(filename = filename)
+        
+        # If the imported dataset is empty, or if there was an error, don't continue.
+        if len(ndata) == 0:
+            return
+        
+        # Ask the user what dates they want to import.
+        date_dlg = ImportSelectionDialog(self, "Import - %s" % last_profile, utility_functions.get_column(ndata, 0))
+        response = date_dlg.run()
+        model, treeiter = date_dlg.treeview.get_selection().get_selected_rows()
+        date_dlg.destroy()
+        
+        # If the user did not press OK or nothing was selected, don't continue:
+        if (response != 20 and response != 21) or treeiter == None:
+            return
+        
         # Clear the data.
         data[:] = []
-        # Clear the ListStore.
         self.liststore.clear()
         
-        # Read and add the data.
-        data = io.read_profile(filename = filename)
+        # If the user selected certain dates, only import those.
+        if response == 21:
+            
+            # Get the dates.
+            dates = []
+            for i in treeiter:
+                dates.append(model[i][0])
+            
+            # Get the new data list.
+            for i in ndata:
+                if i[0] in dates:
+                    data.append(i)
+        
+        # If the user pressed Import All, import all of the data.
+        if response == 20:
+            data = ndata[:]
+        
+        # Add the data.
         for i in data:
             self.liststore.append(i)
         
@@ -1017,11 +1051,39 @@ class Weather(Gtk.Window):
         # If the imported dataset is empty, or if there was an error, don't continue.
         if len(data) == 0:
             return
+        
+        # Ask the user what dates they want to import.
+        date_dlg = ImportSelectionDialog(self, "Import and Merge - %s" % last_profile, utility_functions.get_column(data2, 0))
+        response = date_dlg.run()
+        model, treeiter = date_dlg.treeview.get_selection().get_selected_rows()
+        date_dlg.destroy()
+        
+        # If the user did not press OK or nothing was selected, don't continue:
+        if (response != 20 and response != 21) or treeiter == None:
+            return
+        
+        # If the user selected certain dates, only import those.
+        if response == 21:
             
+            # Get the dates.
+            dates = []
+            for i in treeiter:
+                dates.append(model[i][0])
+            
+            # Get the new data list.
+            data3 = []
+            for i in data2:
+                if i[0] in dates:
+                    data3.append(i)
+        
+        # If the user pressed Import All, import all of the data.
+        if response == 20:
+            data3 = data2[:]
+        
         # Filter the new data to make sure there are no duplicates.
         new_data = []
         date_col = utility_functions.get_column(data, 0)
-        for i in data2:
+        for i in data3:
             
             # If the date already appears, don't include it.
             if i[0] not in date_col:
@@ -1063,28 +1125,62 @@ class Weather(Gtk.Window):
             return
 
         # Get the filename.
-        response, filename = show_file_dialog(self, "Import - %s" % last_profile)
+        response, filename = show_file_dialog(self, "Import as New Profile - %s" % name)
         
-        # If the user pressed OK, create and profile and import the data:
-        if response == Gtk.ResponseType.OK:
+        # If the user did not press OK, don't continue.
+        if response != Gtk.ResponseType.OK:
+            return
+        
+        # Read and add the data.
+        ndata = io.read_profile(filename = filename)
+        
+        # If the imported dataset is empty, or if there was an error, don't continue.
+        if len(ndata) == 0:
+            return
+        
+        # Ask the user what dates they want to import.
+        date_dlg = ImportSelectionDialog(self, "Import as New Profile - %s" % name, utility_functions.get_column(ndata, 0))
+        response = date_dlg.run()
+        model, treeiter = date_dlg.treeview.get_selection().get_selected_rows()
+        date_dlg.destroy()
+        
+        # If the user did not press OK or nothing was selected, don't continue:
+        if (response != 20 and response != 21) or treeiter == None:
+            return
             
-            # Otherwise if there are no problems with the name, create the directory and file.
-            last_profile = name
-            os.makedirs("%s/profiles/%s" % (main_dir, name))
-            open("%s/profiles/%s/weather" % (main_dir, name), "w").close()
+        # Create the profile directory and file.
+        last_profile = name
+        os.makedirs("%s/profiles/%s" % (main_dir, name))
+        open("%s/profiles/%s/weather" % (main_dir, name), "w").close()
+        
+        # Clear the data.
+        data[:] = []
+        self.liststore.clear()
+        
+        # If the user selected certain dates, only import those.
+        if response == 21:
             
-            # Clear the old data.
-            data[:] = []
-            self.liststore.clear()
+            # Get the dates.
+            dates = []
+            for i in treeiter:
+                dates.append(model[i][0])
             
-            # Read and add the data.
-            data = io.read_profile(filename = filename)
-            for i in data:
-                self.liststore.append(i)
-            
-            # Update the title and save the data.
-            self.update_title()
-            self.save(show_dialog = False)
+            # Get the new data list.
+            for i in ndata:
+                if i[0] in dates:
+                    data.append(i)
+        
+        # If the user pressed Import All, import all of the data.
+        if response == 20:
+            data = ndata[:]
+        
+        # Add the data.
+        for i in data:
+            self.liststore.append(i)
+        
+        # Update the title and save the data.
+        self.update_title()
+        self.save(show_dialog = False)
     
     
     def export_file(self, mode = "raw"):
