@@ -42,16 +42,6 @@ def show_file_dialog(self, title):
     # Create the dialog.
     import_dlg = Gtk.FileChooserDialog(title, self, Gtk.FileChooserAction.OPEN, (Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL, Gtk.STOCK_OPEN, Gtk.ResponseType.OK))
     
-    # Set the filters.
-    filter_json = Gtk.FileFilter()
-    filter_json.set_name("WeatherLog data files (JSON)")
-    filter_json.add_pattern("*.json")
-    filter_all = Gtk.FileFilter()
-    filter_all.set_name("All files")
-    filter_all.add_pattern("*")
-    import_dlg.add_filter(filter_json)
-    import_dlg.add_filter(filter_all)
-    
     # Get the response and filename then close the dialog.
     response = import_dlg.run()
     filename = import_dlg.get_filename()
@@ -63,18 +53,8 @@ def show_save_dialog(self, title):
     """Shows the file chooser (save) dialog."""
     
     # Create the dialog.
-    export_dlg = Gtk.FileChooserDialog(title, self, Gtk.FileChooserAction.SAVE, (Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL, Gtk.STOCK_OPEN, Gtk.ResponseType.OK))
+    export_dlg = Gtk.FileChooserDialog(title, self, Gtk.FileChooserAction.SAVE, (Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL, Gtk.STOCK_SAVE, Gtk.ResponseType.OK))
     export_dlg.set_do_overwrite_confirmation(True)
-    
-    # Set the filters.
-    filter_json = Gtk.FileFilter()
-    filter_json.set_name("WeatherLog data files (JSON)")
-    filter_json.add_pattern("*.json")
-    filter_all = Gtk.FileFilter()
-    filter_all.set_name("All files")
-    filter_all.add_pattern("*")
-    export_dlg.add_filter(filter_json)
-    export_dlg.add_filter(filter_all)
     
     # Get the response and filename then close the dialog.
     response = export_dlg.run()
