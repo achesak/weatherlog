@@ -372,8 +372,10 @@ class Weather(Gtk.Window):
             # Sort the list by date.
             data = sorted(data, key = lambda x: datetime.datetime.strptime(x[0], "%d/%m/%Y"))
             
-            # Add the new row to the interface.
-            self.liststore.append(new_data)
+            # Update the ListStore.
+            self.liststore.clear()
+            for i in data:
+                self.liststore.append(i)
         
         # Update the title and save the data.
         self.update_title()
