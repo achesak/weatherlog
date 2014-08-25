@@ -1060,20 +1060,20 @@ class Weather(Gtk.Window):
             show_error_dialog(self, "Add Profile", validate)
             return
 
-        # Otherwise if there are no problems with the name, create the directory and file.
-        last_profile = name
-        os.makedirs("%s/profiles/%s" % (main_dir, name))
-        open("%s/profiles/%s/weather" % (main_dir, name), "w").close()
-        
-        # Clear the old data.
-        data[:] = []
-        self.liststore.clear()
-
         # Get the filename.
         response, filename = show_file_dialog(self, "Import - %s" % last_profile)
         
-        # If the user pressed OK, import the data:
+        # If the user pressed OK, create and profile and import the data:
         if response == Gtk.ResponseType.OK:
+            
+            # Otherwise if there are no problems with the name, create the directory and file.
+            last_profile = name
+            os.makedirs("%s/profiles/%s" % (main_dir, name))
+            open("%s/profiles/%s/weather" % (main_dir, name), "w").close()
+            
+            # Clear the old data.
+            data[:] = []
+            self.liststore.clear()
             
             # Read and add the data.
             data = io.read_profile(filename = filename)
