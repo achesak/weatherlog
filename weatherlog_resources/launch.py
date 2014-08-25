@@ -152,23 +152,6 @@ def get_config(conf_dir):
                   "show_pre-fill": True,
                   "confirm_exit": False}
     
-    # If there are missing configuration options, then add them.
-    # This is for compatability with upgrades from previous versions.
-    if not "restore" in config:
-        config["restore"] = True
-    if not "show_units" in config:
-        config["show_units"] = True
-    if not "show_dates" in config:
-        config["show_dates"] = True
-    if not "auto_save" in config:
-        config["auto_save"] = True
-    if not "confirm_del" in config: 
-        config["confirm_del"] = True
-    if not "show_pre-fill" in config:
-        config["show_pre-fill"] = True
-    if not "confirm_exit" in config:
-        config["confirm_exit"] = False
-    
     return config
 
 
