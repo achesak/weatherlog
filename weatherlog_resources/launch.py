@@ -46,22 +46,30 @@ def get_main_dir():
 def check_files_exist(main_dir, conf_dir):
     """Checks to see if the base files exist, and create them if they don't."""
     
-    # Check to see if the directory exists, and create it if it doesn't.
+    # Check to see if the data directory exists, and create it if it doesn't.
     if not os.path.exists(main_dir) or not os.path.isdir(main_dir):
         
         # Create the directory.
         os.makedirs(main_dir)
-        
-        # Create the last profile file.
-        last_prof = open("%s/lastprofile" % conf_dir, "w")
-        last_prof.write("Main Profile")
-        last_prof.close()
         
         # Create the Main Profile directory and data file.
         os.makedirs("%s/profiles/Main Profile" % main_dir)
         last_prof_data = open("%s/profiles/Main Profile/weather" % main_dir, "w")
         pickle.dump([], last_prof_data)
         last_prof_data.close()
+    
+    # Check to see if the data directory exists, and create it if it doesn't.
+    if not os.path.exists(conf_dir) or not os.path.isdir(conf_dir):
+        
+        # Create the directory.
+        os.makedirs(conf_dir)
+    
+        # Create the last profile file.
+        last_prof = open("%s/lastprofile" % conf_dir, "w")
+        last_prof.write("Main Profile")
+        last_prof.close()
+        
+        
 
 
 def get_last_profile(main_dir, conf_dir):

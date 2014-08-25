@@ -134,16 +134,16 @@ from weatherlog_resources.dialogs.misc_dialogs import show_alert_dialog, show_er
 
 
 # Get any required variables and set up the application.
-# Get the main program directory.
-main_dir = launch.get_main_dir()
+# Get the data and configuration directories.
+main_dir, conf_dir = launch.get_main_dir()
 # Check if the directory and base files exist, and create them if they don't.
-launch.check_files_exist(main_dir)
+launch.check_files_exist(main_dir, conf_dir)
 # Get the last profile.
-last_profile, original_profile, profile_exists = launch.get_last_profile(main_dir)
+last_profile, original_profile, profile_exists = launch.get_last_profile(main_dir, conf_dir)
 # Get the configuration.
-config = launch.get_config(main_dir)
+config = launch.get_config(conf_dir)
 # Get the previous window size.
-last_width, last_height = launch.get_window_size(main_dir, config)
+last_width, last_height = launch.get_window_size(conf_dir, config)
 # Get the units.
 units = launch.get_units(config)
 # Get the data.
@@ -318,7 +318,7 @@ class Weather(Gtk.Window):
         
         # Save the window size.
         try:
-            wins_file = open("%s/window_size" % main_dir, "w")
+            wins_file = open("%s/window_size" % conf_dir, "w")
             wins_file.write("%d\n%d" % (height, width))
             wins_file.close()
         
@@ -1200,7 +1200,8 @@ class Weather(Gtk.Window):
         
         # Restore all files to their default states.
         shutil.rmtree(main_dir)
-        launch.check_files_exist(main_dir)
+        shutil.rmtree(conf_dir)
+        launch.check_files_exist(main_dir, conf_dir)
         
         # Set the default config.
         config = {"pre-fill": False,
@@ -1726,9 +1727,9 @@ class Weather(Gtk.Window):
         if automatic and not config["auto_save"] and not from_options:
             return
         
-        # Save to the file.
+        # Save the current profile.
         try:
-            # This should save to ~/.weatherlog/[profile name]/weather on Linux.
+            # This should save to ~/.local/share/weatherlog/[profile name]/weather on Linux.
             data_file = open("%s/profiles/%s/weather" % (main_dir, last_profile), "w")
             pickle.dump(data, data_file)
             data_file.close()
@@ -1745,7 +1746,8 @@ class Weather(Gtk.Window):
         
         # Save the configuration.
         try:
-            config_file = open("%s/config" % main_dir, "w")
+            # This should save to ~/.config/weatherlog/config on Linux.
+            config_file = open("%s/config" % conf_dir, "w")
             json.dump(config, config_file)
             config_file.close()
             
@@ -1761,8 +1763,8 @@ class Weather(Gtk.Window):
         
         # Save the last profile.
         try:
-            # This should save to ~/.weatherlog/lastprofile on Linux.
-            prof_file = open("%s/lastprofile" % main_dir, "w")
+            # This should save to ~/.config/weatherlog/lastprofile on Linux.
+            prof_file = open("%s/lastprofile" % conf_dir, "w")
             prof_file.write(last_profile)
             prof_file.close()
             
@@ -1806,7 +1808,7 @@ class Weather(Gtk.Window):
             
             # Load the data.   
             try:
-                # This should be ~/.weatherlog/[profile name]/weather on Linux.
+                # This should be ~/.local/share/weatherlog/[profile name]/weather on Linux.
                 data_file = open("%s/profiles/%s/weather" % (main_dir, last_profile), "r")
                 data = pickle.load(data_file)
                 data_file.close()
