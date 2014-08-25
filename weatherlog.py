@@ -1460,12 +1460,6 @@ class Weather(Gtk.Window):
         if validate != "":
             show_error_dialog(self, "%s Data to New Profile" % mode, validate)
             return
-        
-        # Create the directory and file.
-        os.makedirs("%s/profiles/%s" % (main_dir, name))
-        new_prof_file = open("%s/profiles/%s/weather" % (main_dir, name), "w")
-        pickle.dump([], new_prof_file)
-        new_prof_file.close()
             
         # Get the dates to move or copy.
         date_dlg = DateSelectionDialog(self, "%s Data to New Profile" % mode, dates)
@@ -1476,6 +1470,12 @@ class Weather(Gtk.Window):
         # If the user did not click OK or nothing was selected, don't continue:
         if response != Gtk.ResponseType.OK or treeiter == None:
             return
+        
+        # Create the directory and file.
+        os.makedirs("%s/profiles/%s" % (main_dir, name))
+        new_prof_file = open("%s/profiles/%s/weather" % (main_dir, name), "w")
+        pickle.dump([], new_prof_file)
+        new_prof_file.close()
         
         # Get the dates.
         ndates = []
