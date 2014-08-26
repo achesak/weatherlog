@@ -1853,7 +1853,7 @@ class Weather(Gtk.Window):
         if not from_options:
             
             # Save the current profile.
-            io.write_profile(main_dir, last_profile, data)
+            io.write_profile(main_dir, last_profile, data = data)
             
             # Save the creation and last modified dates.
             now = datetime.datetime.now()
