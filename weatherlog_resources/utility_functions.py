@@ -122,3 +122,25 @@ def validate_profile(main_dir, name):
     
     else:
         return ""
+
+
+def validate_data(data):
+    """Validates imported data."""
+    
+    # Test 1: must be a list.
+    if not isinstance(data, list):
+        return False
+    
+    # Test 2: each item must be a list.
+    # Test 3: each item must have the correct length (8).
+    # Test 4: each item of this list must be a string.
+    for i in data:
+        if not isinstance(i, list):
+            return False
+        if len(i) != 8:
+            return False
+        for j in i:
+            if not isinstance(j, str):
+                return False
+    
+    return True

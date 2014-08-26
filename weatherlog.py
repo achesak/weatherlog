@@ -982,15 +982,21 @@ class Weather(Gtk.Window):
             
         # Confirm that the user wants to overwrite the data, if the profile isn't blank.
         if len(data) > 0:
-            response2 = show_question_dialog(self, "Confirm Import - %s" % last_profile, "Are you sure you want to import the data?\n\nCurrent data will be overwritten.")
+            response2 = show_question_dialog(self, "Import - %s" % last_profile, "Are you sure you want to import the data?\n\nCurrent data will be overwritten.")
             if response2 != Gtk.ResponseType.OK:
                 return
         
         # Read and add the data.
         ndata = io.read_profile(filename = filename)
         
-        # If the imported dataset is empty, or if there was an error, don't continue.
+        # If the imported data is empty, don't continue.
         if len(ndata) == 0:
+            show_alert_dialog(self, "Import - %s" % last_profile, "There is no data to import.")
+            return
+        
+        # If the imported data is invalid, don't continue.
+        if not utility_functions.validate_data(ndata):
+            show_error_dialog(self, "Import - %s" % last_profile, "Data is not valid.")
             return
         
         # Ask the user what dates they want to import.
@@ -1048,8 +1054,14 @@ class Weather(Gtk.Window):
         # Read the data.
         data2 = io.read_profile(filename = filename)
         
-        # If the imported dataset is empty, or if there was an error, don't continue.
-        if len(data) == 0:
+        # If the imported data is empty, don't continue.
+        if len(data2) == 0:
+            show_alert_dialog(self, "Import and Merge - %s" % last_profile, "There is no data to import.")
+            return
+        
+        # If the imported data is invalid, don't continue.
+        if not utility_functions.validate_data(data2):
+            show_error_dialog(self, "Import and Merge - %s" % last_profile, "Data is not valid.")
             return
         
         # Ask the user what dates they want to import.
@@ -1134,8 +1146,14 @@ class Weather(Gtk.Window):
         # Read and add the data.
         ndata = io.read_profile(filename = filename)
         
-        # If the imported dataset is empty, or if there was an error, don't continue.
+        # If the imported data is empty, don't continue.
         if len(ndata) == 0:
+            show_alert_dialog(self, "Import as New Profile - %s" % name, "There is no data to import.")
+            return
+        
+        # If the imported data is invalid, don't continue.
+        if not utility_functions.validate_data(ndata):
+            show_error_dialog(self, "Import as New Profile - %s" % name, "Data is not valid.")
             return
         
         # Ask the user what dates they want to import.
