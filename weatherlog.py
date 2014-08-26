@@ -625,7 +625,7 @@ class Weather(Gtk.Window):
         if response == 9:
             
             # Create the dialog.
-            export_dlg = Gtk.FileChooserDialog("Export Info - %s" % last_profile, self, Gtk.FileChooserAction.SAVE, (Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL, Gtk.STOCK_OPEN, Gtk.ResponseType.OK))
+            export_dlg = Gtk.FileChooserDialog("Export Info - %s" % last_profile, self, Gtk.FileChooserAction.SAVE, (Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL, Gtk.STOCK_SAVE, Gtk.ResponseType.OK))
             export_dlg.set_do_overwrite_confirmation(True)
             
             # Get the response.
@@ -778,7 +778,7 @@ class Weather(Gtk.Window):
         if response == 9:
             
             # Create the dialog.
-            export_dlg = Gtk.FileChooserDialog("Export Charts - %s" % last_profile, self, Gtk.FileChooserAction.SAVE, (Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL, Gtk.STOCK_OPEN, Gtk.ResponseType.OK))
+            export_dlg = Gtk.FileChooserDialog("Export Charts - %s" % last_profile, self, Gtk.FileChooserAction.SAVE, (Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL, Gtk.STOCK_SAVE, Gtk.ResponseType.OK))
             export_dlg.set_do_overwrite_confirmation(True)
             
             # Get the response.
@@ -840,7 +840,7 @@ class Weather(Gtk.Window):
         if response == 9:
             
             # Create the dialog.
-            export_dlg = Gtk.FileChooserDialog("Export Data Subset - %s" % last_profile, self, Gtk.FileChooserAction.SAVE, (Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL, Gtk.STOCK_OPEN, Gtk.ResponseType.OK))
+            export_dlg = Gtk.FileChooserDialog("Export Data Subset - %s" % last_profile, self, Gtk.FileChooserAction.SAVE, (Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL, Gtk.STOCK_SAVE, Gtk.ResponseType.OK))
             export_dlg.set_do_overwrite_confirmation(True)
             
             # Get the response.
@@ -951,7 +951,7 @@ class Weather(Gtk.Window):
         if response == 9:
             
             # Create the dialog.
-            export_dlg = Gtk.FileChooserDialog("Export Data Subset - %s" % last_profile, self, Gtk.FileChooserAction.SAVE, (Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL, Gtk.STOCK_OPEN, Gtk.ResponseType.OK))
+            export_dlg = Gtk.FileChooserDialog("Export Data Subset - %s" % last_profile, self, Gtk.FileChooserAction.SAVE, (Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL, Gtk.STOCK_SAVE, Gtk.ResponseType.OK))
             export_dlg.set_do_overwrite_confirmation(True)
             
             # Get the response.
@@ -1202,21 +1202,13 @@ class Weather(Gtk.Window):
     def export_file(self, mode = "raw"):
         """Exports the data to a file."""
         
-        # Get the title.
-        title = "Export"
-        if mode == "html":
-            title += "to HTML"
-        elif mode == "csv":
-            title += "to CSV"
-        title += " - %s" % (last_profile)
-        
         # If there is no data, tell the user and cancel the action.
         if len(data) == 0:
-            show_alert_dialog(self, title, "There is no data to export.")
+            show_alert_dialog(self, "Export - %s" % last_profile, "There is no data to export.")
             return
         
         # Get the filename.
-        response, filename = show_save_dialog(self, title)
+        response, filename = show_save_dialog(self, "Export - %s" % last_profile)
         
         # If the user pressed OK, export the data:
         if response == Gtk.ResponseType.OK:
