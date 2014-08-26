@@ -1901,23 +1901,7 @@ class Weather(Gtk.Window):
             self.liststore.clear()
             
             # Load the data.   
-            try:
-                # This should be ~/.local/share/weatherlog/[profile name]/weather on Linux.
-                data_file = open("%s/profiles/%s/weather" % (main_dir, last_profile), "r")
-                data = pickle.load(data_file)
-                data_file.close()
-                
-            except IOError:
-                # Show the error message, and close the application.
-                # This one shows if there was a problem reading the file.
-                print("Error reloading data (IOError).")
-                data = []
-                
-            except (TypeError, ValueError):
-                # Show the error message, and close the application.
-                # This one shows if there was a problem with the data type.
-                print("Error reloading data (TypeError or ValueError).")
-                data = []
+            data = io.read_profile(main_dir, last_profile)
             
             # Update the list.
             for i in data:
