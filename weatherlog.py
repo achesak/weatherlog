@@ -213,7 +213,7 @@ class Weather(Gtk.Window):
             ("remove", Gtk.STOCK_REMOVE, "Remo_ve...", "<Control>r", "Remove a day from the list", self.remove),
             ("clear_data", Gtk.STOCK_CLEAR, "Clear Current _Data...", None, "Clear the data", self.clear),
             ("clear_all", None, "Clear _All Data...", None, None, self.clear_all),
-            ("exit", Gtk.STOCK_QUIT, "_Quit...", None, "Close the application", lambda x: self.exit("ignore", "this"))
+            ("exit", Gtk.STOCK_QUIT, "_Quit", None, "Close the application", lambda x: self.exit())
         ])
         action_group.add_actions([
             ("file_menu", None, "_File"),
@@ -1987,7 +1987,7 @@ class Weather(Gtk.Window):
         webbrowser.open_new("weatherlog_resources/help/help.html")    
     
 
-    def exit(self, x, y):
+    def exit(self, x = False, y = False):
         """Closes the application."""
         
         # Save the data.
