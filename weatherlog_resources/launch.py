@@ -16,6 +16,8 @@ import os.path
 import sys
 # Import glob for getting a list of directories.
 import glob
+# Import datetime for getting the current time.
+import datetime
 # Import pickle for loading and saving the data.
 # Try importing cPickle (for most Python 2 implementations), then
 # fall back to pickle (for Python 2 implementations lacking this module
@@ -57,6 +59,9 @@ def check_files_exist(main_dir, conf_dir):
         last_prof_data = open("%s/profiles/Main Profile/weather" % main_dir, "w")
         pickle.dump([], last_prof_data)
         last_prof_data.close()
+        
+        # Create the metadata file.
+        create_metadata(main_dir, "Main Profile")
     
     # Check to see if the data directory exists, and create it if it doesn't.
     if not os.path.exists(conf_dir) or not os.path.isdir(conf_dir):
@@ -68,8 +73,6 @@ def check_files_exist(main_dir, conf_dir):
         last_prof = open("%s/lastprofile" % conf_dir, "w")
         last_prof.write("Main Profile")
         last_prof.close()
-        
-        
 
 
 def get_last_profile(main_dir, conf_dir):
@@ -232,4 +235,22 @@ def get_data(main_dir, last_profile):
         sys.exit()
     
     return data
+
+
+def create_metadata(main_dir, last_profile):
+    """Creates the default metadata file."""
     
+    # Get the current time.
+    now = datetime.datetime.now()
+    modified = "%d/%d/%d" % (now.day, now.month, now.year)
+    
+    # Writes the metadata to the file.
+    try:
+        meta_file = open("%s/profiles/%s/metadata" % (main_dir, last_profile), "w")
+        meta_file.write("%s\n%s" % (modified, modified))
+        meta_file.close()
+    
+    except IOError:
+        # Show the error message.
+        # This only shows if the error occurred when writing to the file.
+        print("Error saving metadata file (IOError).")

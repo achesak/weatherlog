@@ -41,8 +41,6 @@ THE SOFTWARE.
 from gi.repository import Gtk, Gdk, GdkPixbuf
 # Import json for loading and saving the data.
 import json
-# Import collections.Counter for getting the mode of the data.
-from collections import Counter
 # Import webbrowser for opening the help in the user's browser.
 import webbrowser
 # Import datetime for getting the difference between two dates, and 
@@ -1408,6 +1406,7 @@ class Weather(Gtk.Window):
         
         # Create the new profile and clear the old data.
         io.write_blank_profile(main_dir, name)
+        launch.create_metadata(main_dir, name)
         last_profile = name
         data[:] = []
         self.liststore.clear()
@@ -1479,6 +1478,10 @@ class Weather(Gtk.Window):
             
         # Rename the directory.
         os.rename("%s/profiles/%s" % (main_dir, last_profile), "%s/profiles/%s" % (main_dir, name))
+        now = datetime.datetime.now()
+        modified = "%d/%d/%d" % (now.day, now.month, now.year)
+        creation, modified2 = io.get_metadata(main_dir, last_profile)
+        io.write_metadata(main_dir, last_profile, creation, modified)
         
         # Clear the old data.
         data[:] = []
@@ -1538,8 +1541,9 @@ class Weather(Gtk.Window):
         for i in data:
             self.liststore.append(i)
         
-        # Update the title.
+        # Update the title and save the data.
         self.update_title()
+        self.save(show_dialog = False)
         
         # Delete the directory of the profile that was merged in.
         shutil.rmtree("%s/profiles/%s" % (main_dir, name))
@@ -1593,6 +1597,7 @@ class Weather(Gtk.Window):
         new_prof_file = open("%s/profiles/%s/weather" % (main_dir, name), "w")
         pickle.dump([], new_prof_file)
         new_prof_file.close()
+        launch.create_metadata(main_dir, name)
         
         # Get the dates.
         ndates = []
@@ -1712,6 +1717,10 @@ class Weather(Gtk.Window):
         
         # Save the data.
         io.write_profile(main_dir = main_dir, name = name, data = data2)
+        now = datetime.datetime.now()
+        modified = "%d/%d/%d" % (now.day, now.month, now.year)
+        creation, modified2 = io.get_metadata(main_dir, last_profile)
+        io.write_metadata(main_dir, last_profile, creation, modified)
     
     
     def options(self, event):
@@ -1841,51 +1850,22 @@ class Weather(Gtk.Window):
         if automatic and not config["auto_save"] and not from_options:
             return
         
-        # Save the current profile.
-        try:
-            # This should save to ~/.local/share/weatherlog/[profile name]/weather on Linux.
-            data_file = open("%s/profiles/%s/weather" % (main_dir, last_profile), "w")
-            pickle.dump(data, data_file)
-            data_file.close()
+        if not from_options:
             
-        except IOError:
-            # Show the error message if something happened, but continue.
-            # This one is shown if there was an error writing to the file.
-            print("Error saving data file (IOError).")
-        
-        except (TypeError, ValueError):
-            # Show the error message if something happened, but continue.
-            # This one is shown if there was an error with the data type.
-            print("Error saving data file (TypeError or ValueError).")
+            # Save the current profile.
+            io.write_profile(main_dir, last_profile, data)
+            
+            # Save the creation and last modified dates.
+            now = datetime.datetime.now()
+            modified = "%d/%d/%d" % (now.day, now.month, now.year)
+            creation, modified2 = io.get_metadata(main_dir, last_profile)
+            io.write_metadata(main_dir, last_profile, creation, modified)
+            
+            # Save the last profile.
+            io.write_last_profile(conf_dir, last_profile)
         
         # Save the configuration.
-        try:
-            # This should save to ~/.config/weatherlog/config on Linux.
-            config_file = open("%s/config" % conf_dir, "w")
-            json.dump(config, config_file)
-            config_file.close()
-            
-        except IOError:
-            # Show the error message if something happened, but continue.
-            # This one is shown if there was an error writing to the file.
-            print("Error saving configuration file (IOError).")
-        
-        except (TypeError, ValueError):
-            # Show the error message if something happened, but continue.
-            # This one is shown if there was an error with the data type.
-            print("Error saving configuration file (TypeError or ValueError).")
-        
-        # Save the last profile.
-        try:
-            # This should save to ~/.config/weatherlog/lastprofile on Linux.
-            prof_file = open("%s/lastprofile" % conf_dir, "w")
-            prof_file.write(last_profile)
-            prof_file.close()
-            
-        except IOError:
-            # Show the error message if something happened, but continue.
-            # This one is shown if there was an error writing to the file.
-            print("Error saving profile file (IOError).")
+        io.write_config(conf_dir, config)
         
         # Show the dialog, if specified.
         if show_dialog:
