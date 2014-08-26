@@ -16,9 +16,6 @@
       <menuitem action="import_profile" />
       <menuitem action="export" />
       <menu action="export_menu">
-        <menuitem action="export_html" />
-        <menuitem action="export_csv" />
-        <separator />
         <menuitem action="export_pastebin" />
         <menuitem action="export_pastebin_html" />
         <menuitem action="export_pastebin_csv" />

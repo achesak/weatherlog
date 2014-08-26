@@ -218,13 +218,11 @@ class Weather(Gtk.Window):
             ("import", Gtk.STOCK_OPEN, "_Import...", None, "Import data from a file", self.import_file),
             ("import_merge", None, "Imp_ort and Merge...", "<Control><Shift>o", None, self.import_merge),
             ("import_profile", None, "Import as New _Profile...", None, None, self.import_new_profile),
-            ("export", Gtk.STOCK_SAVE, "_Export...", None, "Export data to a file", lambda x: self.export_file(mode = "raw"))
+            ("export", Gtk.STOCK_SAVE, "_Export...", None, "Export data to a file", self.export_file)
         ])
         action_weather_export_group = Gtk.Action("export_menu", "E_xport to", None, None)
         action_group.add_action(action_weather_export_group)
         action_group.add_actions([
-            ("export_html", None, "Export to _HTML...", None, None, lambda x: self.export_file(mode = "html")),
-            ("export_csv", None, "Export to _CSV...", None, None, lambda x: self.export_file(mode = "csv")),
             ("export_pastebin", None, "Export to Paste_bin...", None, None, lambda x: self.export_pastebin("raw")),
             ("export_pastebin_html", None, "_Export to Pastebin (HTML)...", None, None, lambda x: self.export_pastebin("html")),
             ("export_pastebin_csv", None, "E_xport to Pastebin (CSV)...", None, None, lambda x: self.export_pastebin("csv")),
@@ -1199,7 +1197,7 @@ class Weather(Gtk.Window):
         self.save(show_dialog = False)
     
     
-    def export_file(self, mode = "raw"):
+    def export_file(self, event):
         """Exports the data to a file."""
         
         # If there is no data, tell the user and cancel the action.
@@ -1210,20 +1208,21 @@ class Weather(Gtk.Window):
         # Get the filename.
         response, filename = show_save_dialog(self, "Export - %s" % last_profile)
         
-        # If the user pressed OK, export the data:
+        # If the user did not press OK, don't continue.
+        if response != Gtk.ResponseType.OK and response != 98 and response != 99:
+            return
+        
+        # Convert the data if needed.
+        if response == 99:
+            converted = export.html(data, units)
+        elif response == 98:
+            converted = export.csv(data, units)
+        
+        # Save the data.
         if response == Gtk.ResponseType.OK:
-            
-            # Convert the data if needed.
-            if mode == "html":
-                converted = export.html(data, units)
-            elif mode == "csv":
-                converted = export.csv(data, units)
-            
-            # Save the data.
-            if mode == "raw":
-                io.write_profile(filename = filename, data = data)
-            else:
-                io.write_standard_file(filename = filename, data = converted)
+            io.write_profile(filename = filename, data = data)
+        else:
+            io.write_standard_file(filename = filename, data = converted)
     
     
     def export_pastebin(self, mode):
