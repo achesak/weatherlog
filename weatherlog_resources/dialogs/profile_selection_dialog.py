@@ -15,7 +15,7 @@ class ProfileSelectionDialog(Gtk.Dialog):
         
         # This window should be modal.
         Gtk.Dialog.__init__(self, title, parent, Gtk.DialogFlags.MODAL)
-        self.set_default_size(300, 300)
+        self.set_default_size(400, 300)
         
         # Add the buttons.
         self.add_button("Cancel", Gtk.ResponseType.CANCEL)
@@ -32,7 +32,7 @@ class ProfileSelectionDialog(Gtk.Dialog):
         sel_grid.add(sel_lbl)
         
         # Create the ListStore for storing the data.
-        self.liststore = Gtk.ListStore(str, str)
+        self.liststore = Gtk.ListStore(str, str, str)
         # Add the profiles.
         for i in profiles:
             self.liststore.append(i)
@@ -45,9 +45,14 @@ class ProfileSelectionDialog(Gtk.Dialog):
         self.pro_col = Gtk.TreeViewColumn("Profile", pro_text, text = 0)
         self.treeview.append_column(self.pro_col)
         
-        # Create the Last Modified column.
+        # Create the Creation Date.
+        cre_text = Gtk.CellRendererText()
+        self.cre_text = Gtk.TreeViewColumn("Creation Date", cre_text, text = 1)
+        self.treeview.append_column(self.cre_text)
+        
+        # Create the Last Modified Date column.
         mod_text = Gtk.CellRendererText()
-        self.mod_col = Gtk.TreeViewColumn("Last Modified", mod_text, text = 1)
+        self.mod_col = Gtk.TreeViewColumn("Last Modified Date", mod_text, text = 2)
         self.treeview.append_column(self.mod_col)
         
         # Allow for multiple items to be selected, if appropriate.

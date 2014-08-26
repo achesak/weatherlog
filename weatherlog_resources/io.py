@@ -115,15 +115,14 @@ def get_profile_list(main_dir, last_profile):
     profiles = list(set(profiles) - set([last_profile]))
     profiles.sort()
     
-    # Get the last modified dates.
+    # Get the creation and last modified dates.
     for i in range(0, len(profiles)):
         
-        # Get the date and format it properly.
-        last_modified = os.path.getmtime("%s/profiles/%s/weather" % (main_dir, last_profile))
-        last_modified = time.strftime("%d/%m/%Y", time.localtime(last_modified))
+        # Get the dates.
+        creation, modified = get_metadata(main_dir, profiles[i])
         
-        # Change the value in the list.
-        profiles[i] = [profiles[i], last_modified]
+        # Change the values in the list.
+        profiles[i] = [profiles[i], creation, modified]
     
     # Switch back to the previous directory.
     os.chdir(current_dir)
