@@ -29,14 +29,13 @@ def write_profile(main_dir = "", name = "", filename = "", data = []):
     filename = filename if filename != "" else "%s/profiles/%s/weather" % (main_dir, name)
     
     # Write the data.
-    #try:
-    if 1:
+    try:
         # This should save to ~/.local/share/weatherlog/[profile name]/weather on Linux.
         data_file = open(filename, "w")
         pickle.dump(data, data_file)
         data_file.close()
         return True
-    """    
+    
     except IOError:
         # Show the error message if something happened, but continue.
         # This one is shown if there was an error writing to the file.
@@ -47,7 +46,7 @@ def write_profile(main_dir = "", name = "", filename = "", data = []):
         # Show the error message if something happened, but continue.
         # This one is shown if there was an error with the data type.
         print("Error saving data file (TypeError or ValueError).")
-        return False"""
+        return False
 
 
 def read_profile(main_dir = "", name = "", filename = ""):
