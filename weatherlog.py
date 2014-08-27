@@ -231,7 +231,7 @@ class Weather(Gtk.Window):
         ])
         action_group.add_actions([
             ("info_global_menu", None, "_Info"),
-            ("info", Gtk.STOCK_INFO, "_Info...", "<Control>i", "Show info about the data", lambda x: self.show_info_generic()),
+            ("info", Gtk.STOCK_INFO, "_Info...", "<Control>i", "Show info about the data", lambda x: self.show_info_generic(data = data)),
             ("info_range", None, "Info in _Range...", "<Control><Shift>i", None, lambda x: self.info_range()),
             ("info_selected", None, "Info for _Selected Dates...", None, None, lambda x: self.info_selected()),
             ("charts", None, "_Charts...", "<Control>c", None, lambda x: self.show_chart_generic()),
