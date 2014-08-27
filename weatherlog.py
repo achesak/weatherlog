@@ -234,7 +234,7 @@ class Weather(Gtk.Window):
             ("info", Gtk.STOCK_INFO, "_Info...", "<Control>i", "Show info about the data", lambda x: self.show_info_generic(data = data)),
             ("info_range", None, "Info in _Range...", "<Control><Shift>i", None, lambda x: self.info_range()),
             ("info_selected", None, "Info for _Selected Dates...", None, None, lambda x: self.info_selected()),
-            ("charts", None, "_Charts...", "<Control>c", None, lambda x: self.show_chart_generic()),
+            ("charts", None, "_Charts...", "<Control>c", None, lambda x: self.show_chart_generic(data = data)),
             ("charts_range", None, "Charts _in Range...", "<Control><Shift>c", None, lambda x: self.chart_range()),
             ("charts_selected", None, "Charts _for Selected Dates...", None, None, lambda x: self.chart_selected()),
             ("select_data", None, "Select _Data...", "<Control>d", None, self.select_data_simple),
@@ -246,19 +246,9 @@ class Weather(Gtk.Window):
             ("add_profile", None, "_Add Profile...", "<Control><Shift>n", None, self.add_profile),
             ("remove_profile", None, "_Remove Profile...", None, None, self.remove_profile),
             ("rename_profile", None, "Re_name Profile...", None, None, self.rename_profile),
-            ("merge_profiles", None, "_Merge Profiles...", None, None, self.merge_profiles)
-        ])
-        action_copy_group = Gtk.Action("copy_menu", "_Copy Data", None, None)
-        action_group.add_action(action_copy_group)
-        action_group.add_actions([
-            ("copy_new", None, "To _New Profile...", None, None, lambda x: self.data_profile_new(mode = "Copy")),
-            ("copy_existing", None, "To _Existing Profile...", None, None, lambda x: self.data_profile_existing(mode = "Copy"))
-        ])
-        action_move_group = Gtk.Action("move_menu", "Mo_ve Data", None, None)
-        action_group.add_action(action_move_group)
-        action_group.add_actions([
-            ("move_new", None, "To _New Profile...", None, None, lambda x: self.data_profile_new(mode = "Move")),
-            ("move_existing", None, "To _Existing Profile...", None, None, lambda x: self.data_profile_existing(mode = "Move"))
+            ("merge_profiles", None, "_Merge Profiles...", None, None, self.merge_profiles),
+            ("copy_new", None, "Copy _Data to New Profile...", None, None, self.data_profile_new),
+            ("copy_existing", None, "Copy Data to _Existing Profile...", None, None, self.data_profile_existing)
         ])
         action_group.add_actions([
             ("options_menu", None, "_Options"),
@@ -1571,14 +1561,14 @@ class Weather(Gtk.Window):
         shutil.rmtree("%s/profiles/%s" % (main_dir, name))
         
     
-    def data_profile_new(self, mode = "Copy"):
+    def data_profile_new(self, event):
         """Copies or moves data to a new profile."""
         
         global data
         
         # If there is no data, tell the user and don't continue.
         if len(data) == 0:
-            show_no_data_dialog(self, "%s Data to New Profile" % mode)
+            show_no_data_dialog(self, "Copy Data to New Profile")
             return
         
         # Get the dates.
@@ -1589,7 +1579,7 @@ class Weather(Gtk.Window):
             dates2.append(i[0])
         
         # Get the profile name.
-        new_dlg = ProfileNameDialog(self, "%s Data to New Profile" % mode)
+        new_dlg = ProfileNameDialog(self, "Copy Data to New Profile")
         response = new_dlg.run()
         name = new_dlg.nam_ent.get_text().lstrip().rstrip()
         new_dlg.destroy()
@@ -1601,17 +1591,18 @@ class Weather(Gtk.Window):
         # Validate the name. If the name isn't valid, don't continue.
         validate = utility_functions.validate_profile(main_dir, name)
         if validate != "":
-            show_error_dialog(self, "%s Data to New Profile" % mode, validate)
+            show_error_dialog(self, "Copy Data to New Profile", validate)
             return
             
         # Get the dates to move or copy.
-        date_dlg = DateSelectionDialog(self, "%s Data to New Profile" % mode, dates)
+        buttons = [["Cancel", Gtk.ResponseType.CANCEL], ["Move Data", 34], ["Copy Data", 35]]
+        date_dlg = DateSelectionDialog(self, "Copy Data to New Profile", dates, buttons)
         response = date_dlg.run()
         model, treeiter = date_dlg.treeview.get_selection().get_selected_rows()
         date_dlg.destroy()
         
         # If the user did not click OK or nothing was selected, don't continue:
-        if response != Gtk.ResponseType.OK or treeiter == None:
+        if (response != 34 and response != 35) or treeiter == None:
             return
         
         # Create the directory and file.
@@ -1633,7 +1624,7 @@ class Weather(Gtk.Window):
                 ndata.append(data[i])
         
         # If the user wants to move the data, delete the items in the current profile.
-        if mode == "Move":
+        if response == 34:
             
             data = [x for x in data if x[0] not in ndates]
         
@@ -1649,14 +1640,14 @@ class Weather(Gtk.Window):
         io.write_profile(main_dir = main_dir, name = name, data = ndata)
     
     
-    def data_profile_existing(self, mode = "Copy"):
+    def data_profile_existing(self, event):
         """Copies or moves data to an existing profile."""
         
         global data
         
         # If there is no data, tell the user and don't continue.
         if len(data) == 0:
-            show_no_data_dialog(self, "%s Data to Existing Profile" % mode)
+            show_no_data_dialog(self, "Copy Data to Existing Profile")
             return
         
         # Get the dates.
@@ -1671,16 +1662,16 @@ class Weather(Gtk.Window):
         
         # If there are no other profiles, don't continue.
         if len(profiles) == 0:
-            show_alert_dialog(self, "%s Data to Existing Profile" % mode, "There are no other profiles.")
+            show_alert_dialog(self, "Copy Data to Existing Profile", "There are no other profiles.")
             return
         
         # Get the profile.
-        exi_dlg = ProfileSelectionDialog(self, "%s Data to Existing Profile" % mode, profiles)
+        exi_dlg = ProfileSelectionDialog(self, "Copy Data to Existing Profile", profiles)
         response = exi_dlg.run()
         model, treeiter = exi_dlg.treeview.get_selection().get_selected()
         exi_dlg.destroy()
         
-        # If the user did not press OK or nothing was selected, don't continue.
+        # If the user did not click OK or nothing was selected, don't continue:
         if response != Gtk.ResponseType.OK or treeiter == None:
             return
             
@@ -1688,13 +1679,14 @@ class Weather(Gtk.Window):
         name = model[treeiter][0]
         
         # Get the dates to move or copy.
-        date_dlg = DateSelectionDialog(self, "%s Data to Existing Profile" % mode, dates)
+        buttons = [["Cancel", Gtk.ResponseType.CANCEL], ["Move Data", 34], ["Copy Data", 35]]
+        date_dlg = DateSelectionDialog(self, "Copy Data to Existing Profile", dates, buttons)
         response = date_dlg.run()
         model, treeiter = date_dlg.treeview.get_selection().get_selected_rows()
         date_dlg.destroy()
         
         # If the user did not click OK or nothing was selected, don't continue:
-        if response != Gtk.ResponseType.OK or treeiter == None:
+        if (response != 34 and response != 35) or treeiter == None:
             return
             
         # Get the dates.
@@ -1709,7 +1701,7 @@ class Weather(Gtk.Window):
                 ndata.append(data[i])
 
         # If the user wants to move the data, delete the items in the current profile.
-        if mode == "Move":
+        if response == 34:
             
             data = [x for x in data if x[0] not in ndates]
         

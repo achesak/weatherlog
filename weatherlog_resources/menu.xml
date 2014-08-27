@@ -44,14 +44,8 @@
       <menuitem action="rename_profile" />
       <menuitem action="merge_profiles" />
       <separator />
-      <menu action="copy_menu">
-        <menuitem action="copy_new" />
-        <menuitem action="copy_existing" />
-      </menu>
-      <menu action="move_menu">
-        <menuitem action="move_new" />
-        <menuitem action="move_existing" />
-      </menu>
+      <menuitem action="copy_new" />
+      <menuitem action="copy_existing" />
     </menu>
     <menu action="options_menu">
       <menuitem action="options" />

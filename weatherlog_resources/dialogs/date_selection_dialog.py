@@ -10,7 +10,7 @@ from gi.repository import Gtk
 
 class DateSelectionDialog(Gtk.Dialog):
     """Shows the date selection dialog."""
-    def __init__(self, parent, title, dates):
+    def __init__(self, parent, title, dates, buttons = [["Cancel", Gtk.ResponseType.CANCEL], ["OK", Gtk.ResponseType.OK]]):
         """Create the dialog."""
         
         # This window should be modal.
@@ -18,8 +18,8 @@ class DateSelectionDialog(Gtk.Dialog):
         self.set_default_size(300, 300)
         
         # Add the buttons.
-        self.add_button("Cancel", Gtk.ResponseType.CANCEL)
-        self.add_button("OK", Gtk.ResponseType.OK)
+        for i in buttons:
+            self.add_button(i[0], i[1])
         
         # Create the grid.
         info_box = self.get_content_area()
