@@ -46,10 +46,15 @@ class OptionsDialog(Gtk.Dialog):
         self.del_chk.set_active(config["confirm_del"])
         opt_grid1.attach_next_to(self.del_chk, self.sav_chk, Gtk.PositionType.BOTTOM, 2, 1)
         
+        # Create the import all checkbox.
+        self.imp_chk = Gtk.CheckButton("Import all")
+        self.imp_chk.set_active(config["import_all"])
+        opt_grid1.attach_next_to(self.imp_chk, self.del_chk, Gtk.PositionType.BOTTOM, 2, 1)
+        
         # Create the Location label and entry.
         loc_lbl = Gtk.Label("Location: ")
         loc_lbl.set_alignment(0, 0.5)
-        opt_grid1.attach_next_to(loc_lbl, self.del_chk, Gtk.PositionType.BOTTOM, 1, 1)
+        opt_grid1.attach_next_to(loc_lbl, self.imp_chk, Gtk.PositionType.BOTTOM, 1, 1)
         self.loc_ent = Gtk.Entry()
         self.loc_ent.set_max_length(5)
         self.loc_ent.connect("changed", self.filter_numbers)

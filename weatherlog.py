@@ -996,10 +996,14 @@ class Weather(Gtk.Window):
             return
         
         # Ask the user what dates they want to import.
-        date_dlg = ImportSelectionDialog(self, "Import - %s" % last_profile, utility_functions.get_column(ndata, 0))
-        response = date_dlg.run()
-        model, treeiter = date_dlg.treeview.get_selection().get_selected_rows()
-        date_dlg.destroy()
+        if not config["import_all"]:
+            date_dlg = ImportSelectionDialog(self, "Import - %s" % last_profile, utility_functions.get_column(ndata, 0))
+            response = date_dlg.run()
+            model, treeiter = date_dlg.treeview.get_selection().get_selected_rows()
+            date_dlg.destroy()
+        
+        else:
+            response = 20
         
         # If the user did not press OK or nothing was selected, don't continue:
         if (response != 20 and response != 21) or treeiter == None:
@@ -1061,10 +1065,14 @@ class Weather(Gtk.Window):
             return
         
         # Ask the user what dates they want to import.
-        date_dlg = ImportSelectionDialog(self, "Import and Merge - %s" % last_profile, utility_functions.get_column(data2, 0))
-        response = date_dlg.run()
-        model, treeiter = date_dlg.treeview.get_selection().get_selected_rows()
-        date_dlg.destroy()
+        if not config["import_all"]:
+            date_dlg = ImportSelectionDialog(self, "Import and Merge - %s" % last_profile, utility_functions.get_column(data2, 0))
+            response = date_dlg.run()
+            model, treeiter = date_dlg.treeview.get_selection().get_selected_rows()
+            date_dlg.destroy()
+        
+        else:
+            response = 20
         
         # If the user did not press OK or nothing was selected, don't continue:
         if (response != 20 and response != 21) or treeiter == None:
@@ -1153,10 +1161,14 @@ class Weather(Gtk.Window):
             return
         
         # Ask the user what dates they want to import.
-        date_dlg = ImportSelectionDialog(self, "Import as New Profile - %s" % name, utility_functions.get_column(ndata, 0))
-        response = date_dlg.run()
-        model, treeiter = date_dlg.treeview.get_selection().get_selected_rows()
-        date_dlg.destroy()
+        if not config["import_all"]:
+            date_dlg = ImportSelectionDialog(self, "Import as New Profile - %s" % name, utility_functions.get_column(ndata, 0))
+            response = date_dlg.run()
+            model, treeiter = date_dlg.treeview.get_selection().get_selected_rows()
+            date_dlg.destroy()
+        
+        else:
+            response = 20
         
         # If the user did not press OK or nothing was selected, don't continue:
         if (response != 20 and response != 21) or treeiter == None:
@@ -1734,6 +1746,7 @@ class Weather(Gtk.Window):
         confirm_del = opt_dlg.del_chk.get_active()
         show_prefill = opt_dlg.pdl_chk.get_active()
         confirm_exit = opt_dlg.cex_chk.get_active()
+        import_all = opt_dlg.imp_chk.get_active()
         opt_dlg.destroy()
         
         # If the user pressed OK, change the options.
@@ -1750,6 +1763,7 @@ class Weather(Gtk.Window):
             config["confirm_del"] = confirm_del
             config["show_pre-fill"] = show_prefill
             config["confirm_exit"] = confirm_exit
+            config["import_all"] = import_all
             
             # Configure the units.
             units = launch.get_units(config)
@@ -1802,7 +1816,8 @@ class Weather(Gtk.Window):
                       "auto_save": True,
                       "confirm_del": True,
                       "show_pre-fill": True,
-                      "confirm_exit": False}
+                      "confirm_exit": False,
+                      "import_all": False}
             
             # Configure the units.
             units = launch.get_units(config)

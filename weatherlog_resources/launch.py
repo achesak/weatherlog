@@ -153,7 +153,8 @@ def get_config(conf_dir):
                   "auto_save": True,
                   "confirm_del": True,
                   "show_pre-fill": True,
-                  "confirm_exit": False}
+                  "confirm_exit": False,
+                  "import_all": False}
     
     return config
 
