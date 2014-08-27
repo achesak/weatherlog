@@ -36,7 +36,6 @@ THE SOFTWARE.
 ################################################################################
 
 
-# Import any needed modules.
 # Import Gtk and Gdk for the interface.
 from gi.repository import Gtk, Gdk, GdkPixbuf
 # Import json for loading and saving the data.
@@ -144,7 +143,7 @@ config = launch.get_config(conf_dir)
 last_width, last_height = launch.get_window_size(conf_dir, config)
 # Get the units.
 units = launch.get_units(config)
-# Get the data.
+# Get the profile data.
 data = launch.get_data(main_dir, last_profile)
 
 
@@ -158,14 +157,8 @@ class Weather(Gtk.Window):
         self.set_default_size(last_width, last_height)
         self.set_icon_from_file("weatherlog_resources/images/icon_small.png")
         
-        # Create the ListStore for storing the data. ListStore has 8 columns, all strings.
-        self.liststore = Gtk.ListStore(str, str, str, str, str, str, str, str)
-        
-        # Add the data.
-        for i in data:
-            self.liststore.append(i)
-        
         # Create the main UI.
+        self.liststore = Gtk.ListStore(str, str, str, str, str, str, str, str)
         self.treeview = Gtk.TreeView(model = self.liststore)
         date_text = Gtk.CellRendererText()
         self.date_col = Gtk.TreeViewColumn("Date", date_text, text = 0)
@@ -192,13 +185,9 @@ class Weather(Gtk.Window):
         self.note_col = Gtk.TreeViewColumn("Notes", note_text, text = 7)
         self.treeview.append_column(self.note_col)
         
-        # Create the ScrolledWindow for displaying the list with a scrollbar.
-        scrolled_win = Gtk.ScrolledWindow()
-        scrolled_win.set_hexpand(True)
-        scrolled_win.set_vexpand(True)
-        
-        # Display the TreeView.
-        scrolled_win.add(self.treeview)
+        # Add the data.
+        for i in data:
+            self.liststore.append(i)
         
         # Create the menus.
         action_group = Gtk.ActionGroup("actions")
@@ -269,8 +258,12 @@ class Weather(Gtk.Window):
         # Create the grid for the UI and add the UI items.
         grid = Gtk.Grid()
         menubar = ui_manager.get_widget("/menubar")
-        grid.add(menubar)
         toolbar = ui_manager.get_widget("/toolbar")
+        scrolled_win = Gtk.ScrolledWindow()
+        scrolled_win.set_hexpand(True)
+        scrolled_win.set_vexpand(True)
+        scrolled_win.add(self.treeview)
+        grid.add(menubar)
         grid.attach_next_to(toolbar, menubar, Gtk.PositionType.BOTTOM, 1, 1)
         grid.attach_next_to(scrolled_win, toolbar, Gtk.PositionType.BOTTOM, 1, 1)
         self.add(grid)
@@ -358,7 +351,7 @@ class Weather(Gtk.Window):
             # Sort the list by date.
             data = sorted(data, key = lambda x: datetime.datetime.strptime(x[0], "%d/%m/%Y"))
             
-            # Update the ListStore.
+            # Update the UI.
             self.liststore.clear()
             for i in data:
                 self.liststore.append(i)
@@ -378,7 +371,6 @@ class Weather(Gtk.Window):
             date = tm.get_value(ti, 0)
         
         except:
-            # Tell the user there is nothing selected.
             show_error_dialog(self, "Edit - %s" % last_profile, "No date selected.")
             return
         
@@ -414,7 +406,7 @@ class Weather(Gtk.Window):
         new_data = [date, ("%.2f" % temp), "%s%s" % ((("%.2f" % prec) + " " if prec_type != "None" else ""), prec_type), "%s%s" % ((("%.2f" % wind) + " " if wind_dir != "None" else ""), wind_dir), ("%.2f" % humi), ("%.2f %s" % (airp, airp_read)), clou, note]
         data[index] = new_data
         
-        # Update the ListStore.
+        # Update the UI.
         self.liststore.clear()
         for i in data:
             self.liststore.append(i)
@@ -460,12 +452,10 @@ class Weather(Gtk.Window):
         
         # Loop through the list of dates and delete them.
         for i in ndates:
-            
-            # Find each index and delete the item at that index.
             index = utility_functions.get_column(data, 0).index(i)
             del data[index]
         
-        # Refresh the ListStore.
+        # Update the UI.
         self.liststore.clear()
         for i in data:
             self.liststore.append(i)
@@ -610,20 +600,16 @@ class Weather(Gtk.Window):
         # If the user clicked Export:
         if response == 9:
             
-            # Create the dialog.
+            # Get the filename.
             export_dlg = Gtk.FileChooserDialog("Export Info - %s" % last_profile, self, Gtk.FileChooserAction.SAVE, (Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL, Gtk.STOCK_SAVE, Gtk.ResponseType.OK))
             export_dlg.set_do_overwrite_confirmation(True)
-            
-            # Get the response.
             response2 = export_dlg.run()
+            filename = export_dlg.get_filename()
+            export_dlg.close()
+            
+            # Export the info.
             if response2 == Gtk.ResponseType.OK:
-                
-                # Export the info.
-                filename = export_dlg.get_filename()
                 export_info.export_info(data2, filename)
-                
-            # Close the dialog.
-            export_dlg.destroy()
         
         # Close the dialog.
         info_dlg.destroy()
@@ -763,20 +749,16 @@ class Weather(Gtk.Window):
         # If the user clicked Export:
         if response == 9:
             
-            # Create the dialog.
+            # Get the filename.
             export_dlg = Gtk.FileChooserDialog("Export Charts - %s" % last_profile, self, Gtk.FileChooserAction.SAVE, (Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL, Gtk.STOCK_SAVE, Gtk.ResponseType.OK))
             export_dlg.set_do_overwrite_confirmation(True)
-            
-            # Get the response.
             response2 = export_dlg.run()
+            filename = export_dlg.get_filename()
+            export_dlg.close()
+            
+            # Export the info.
             if response2 == Gtk.ResponseType.OK:
-                
-                # Export the info.
-                filename = export_dlg.get_filename()
                 export_info.export_chart(data2, filename)
-                
-            # Close the dialog.
-            export_dlg.destroy()
         
         # Close the dialog.
         chart_dlg.destroy()
@@ -825,20 +807,16 @@ class Weather(Gtk.Window):
         # If the user clicked Export:
         if response == 9:
             
-            # Create the dialog.
+            # Get the filename.
             export_dlg = Gtk.FileChooserDialog("Export Data Subset - %s" % last_profile, self, Gtk.FileChooserAction.SAVE, (Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL, Gtk.STOCK_SAVE, Gtk.ResponseType.OK))
             export_dlg.set_do_overwrite_confirmation(True)
-            
-            # Get the response.
             response2 = export_dlg.run()
+            filename = export_dlg.get_filename()
+            export_dlg.close()
+            
+            # Export the info.
             if response2 == Gtk.ResponseType.OK:
-                
-                # Export the info.
-                filename = export_dlg.get_filename()
                 export_info.export_subset(filtered, units, filename)
-                
-            # Close the dialog.
-            export_dlg.destroy()
     
     
     def select_data_advanced(self, event):
@@ -936,20 +914,16 @@ class Weather(Gtk.Window):
         # If the user clicked Export:
         if response == 9:
             
-            # Create the dialog.
+            # Get the filename.
             export_dlg = Gtk.FileChooserDialog("Export Data Subset - %s" % last_profile, self, Gtk.FileChooserAction.SAVE, (Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL, Gtk.STOCK_SAVE, Gtk.ResponseType.OK))
             export_dlg.set_do_overwrite_confirmation(True)
-            
-            # Get the response.
             response2 = export_dlg.run()
+            filename = export_dlg.get_filename()
+            export_dlg.close()
+            
+            # Export the info.
             if response2 == Gtk.ResponseType.OK:
-                
-                # Export the info.
-                filename = export_dlg.get_filename()
                 export_info.export_subset(filtered, units, filename)
-                
-            # Close the dialog.
-            export_dlg.destroy()
     
     
     def import_file(self, event):
@@ -973,12 +947,10 @@ class Weather(Gtk.Window):
         # Read and add the data.
         ndata = io.read_profile(filename = filename)
         
-        # If the imported data is empty, don't continue.
+        # If the imported data is empty or invalid, don't continue.
         if len(ndata) == 0:
             show_alert_dialog(self, "Import - %s" % last_profile, "There is no data to import.")
             return
-        
-        # If the imported data is invalid, don't continue.
         if not utility_functions.validate_data(ndata):
             show_error_dialog(self, "Import - %s" % last_profile, "Data is not valid.")
             return
