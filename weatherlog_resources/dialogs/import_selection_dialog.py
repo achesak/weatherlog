@@ -32,31 +32,24 @@ class ImportSelectionDialog(Gtk.Dialog):
         sel_lbl.set_alignment(0, 0.5)
         sel_grid.add(sel_lbl)
         
-        # Create the ListStore for storing the data.
+        # Create the Profile column.
         self.liststore = Gtk.ListStore(str)
-        # Add the dates.
-        for i in dates:
-            self.liststore.append([i])
-        
-        # Create the TreeView for displaying the data.
         self.treeview = Gtk.TreeView(model = self.liststore)
         self.treeview.get_selection().set_mode(Gtk.SelectionMode.MULTIPLE)
-        
-        # Create the Profile column.
         pro_text = Gtk.CellRendererText()
         self.pro_col = Gtk.TreeViewColumn("Dates", pro_text, text = 0)
         self.treeview.append_column(self.pro_col)
         
-        # Create the ScrolledWindow for displaying the list with a scrollbar.
+        # Display the UI.
         scrolled_win = Gtk.ScrolledWindow()
-        
-        # The container should scroll vertically and horizontally.
         scrolled_win.set_vexpand(True)
         scrolled_win.set_hexpand(True)
-        
-        # Display the TreeView.
         scrolled_win.add(self.treeview)
         sel_grid.attach_next_to(scrolled_win, sel_lbl, Gtk.PositionType.BOTTOM, 1, 1)
+        
+        # Add the dates.
+        for i in dates:
+            self.liststore.append([i])
         
         # Show the dialog. The response gets handled by the function
         # in the main class.

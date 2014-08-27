@@ -115,8 +115,6 @@ class OptionsDialog(Gtk.Dialog):
     def filter_numbers(self, event):
         """Filters non-numbers out of the entry."""
         
-        # Get the text.
-        text = self.loc_ent.get_text()
-        
         # Only allow numbers. Filter out any other characters.
+        text = self.loc_ent.get_text()
         self.loc_ent.set_text("".join([i for i in text if i in "0123456789"]))

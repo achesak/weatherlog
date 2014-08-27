@@ -24,7 +24,6 @@ class DateSelectionDialog(Gtk.Dialog):
         # Create the grid.
         info_box = self.get_content_area()
         info_grid = Gtk.Grid()
-        # Add the grid to the dialog's content area.
         info_box.add(info_grid)
         
         # Create the label.
@@ -32,33 +31,24 @@ class DateSelectionDialog(Gtk.Dialog):
         info_lbl.set_alignment(0, 0.5)
         info_grid.add(info_lbl)
         
-        # Create the ListStore for storing the data.
-        self.liststore = Gtk.ListStore(str)
-        # Add the dates.
-        for i in dates:
-            self.liststore.append(i)
-        
-        # Create the TreeView for displaying the data.
-        self.treeview = Gtk.TreeView(model = self.liststore)
-        
         # Create the Date column.
+        self.liststore = Gtk.ListStore(str)
+        self.treeview = Gtk.TreeView(model = self.liststore)
+        self.treeview.get_selection().set_mode(Gtk.SelectionMode.MULTIPLE)
         date_text = Gtk.CellRendererText()
         self.date_col = Gtk.TreeViewColumn("Date", date_text, text = 0)
         self.treeview.append_column(self.date_col)
         
-        # Allow for multiple items to be selected.
-        self.treeview.get_selection().set_mode(Gtk.SelectionMode.MULTIPLE)
-        
-        # Create the ScrolledWindow for displaying the list with a scrollbar.
+        # Display the UI.
         scrolled_win = Gtk.ScrolledWindow()
-        
-        # The container should scroll vertically and horizontally.
         scrolled_win.set_vexpand(True)
         scrolled_win.set_hexpand(True)
-        
-        # Display the TreeView.
         scrolled_win.add(self.treeview)
         info_grid.attach_next_to(scrolled_win, info_lbl, Gtk.PositionType.BOTTOM, 1, 1)
+        
+        # Add the dates.
+        for i in dates:
+            self.liststore.append(i)
         
         # Show the dialog.
         self.show_all()

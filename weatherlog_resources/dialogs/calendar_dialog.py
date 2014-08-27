@@ -24,7 +24,6 @@ class CalendarDialog(Gtk.Dialog):
         # Create the grid.
         info_box = self.get_content_area()
         info_grid = Gtk.Grid()
-        # Add the grid to the dialog's content area.
         info_box.add(info_grid)
         
         # Create the label.

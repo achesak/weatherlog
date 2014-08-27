@@ -30,11 +30,8 @@ def convert(data2, units):
             # cm = in * 2.54
             # Skip "None" values.
             if data[i][2] != "None":
-                
                 split = data[i][2].split(" ")
-            
                 split[0] = "%.2f" % (float(split[0]) * 2.54)
-                
                 data[i][2] = " ".join(split)
             
             # Convert the wind speed.
@@ -42,11 +39,8 @@ def convert(data2, units):
             # kph = mph * 1.60934
             # Skip "None" values.
             if data[i][3] != "None":
-                
                 split = data[i][3].split(" ")
-            
                 split[0] = "%.2f" % (float(split[0]) * 1.60934)
-                
                 data[i][3] = " ".join(split)
         
         # Convert from metric to imperial:
@@ -62,11 +56,8 @@ def convert(data2, units):
             # in = cm / 2.54
             # Skip "None" values.
             if data[i][2] != "None":
-                
                 split = data[i][2].split(" ")
-            
                 split[0] = "%.2f" % (float(split[0]) / 2.54)
-                
                 data[i][2] = " ".join(split)
             
             # Convert the wind speed.
@@ -74,11 +65,8 @@ def convert(data2, units):
             # mph = kph / 1.60934
             # Skip "None" values.
             if data[i][3] != "None":
-                
                 split = data[i][3].split(" ")
-            
                 split[0] = "%.2f" % (float(split[0]) / 1.60934)
-                
                 data[i][3] = " ".join(split)
     
     return data

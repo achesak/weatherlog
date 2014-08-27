@@ -110,7 +110,6 @@ class AddNewDialog(Gtk.Dialog):
         self.airp_com.set_active(0)
         new_grid.attach_next_to(self.airp_com, self.airp_sbtn, Gtk.PositionType.RIGHT, 1, 1)
         
-        
         # Create the Cloud Cover label and combobox.
         clou_lbl = Gtk.Label("Cloud Cover: ")
         clou_lbl.set_alignment(0, 0.5)
@@ -152,12 +151,10 @@ class AddNewDialog(Gtk.Dialog):
         
         # If the value is None, disable the spinbutton.
         if widget.get_active_text() == "None":
-        
             self.prec_sbtn.set_sensitive(False)
         
 		# Otherwise, enable the spinbutton.
         else:
-        
             self.prec_sbtn.set_sensitive(True)
     
     
@@ -166,12 +163,10 @@ class AddNewDialog(Gtk.Dialog):
         
         # If the value is None, disable the spinbutton.
         if widget.get_active_text() == "None":
-        
             self.wind_sbtn.set_sensitive(False)
         
         # Otherwise, enable the spinbutton.
         else:
-        
             self.wind_sbtn.set_sensitive(True)
     
     
@@ -183,10 +178,7 @@ class AddNewDialog(Gtk.Dialog):
         
         # If there was an error, tell the user and cancel the action.
         if "error" in data:
-            
-            # Show the dialog.
             show_error_dialog(self, "Add New - %s" % profile, "There was an error getting the data from Yahoo! Weather.")
-            
             return False
         
         # Set the temperature field.

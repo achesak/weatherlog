@@ -172,12 +172,10 @@ class EditDialog(Gtk.Dialog):
         
         # If the value is None, disable the spinbutton.
         if widget.get_active_text() == "None":
-        
             self.prec_sbtn.set_sensitive(False)
         
 		# Otherwise, enable the spinbutton.
         else:
-        
             self.prec_sbtn.set_sensitive(True)
     
     
@@ -186,10 +184,8 @@ class EditDialog(Gtk.Dialog):
         
         # If the value is None, disable the spinbutton.
         if widget.get_active_text() == "None":
-        
             self.wind_sbtn.set_sensitive(False)
         
         # Otherwise, enable the spinbutton.
         else:
-        
             self.wind_sbtn.set_sensitive(True)

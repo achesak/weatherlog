@@ -31,26 +31,15 @@ class ProfileSelectionDialog(Gtk.Dialog):
         sel_lbl.set_alignment(0, 0.5)
         sel_grid.add(sel_lbl)
         
-        # Create the ListStore for storing the data.
+        # Create the Profile, Creation Date, and Last Modified Date columns.
         self.liststore = Gtk.ListStore(str, str, str)
-        # Add the profiles.
-        for i in profiles:
-            self.liststore.append(i)
-        
-        # Create the TreeView for displaying the data.
         self.treeview = Gtk.TreeView(model = self.liststore)
-        
-        # Create the Profile column.
         pro_text = Gtk.CellRendererText()
         self.pro_col = Gtk.TreeViewColumn("Profile", pro_text, text = 0)
         self.treeview.append_column(self.pro_col)
-        
-        # Create the Creation Date.
         cre_text = Gtk.CellRendererText()
         self.cre_text = Gtk.TreeViewColumn("Creation Date", cre_text, text = 1)
         self.treeview.append_column(self.cre_text)
-        
-        # Create the Last Modified Date column.
         mod_text = Gtk.CellRendererText()
         self.mod_col = Gtk.TreeViewColumn("Last Modified Date", mod_text, text = 2)
         self.treeview.append_column(self.mod_col)
@@ -59,14 +48,14 @@ class ProfileSelectionDialog(Gtk.Dialog):
         if select_mode == "multiple":
             self.treeview.get_selection().set_mode(Gtk.SelectionMode.MULTIPLE)
         
-        # Create the ScrolledWindow for displaying the list with a scrollbar.
-        scrolled_win = Gtk.ScrolledWindow()
+        # Add the profiles.
+        for i in profiles:
+            self.liststore.append(i)
         
-        # The container should scroll vertically and horizontally.
+        # Display the UI.
+        scrolled_win = Gtk.ScrolledWindow()
         scrolled_win.set_vexpand(True)
         scrolled_win.set_hexpand(True)
-        
-        # Display the TreeView.
         scrolled_win.add(self.treeview)
         sel_grid.attach_next_to(scrolled_win, sel_lbl, Gtk.PositionType.BOTTOM, 1, 1)
         

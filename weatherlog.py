@@ -108,8 +108,6 @@ from weatherlog_resources.dialogs.new_dialog import AddNewDialog
 from weatherlog_resources.dialogs.edit_dialog import EditDialog
 # Import the dialog for displaying information.
 from weatherlog_resources.dialogs.info_dialog import GenericInfoDialog
-# Import the dialog for telling the user there is no data.
-from weatherlog_resources.dialogs.data_dialog import show_no_data_dialog
 # Import the dialog for entering a profile name.
 from weatherlog_resources.dialogs.profile_name_dialog import ProfileNameDialog
 # Import the dialog for selecting a profile from a list.
@@ -130,7 +128,7 @@ from weatherlog_resources.dialogs.data_subset_dialog import DataSubsetDialog
 # Import the dialog for selecting dates to import.
 from weatherlog_resources.dialogs.import_selection_dialog import ImportSelectionDialog
 # Import the miscellaneous dialogs.
-from weatherlog_resources.dialogs.misc_dialogs import show_alert_dialog, show_error_dialog, show_question_dialog, show_file_dialog, show_save_dialog
+from weatherlog_resources.dialogs.misc_dialogs import show_alert_dialog, show_error_dialog, show_question_dialog, show_file_dialog, show_save_dialog, show_no_data_dialog
 
 
 # Get any required variables and set up the application.
