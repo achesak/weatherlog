@@ -1329,7 +1329,8 @@ class Weather(Gtk.Window):
                   "auto_save": True,
                   "confirm_del": True,
                   "show_pre-fill": True,
-                  "confirm_exit": False}
+                  "confirm_exit": False,
+                  "import_all": False}
         
         # Configure the units.
         units = launch.get_units(config)
@@ -1403,9 +1404,18 @@ class Weather(Gtk.Window):
         
         # Validate the name. If the name isn't valid, don't continue.
         validate = utility_functions.validate_profile(main_dir, name)
-        if validate != "":
+        if validate.endswith("\".\")."):
             show_error_dialog(self, "Add Profile", validate)
             return
+        
+        # If the name is already in use, ask the user is they want to delete the old profile.
+        elif validate.endswith("already in use."):
+            del_old = show_question_dialog(self, "Add Profile", "%s\n\nWould you like to delete the existing profile?" % validate)
+            if del_old != Gtk.ResponseType.OK:
+                return
+            
+            # Delete the existing profile.
+            shutil.rmtree("%s/profiles/%s" % (main_dir, name))
         
         # Create the new profile and clear the old data.
         io.write_blank_profile(main_dir, name)
@@ -1475,9 +1485,18 @@ class Weather(Gtk.Window):
         
         # Validate the name. If the name isn't valid, don't continue.
         validate = utility_functions.validate_profile(main_dir, name)
-        if validate != "":
+        if validate.endswith("\".\")."):
             show_error_dialog(self, "Rename Profile", validate)
             return
+        
+        # If the name is already in use, ask the user is they want to delete the old profile.
+        elif validate.endswith("already in use."):
+            del_old = show_question_dialog(self, "Rename Profile", "%s\n\nWould you like to delete the existing profile?" % validate)
+            if del_old != Gtk.ResponseType.OK:
+                return
+            
+            # Delete the existing profile.
+            shutil.rmtree("%s/profiles/%s" % (main_dir, name))
             
         # Rename the directory.
         os.rename("%s/profiles/%s" % (main_dir, last_profile), "%s/profiles/%s" % (main_dir, name))
