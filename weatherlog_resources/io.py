@@ -143,6 +143,8 @@ def get_metadata(main_dir, last_profile):
         # Show the error message.
         # This only shows if the error occurred when reading from the file.
         print("Error reading metadata file (IOError).")
+        creation = "Error"
+        modified = "Error"
     
     return creation, modified
 
