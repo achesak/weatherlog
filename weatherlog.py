@@ -1319,6 +1319,7 @@ class Weather(Gtk.Window):
         # If there are no other profiles, cancel the action.
         if len(profiles) == 0:
             show_alert_dialog(self, "Switch Profile", "There are no other profiles.")
+            return
         
         # Get the profile to switch to.
         swi_dlg = ProfileSelectionDialog(self, "Switch Profile", profiles)
