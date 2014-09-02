@@ -7,7 +7,7 @@ patterns and overall info.
 
 ![WeatherLog main UI](weatherlog_resources/help/images/main_profile_example.png "Main view with example data")
 
-![WeatherLog info UI](weatherLog_resources/help/images/general_info.png "Info window")
+![WeatherLog info UI](weatherlog_resources/help/images/general_info.png "Info window")
 
 # Using WeatherLog
 
