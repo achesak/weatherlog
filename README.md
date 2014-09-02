@@ -11,14 +11,20 @@ patterns and overall info.
 
 # Using WeatherLog
 
-WeatherLog requires the Python interpreter to run. Development is done using 2.7.x, but it should work with 3.x as well. GTK+ 3 is also required.
+WeatherLog requires the Python interpreter to run. Development is done using 2.7.x, but it should work with 3.x as well. GTK+ 3 and its Python bindings
+are also required.
 
-To run WeatherLog, open a terminal in the directory containing the files and type "python weatherlog.py". Currently WeatherLog only works on Linux and Windows.
+To run WeatherLog, open a terminal in the directory containing the files and type `python weatherlog.py`. On some systems double-clicking on the 
+`weatherlog.py` file will also work.
+
+WeatherLog currently only runs on Linux and Windows. Note that while the application should work on Windows, it is not extensively tested on that
+platform.
 
 # License
 
-WeatherLog is released under the [MIT open source license](http://opensource.org/licenses/mit-license.php). See the LICENSE file for more information.
+WeatherLog is released under the [MIT open source license](http://opensource.org/licenses/mit-license.php). See the `LICENSE` file for more information.
 
-WeatherLog uses [python-weather-api](https://launchpad.net/python-weather-api) to get data from weather APIs. See the README and LICENSE files in resources/dialogs/pywapi for more information.
+WeatherLog uses [python-weather-api](https://launchpad.net/python-weather-api) to get data from weather APIs. See the `README` and `LICENSE` files in
+`resources/dialogs/pywapi` for more information.
 
 The program icon is from an [icon set by Mr J](https://www.iconfinder.com/search/?q=iconset:weather-icons-8).
