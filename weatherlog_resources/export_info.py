@@ -29,3 +29,10 @@ def export_subset(data, units, filename):
     
     data2 = export.html(data, units)
     io.write_standard_file(filename, data2)
+
+
+def export_weather(data, filename):
+    """Exports weather data."""
+    
+    data2 = export.weather_html(data)
+    io.write_standard_file(filename, data2)

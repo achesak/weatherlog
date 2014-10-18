@@ -188,3 +188,53 @@ def chart_html(data):
 </html>"""
     
     return html.lstrip()
+
+
+def weather_html(data):
+    """Converts the weather data to HTML."""
+    
+    title_list = ["Weather", "Location", "Forecast"]
+    
+    # Build the string.
+    html = """
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>Data exported from WeatherLog</title>
+<meta charset="utf-8" />
+</head>
+<body>"""
+    
+    # Add the data. Loop through the list, and add each sublist as a new table.
+    for j in range(0, len(data)):
+        html += """
+<h1>""" + title_list[j] + """</h1>
+<table>
+<tr>
+<th>Field</th>
+<th>Value</th>
+</tr>"""
+    
+        # Add the data. Loop through each list, and add it as a table row.
+        for i in data[j]:
+            try:
+                i[0] = i[0].encode("utf-8")
+                i[1] = i[1].encode("utf-8")
+            except:
+                pass
+            html += """
+<tr>
+<td>%s</td>
+<td>%s</td>
+</tr>""" % (i[0], i[1])
+        
+        # Close the table.
+        html += """
+</table>"""
+    
+    # Add the closing tags.
+    html += """
+</body>
+</html>"""
+    
+    return html.lstrip()

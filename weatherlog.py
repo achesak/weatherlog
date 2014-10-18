@@ -564,7 +564,7 @@ class Weather(Gtk.Window):
             
             # Export the info.
             if response2 == Gtk.ResponseType.OK:
-                export_info.export_info(data, filename)
+                export_info.export_weather(data, filename)
         
         # Close the dialog.
         info_dlg.destroy()
