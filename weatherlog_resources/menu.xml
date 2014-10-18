@@ -8,6 +8,9 @@
       <menuitem action="clear_data" />
       <menuitem action="clear_all" />
       <separator />
+      <menuitem action="get_current_here" />
+      <menuitem action="get_current_there" />
+      <separator />
       <menuitem action="exit" />
     </menu>
     <menu action="file_menu">

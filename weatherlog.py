@@ -101,6 +101,8 @@ import weatherlog_resources.charts as charts
 import weatherlog_resources.command_line as command_line
 # Import the functions for filtering the data.
 import weatherlog_resources.filter_data as filter_data
+# Import the function for getting the wind direction.
+import weatherlog_resources.directions as directions
 # Import the dialog for getting new data.
 from weatherlog_resources.dialogs.new_dialog import AddNewDialog
 # Import the dialog for editing a row of data.
@@ -126,8 +128,14 @@ from weatherlog_resources.dialogs.select_advanced_dialog import SelectDataAdvanc
 from weatherlog_resources.dialogs.data_subset_dialog import DataSubsetDialog
 # Import the dialog for selecting dates to import.
 from weatherlog_resources.dialogs.import_selection_dialog import ImportSelectionDialog
+# Import the dialog for specifying a location.
+from weatherlog_resources.dialogs.location_dialog import LocationDialog
+# Import the dialog for displaying the current weather.
+from weatherlog_resources.dialogs.weather_dialog import CurrentWeatherDialog
 # Import the miscellaneous dialogs.
 from weatherlog_resources.dialogs.misc_dialogs import show_alert_dialog, show_error_dialog, show_question_dialog, show_file_dialog, show_save_dialog, show_no_data_dialog
+# Import python-weather-api for getting the current weather.
+import weatherlog_resources.dialogs.pywapi.pywapi as pywapi
 
 
 # Get any required variables and set up the application.
@@ -145,6 +153,8 @@ last_width, last_height = launch.get_window_size(conf_dir, config)
 units = launch.get_units(config)
 # Get the profile data.
 data = launch.get_data(main_dir, last_profile)
+# Get the weather codes.
+weather_codes = launch.codes
 
 
 class Weather(Gtk.Window):
@@ -198,6 +208,8 @@ class Weather(Gtk.Window):
             ("remove", Gtk.STOCK_REMOVE, "Remo_ve...", "<Control>r", "Remove a day from the list", self.remove),
             ("clear_data", Gtk.STOCK_CLEAR, "Clear Current _Data...", None, "Clear the data", self.clear),
             ("clear_all", None, "Clear _All Data...", None, None, self.clear_all),
+            ("get_current_here", None, "Get Current _Weather...", "<Control>w", None, lambda x: self.get_weather(True)),
+            ("get_current_there", None, "Get Current Weather _For...", None, None, lambda x: self.get_weather(False)),
             ("exit", Gtk.STOCK_QUIT, "_Quit", None, "Close the application", lambda x: self.exit())
         ])
         action_group.add_actions([
@@ -463,7 +475,100 @@ class Weather(Gtk.Window):
         # Update the title and save the data.
         self.update_title()
         self.save(show_dialog = False)
+    
+    
+    def get_weather(self, here):
+        """Gets the current weather."""
         
+        location = ""
+        message = "Enter location: "
+        days = {"Sun": "Sunday", "Mon": "Monday", "Tue": "Tuesday", "Wed": "Wednesday",
+                "Thu": "Thursday", "Fri": "Friday", "Sat": "Saturday"}
+        
+        # If getting the weather for the current location, make sure this
+        # location has been specified.
+        if here and len(config["location"]) == 5:
+            location = config["location"]
+        
+        if not here or not location:
+            
+            # Get the location.
+            loc_dlg = LocationDialog(self, message)
+            response = loc_dlg.run()
+            location = loc_dlg.loc_ent.get_text().lstrip().rstrip()
+            loc_dlg.destroy()
+            
+            if response != Gtk.ResponseType.OK:
+                return
+        
+        # Make sure the location is valid.
+        if not location or len(location) != 5 or not location.isdigit():
+            show_error_dialog(self, "Get Current Weather", "The specified location is not valid. Only 5-digit US zipcodes are currently supported.")
+            return
+        
+        # Get the current weather and organise it.
+        result = pywapi.get_weather_from_yahoo(location, config["units"])
+        if units["airp"] == "mbar":
+            result["atmosphere"]["pressure"] = str(float(result["atmosphere"]["pressure"]) * 33.86389)
+        data = []
+        
+        # Note: the conversion from int back to str for the temperature is necessary due
+        # to encoding issues.
+        data1 = [
+            ["Condition", weather_codes[result["condition"]["code"]]],
+            ["Temperature", "%d %s" % (int(result["condition"]["temp"]), units["temp"])],
+            ["Wind speed", "%s %s" % (result["wind"]["speed"], units["wind"])],
+            ["Wind direction", directions.degree_to_direction(int(result["wind"]["direction"]))],
+            ["Wind chill", "%d %s" % (int(result["wind"]["chill"]), units["temp"])],
+            ["Humidity", "%s%%" % result["atmosphere"]["humidity"]],
+            ["Air pressure", "%s %s" % (result["atmosphere"]["pressure"], units["airp"])],
+            ["Air pressure change", ["Steady", "Rising", "Falling"][int(result["atmosphere"]["rising"])]],
+            ["Visibility", "%s %s" % (result["atmosphere"]["visibility"], result["units"]["distance"])],
+            ["Sunrise", result["astronomy"]["sunrise"]],
+            ["Sunset", result["astronomy"]["sunset"]]
+        ]
+        data2 = [
+            ["City", result["location"]["city"]],
+            ["Region", result["location"]["region"]],
+            ["Country", result["location"]["country"]],
+            ["Latitude", result["geo"]["lat"]],
+            ["Longitude", result["geo"]["long"]]
+        ]
+        data3 = [
+        ]
+        for i in result["forecasts"]:
+            data3.append(["Date", i["date"]])
+            data3.append(["Day", days[i["day"]]])
+            data3.append(["Condition", weather_codes[i["code"]]])
+            data3.append(["Low", "%d %s" % (int(i["low"]), units["temp"])])
+            data3.append(["High", "%d %s" % (int(i["high"]), units["temp"])])
+            data3.append(["", ""])
+        
+        data.append(data1)
+        data.append(data2)
+        data.append(data3)
+        
+        # Show the current weather.
+        info_dlg = CurrentWeatherDialog(self, "Current Weather For %s" % result["location"]["city"], data)
+        response = info_dlg.run()
+        
+        # If the user clicked Export:
+        if response == 9:
+            
+            # Get the filename.
+            export_dlg = Gtk.FileChooserDialog("Export Weather For %s" % result["location"]["city"], self, Gtk.FileChooserAction.SAVE, (Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL, Gtk.STOCK_SAVE, Gtk.ResponseType.OK))
+            export_dlg.set_do_overwrite_confirmation(True)
+            response2 = export_dlg.run()
+            filename = export_dlg.get_filename()
+            export_dlg.close()
+            
+            # Export the info.
+            if response2 == Gtk.ResponseType.OK:
+                export_info.export_info(data, filename)
+        
+        # Close the dialog.
+        info_dlg.destroy()
+    
     
     def info_range(self):
         """Gets the range for the info to display."""
