@@ -23,6 +23,7 @@ class CurrentWeatherDialog(Gtk.Dialog):
         info_box = self.get_content_area()
         
         # Add the buttons.
+        self.add_button("Add", 10)
         self.add_button("Export", 9)
         self.add_button("Close", Gtk.ResponseType.CLOSE)
         

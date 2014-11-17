@@ -319,13 +319,13 @@ class Weather(Gtk.Window):
             print("Error saving window size file (IOError).")
     
     
-    def add_new(self, event):
+    def add_new(self, event, prefill_data = []):
         """Shows the dialog for input of new data."""
         
         global data
         
         # Get the data to add.
-        new_dlg = AddNewDialog(self, last_profile, config["location"], config["pre-fill"], config["show_pre-fill"], units)
+        new_dlg = AddNewDialog(self, last_profile, config["location"], config["pre-fill"], config["show_pre-fill"], units, prefill_data)
         response = new_dlg.run()
         year, month, day = new_dlg.date_cal.get_date()
         date = "%d/%d/%d" % (day, month + 1, year)
@@ -552,6 +552,9 @@ class Weather(Gtk.Window):
         info_dlg = CurrentWeatherDialog(self, "Current Weather For %s" % result["location"]["city"], data)
         response = info_dlg.run()
         
+        # Close the dialog.
+        info_dlg.destroy()
+        
         # If the user clicked Export:
         if response == 9:
             
@@ -566,8 +569,21 @@ class Weather(Gtk.Window):
             if response2 == Gtk.ResponseType.OK:
                 export_info.export_weather(data, filename)
         
-        # Close the dialog.
-        info_dlg.destroy()
+        # If the user clicked Add:
+        elif response == 10:
+            
+            # Get the data and pass it to the Add dialog.
+            prefill_data = [
+                int(result["condition"]["temp"]),
+                float(result["wind"]["speed"]),
+                directions.degree_to_direction(int(result["wind"]["direction"])),
+                int(result["atmosphere"]["humidity"]),
+                float(result["atmosphere"]["pressure"]),
+                ["Steady", "Rising", "Falling"][int(result["atmosphere"]["rising"])]
+            ]
+            
+            self.add_new(False, prefill_data)
+            
     
     
     def info_range(self):

@@ -16,7 +16,7 @@ from .. import directions
 
 class AddNewDialog(Gtk.Dialog):
     """Shows the "Add New" dialog."""
-    def __init__(self, parent, profile, user_location, prefill, show_prefill_dlg, units):
+    def __init__(self, parent, profile, user_location, prefill, show_prefill_dlg, units, prefill_data = []):
         """Create the dialog."""
         
         # This window should be modal.
@@ -131,8 +131,18 @@ class AddNewDialog(Gtk.Dialog):
         self.prec_com.connect("changed", self.enable_prec)
         self.wind_com.connect("changed", self.enable_wind)
         
+        # Pre-fill from given values, if there are any.
+        if len(prefill_data) > 0:
+            self.temp_sbtn.set_value(prefill_data[0])
+            self.wind_sbtn.set_value(prefill_data[1])
+            self.wind_com.set_active(["None", "N", "NNE", "NE", "ENE", "E", "ESE", "SE", "SSE", "S", "SSW", "SW", "WSW", "W", "WNW", "NW", "NNW"].index(prefill_data[2]))
+            self.humi_sbtn.set_value(prefill_data[3])
+            self.airp_sbtn.set_value(prefill_data[4])
+            self.airp_com.set_active(["Steady", "Rising", "Falling"].index(prefill_data[5]))
+            station = False
+        
         # Pre-fill the fields, if the user wants that.
-        if prefill and user_location and len(user_location) == 5:
+        elif prefill and user_location and len(user_location) == 5:
             station = self.prefill(user_location, units, profile)
         
         # Show the dialog. The response gets handled by the function
