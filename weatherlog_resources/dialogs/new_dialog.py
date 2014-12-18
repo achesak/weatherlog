@@ -11,7 +11,7 @@ from misc_dialogs import *
 # Import pywapi to pre-fill the fields.
 import pywapi.pywapi as pywapi
 # Import function to convert degrees to a wind direction.
-from .. import directions
+from .. import utility_functions
 
 
 class AddNewDialog(Gtk.Dialog):
@@ -196,7 +196,7 @@ class AddNewDialog(Gtk.Dialog):
         
         # Set the wind fields.
         try:
-            self.wind_com.set_active(["None", "N", "NNE", "NE", "ENE", "E", "ESE", "SE", "SSE", "S", "SSW", "SW", "WSW", "W", "WNW", "NW", "NNW"].index(directions.degree_to_direction(float(data["wind"]["direction"]))))
+            self.wind_com.set_active(["None", "N", "NNE", "NE", "ENE", "E", "ESE", "SE", "SSE", "S", "SSW", "SW", "WSW", "W", "WNW", "NW", "NNW"].index(utility_functions.degree_to_direction(float(data["wind"]["direction"]))))
         except:
             self.wind_com.set_active(0)
         try:

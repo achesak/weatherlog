@@ -101,8 +101,6 @@ import weatherlog_resources.charts as charts
 import weatherlog_resources.command_line as command_line
 # Import the functions for filtering the data.
 import weatherlog_resources.filter_data as filter_data
-# Import the function for getting the wind direction.
-import weatherlog_resources.directions as directions
 # Import the dialog for getting new data.
 from weatherlog_resources.dialogs.new_dialog import AddNewDialog
 # Import the dialog for editing a row of data.
@@ -518,7 +516,7 @@ class Weather(Gtk.Window):
             ["Condition", weather_codes[result["condition"]["code"]]],
             ["Temperature", "%d %s" % (int(result["condition"]["temp"]), units["temp"])],
             ["Wind speed", "%s %s" % (result["wind"]["speed"], units["wind"])],
-            ["Wind direction", directions.degree_to_direction(int(result["wind"]["direction"]))],
+            ["Wind direction", utility_functions.degree_to_direction(int(result["wind"]["direction"]))],
             ["Wind chill", "%d %s" % (int(result["wind"]["chill"]), units["temp"])],
             ["Humidity", "%s%%" % result["atmosphere"]["humidity"]],
             ["Air pressure", "%s %s" % (result["atmosphere"]["pressure"], units["airp"])],
