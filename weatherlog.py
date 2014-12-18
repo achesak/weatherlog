@@ -91,8 +91,6 @@ import weatherlog_resources.io as io
 import weatherlog_resources.export as export
 # Import the function for exporting the info.
 import weatherlog_resources.export_info as export_info
-# Import the function for converting the data.
-import weatherlog_resources.convert as convert
 # Import the functions for getting the info.
 import weatherlog_resources.info as info
 # Import the functions for getting the chart data.
@@ -1875,7 +1873,7 @@ class Weather(Gtk.Window):
                 if response == Gtk.ResponseType.OK:
                     
                     # Convert the data.
-                    new_data = convert.convert(data, units_)
+                    new_data = utility_functions.convert(data, units_)
                     
                     # Update the list.
                     data[:] = []
@@ -1929,7 +1927,7 @@ class Weather(Gtk.Window):
                 if response == Gtk.ResponseType.OK:
                     
                     # Convert the data.
-                    new_data = convert.convert(data, config["units"])
+                    new_data = utility_functions.convert(data, config["units"])
                     
                     # Update the list.
                     data[:] = []
