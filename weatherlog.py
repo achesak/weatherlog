@@ -121,6 +121,8 @@ from weatherlog_resources.dialogs.date_selection_dialog import DateSelectionDial
 from weatherlog_resources.dialogs.options_dialog import OptionsDialog
 # Import the dialog for displaying the charts.
 from weatherlog_resources.dialogs.chart_dialog import GenericChartDialog
+# Import the dialog for displaying the graphs.
+from weatherlog_resources.dialogs.graph_dialog import GenericGraphDialog
 # Import the dialogs for selecting data subsets.
 from weatherlog_resources.dialogs.select_simple_dialog import SelectDataSimpleDialog
 from weatherlog_resources.dialogs.select_advanced_dialog import SelectDataAdvancedDialog
@@ -238,7 +240,7 @@ class Weather(Gtk.Window):
             ("charts", None, "_Charts...", "<Control>c", None, lambda x: self.show_chart_generic(data = data)),
             ("charts_range", None, "Charts i_n Range...", "<Control><Shift>c", None, lambda x: self.chart_range()),
             ("charts_selected", None, "Charts _for Selected Dates...", None, None, lambda x: self.chart_selected()),
-            ("graphs", None, "_Graphs...", "<Control>g", None, None),
+            ("graphs", None, "_Graphs...", "<Control>g", None, lambda x: self.show_graph_generic(data = data)),
             ("graphs_range", None, "Gra_phs in Range...", "<Control><Shift>g", None, None),
             ("graphs_selected", None, "Grap_hs for Selected Dates...", None, None, None),
             ("select_data", None, "Select _Data...", "<Control>d", None, self.select_data_simple),
@@ -888,6 +890,20 @@ class Weather(Gtk.Window):
         
         # Close the dialog.
         chart_dlg.destroy()
+    
+    
+    def show_graph_generic(self, data = data):
+        """Shows graphs of the data."""
+        
+        # If matplotlib isn't installed, don't continue.
+        if not matplotlib_installed:
+            show_alert_dialog(self, "Graphs - %s" % last_profile, "matplotlib is required to use the graphing feaures.")
+            return
+        
+        # Show the graph.
+        graph_dlg = GenericGraphDialog(self, "Graphs - %s" % last_profile, data, last_profile)
+        response = graph_dlg.run()
+        graph_dlg.destroy()
     
     
     def select_data_simple(self, event):

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 
-# This file defines the generic chart dialog.
+# This file defines the chart dialog.
 
 
 # Import GTK for the dialog.
