@@ -161,13 +161,13 @@ data = launch.get_data(main_dir, last_profile)
 weather_codes = launch.codes
 
 
-class Weather(Gtk.Window):
+class WeatherLog(Gtk.Window):
     """Shows the main application."""
     def __init__(self):
         """Create the application."""
         
         # Create the window.
-        Gtk.Window.__init__(self, title = "WeatherLog")
+        Gtk.Window.__init__(self, title = TITLE)
         self.set_default_size(last_width, last_height)
         self.set_icon_from_file("weatherlog_resources/images/icon_small.png")
         
@@ -2119,7 +2119,7 @@ class Weather(Gtk.Window):
 if __name__ == "__main__" and len(sys.argv) == 1:
     
     # Show the window and start the application.
-    win = Weather()
+    win = WeatherLog()
     win.connect("delete-event", win.exit)
     win.show_all()
     Gtk.main()
