@@ -72,6 +72,12 @@ try:
 except ImportError:
     from urllib import urlopen, urlencode
     py_version = 2
+# Try importing matplotlib, just so we know if it's installed.
+try:
+    from matplotlib.figure import Figure
+    matplotlib_installed = True
+except ImportError:
+    matplotlib_installed = False
 
 # Tell Python not to create bytecode files, as they mess with the git repo.
 # This line can be removed be the user, if desired.
@@ -230,8 +236,11 @@ class Weather(Gtk.Window):
             ("info_range", None, "Info in _Range...", "<Control><Shift>i", None, lambda x: self.info_range()),
             ("info_selected", None, "Info for _Selected Dates...", None, None, lambda x: self.info_selected()),
             ("charts", None, "_Charts...", "<Control>c", None, lambda x: self.show_chart_generic(data = data)),
-            ("charts_range", None, "Charts _in Range...", "<Control><Shift>c", None, lambda x: self.chart_range()),
+            ("charts_range", None, "Charts i_n Range...", "<Control><Shift>c", None, lambda x: self.chart_range()),
             ("charts_selected", None, "Charts _for Selected Dates...", None, None, lambda x: self.chart_selected()),
+            ("graphs", None, "_Graphs...", "<Control>g", None, None),
+            ("graphs_range", None, "Gra_phs in Range...", "<Control><Shift>g", None, None),
+            ("graphs_selected", None, "Grap_hs for Selected Dates...", None, None, None),
             ("select_data", None, "Select _Data...", "<Control>d", None, self.select_data_simple),
             ("select_data_advanced", None, "Select Data (_Advanced)...", "<Control><Shift>d", None, self.select_data_advanced)
         ])

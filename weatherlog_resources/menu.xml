@@ -36,6 +36,10 @@
       <menuitem action="charts_range" />
       <menuitem action="charts_selected" />
       <separator />
+      <menuitem action="graphs" />
+      <menuitem action="graphs_range" />
+      <menuitem action="graphs_selected" />
+      <separator />
       <menuitem action="select_data" />
       <menuitem action="select_data_advanced" />
     </menu>
