@@ -96,6 +96,17 @@ def get_main_dir():
         return base + "/.local/share/weatherlog", base + "/.config/weatherlog"
 
 
+def get_ui_info():
+    """Get the application's UI info."""
+    
+    version = "2.1"
+    title = "WeatherLog"
+    menu_file = open("weatherlog_resources/menu.xml", "r")
+    menu_data = menu_file.read()
+    menu_file.close()
+    return version, title, menu_data
+
+
 def check_files_exist(main_dir, conf_dir):
     """Checks to see if the base files exist, and create them if they don't."""
     

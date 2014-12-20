@@ -83,8 +83,6 @@ except ImportError:
 # This line can be removed be the user, if desired.
 sys.dont_write_bytecode = True
 
-# Import the application's UI data.
-from weatherlog_resources.ui import VERSION, TITLE, MENU_DATA
 # Import the functions for setting up the application.
 import weatherlog_resources.launch as launch
 # Import the functions for various tasks.
@@ -141,6 +139,8 @@ import weatherlog_resources.dialogs.pywapi.pywapi as pywapi
 
 
 # Get any required variables and set up the application.
+# Get the application's UI data.
+VERSION, TITLE, MENU_DATA = launch.get_ui_info()
 # Get the data and configuration directories.
 main_dir, conf_dir = launch.get_main_dir()
 # Check if the directory and base files exist, and create them if they don't.
