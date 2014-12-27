@@ -16,25 +16,8 @@ from matplotlib.backends.backend_gtk3agg import FigureCanvasGTK3Agg as FigureCan
 
 class GenericGraphDialog(Gtk.Dialog):
     """Shows the graph dialog."""
-    def __init__(self, parent, title, data, last_profile):
+    def __init__(self, parent, title, data2, last_profile):
         """Create the dialog."""
-        
-        data = [(datetime.datetime.strptime('5/1/2014', "%d/%m/%Y"), 23),
-                (datetime.datetime.strptime('12/1/2014', "%d/%m/%Y"), 12),
-                (datetime.datetime.strptime('5/2/2014', "%d/%m/%Y"), 14),
-                (datetime.datetime.strptime('19/2/2014', "%d/%m/%Y"), 16),
-                (datetime.datetime.strptime('5/4/2014', "%d/%m/%Y"), 13),
-                (datetime.datetime.strptime('5/5/2014', "%d/%m/%Y"), 9),
-                (datetime.datetime.strptime('19/5/2014', "%d/%m/%Y"), 27),
-                (datetime.datetime.strptime('19/6/2014', "%d/%m/%Y"), 15),
-                (datetime.datetime.strptime('5/7/2014', "%d/%m/%Y"), 16),
-                (datetime.datetime.strptime('5/10/2014', "%d/%m/%Y"), 14),
-                (datetime.datetime.strptime('19/10/2014', "%d/%m/%Y"), 11),
-                (datetime.datetime.strptime('19/11/2014', "%d/%m/%Y"), 19)
-                ]
-        
-        x = [date2num(date) for (date, value) in data]
-        y = [value for (date, value) in data]
         
         # This window should be modal.
         Gtk.Dialog.__init__(self, title, parent, Gtk.DialogFlags.MODAL)
@@ -54,13 +37,13 @@ class GenericGraphDialog(Gtk.Dialog):
         f1 = Figure(figsize = (12, 6))
         f1.subplots_adjust(bottom = 0.2)
         a1 = f1.add_subplot(1,1,1)
-        a1.plot(x, y)
+        a1.plot(data2[1], data2[2])
         a1.set_title("Temperature - %s" % last_profile)
         a1.set_xlabel("Date")
         a1.set_ylabel("Temperature")
-        a1.set_xticks(x)
+        a1.set_xticks(data2[1])
         a1.set_xticklabels(
-                [date.strftime("%d/%m/%Y") for (date, value) in data], rotation = "vertical"
+                data2[0], rotation = "vertical"
         )
         canvas1 = FigureCanvas(f1)
         scrolled_win1 = Gtk.ScrolledWindow()
@@ -74,13 +57,13 @@ class GenericGraphDialog(Gtk.Dialog):
         f2 = Figure(figsize = (12, 6))
         f2.subplots_adjust(bottom = 0.2)
         a2 = f2.add_subplot(1,1,1)
-        a2.plot(x, y)
+        a2.plot(data2[1], data2[3])
         a2.set_title("Precipitation - %s" % last_profile)
         a2.set_xlabel("Date")
         a2.set_ylabel("Precipitation")
-        a2.set_xticks(x)
+        a2.set_xticks(data2[1])
         a2.set_xticklabels(
-                [date.strftime("%d/%m/%Y") for (date, value) in data], rotation = "vertical"
+                data2[0], rotation = "vertical"
         )
         canvas2 = FigureCanvas(f2)
         scrolled_win2 = Gtk.ScrolledWindow()
@@ -94,13 +77,13 @@ class GenericGraphDialog(Gtk.Dialog):
         f3 = Figure(figsize = (12, 6))
         f3.subplots_adjust(bottom = 0.2)
         a3 = f3.add_subplot(1,1,1)
-        a3.plot(x, y)
+        a3.plot(data2[1], data2[4])
         a3.set_title("Wind Speed - %s" % last_profile)
         a3.set_xlabel("Date")
         a3.set_ylabel("Wind Speed")
-        a3.set_xticks(x)
+        a3.set_xticks(data2[1])
         a3.set_xticklabels(
-                [date.strftime("%d/%m/%Y") for (date, value) in data], rotation = "vertical"
+                data2[0], rotation = "vertical"
         )
         canvas3 = FigureCanvas(f3)
         scrolled_win3 = Gtk.ScrolledWindow()
@@ -114,13 +97,13 @@ class GenericGraphDialog(Gtk.Dialog):
         f4 = Figure(figsize = (12, 6))
         f4.subplots_adjust(bottom = 0.2)
         a4 = f4.add_subplot(1,1,1)
-        a4.plot(x, y)
+        a4.plot(data2[1], data2[5])
         a4.set_title("Humidity - %s" % last_profile)
         a4.set_xlabel("Date")
         a4.set_ylabel("Humidity")
-        a4.set_xticks(x)
+        a4.set_xticks(data2[1])
         a4.set_xticklabels(
-                [date.strftime("%d/%m/%Y") for (date, value) in data], rotation = "vertical"
+                data2[0], rotation = "vertical"
         )
         canvas4 = FigureCanvas(f4)
         scrolled_win4 = Gtk.ScrolledWindow()
@@ -134,13 +117,13 @@ class GenericGraphDialog(Gtk.Dialog):
         f5 = Figure(figsize = (12, 6))
         f5.subplots_adjust(bottom = 0.2)
         a5 = f5.add_subplot(1,1,1)
-        a5.plot(x, y)
+        a5.plot(data2[1], data2[6])
         a5.set_title("Air Pressure - %s" % last_profile)
         a5.set_xlabel("Date")
         a5.set_ylabel("Air Pressure")
-        a5.set_xticks(x)
+        a5.set_xticks(data2[1])
         a5.set_xticklabels(
-                [date.strftime("%d/%m/%Y") for (date, value) in data], rotation = "vertical"
+                data2[0], rotation = "vertical"
         )
         canvas5 = FigureCanvas(f5)
         scrolled_win5 = Gtk.ScrolledWindow()

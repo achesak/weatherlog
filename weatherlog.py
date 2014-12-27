@@ -99,6 +99,8 @@ import weatherlog_resources.export_info as export_info
 import weatherlog_resources.info as info
 # Import the functions for getting the chart data.
 import weatherlog_resources.charts as charts
+# Import the functions for getting the graph data.
+import weatherlog_resources.graphs as graphs
 # Import the functions for handling command line arguments.
 import weatherlog_resources.command_line as command_line
 # Import the functions for filtering the data.
@@ -900,8 +902,11 @@ class WeatherLog(Gtk.Window):
             show_alert_dialog(self, "Graphs - %s" % last_profile, "matplotlib is required to use the graphing feaures.")
             return
         
+        # Get the data for the graphs.
+        data2 = graphs.get_data(data)
+        
         # Show the graph.
-        graph_dlg = GenericGraphDialog(self, "Graphs - %s" % last_profile, data, last_profile)
+        graph_dlg = GenericGraphDialog(self, "Graphs - %s" % last_profile, data2, last_profile)
         response = graph_dlg.run()
         graph_dlg.destroy()
     
