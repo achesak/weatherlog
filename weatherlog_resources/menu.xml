@@ -75,4 +75,17 @@
     <separator />
     <toolitem action="clear_data" />
   </toolbar>
+  <popup name="context_menu">
+    <menuitem action="add_new" />
+    <menuitem action="edit" />
+    <menuitem action="remove" />
+    <separator />
+    <menuitem action="info" />
+    <menuitem action="charts" />
+    <menuitem action="graphs" />
+    <separator />
+    <menuitem action="switch_profile" />
+    <menuitem action="add_profile" />
+    <menuitem action="remove_profile" />
+  </popup>
 </ui>

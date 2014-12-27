@@ -280,6 +280,7 @@ class WeatherLog(Gtk.Window):
         grid = Gtk.Grid()
         menubar = ui_manager.get_widget("/menubar")
         toolbar = ui_manager.get_widget("/toolbar")
+        self.context_menu = ui_manager.get_widget("/context_menu")
         scrolled_win = Gtk.ScrolledWindow()
         scrolled_win.set_hexpand(True)
         scrolled_win.set_vexpand(True)
@@ -293,8 +294,9 @@ class WeatherLog(Gtk.Window):
         # Set the new title.
         self.update_title()
         
-        # Bind the event for window close.
+        # Bind the events.
         self.connect("delete-event", self.delete_event)
+        self.treeview.connect("button-press-event", self.context_event)
         
         # Change the titles, if the user doesn't want units to be displayed.
         if not config["show_units"]:
@@ -326,6 +328,14 @@ class WeatherLog(Gtk.Window):
             # Show the error message if something happened, but continue.
             # This one is shown if there was an error writing to the file.
             print("Error saving window size file (IOError).")
+    
+    
+    def context_event(self, widget, event):
+        """Opens the context menu."""
+        
+        if event.type == Gdk.EventType.BUTTON_PRESS and event.button == 3:
+            self.context_menu.popup(None, None, None, None, event.button, event.time)
+            return True
     
     
     def add_new(self, event, prefill_data = []):
