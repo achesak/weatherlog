@@ -243,8 +243,8 @@ class WeatherLog(Gtk.Window):
             ("charts_range", None, "Charts i_n Range...", "<Control><Shift>c", None, lambda x: self.chart_range()),
             ("charts_selected", None, "Charts _for Selected Dates...", None, None, lambda x: self.chart_selected()),
             ("graphs", None, "_Graphs...", "<Control>g", None, lambda x: self.show_graph_generic(data = data)),
-            ("graphs_range", None, "Gra_phs in Range...", "<Control><Shift>g", None, None),
-            ("graphs_selected", None, "Grap_hs for Selected Dates...", None, None, None),
+            ("graphs_range", None, "Gra_phs in Range...", "<Control><Shift>g", None, lambda x: self.graph_range()),
+            ("graphs_selected", None, "Grap_hs for Selected Dates...", None, None, lambda x: self.graph_selected()),
             ("select_data", None, "Select _Data...", "<Control>d", None, self.select_data_simple),
             ("select_data_advanced", None, "Select Data (_Advanced)...", "<Control><Shift>d", None, self.select_data_advanced)
         ])
@@ -902,6 +902,116 @@ class WeatherLog(Gtk.Window):
         
         # Close the dialog.
         chart_dlg.destroy()
+    
+    
+    def graph_range(self):
+        """Gets the range for the graph to display."""
+        
+        # If there is no data, tell the user and don't show the info dialog.
+        if len(data) == 0:
+            
+            # Show the dialog.
+            show_no_data_dialog(self, "Graphs - %s" % last_profile)
+            return
+        
+        # Get the first and last entered dates.
+        days, months, years = utility_functions.split_date(data[0][0])
+        daye, monthe, yeare = utility_functions.split_date(data[len(data) - 1][0])
+        
+        # Get the starting date.
+        start_dlg = CalendarDialog(self, "Graphss in Range - %s" % last_profile, "Select the starting date:", days, months, years)
+        response1 = start_dlg.run()
+        year1, month1, day1 = start_dlg.info_cal.get_date()
+        date1 = "%d/%d/%d" % (day1, month1 + 1, year1)
+        start_dlg.destroy()
+        
+        # If the user did not click OK, cancel the action.
+        if response1 != Gtk.ResponseType.OK:
+            return
+            
+        # Check to make sure this date is valid, and cancel the action if not.
+        if date1 not in utility_functions.get_column(data, 0):
+            show_error_dialog(self, "Graphs in Range - %s" % last_profile, "%s is not a valid date." % date1)
+            return
+        
+        # Get the ending date.
+        end_dlg = CalendarDialog(self, "Graphs in Range - %s" % last_profile, "Select the ending date:", daye, monthe, yeare)
+        response2 = end_dlg.run()
+        year2, month2, day2 = end_dlg.info_cal.get_date()
+        date2 = "%d/%d/%d" % (day2, month2 + 1, year2)
+        end_dlg.destroy()
+        
+        # If the user did not click OK, don't continue.
+        if response2 != Gtk.ResponseType.OK:
+            return
+        
+        # Check to make sure this date is valid, and cancel the action if not.
+        if date2 not in utility_functions.get_column(data, 0):
+            show_error_dialog(self, "Graphs in Range - %s" % last_profile, "%s is not a valid date." % date2)
+            return
+        
+        # Convert the dates to ISO notation for comparison.
+        nDate1 = utility_functions.date_to_iso(day1, month1, year1)
+        nDate2 = utility_functions.date_to_iso(day2, month2, year2)
+        
+        # Check to make sure this date is later than the starting date, 
+        # and cancel the action if not.
+        if date1 == date2 or nDate1 > nDate2:
+            show_error_dialog(self, "Graphs in Range - %s" % last_profile, "The ending date must be later than the starting date.")
+            return
+        
+        # Get the indices.
+        date_col = utility_functions.get_column(data, 0)
+        index1 = date_col.index(date1)
+        index2 = date_col.index(date2)
+        
+        # Get the new list.
+        data2 = data[index1:index2 + 1]
+        
+        # Pass the data to the charts dialog.
+        self.show_graph_generic(data = data2)
+    
+    
+    def graph_selected(self):
+        """Gets the selected dates to for the graphs to display."""
+        
+        # If there is no data, tell the user and don't show the info dialog.
+        if len(data) == 0:
+            show_no_data_dialog(self, "Graphs - %s" % last_profile)
+            return
+        
+        # Get the dates.
+        dates = []
+        for i in data:
+            dates.append([i[0]])
+        
+        # Get the selected dates.
+        info_dlg = DateSelectionDialog(self, "Graphs for Selected Dates - %s" % last_profile, dates)
+        response = info_dlg.run()
+        model, treeiter = info_dlg.treeview.get_selection().get_selected_rows()
+        info_dlg.destroy()
+        
+        # If the user did not click OK or nothing was selected, don't continue.
+        if response != Gtk.ResponseType.OK or treeiter == None:
+            return
+        
+        # Get the dates.
+        ndates = []
+        for i in treeiter:
+            ndates.append(model[i][0])
+        
+        # Get the data.
+        ndata = []
+        for i in range(0, len(data)):
+            if data[i][0] in ndates:
+                ndata.append(data[i])
+        
+        # If there is no data, don't continue.
+        if len(ndata) == 0:
+            return
+        
+        # Pass the data to the charts dialog.
+        self.show_graph_generic(data = ndata)
     
     
     def show_graph_generic(self, data = data):
