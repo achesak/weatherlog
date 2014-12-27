@@ -916,7 +916,7 @@ class WeatherLog(Gtk.Window):
         data2 = graphs.get_data(data)
         
         # Show the graph.
-        graph_dlg = GenericGraphDialog(self, "Graphs - %s" % last_profile, data2, last_profile)
+        graph_dlg = GenericGraphDialog(self, "Graphs - %s" % last_profile, data2, last_profile, units)
         response = graph_dlg.run()
         graph_dlg.destroy()
     
