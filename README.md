@@ -12,7 +12,7 @@ patterns and overall info.
 # Using WeatherLog
 
 WeatherLog requires the Python interpreter to run. Development is done using 2.7.x, but it should work with 3.x as well. GTK+ 3 and its Python bindings
-are also required.
+are also required. The graph features also require Matplotlib.
 
 To run WeatherLog, open a terminal in the directory containing the files and type `python weatherlog.py`. On some systems double-clicking on the 
 `weatherlog.py` file will also work.
