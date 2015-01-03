@@ -915,7 +915,7 @@ class WeatherLog(Gtk.Window):
         daye, monthe, yeare = utility_functions.split_date(data[len(data) - 1][0])
         
         # Get the starting date.
-        start_dlg = CalendarDialog(self, "Graphss in Range - %s" % last_profile, "Select the starting date:", days, months, years)
+        start_dlg = CalendarDialog(self, "Graphs in Range - %s" % last_profile, "Select the starting date:", days, months, years)
         response1 = start_dlg.run()
         year1, month1, day1 = start_dlg.info_cal.get_date()
         date1 = "%d/%d/%d" % (day1, month1 + 1, year1)
