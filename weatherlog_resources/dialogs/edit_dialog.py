@@ -7,7 +7,7 @@
 # Import GTK for the dialog.
 from gi.repository import Gtk
 # Import the dialogs.
-from misc_dialogs import *
+from weatherlog_resources.dialogs.misc_dialogs import *
 
 
 class EditDialog(Gtk.Dialog):

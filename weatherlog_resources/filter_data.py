@@ -6,7 +6,7 @@
 
 
 # Import the utility functions.
-import utility_functions
+import weatherlog_resources.utility_functions as utility_functions
 # Import datetime for sorting the data.
 import datetime
 

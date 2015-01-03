@@ -7,9 +7,9 @@
 # Import GTK for the dialog.
 from gi.repository import Gtk
 # Import the dialogs.
-from misc_dialogs import *
+from weatherlog_resources.dialogs.misc_dialogs import *
 # Import pywapi to pre-fill the fields.
-import pywapi.pywapi as pywapi
+import weatherlog_resources.dialogs.pywapi.pywapi as pywapi
 # Import function to convert degrees to a wind direction.
 from .. import utility_functions
 

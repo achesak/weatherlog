@@ -8,9 +8,9 @@
 import datetime
 
 # Import the utility functions.
-import utility_functions
+import weatherlog_resources.utility_functions as utility_functions
 # Import the info functions.
-import info_functions
+import weatherlog_resources.info_functions as info_functions
 # Import date2num for converting dates to numbers.
 from matplotlib.dates import date2num
 

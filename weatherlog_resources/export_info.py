@@ -5,9 +5,9 @@
 
 
 # Import the functions for exporting data.
-import export
+import weatherlog_resources.export as export
 # Import the functions for writing to files.
-import io
+import weatherlog_resources.io as io
 
 
 def export_info(data, filename):

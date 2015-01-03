@@ -10,9 +10,9 @@ import datetime
 from collections import Counter
 
 # Import the utility functions.
-import utility_functions
+import weatherlog_resources.utility_functions as utility_functions
 # Import the info functions.
-import info_functions
+import weatherlog_resources.info_functions as info_functions
 
 
 def general_info(data, units):
