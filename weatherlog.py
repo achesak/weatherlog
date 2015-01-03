@@ -53,8 +53,6 @@ import os
 import os.path
 # Import sys for closing the application.
 import sys
-# Import time for working with dates and times.
-import time
 # Import pickle for loading and saving the data.
 # Try importing cPickle (for most Python 2 implementations), then
 # fall back to pickle (for Python 2 implementations lacking this module
@@ -87,8 +85,6 @@ sys.dont_write_bytecode = True
 import weatherlog_resources.launch as launch
 # Import the functions for various tasks.
 import weatherlog_resources.utility_functions as utility_functions
-# Import the functions for getting and calculating the data.
-import weatherlog_resources.info_functions as info_functions
 # Import the functions for reading and writing profiles.
 import weatherlog_resources.io as io
 # Import the functions for exporting the data.
