@@ -100,7 +100,7 @@ class GenericGraphDialog(Gtk.Dialog):
         a7 = f7.add_subplot(1,1,1)
         a7.bar([0, 1, 2, 3, 4], data[8], width = 0.5)
         a7.set_xlabel("Precipitation Type")
-        a7.set_ylabel("Days")
+        a7.set_ylabel("Number of Days")
         a7.set_title("Precipitation (Days) - %s" % last_profile)
         a7.set_xticks([0.25, 1.25, 2.25, 3.25, 4.25])
         a7.set_xticklabels(["None", "Rain", "Snow", "Hail", "Sleet"])
@@ -170,6 +170,23 @@ class GenericGraphDialog(Gtk.Dialog):
         scrolled_win5.set_vexpand(True)
         scrolled_win5.add(canvas5)
         
+        # Tab 8: Air Pressure change bar graph
+        info_box8 = Gtk.Box()
+        info_box8_lbl = Gtk.Label("Air Pressure (Change)")
+        f8 = Figure(figsize = (12, 6))
+        a8 = f8.add_subplot(1,1,1)
+        a8.bar([0, 1, 2], data[9], width = 0.5)
+        a8.set_xlabel("Air Pressure Change")
+        a8.set_ylabel("Number of Days")
+        a8.set_title("Air Pressure (Change) - %s" % last_profile)
+        a8.set_xticks([0.25, 1.25, 2.25])
+        a8.set_xticklabels(["Steady", "Rising", "Falling"])
+        canvas8 = FigureCanvas(f8)
+        scrolled_win8 = Gtk.ScrolledWindow()
+        scrolled_win8.set_hexpand(True)
+        scrolled_win8.set_vexpand(True)
+        scrolled_win8.add(canvas8)
+        
         # Add the tabs to the notebook.
         notebook.append_page(scrolled_win1, info_box1_lbl)
         notebook.append_page(scrolled_win2, info_box2_lbl)
@@ -178,6 +195,7 @@ class GenericGraphDialog(Gtk.Dialog):
         notebook.append_page(scrolled_win3, info_box3_lbl)
         notebook.append_page(scrolled_win4, info_box4_lbl)
         notebook.append_page(scrolled_win5, info_box5_lbl)
+        notebook.append_page(scrolled_win8, info_box8_lbl)
         info_box.add(notebook)
         
         # Show the dialog. There's no need to get the response.

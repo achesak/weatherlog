@@ -73,6 +73,18 @@ def get_data(data):
     prec_amount = [prec_total_rain, prec_total_snow, prec_total_hail, prec_total_sleet]
     prec_days = [prec_none, prec_rain, prec_snow, prec_hail, prec_sleet]
     
-    data = [date_data, new_dates, temp_data, prec_data, wind_data, humi_data, airp_data, prec_amount, prec_days]
+    airp_steady = 0
+    airp_rising = 0
+    airp_falling = 0
+    for i in airp_data2:
+        if i == "Steady":
+            airp_steady += 1
+        elif i == "Rising":
+            airp_rising += 1
+        elif i == "Falling":
+            airp_falling += 1
+    airp_change = [airp_steady, airp_rising, airp_falling]
+    
+    data = [date_data, new_dates, temp_data, prec_data, wind_data, humi_data, airp_data, prec_amount, prec_days, airp_change]
     
     return data
