@@ -187,6 +187,23 @@ class GenericGraphDialog(Gtk.Dialog):
         scrolled_win8.set_vexpand(True)
         scrolled_win8.add(canvas8)
         
+        # Tab 9: Cloud Cover change bar graph
+        info_box9 = Gtk.Box()
+        info_box9_lbl = Gtk.Label("Cloud Cover")
+        f9 = Figure(figsize = (12, 6))
+        a9 = f9.add_subplot(1,1,1)
+        a9.bar([0, 1, 2, 3, 4], data[10], width = 0.5)
+        a9.set_xlabel("Cloud Cover")
+        a9.set_ylabel("Number of Days")
+        a9.set_title("Cloud Cover - %s" % last_profile)
+        a9.set_xticks([0.25, 1.25, 2.25, 3.25, 4.25])
+        a9.set_xticklabels(["Sunny", "Mostly Sunny", "Partly Cloudy", "Mostly Cloudy", "Cloudy"])
+        canvas9 = FigureCanvas(f9)
+        scrolled_win9 = Gtk.ScrolledWindow()
+        scrolled_win9.set_hexpand(True)
+        scrolled_win9.set_vexpand(True)
+        scrolled_win9.add(canvas9)
+        
         # Add the tabs to the notebook.
         notebook.append_page(scrolled_win1, info_box1_lbl)
         notebook.append_page(scrolled_win2, info_box2_lbl)
@@ -196,6 +213,7 @@ class GenericGraphDialog(Gtk.Dialog):
         notebook.append_page(scrolled_win4, info_box4_lbl)
         notebook.append_page(scrolled_win5, info_box5_lbl)
         notebook.append_page(scrolled_win8, info_box8_lbl)
+        notebook.append_page(scrolled_win9, info_box9_lbl)
         info_box.add(notebook)
         
         # Show the dialog. There's no need to get the response.

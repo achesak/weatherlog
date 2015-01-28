@@ -41,6 +41,7 @@ def get_data(data):
     humi_data = utility_functions.convert_float(utility_functions.get_column(data, 4))
     airp_data1, airp_data2 = utility_functions.split_list(utility_functions.get_column(data, 5))
     airp_data = utility_functions.convert_float(airp_data1)
+    clou_data = utility_functions.get_column(data, 6)
     
     prec_split = utility_functions.split_list2(utility_functions.get_column(data, 2))
     prec_total = 0
@@ -85,6 +86,24 @@ def get_data(data):
             airp_falling += 1
     airp_change = [airp_steady, airp_rising, airp_falling]
     
-    data = [date_data, new_dates, temp_data, prec_data, wind_data, humi_data, airp_data, prec_amount, prec_days, airp_change]
+    clou_sunny = 0
+    clou_msunny = 0
+    clou_pcloudy = 0
+    clou_mcloudy = 0
+    clou_cloudy = 0
+    for i in clou_data:
+        if i == "Sunny":
+            clou_sunny += 1
+        elif i == "Mostly Sunny":
+            clou_msunny += 1
+        elif i == "Partly Cloudy":
+            clou_pcloudy += 1
+        elif i == "Mostly Cloudy":
+            clou_mcloudy += 1
+        elif i == "Cloudy":
+            clou_cloudy += 1
+    clou_days = [clou_sunny, clou_msunny, clou_pcloudy, clou_mcloudy, clou_cloudy]
+    
+    data = [date_data, new_dates, temp_data, prec_data, wind_data, humi_data, airp_data, prec_amount, prec_days, airp_change, clou_days]
     
     return data
