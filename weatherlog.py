@@ -97,8 +97,6 @@ import weatherlog_resources.info as info
 import weatherlog_resources.charts as charts
 # Import the functions for getting the graph data.
 import weatherlog_resources.graphs as graphs
-# Import the functions for handling command line arguments.
-import weatherlog_resources.command_line as command_line
 # Import the functions for filtering the data.
 import weatherlog_resources.filter_data as filter_data
 # Import the dialog for getting new data.
@@ -2236,7 +2234,7 @@ class WeatherLog(Gtk.Window):
             Gtk.main_quit()
 
 
-# Show the window and start the application, but only if there are no exta arguments.
+# Show the window and start the application.
 if __name__ == "__main__" and len(sys.argv) == 1:
     
     # Show the window and start the application.
@@ -2244,50 +2242,3 @@ if __name__ == "__main__" and len(sys.argv) == 1:
     win.connect("delete-event", win.exit)
     win.show_all()
     Gtk.main()
-
-# If there are arguments, run the application from the command line.
-elif __name__ == "__main__" and len(sys.argv) > 1:
-    
-    # Add a row of data:
-    if sys.argv[1] == "add":
-        command_line.add(data, main_dir, last_profile, sys.argv)
-        
-    # Remove a row of data:
-    elif sys.argv[1] == "remove":
-        command_line.remove(data, main_dir, last_profile, sys.argv)
-    
-    # Clear the current profile:
-    elif sys.argv[1] == "clear":
-        command_line.clear(main_dir, last_profile)
-    
-    # Clear all the data:
-    elif sys.argv[1] == "clear_all":
-        shutil.rmtree(main_dir)
-    
-    # Switch profiles:
-    elif sys.argv[1] == "switch_profile":
-        command_line.switch_profile(main_dir, sys.argv[2])
-    
-    # Add a new profile:
-    elif sys.argv[1] == "add_profile":
-        command_line.add_profile(main_dir, sys.argv[2])
-    
-    # Remove an existing profile:
-    elif sys.argv[1] == "remove_profile":
-        command_line.remove_profile(main_dir, last_profile, sys.argv[2])
-    
-    # Show the help:
-    elif sys.argv[1] == "help":
-        webbrowser.open_new("weatherlog_resources/help/help.html")
-    
-    # Set the options:
-    elif sys.argv[1] == "options":
-        command_line.options(py_version, config, main_dir)
-    
-    # Reset the options:
-    elif sys.argv[1] == "reset_options":
-        command_line.reset_options(config, main_dir)
-    
-    # Set the window size:
-    elif sys.argv[1] == "window_size":
-        command_line.window_size(main_dir, sys.argv)
