@@ -337,6 +337,7 @@ class WeatherLog(Gtk.Window):
         
         global data
         
+        
         # Get the data to add.
         new_dlg = AddNewDialog(self, last_profile, config["location"], config["pre-fill"], config["show_pre-fill"], units, prefill_data)
         response = new_dlg.run()
