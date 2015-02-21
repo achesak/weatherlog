@@ -301,9 +301,11 @@ class WeatherLog(Gtk.Window):
         # Change the titles, if the user doesn't want units to be displayed.
         if not config["show_units"]:
             self.temp_col.set_title("Temperature")
+            self.chil_col.set_title("Wind Chill")
             self.prec_col.set_title("Precipitation")
             self.wind_col.set_title("Wind")
             self.humi_col.set_title("Humidity")
+            self.visi_col.set_title("Visibility")
             self.airp_col.set_title("Air Pressure")
         
         # Show the dialog telling the user the dataset couldn't be found, if neccessary:
@@ -1579,9 +1581,11 @@ class WeatherLog(Gtk.Window):
         
         # Update the main window.
         self.temp_col.set_title("Temperature (%s)" % units["temp"])
+        self.chil_col.set_title("Wind Chill (%s)" % units["temp"])
         self.prec_col.set_title("Precipitation (%s)" % units["prec"])
         self.wind_col.set_title("Wind (%s)" % units["wind"])
         self.humi_col.set_title("Humidity (%)")
+        self.visi_col.set_title("Visibility (%s)" % units["visi"])
         self.airp_col.set_title("Air Pressure (%s)" % units["airp"])
         
         # Update the title and save the data.
@@ -2050,15 +2054,19 @@ class WeatherLog(Gtk.Window):
             # Add/remove the units, if desired:
             if not config["show_units"]:
                 self.temp_col.set_title("Temperature")
+                self.chil_col.set_title("Wind Chill")
                 self.prec_col.set_title("Precipitation")
                 self.wind_col.set_title("Wind")
                 self.humi_col.set_title("Humidity")
+                self.visi_col.set_title("Visibility")
                 self.airp_col.set_title("Air Pressure")
             else:
                 self.temp_col.set_title("Temperature (%s)" % units["temp"])
+                self.chil_col.set_title("Wind Chill (%s)" % units["temp"])
                 self.prec_col.set_title("Precipitation (%s)" % units["prec"])
                 self.wind_col.set_title("Wind (%s)" % units["wind"])
                 self.humi_col.set_title("Humidity (%)")
+                self.visi_col.set_title("Visibility (%s)" % units["visi"])
                 self.airp_col.set_title("Air Pressure (%s)" % units["airp"])
         
         # If the user pressed Reset:
@@ -2103,9 +2111,11 @@ class WeatherLog(Gtk.Window):
             
             # Reset the main window.
             self.temp_col.set_title("Temperature (%s)" % units["temp"])
+            self.chil_col.set_title("Wind Chill (%s)" % units["temp"])
             self.prec_col.set_title("Precipitation (%s)" % units["prec"])
             self.wind_col.set_title("Wind (%s)" % units["wind"])
             self.humi_col.set_title("Humidity (%)")
+            self.visi_col.set_title("Visibility (%s)" % units["visi"])
             self.airp_col.set_title("Air Pressure (%s)" % units["airp"])
             
         # Update the title and save the data.
