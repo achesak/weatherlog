@@ -27,7 +27,7 @@ class ProfileSelectionDialog(Gtk.Dialog):
         sel_box.add(sel_grid)
         
         # Create the label.
-        sel_lbl = Gtk.Label("Choose profile:")
+        sel_lbl = Gtk.Label("Choose dataset:")
         sel_lbl.set_alignment(0, 0.5)
         sel_grid.add(sel_lbl)
         
@@ -35,7 +35,7 @@ class ProfileSelectionDialog(Gtk.Dialog):
         self.liststore = Gtk.ListStore(str, str, str)
         self.treeview = Gtk.TreeView(model = self.liststore)
         pro_text = Gtk.CellRendererText()
-        self.pro_col = Gtk.TreeViewColumn("Profile", pro_text, text = 0)
+        self.pro_col = Gtk.TreeViewColumn("Dataset", pro_text, text = 0)
         self.treeview.append_column(self.pro_col)
         cre_text = Gtk.CellRendererText()
         self.cre_text = Gtk.TreeViewColumn("Creation Date", cre_text, text = 1)

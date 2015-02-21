@@ -27,7 +27,7 @@ class ProfileNameDialog(Gtk.Dialog):
         nam_box.add(nam_grid)
         
         # Create the label and entry.
-        nam_lbl = Gtk.Label("Enter profile name: ")
+        nam_lbl = Gtk.Label("Enter dataset name: ")
         nam_lbl.set_alignment(0, 0.5)
         nam_grid.add(nam_lbl)
         self.nam_ent = Gtk.Entry()

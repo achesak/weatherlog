@@ -116,14 +116,14 @@ def check_files_exist(main_dir, conf_dir):
         # Create the directory.
         os.makedirs(main_dir)
         
-        # Create the Main Profile directory and data file.
-        os.makedirs("%s/profiles/Main Profile" % main_dir)
-        last_prof_data = open("%s/profiles/Main Profile/weather" % main_dir, "w")
+        # Create the Main Dataset directory and data file.
+        os.makedirs("%s/profiles/Main Dataset" % main_dir)
+        last_prof_data = open("%s/profiles/Main Dataset/weather" % main_dir, "w")
         pickle.dump([], last_prof_data)
         last_prof_data.close()
         
         # Create the metadata file.
-        create_metadata(main_dir, "Main Profile")
+        create_metadata(main_dir, "Main Dataset")
     
     # Check to see if the data directory exists, and create it if it doesn't.
     if not os.path.exists(conf_dir) or not os.path.isdir(conf_dir):
@@ -133,7 +133,7 @@ def check_files_exist(main_dir, conf_dir):
     
         # Create the last profile file.
         last_prof = open("%s/lastprofile" % conf_dir, "w")
-        last_prof.write("Main Profile")
+        last_prof.write("Main Dataset")
         last_prof.close()
 
 
@@ -169,27 +169,27 @@ def get_last_profile(main_dir, conf_dir):
     except IOError:
         # Show the error message, and close the application.
         # This one shows if there was a problem reading the file.
-        print("Error reading profile file (IOError).")
+        print("Error reading dataset file (IOError).")
         sys.exit()
     
     # If the profile doesn't exist, switch or make one that does:
     if not profile_exists:
         
         # If the default profile exists, switch to that.
-        if "Main Profile" in profiles_list:
-            last_profile = "Main Profile"
+        if "Main Dataset" in profiles_list:
+            last_profile = "Main Dataset"
         
         # Otherwise, create the profile:
         else:
             
-            # Create the Main Profile directory and data file.
-            os.makedirs("%s/profiles/Main Profile" % main_dir)
-            last_prof_data = open("%s/profiles/Main Profile/weather" % main_dir, "w")
+            # Create the Main Dataset directory and data file.
+            os.makedirs("%s/profiles/Main Dataset" % main_dir)
+            last_prof_data = open("%s/profiles/Main Dataset/weather" % main_dir, "w")
             pickle.dump([], last_prof_data)
             last_prof_data.close()
             
             # Set the profile name.
-            last_profile = "Main Profile"
+            last_profile = "Main Dataset"
     
     return last_profile, original_profile, profile_exists
 

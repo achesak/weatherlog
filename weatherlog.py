@@ -222,7 +222,7 @@ class WeatherLog(Gtk.Window):
             ("file_menu", None, "_File"),
             ("import", Gtk.STOCK_OPEN, "_Import...", None, "Import data from a file", self.import_file),
             ("import_merge", None, "Imp_ort and Merge...", "<Control><Shift>o", None, self.import_merge),
-            ("import_profile", None, "Import as New _Profile...", None, None, self.import_new_profile),
+            ("import_profile", None, "Import as New _Dataset...", None, None, self.import_new_profile),
             ("export", Gtk.STOCK_SAVE, "_Export...", None, "Export data to a file", self.export_file)
         ])
         action_weather_export_group = Gtk.Action("export_menu", "E_xport to", None, None)
@@ -249,14 +249,14 @@ class WeatherLog(Gtk.Window):
             ("select_data_advanced", None, "Select Data (_Advanced)...", "<Control><Shift>d", None, self.select_data_advanced)
         ])
         action_group.add_actions([
-            ("profiles_menu", None, "_Profiles"),
-            ("switch_profile", None, "_Switch Profile...", "<Control><Shift>s", None, self.switch_profile),
-            ("add_profile", None, "_Add Profile...", "<Control><Shift>n", None, self.add_profile),
-            ("remove_profile", None, "_Remove Profile...", None, None, self.remove_profile),
-            ("rename_profile", None, "Re_name Profile...", None, None, self.rename_profile),
-            ("merge_profiles", None, "_Merge Profiles...", None, None, self.merge_profiles),
-            ("copy_new", None, "Copy _Data to New Profile...", None, None, self.data_profile_new),
-            ("copy_existing", None, "Copy Data to _Existing Profile...", None, None, self.data_profile_existing)
+            ("profiles_menu", None, "_Datasets"),
+            ("switch_profile", None, "_Switch Dataset...", "<Control><Shift>s", None, self.switch_profile),
+            ("add_profile", None, "_Add Dataset...", "<Control><Shift>n", None, self.add_profile),
+            ("remove_profile", None, "_Remove Dataset...", None, None, self.remove_profile),
+            ("rename_profile", None, "Re_name Dataset...", None, None, self.rename_profile),
+            ("merge_profiles", None, "_Merge Dataset...", None, None, self.merge_profiles),
+            ("copy_new", None, "Copy _Data to New Dataset...", None, None, self.data_profile_new),
+            ("copy_existing", None, "Copy Data to _Existing Dataset...", None, None, self.data_profile_existing)
         ])
         action_group.add_actions([
             ("options_menu", None, "_Options"),
@@ -306,9 +306,9 @@ class WeatherLog(Gtk.Window):
             self.humi_col.set_title("Humidity")
             self.airp_col.set_title("Air Pressure")
         
-        # Show the dialog telling the user the profile couldn't be found, if neccessary:
+        # Show the dialog telling the user the dataset couldn't be found, if neccessary:
         if not profile_exists:
-            show_alert_dialog(self, "WeatherLog", "The profile \"%s\" could not be found." % original_profile)
+            show_alert_dialog(self, "WeatherLog", "The dataset \"%s\" could not be found." % original_profile)
             self.save(show_dialog = False)
     
     
@@ -1364,7 +1364,7 @@ class WeatherLog(Gtk.Window):
         global data
         
         # Get the new profile name.
-        new_dlg = ProfileNameDialog(self, "Import as New Profile")
+        new_dlg = ProfileNameDialog(self, "Import as New Dataset")
         response = new_dlg.run()
         name = new_dlg.nam_ent.get_text().lstrip().rstrip()
         new_dlg.destroy()
@@ -1377,11 +1377,11 @@ class WeatherLog(Gtk.Window):
         # show a dialog and cancel the action.
         validate = utility_functions.validate_profile(main_dir, name)
         if validate != "":
-            show_error_dialog(self, "Import as New Profile", validate)
+            show_error_dialog(self, "Import as New Dataset", validate)
             return
 
         # Get the filename.
-        response, filename = show_file_dialog(self, "Import as New Profile - %s" % name)
+        response, filename = show_file_dialog(self, "Import as New Dataset - %s" % name)
         
         # If the user did not press OK, don't continue.
         if response != Gtk.ResponseType.OK:
@@ -1392,12 +1392,12 @@ class WeatherLog(Gtk.Window):
         
         # If the imported data is empty, don't continue.
         if len(ndata) == 0:
-            show_alert_dialog(self, "Import as New Profile - %s" % name, "There is no data to import.")
+            show_alert_dialog(self, "Import as New Dataset - %s" % name, "There is no data to import.")
             return
         
         # If the imported data is invalid, don't continue.
         if not utility_functions.validate_data(ndata):
-            show_error_dialog(self, "Import as New Profile - %s" % name, "Data is not valid.")
+            show_error_dialog(self, "Import as New Dataset - %s" % name, "Data is not valid.")
             return
         
         # Ask the user what dates they want to import.
@@ -1551,7 +1551,7 @@ class WeatherLog(Gtk.Window):
         # Clear the old data and reset the profile name.
         data[:] = []
         self.liststore.clear()
-        last_profile = "Main Profile"
+        last_profile = "Main Dataset"
         
         # Restore all files to their default states.
         shutil.rmtree(main_dir)
@@ -1598,11 +1598,11 @@ class WeatherLog(Gtk.Window):
         
         # If there are no other profiles, cancel the action.
         if len(profiles) == 0:
-            show_alert_dialog(self, "Switch Profile", "There are no other profiles.")
+            show_alert_dialog(self, "Switch Dataset", "There are no other datasets.")
             return
         
         # Get the profile to switch to.
-        swi_dlg = ProfileSelectionDialog(self, "Switch Profile", profiles)
+        swi_dlg = ProfileSelectionDialog(self, "Switch Dataset", profiles)
         response = swi_dlg.run()
         model, treeiter = swi_dlg.treeview.get_selection().get_selected()
         swi_dlg.destroy()
@@ -1634,7 +1634,7 @@ class WeatherLog(Gtk.Window):
         global data
         
         # Get the name for the new profile.
-        new_dlg = ProfileNameDialog(self, "Add Profile")
+        new_dlg = ProfileNameDialog(self, "Add Dataset")
         response = new_dlg.run()
         name = new_dlg.nam_ent.get_text().lstrip().rstrip()
         new_dlg.destroy()
@@ -1646,12 +1646,12 @@ class WeatherLog(Gtk.Window):
         # Validate the name. If the name isn't valid, don't continue.
         validate = utility_functions.validate_profile(main_dir, name)
         if validate.endswith("\".\")."):
-            show_error_dialog(self, "Add Profile", validate)
+            show_error_dialog(self, "Add Dataset", validate)
             return
         
         # If the name is already in use, ask the user is they want to delete the old profile.
         elif validate.endswith("already in use."):
-            del_old = show_question_dialog(self, "Add Profile", "%s\n\nWould you like to delete the existing profile?" % validate)
+            del_old = show_question_dialog(self, "Add Dataset", "%s\n\nWould you like to delete the existing dataset?" % validate)
             if del_old != Gtk.ResponseType.OK:
                 return
             
@@ -1679,11 +1679,11 @@ class WeatherLog(Gtk.Window):
         
         # If there are no other profiles, cancel the action.
         if len(profiles) == 0:
-            show_alert_dialog(self, "Remove Profile", "There are no other profiles.")
+            show_alert_dialog(self, "Remove Dataset", "There are no other datasets.")
             return
         
         # Get the profiles to remove.
-        rem_dlg = ProfileSelectionDialog(self, "Remove Profile", profiles, select_mode = "multiple")
+        rem_dlg = ProfileSelectionDialog(self, "Remove Dataset", profiles, select_mode = "multiple")
         response = rem_dlg.run()
         model, treeiter = rem_dlg.treeview.get_selection().get_selected_rows()
         rem_dlg.destroy()
@@ -1699,7 +1699,7 @@ class WeatherLog(Gtk.Window):
         
         # Only show the confirmation dialog if the user wants that.
         if config["confirm_del"]:
-            response = show_question_dialog(self, "Remove Profile", "Are you sure you want to remove the profile%s?\n\nThis action cannot be undone." % ("" if len(profiles) == 1 else "s"))
+            response = show_question_dialog(self, "Remove Dataset", "Are you sure you want to remove the dataset%s?\n\nThis action cannot be undone." % ("" if len(profiles) == 1 else "s"))
             if response != Gtk.ResponseType.OK:
                 return
         
@@ -1715,7 +1715,7 @@ class WeatherLog(Gtk.Window):
         global data
         
         # Get the new profile name.
-        ren_dlg = ProfileNameDialog(self, "Rename Profile")
+        ren_dlg = ProfileNameDialog(self, "Rename Dataset")
         response = ren_dlg.run()
         name = ren_dlg.nam_ent.get_text().lstrip().rstrip()
         ren_dlg.destroy()
@@ -1727,12 +1727,12 @@ class WeatherLog(Gtk.Window):
         # Validate the name. If the name isn't valid, don't continue.
         validate = utility_functions.validate_profile(main_dir, name)
         if validate.endswith("\".\")."):
-            show_error_dialog(self, "Rename Profile", validate)
+            show_error_dialog(self, "Rename Dataset", validate)
             return
         
         # If the name is already in use, ask the user is they want to delete the old profile.
         elif validate.endswith("already in use."):
-            del_old = show_question_dialog(self, "Rename Profile", "%s\n\nWould you like to delete the existing profile?" % validate)
+            del_old = show_question_dialog(self, "Rename Dataset", "%s\n\nWould you like to delete the existing dataset?" % validate)
             if del_old != Gtk.ResponseType.OK:
                 return
             
@@ -1771,11 +1771,11 @@ class WeatherLog(Gtk.Window):
         
         # If there are no other profiles, tell the user and cancel the action.
         if len(profiles) == 0:
-            show_alert_dialog(self, "Merge Profiles", "There are no other profiles.")
+            show_alert_dialog(self, "Merge Datasets", "There are no other datasets.")
             return
         
         # Get the profile to merge.
-        mer_dlg = ProfileSelectionDialog(self, "Merge Profiles", profiles)
+        mer_dlg = ProfileSelectionDialog(self, "Merge Datasets", profiles)
         response = mer_dlg.run()
         model, treeiter = mer_dlg.treeview.get_selection().get_selected()
         mer_dlg.destroy()
@@ -1819,7 +1819,7 @@ class WeatherLog(Gtk.Window):
         
         # If there is no data, tell the user and don't continue.
         if len(data) == 0:
-            show_no_data_dialog(self, "Copy Data to New Profile")
+            show_no_data_dialog(self, "Copy Data to New Dataset")
             return
         
         # Get the dates.
@@ -1830,7 +1830,7 @@ class WeatherLog(Gtk.Window):
             dates2.append(i[0])
         
         # Get the profile name.
-        new_dlg = ProfileNameDialog(self, "Copy Data to New Profile")
+        new_dlg = ProfileNameDialog(self, "Copy Data to New Dataset")
         response = new_dlg.run()
         name = new_dlg.nam_ent.get_text().lstrip().rstrip()
         new_dlg.destroy()
@@ -1842,12 +1842,12 @@ class WeatherLog(Gtk.Window):
         # Validate the name. If the name isn't valid, don't continue.
         validate = utility_functions.validate_profile(main_dir, name)
         if validate != "":
-            show_error_dialog(self, "Copy Data to New Profile", validate)
+            show_error_dialog(self, "Copy Data to New Dataset", validate)
             return
             
         # Get the dates to move or copy.
         buttons = [["Cancel", Gtk.ResponseType.CANCEL], ["Move Data", 34], ["Copy Data", 35]]
-        date_dlg = DateSelectionDialog(self, "Copy Data to New Profile", dates, buttons)
+        date_dlg = DateSelectionDialog(self, "Copy Data to New Dataset", dates, buttons)
         response = date_dlg.run()
         model, treeiter = date_dlg.treeview.get_selection().get_selected_rows()
         date_dlg.destroy()
@@ -1898,7 +1898,7 @@ class WeatherLog(Gtk.Window):
         
         # If there is no data, tell the user and don't continue.
         if len(data) == 0:
-            show_no_data_dialog(self, "Copy Data to Existing Profile")
+            show_no_data_dialog(self, "Copy Data to Existing Dataset")
             return
         
         # Get the dates.
@@ -1913,11 +1913,11 @@ class WeatherLog(Gtk.Window):
         
         # If there are no other profiles, don't continue.
         if len(profiles) == 0:
-            show_alert_dialog(self, "Copy Data to Existing Profile", "There are no other profiles.")
+            show_alert_dialog(self, "Copy Data to Existing Dataset", "There are no other datasets.")
             return
         
         # Get the profile.
-        exi_dlg = ProfileSelectionDialog(self, "Copy Data to Existing Profile", profiles)
+        exi_dlg = ProfileSelectionDialog(self, "Copy Data to Existing Dataset", profiles)
         response = exi_dlg.run()
         model, treeiter = exi_dlg.treeview.get_selection().get_selected()
         exi_dlg.destroy()
@@ -1931,7 +1931,7 @@ class WeatherLog(Gtk.Window):
         
         # Get the dates to move or copy.
         buttons = [["Cancel", Gtk.ResponseType.CANCEL], ["Move Data", 34], ["Copy Data", 35]]
-        date_dlg = DateSelectionDialog(self, "Copy Data to Existing Profile", dates, buttons)
+        date_dlg = DateSelectionDialog(self, "Copy Data to Existing Dataset", dates, buttons)
         response = date_dlg.run()
         model, treeiter = date_dlg.treeview.get_selection().get_selected_rows()
         date_dlg.destroy()
@@ -2200,7 +2200,7 @@ class WeatherLog(Gtk.Window):
         about_dlg.set_logo(pixbuf)
         about_dlg.set_version(VERSION)
         about_dlg.set_comments("WeatherLog is an application for keeping track of the weather\nand getting information about past trends.")
-        about_dlg.set_copyright("Copyright (c) 2013-2014 Adam Chesak")
+        about_dlg.set_copyright("Copyright (c) 2013-2015 Adam Chesak")
         about_dlg.set_authors(["Adam Chesak <achesak@yahoo.com>"])
         about_dlg.set_license(license_text)
         about_dlg.set_website("http://poultryandprogramming.wordpress.com/")
