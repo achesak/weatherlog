@@ -227,11 +227,13 @@ class AddNewDialog(Gtk.Dialog):
         # Pre-fill from given values, if there are any.
         if len(prefill_data) > 0:
             self.temp_sbtn.set_value(prefill_data[0])
-            self.wind_sbtn.set_value(prefill_data[1])
-            self.wind_com.set_active(["None", "N", "NNE", "NE", "ENE", "E", "ESE", "SE", "SSE", "S", "SSW", "SW", "WSW", "W", "WNW", "NW", "NNW"].index(prefill_data[2]))
-            self.humi_sbtn.set_value(prefill_data[3])
-            self.airp_sbtn.set_value(prefill_data[4])
-            self.airp_com.set_active(["Steady", "Rising", "Falling"].index(prefill_data[5]))
+            self.chil_sbtn.set_value(prefill_data[1])
+            self.wind_sbtn.set_value(prefill_data[2])
+            self.wind_com.set_active(["None", "N", "NNE", "NE", "ENE", "E", "ESE", "SE", "SSE", "S", "SSW", "SW", "WSW", "W", "WNW", "NW", "NNW"].index(prefill_data[3]))
+            self.humi_sbtn.set_value(prefill_data[4])
+            self.airp_sbtn.set_value(prefill_data[5])
+            self.airp_com.set_active(["Steady", "Rising", "Falling"].index(prefill_data[6]))
+            self.visi_sbtn.set_value(prefill_data[7])
             station = False
         
         # Pre-fill the fields, if the user wants that.
@@ -263,6 +265,9 @@ class AddNewDialog(Gtk.Dialog):
         # Set the temperature field.
         self.temp_sbtn.set_value(float(data["condition"]["temp"]))
         
+        # Set the wind chill field.
+        self.chil_sbtn.set_value(float(data["wind"]["chill"]))
+        
         # Set the wind fields.
         try:
             self.wind_com.set_active(["None", "N", "NNE", "NE", "ENE", "E", "ESE", "SE", "SSE", "S", "SSW", "SW", "WSW", "W", "WNW", "NW", "NNW"].index(utility_functions.degree_to_direction(float(data["wind"]["direction"]))))
@@ -282,6 +287,9 @@ class AddNewDialog(Gtk.Dialog):
             new_pressure = float(data["atmosphere"]["pressure"]) * 33.86389
             self.airp_sbtn.set_value(new_pressure)
         self.airp_com.set_active(int(data["atmosphere"]["rising"]))
+        
+        # Set the visibility field.
+        self.visi_sbtn.set_value(float(data["atmosphere"]["visibility"]))
         
         # Return the location.
         return "%s, %s" % (data["location"]["city"], data["location"]["country"])
