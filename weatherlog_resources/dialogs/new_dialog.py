@@ -36,9 +36,9 @@ class AddNewDialog(Gtk.Dialog):
         new_grid1 = Gtk.Grid()
         new_grid2 = Gtk.Grid()
         new_grid3 = Gtk.Grid()
-        new_grid1_lbl = Gtk.Label("Section 1")
-        new_grid2_lbl = Gtk.Label("Section 2")
-        new_grid3_lbl = Gtk.Label("Section 3")
+        new_grid1_lbl = Gtk.Label("Date")
+        new_grid2_lbl = Gtk.Label("Data 1")
+        new_grid3_lbl = Gtk.Label("Data 2")
         
         # Create the Date label and calendar.
         date_lbl = Gtk.Label("Date: ")
