@@ -19,6 +19,11 @@ class AddNewDialog(Gtk.Dialog):
     def __init__(self, parent, profile, user_location, prefill, show_prefill_dlg, units, prefill_data = []):
         """Create the dialog."""
         
+        # Determine the default units.
+        unit = 0
+        if units["prec"] == "in":
+            unit = 1
+        
         # This window should be modal.
         Gtk.Dialog.__init__(self, "Add New - %s" % profile, parent, Gtk.DialogFlags.MODAL)
         self.set_resizable(False)
@@ -62,7 +67,7 @@ class AddNewDialog(Gtk.Dialog):
         self.temp_unit = Gtk.ComboBoxText()
         for i in ["°C", "°F"]:
             self.temp_unit.append_text(i)
-        self.temp_unit.set_active(0)
+        self.temp_unit.set_active(unit)
         new_grid2.attach_next_to(self.temp_unit, self.temp_sbtn, Gtk.PositionType.RIGHT, 1, 1)
         
         # Wind Chill entry
@@ -80,7 +85,7 @@ class AddNewDialog(Gtk.Dialog):
         self.chil_unit = Gtk.ComboBoxText()
         for i in ["°C", "°F"]:
             self.chil_unit.append_text(i)
-        self.chil_unit.set_active(0)
+        self.chil_unit.set_active(unit)
         new_grid2.attach_next_to(self.chil_unit, self.chil_sbtn, Gtk.PositionType.RIGHT, 1, 1)
         
         # Precipitation entry
@@ -96,7 +101,7 @@ class AddNewDialog(Gtk.Dialog):
         self.prec_unit = Gtk.ComboBoxText()
         for i in ["cm", "in"]:
             self.prec_unit.append_text(i)
-        self.prec_unit.set_active(0)
+        self.prec_unit.set_active(unit)
         new_grid2.attach_next_to(self.prec_unit, self.prec_sbtn, Gtk.PositionType.RIGHT, 1, 1)
         
         # Precipitation Type entry
@@ -122,7 +127,7 @@ class AddNewDialog(Gtk.Dialog):
         self.wind_unit = Gtk.ComboBoxText()
         for i in ["kph", "mph"]:
             self.wind_unit.append_text(i)
-        self.wind_unit.set_active(0)
+        self.wind_unit.set_active(unit)
         new_grid2.attach_next_to(self.wind_unit, self.wind_sbtn, Gtk.PositionType.RIGHT, 1, 1)
         
         # Wind Direction entry
@@ -157,7 +162,7 @@ class AddNewDialog(Gtk.Dialog):
         self.airp_unit = Gtk.ComboBoxText()
         for i in ["hPa", "mbar"]:
             self.airp_unit.append_text(i)
-        self.airp_unit.set_active(0)
+        self.airp_unit.set_active(unit)
         new_grid3.attach_next_to(self.airp_unit, self.airp_sbtn, Gtk.PositionType.RIGHT, 1, 1)
         
         # Air Pressure Change entry
@@ -203,7 +208,7 @@ class AddNewDialog(Gtk.Dialog):
         self.visi_unit = Gtk.ComboBoxText()
         for i in ["km", "mi"]:
             self.visi_unit.append_text(i)
-        self.visi_unit.set_active(0)
+        self.visi_unit.set_active(unit)
         new_grid3.attach_next_to(self.visi_unit, self.visi_sbtn, Gtk.PositionType.RIGHT, 1, 1)
         
         # Notes entry
@@ -282,7 +287,7 @@ class AddNewDialog(Gtk.Dialog):
         
         # If there was an error, tell the user and cancel the action.
         if "error" in data:
-            show_error_dialog(self, "Add New - %s" % profile, "There was an error getting the data from Yahoo! Weather.")
+            show_error_dialog(self, "Add New - %s" % profile, "There was an error getting the data from Yahoo! Weather.\n\nDebug: %s" % data["error"])
             return False
         
         # Set the temperature field.

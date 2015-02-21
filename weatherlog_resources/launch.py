@@ -258,7 +258,8 @@ def get_units(config):
         units = {"temp": "°C",
                  "prec": "cm",
                  "wind": "kph",
-                 "airp": "hPa"}
+                 "airp": "hPa",
+                 "visi": "km"}
     
     # Imperial:
     elif config["units"] == "imperial":
@@ -270,7 +271,8 @@ def get_units(config):
         units = {"temp": "°F",
                  "prec": "in",
                  "wind": "mph",
-                 "airp": "mbar"}
+                 "airp": "mbar",
+                 "visi": "mi"}
     
     return units
 
