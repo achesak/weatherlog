@@ -168,7 +168,7 @@ class WeatherLog(Gtk.Window):
         self.set_icon_from_file("weatherlog_resources/images/icon_small.png")
         
         # Create the main UI.
-        self.liststore = Gtk.ListStore(str, str, str, str, str, str, str, str)
+        self.liststore = Gtk.ListStore(str, str, str, str, str, str, str, str, str, str)
         self.treeview = Gtk.TreeView(model = self.liststore)
         date_text = Gtk.CellRendererText()
         self.date_col = Gtk.TreeViewColumn("Date", date_text, text = 0)
@@ -176,23 +176,29 @@ class WeatherLog(Gtk.Window):
         temp_text = Gtk.CellRendererText()
         self.temp_col = Gtk.TreeViewColumn("Temperature (%s)" % units["temp"], temp_text, text = 1)
         self.treeview.append_column(self.temp_col)
+        chil_text = Gtk.CellRendererText()
+        self.chil_col = Gtk.TreeViewColumn("Wind Chill (%s)" % units["temp"], chil_text, text = 2)
+        self.treeview.append_column(self.chil_col)
         prec_text = Gtk.CellRendererText()
-        self.prec_col = Gtk.TreeViewColumn("Precipitation (%s)" % units["prec"], prec_text, text = 2)
+        self.prec_col = Gtk.TreeViewColumn("Precipitation (%s)" % units["prec"], prec_text, text = 3)
         self.treeview.append_column(self.prec_col)
         wind_text = Gtk.CellRendererText()
-        self.wind_col = Gtk.TreeViewColumn("Wind (%s)" % units["wind"], wind_text, text = 3)
+        self.wind_col = Gtk.TreeViewColumn("Wind (%s)" % units["wind"], wind_text, text = 4)
         self.treeview.append_column(self.wind_col)
         humi_text = Gtk.CellRendererText()
-        self.humi_col = Gtk.TreeViewColumn("Humidity (%)", humi_text, text = 4)
+        self.humi_col = Gtk.TreeViewColumn("Humidity (%)", humi_text, text = 5)
         self.treeview.append_column(self.humi_col)
         airp_text = Gtk.CellRendererText()
-        self.airp_col = Gtk.TreeViewColumn("Air Pressure (%s)" % units["airp"], airp_text, text = 5)
+        self.airp_col = Gtk.TreeViewColumn("Air Pressure (%s)" % units["airp"], airp_text, text = 6)
         self.treeview.append_column(self.airp_col)
+        visi_text = Gtk.CellRendererText()
+        self.visi_col = Gtk.TreeViewColumn("Visibility (%s)" % units["visi"], visi_text, text = 7)
+        self.treeview.append_column(self.visi_col)
         clou_text = Gtk.CellRendererText()
-        self.clou_col = Gtk.TreeViewColumn("Cloud Cover", clou_text, text = 6)
+        self.clou_col = Gtk.TreeViewColumn("Cloud Cover", clou_text, text = 8)
         self.treeview.append_column(self.clou_col)
         note_text = Gtk.CellRendererText()
-        self.note_col = Gtk.TreeViewColumn("Notes", note_text, text = 7)
+        self.note_col = Gtk.TreeViewColumn("Notes", note_text, text = 9)
         self.treeview.append_column(self.note_col)
         
         # Add the data.
@@ -344,6 +350,7 @@ class WeatherLog(Gtk.Window):
         year, month, day = new_dlg.date_cal.get_date()
         date = "%d/%d/%d" % (day, month + 1, year)
         temp = new_dlg.temp_sbtn.get_value()
+        chil = new_dlg.chil_sbtn.get_value()
         prec = new_dlg.prec_sbtn.get_value()
         prec_type = new_dlg.prec_com.get_active_text()
         wind = new_dlg.wind_sbtn.get_value()
@@ -352,6 +359,8 @@ class WeatherLog(Gtk.Window):
         airp = new_dlg.airp_sbtn.get_value()
         airp_read = new_dlg.airp_com.get_active_text()
         clou = new_dlg.clou_com.get_active_text()
+        ctyp = new_dlg.clou_com2.get_active_text()
+        visi = new_dlg.visi_sbtn.get_value()
         note = new_dlg.note_ent.get_text().strip()
         new_dlg.destroy()
         
@@ -371,7 +380,16 @@ class WeatherLog(Gtk.Window):
             
         else:
             # Format the data and add it to the list.
-            new_data = [date, ("%.2f" % temp), "%s%s" % ((("%.2f" % prec) + " " if prec_type != "None" else ""), prec_type), "%s%s" % ((("%.2f" % wind) + " " if wind_dir != "None" else ""), wind_dir), ("%.2f" % humi), ("%.2f %s" % (airp, airp_read)), clou, note]
+            new_data = [date,
+                        ("%.2f" % temp),
+                        ("%.2f" % chil),
+                        "%s%s" % ((("%.2f" % prec) + " " if prec_type != "None" else ""), prec_type),
+                        "%s%s" % ((("%.2f" % wind) + " " if wind_dir != "None" else ""), wind_dir),
+                        ("%.2f" % humi),
+                        ("%.2f %s" % (airp, airp_read)),
+                        ("%.2f" % visi),
+                        "%s (%s)" % (clou, ctyp),
+                        note]
             data.append(new_data)
             
             # Sort the list by date.

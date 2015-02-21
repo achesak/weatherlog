@@ -96,7 +96,6 @@ class AddNewDialog(Gtk.Dialog):
         self.prec_sbtn = Gtk.SpinButton(digits = 2, adjustment = prec_adj)
         self.prec_sbtn.set_numeric(False)
         self.prec_sbtn.set_value(0)
-        self.prec_sbtn.set_sensitive(False)
         new_grid2.attach_next_to(self.prec_sbtn, prec_lbl, Gtk.PositionType.RIGHT, 1, 1)
         self.prec_unit = Gtk.ComboBoxText()
         for i in ["cm", "in"]:
@@ -122,7 +121,6 @@ class AddNewDialog(Gtk.Dialog):
         self.wind_sbtn = Gtk.SpinButton(digits = 2, adjustment = wind_adj)
         self.wind_sbtn.set_numeric(False)
         self.wind_sbtn.set_value(0)
-        self.wind_sbtn.set_sensitive(False)
         new_grid2.attach_next_to(self.wind_sbtn, wind_lbl, Gtk.PositionType.RIGHT, 1, 1)
         self.wind_unit = Gtk.ComboBoxText()
         for i in ["kph", "mph"]:
@@ -226,10 +224,6 @@ class AddNewDialog(Gtk.Dialog):
         notebook.append_page(new_grid2, new_grid2_lbl)
         notebook.append_page(new_grid3, new_grid3_lbl)
         
-        # Bind the events for enabling the comboboxes.
-        self.prec_com.connect("changed", self.enable_prec)
-        self.wind_com.connect("changed", self.enable_wind)
-        
         # Pre-fill from given values, if there are any.
         if len(prefill_data) > 0:
             self.temp_sbtn.set_value(prefill_data[0])
@@ -253,30 +247,6 @@ class AddNewDialog(Gtk.Dialog):
             
             # Show the dialog.
             show_alert_dialog(self, "Add New - %s" % profile, "Temperature, wind, humidity, and air pressure have been pre-filled using data from Yahoo! Weather.\n\nLocation is set to %s, at %s." % (user_location, station))
-    
-    
-    def enable_prec(self, widget):
-        """Enable or disable the precipitation spinbutton."""
-        
-        # If the value is None, disable the spinbutton.
-        if widget.get_active_text() == "None":
-            self.prec_sbtn.set_sensitive(False)
-        
-		# Otherwise, enable the spinbutton.
-        else:
-            self.prec_sbtn.set_sensitive(True)
-    
-    
-    def enable_wind(self, widget):
-        """Enable or disable the wind spinbutton."""
-        
-        # If the value is None, disable the spinbutton.
-        if widget.get_active_text() == "None":
-            self.wind_sbtn.set_sensitive(False)
-        
-        # Otherwise, enable the spinbutton.
-        else:
-            self.wind_sbtn.set_sensitive(True)
     
     
     def prefill(self, user_location, units, profile):
