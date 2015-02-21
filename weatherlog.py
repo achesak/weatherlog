@@ -606,12 +606,14 @@ class WeatherLog(Gtk.Window):
             
             # Get the data and pass it to the Add dialog.
             prefill_data = [
-                int(result["condition"]["temp"]),
+                float(result["condition"]["temp"]),
+                float(result["wind"]["chill"]),
                 float(result["wind"]["speed"]),
-                directions.degree_to_direction(int(result["wind"]["direction"])),
-                int(result["atmosphere"]["humidity"]),
+                utility_functions.degree_to_direction(int(result["wind"]["direction"])),
+                float(result["atmosphere"]["humidity"]),
                 float(result["atmosphere"]["pressure"]),
-                ["Steady", "Rising", "Falling"][int(result["atmosphere"]["rising"])]
+                ["Steady", "Rising", "Falling"][int(result["atmosphere"]["rising"])],
+                float(result["atmosphere"]["visibility"])
             ]
             
             self.add_new(False, prefill_data)
