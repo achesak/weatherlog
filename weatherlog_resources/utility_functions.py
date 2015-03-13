@@ -139,7 +139,7 @@ def validate_data(data):
     for i in data:
         if not isinstance(i, list):
             return False
-        if len(i) != 8:
+        if len(i) != 10:
             return False
         for j in i:
             if not isinstance(j, str):

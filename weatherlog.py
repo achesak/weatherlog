@@ -1418,7 +1418,7 @@ class WeatherLog(Gtk.Window):
         if (response != 20 and response != 21) or treeiter == None:
             return
             
-        # Create the profile directory and file.
+        # Create the dataset directory and file.
         last_profile = name
         os.makedirs("%s/profiles/%s" % (main_dir, name))
         open("%s/profiles/%s/weather" % (main_dir, name), "w").close()

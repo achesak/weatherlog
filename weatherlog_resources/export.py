@@ -23,13 +23,15 @@ def html(data2, units):
 <tr>
 <th>Date</th>
 <th>Temperature (%s)</th>
+<th>Wind Chill (%s)</th>
 <th>Precipitation (%s)</th>
 <th>Wind (%s)</th>
 <th>Humidity (%%)</th>
 <th>Air Pressure (%s)</th>
+<th>Visibility (%s)</th>
 <th>Cloud Cover</th>
 <th>Notes</th>
-</tr>""" % (units["temp"], units["prec"], units["wind"], units["airp"])
+</tr>""" % (units["temp"], units["temp"], units["prec"], units["wind"], units["airp"], units["visi"])
     
     # Add the data. Loop through each list, and add it as a table row.
     for i in data:
@@ -45,7 +47,9 @@ def html(data2, units):
 <td>%s</td>
 <td>%s</td>
 <td>%s</td>
-</tr>""" % (i[0], i[1], i[2], i[3], i[4], i[5], i[6], i[7].replace("<", "&lt;").replace(">", "&gt;"))
+<td>%s</td>
+<td>%s</td>
+</tr>""" % (i[0], i[1], i[2], i[3], i[4], i[5], i[6], i[7], i[8], i[9].replace("<", "&lt;").replace(">", "&gt;"))
     
     # Add the closing tags.
     html += """
@@ -63,13 +67,13 @@ def csv(data2, units):
     data = data2[:]
     
     # Build the string.
-    csv = """"Date","Temperature (%s)","Precipitation (%s)","Wind (%s)","Humidity (%%)","Air Pressure (%s)","Cloud Cover","Notes"\n""" % (units["temp"], units["prec"], units["wind"], units["airp"])
+    csv = """"Date","Temperature (%s)","Wind Chill (%s)","Precipitation (%s)","Wind (%s)","Humidity (%%)","Air Pressure (%s)","Visibility (%s","Cloud Cover","Notes"\n""" % (units["temp"], units["temp"], units["prec"], units["wind"], units["airp"], units["visi"])
     
     # Add the data. Loop through each list, and add it as a row.
     for i in data:
         for j in range(0, len(i)):
             i[j] = i[j].encode("utf-8")
-        csv += """"%s","%s","%s","%s","%s","%s","%s","%s"\n""" % (i[0], i[1], i[2], i[3], i[4], i[5], i[6], i[7])
+        csv += """"%s","%s","%s","%s","%s","%s","%s","%s","%s","%s"\n""" % (i[0], i[1], i[2], i[3], i[4], i[5], i[6], i[7], i[8], i[9])
     
     # Remove the last newline character.
     csv = csv[:-1]
@@ -80,8 +84,8 @@ def csv(data2, units):
 def info_html(data):
     """Converts the info data to HTML."""
     
-    title_list = ["General Info", "Temperature Info", "Precipitation Info", "Wind Info", "Humidity Info",
-                  "Air Pressure Info", "Cloud Cover Info", "Notes Info"]
+    title_list = ["General Info", "Temperature Info", "Wind Chill Info", "Precipitation Info", "Wind Info",
+                  "Humidity Info", "Air Pressure Info", "Visibility Info", "Cloud Cover Info", "Notes Info"]
     
     # Build the string.
     html = """
@@ -131,7 +135,8 @@ def info_html(data):
 def chart_html(data):
     """Converts the chart data to HTML."""
     
-    title_list = ["Temperature Chart", "Precipitation Chart", "Wind Chart", "Humidity Chart", "Air Pressure Chart"]
+    title_list = ["Temperature Chart", "Wind Chill Chart", "Precipitation Chart", "Wind Chart",
+                  "Humidity Chart", "Air Pressure Chart", "Visibility Chart"]
     
     # Build the string.
     html = """
