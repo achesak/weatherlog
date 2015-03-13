@@ -893,10 +893,12 @@ class WeatherLog(Gtk.Window):
         # Get the chart data.
         data2 = [
             charts.temp_chart(data, units),
+            charts.chil_chart(data, units),
             charts.prec_chart(data, units),
             charts.wind_chart(data, units),
             charts.humi_chart(data, units),
-            charts.airp_chart(data, units)
+            charts.airp_chart(data, units),
+            charts.visi_chart(data, units)
         ]
         
         # Show the chart.

@@ -58,12 +58,57 @@ def temp_chart(data, units):
     return data2
 
 
+def chil_chart(data, units):
+    """"Gets the wind chill chart data."""
+    
+    # Get the data.
+    chil_data = utility_functions.convert_float(utility_functions.get_column(data, 2))
+    chil_low = min(chil_data)
+    chil_high = max(chil_data)
+    chil_avg = info_functions.mean(chil_data)
+    chil_median = info_functions.median(chil_data)
+    
+    # Calculate and add the data.
+    data2 = []
+    for i in range(0, len(data)):
+        
+        chil = [data[i][0], "%.2f %s" % (chil_data[i], units["temp"])]
+        if chil_avg == chil_data[i]:
+            average = "Average Value"
+        else:
+            average = chil_avg - chil_data[i]
+            average = "%.2f %s %s" % (abs(average), units["temp"], "above" if chil_avg < chil_data[i] else "below")
+        chil.append(average)
+        if chil_low == chil_data[i]:
+            low = "Lowest Value"
+        else:
+            low = chil_low - chil_data[i]
+            low = "%.2f %s %s" % (abs(low), units["temp"], "above" if chil_low < chil_data[i] else "below")
+        chil.append(low)
+        if chil_high == chil_data[i]:
+            high = "Highest Value"
+        else:
+            high = chil_high - chil_data[i]
+            high = "%.2f %s %s" % (abs(high), units["temp"], "above" if chil_high < chil_data[i] else "below")
+        chil.append(high)
+        if chil_median == chil_data[i]:
+            median = "Median Value"
+        else:
+            median = chil_median - chil_data[i]
+            median = "%.2f %s %s" % (abs(median), units["temp"], "above" if chil_median < chil_data[i] else "below")
+        chil.append(median)
+        
+        data2.append(chil)
+    
+    return data2
+
+
 def prec_chart(data, units):
     """"Gets the precipitation chart data."""
     
     # Get the data.
-    prec_data1, prec_data2 = utility_functions.split_list(utility_functions.get_column(data, 2))
-    prec_split = utility_functions.split_list2(utility_functions.get_column(data, 2))
+    prec_data1, prec_data2 = utility_functions.split_list(utility_functions.get_column(data, 3))
+    prec_split = utility_functions.split_list2(utility_functions.get_column(data, 3))
     prec_data1 = utility_functions.none_to_zero(prec_data1)
     prec_data1 = utility_functions.convert_float(prec_data1)
     prec_low = min(prec_data1)
@@ -110,7 +155,7 @@ def wind_chart(data, units):
     """"Gets the wind chart data."""
     
     # Get the data.
-    wind_data1, wind_data2 = utility_functions.split_list(utility_functions.get_column(data, 3))
+    wind_data1, wind_data2 = utility_functions.split_list(utility_functions.get_column(data, 4))
     wind_data1 = utility_functions.none_to_zero(wind_data1)
     wind_data1 = utility_functions.convert_float(wind_data1)
     wind_low = min(wind_data1)
@@ -157,7 +202,7 @@ def humi_chart(data, units):
     """"Gets the humidity chart data."""
     
     # Get the data.
-    humi_data = utility_functions.convert_float(utility_functions.get_column(data, 4))
+    humi_data = utility_functions.convert_float(utility_functions.get_column(data, 5))
     humi_low = min(humi_data)
     humi_high = max(humi_data)
     humi_avg = info_functions.mean(humi_data)
@@ -202,7 +247,7 @@ def airp_chart(data, units):
     """"Gets the air pressure chart data."""
     
     # Get the data.
-    airp_data1, airp_data2 = utility_functions.split_list(utility_functions.get_column(data, 5))
+    airp_data1, airp_data2 = utility_functions.split_list(utility_functions.get_column(data, 6))
     airp_data1 = utility_functions.convert_float(airp_data1)
     airp_low = min(airp_data1)
     airp_high = max(airp_data1)
@@ -240,5 +285,50 @@ def airp_chart(data, units):
         airp.append(median)
         
         data2.append(airp)
+    
+    return data2
+
+
+def visi_chart(data, units):
+    """"Gets the visibility chart data."""
+    
+    # Get the data.
+    visi_data = utility_functions.convert_float(utility_functions.get_column(data, 7))
+    visi_low = min(visi_data)
+    visi_high = max(visi_data)
+    visi_avg = info_functions.mean(visi_data)
+    visi_median = info_functions.median(visi_data)
+    
+    # Calculate and add the data.
+    data2 = []
+    for i in range(0, len(data)):
+        
+        visi = [data[i][0], "%.2f %s" % (visi_data[i], units["visi"])]
+        if visi_avg == visi_data[i]:
+            average = "Average Value"
+        else:
+            average = visi_avg - visi_data[i]
+            average = "%.2f %s %s" % (abs(average), units["visi"], "above" if visi_avg < visi_data[i] else "below")
+        visi.append(average)
+        if visi_low == visi_data[i]:
+            low = "Lowest Value"
+        else:
+            low = visi_low - visi_data[i]
+            low = "%.2f %s %s" % (abs(low), units["visi"], "above" if visi_low < visi_data[i] else "below")
+        visi.append(low)
+        if visi_high == visi_data[i]:
+            high = "Highest Value"
+        else:
+            high = visi_high - visi_data[i]
+            high = "%.2f %s %s" % (abs(high), units["visi"], "above" if visi_high < visi_data[i] else "below")
+        visi.append(high)
+        if visi_median == visi_data[i]:
+            median = "Median Value"
+        else:
+            median = visi_median - visi_data[i]
+            median = "%.2f %s %s" % (abs(median), units["visi"], "above" if visi_median < visi_data[i] else "below")
+        visi.append(median)
+        
+        data2.append(visi)
     
     return data2
