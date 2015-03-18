@@ -7,8 +7,8 @@
 # Import collections.Counter for getting the mode of the data.
 from collections import Counter
 
-# Import the utility functions.
-import weatherlog_resources.utility_functions as utility_functions
+# Import the dataset functions.
+import weatherlog_resources.datasets as datasets
 # Import the calculation functions.
 import weatherlog_resources.calculations as calculations
 
@@ -17,7 +17,7 @@ def temp_chart(data, units):
     """"Gets the temperature chart data."""
     
     # Get the data.
-    temp_data = utility_functions.convert_float(utility_functions.get_column(data, 1))
+    temp_data = datasets.convert_float(datasets.get_column(data, 1))
     temp_low = min(temp_data)
     temp_high = max(temp_data)
     temp_avg = calculations.mean(temp_data)
@@ -62,7 +62,7 @@ def chil_chart(data, units):
     """"Gets the wind chill chart data."""
     
     # Get the data.
-    chil_data = utility_functions.convert_float(utility_functions.get_column(data, 2))
+    chil_data = datasets.convert_float(datasets.get_column(data, 2))
     chil_low = min(chil_data)
     chil_high = max(chil_data)
     chil_avg = calculations.mean(chil_data)
@@ -107,10 +107,10 @@ def prec_chart(data, units):
     """"Gets the precipitation chart data."""
     
     # Get the data.
-    prec_data1, prec_data2 = utility_functions.split_list(utility_functions.get_column(data, 3))
-    prec_split = utility_functions.split_list2(utility_functions.get_column(data, 3))
-    prec_data1 = utility_functions.none_to_zero(prec_data1)
-    prec_data1 = utility_functions.convert_float(prec_data1)
+    prec_data1, prec_data2 = datasets.split_list(datasets.get_column(data, 3))
+    prec_split = datasets.split_list2(datasets.get_column(data, 3))
+    prec_data1 = datasets.none_to_zero(prec_data1)
+    prec_data1 = datasets.convert_float(prec_data1)
     prec_low = min(prec_data1)
     prec_high = max(prec_data1)
     prec_avg = calculations.mean(prec_data1)
@@ -155,9 +155,9 @@ def wind_chart(data, units):
     """"Gets the wind chart data."""
     
     # Get the data.
-    wind_data1, wind_data2 = utility_functions.split_list(utility_functions.get_column(data, 4))
-    wind_data1 = utility_functions.none_to_zero(wind_data1)
-    wind_data1 = utility_functions.convert_float(wind_data1)
+    wind_data1, wind_data2 = datasets.split_list(datasets.get_column(data, 4))
+    wind_data1 = datasets.none_to_zero(wind_data1)
+    wind_data1 = datasets.convert_float(wind_data1)
     wind_low = min(wind_data1)
     wind_high = max(wind_data1)
     wind_avg = calculations.mean(wind_data1)
@@ -202,7 +202,7 @@ def humi_chart(data, units):
     """"Gets the humidity chart data."""
     
     # Get the data.
-    humi_data = utility_functions.convert_float(utility_functions.get_column(data, 5))
+    humi_data = datasets.convert_float(datasets.get_column(data, 5))
     humi_low = min(humi_data)
     humi_high = max(humi_data)
     humi_avg = calculations.mean(humi_data)
@@ -247,8 +247,8 @@ def airp_chart(data, units):
     """"Gets the air pressure chart data."""
     
     # Get the data.
-    airp_data1, airp_data2 = utility_functions.split_list(utility_functions.get_column(data, 6))
-    airp_data1 = utility_functions.convert_float(airp_data1)
+    airp_data1, airp_data2 = datasets.split_list(datasets.get_column(data, 6))
+    airp_data1 = datasets.convert_float(airp_data1)
     airp_low = min(airp_data1)
     airp_high = max(airp_data1)
     airp_avg = calculations.mean(airp_data1)
@@ -293,7 +293,7 @@ def visi_chart(data, units):
     """"Gets the visibility chart data."""
     
     # Get the data.
-    visi_data = utility_functions.convert_float(utility_functions.get_column(data, 7))
+    visi_data = datasets.convert_float(datasets.get_column(data, 7))
     visi_low = min(visi_data)
     visi_high = max(visi_data)
     visi_avg = calculations.mean(visi_data)

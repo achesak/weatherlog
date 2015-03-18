@@ -5,8 +5,8 @@
 # on the user-specified conditions.
 
 
-# Import the utility functions.
-import weatherlog_resources.utility_functions as utility_functions
+# Import the dataset functions.
+import weatherlog_resources.datasets as datasets
 # Import datetime for sorting the data.
 import datetime
 
@@ -23,13 +23,13 @@ def filter_data(data, condition):
     string_compare = False
     col = []
     if condition[0] == "temperature":
-        col = utility_functions.convert_float(utility_functions.get_column(data, 1))
+        col = datasets.convert_float(datasets.get_column(data, 1))
     elif condition[0] == "precipitation amount":
-        col = utility_functions.get_column(data, 2)
-        col = utility_functions.convert_float(utility_functions.none_to_zero(utility_functions.split_list(col)[0]))
+        col = datasets.get_column(data, 2)
+        col = datasets.convert_float(datasets.none_to_zero(datasets.split_list(col)[0]))
     elif condition[0] == "precipitation type":
         string_compare = True
-        ncol = utility_functions.get_column(data, 2)
+        ncol = datasets.get_column(data, 2)
         col = []
         for i in ncol:
             if i == "None":
@@ -38,11 +38,11 @@ def filter_data(data, condition):
                 i_split = i.split(" ")
                 col.append(i_split[1])
     elif condition[0] == "wind speed":
-        col = utility_functions.get_column(data, 3)
-        col = utility_functions.convert_float(utility_functions.none_to_zero(utility_functions.split_list(col)[0]))
+        col = datasets.get_column(data, 3)
+        col = datasets.convert_float(datasets.none_to_zero(datasets.split_list(col)[0]))
     elif condition[0] == "wind direction":
         string_compare = True
-        ncol = utility_functions.get_column(data, 3)
+        ncol = datasets.get_column(data, 3)
         col = []
         for i in ncol:
             if i == "None":
@@ -51,15 +51,15 @@ def filter_data(data, condition):
                 i_split = i.split(" ")
                 col.append(i_split[1])
     elif condition[0] == "humidity":
-        col = utility_functions.convert_float(utility_functions.get_column(data, 4))
+        col = datasets.convert_float(datasets.get_column(data, 4))
     elif condition[0] == "air pressure":
-        col = utility_functions.convert_float(utility_functions.split_list(utility_functions.get_column(data, 5))[0])
+        col = datasets.convert_float(datasets.split_list(datasets.get_column(data, 5))[0])
     elif condition[0] == "air pressure change":
         string_compare = True
-        col = utility_functions.split_list(utility_functions.get_column(data, 5))[1]
+        col = datasets.split_list(datasets.get_column(data, 5))[1]
     elif condition[0] == "cloud cover":
         string_compare = True
-        col = utility_functions.get_column(data, 6)
+        col = datasets.get_column(data, 6)
     
     # Loop through the data, and add it to the filtered list if it matches the condition.
     for i in range(0, len(data)):
@@ -155,7 +155,7 @@ def filter_and(set1, set2):
     
     # Get the date column of the second list for the comparison.
     filtered = []
-    date_list = utility_functions.get_column(set2, 0)
+    date_list = datasets.get_column(set2, 0)
     
     # Loop through the first set, and only add the item to the filtered list if it's also in the second set.
     for i in set1:
@@ -170,7 +170,7 @@ def filter_not(set1, data):
     
     # Get the date column of the set for the comparison.
     filtered = []
-    date_list = utility_functions.get_column(set1, 0)
+    date_list = datasets.get_column(set1, 0)
     
     # Loop through the data list, and only add the item to the filtered list if it's not in the other set.
     for i in data:
@@ -184,7 +184,7 @@ def filter_or(set1, set2):
     """Returns a list of the items that are in either set1 or set2."""
     
     # Get the date column of the first set for the comparison.
-    date_list = utility_functions.get_column(set1, 0)
+    date_list = datasets.get_column(set1, 0)
     
     # Set the filtered list to all of the items of the first set.
     filtered = set1[:]

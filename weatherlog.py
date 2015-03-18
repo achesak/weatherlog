@@ -83,8 +83,16 @@ sys.dont_write_bytecode = True
 
 # Import the functions for setting up the application.
 import weatherlog_resources.launch as launch
-# Import the functions for various tasks.
-import weatherlog_resources.utility_functions as utility_functions
+# Import the functions for working with datasets.
+import weatherlog_resources.datasets as datasets
+# Import the functions for working with dates.
+import weatherlog_resources.dates as dates
+# Import the functions for validating user-entered data.
+import weatherlog_resources.validate as validate
+# Import the functions for converting between units.
+import weatherlog_resources.convert as convert
+# Import the functions for converting degrees to a compass direction.
+import weatherlog_resources.degrees as degrees
 # Import the functions for reading and writing profiles.
 import weatherlog_resources.io as io
 # Import the functions for exporting the data.
@@ -377,7 +385,7 @@ class WeatherLog(Gtk.Window):
             wind_dir = "None"
         
         # If the date has already been entered, tell the user and don't continue.
-        if date in utility_functions.get_column(data, 0):
+        if date in datasets.get_column(data, 0):
             show_error_dialog(self, "Add New", "The date %s has already been entered." % date)
             
         else:
@@ -421,7 +429,7 @@ class WeatherLog(Gtk.Window):
             return
         
         # Get the index of the date.
-        index = utility_functions.get_column(data, 0).index(date)
+        index = datasets.get_column(data, 0).index(date)
         
         # Get the new data.
         edit_dlg = EditDialog(self, last_profile, data[index], date, units)
@@ -498,7 +506,7 @@ class WeatherLog(Gtk.Window):
         
         # Loop through the list of dates and delete them.
         for i in ndates:
-            index = utility_functions.get_column(data, 0).index(i)
+            index = datasets.get_column(data, 0).index(i)
             del data[index]
         
         # Update the UI.
@@ -552,7 +560,7 @@ class WeatherLog(Gtk.Window):
             ["Condition", weather_codes[result["condition"]["code"]]],
             ["Temperature", "%d %s" % (int(result["condition"]["temp"]), units["temp"])],
             ["Wind speed", "%s %s" % (result["wind"]["speed"], units["wind"])],
-            ["Wind direction", utility_functions.degree_to_direction(int(result["wind"]["direction"]))],
+            ["Wind direction", degrees.degree_to_direction(int(result["wind"]["direction"]))],
             ["Wind chill", "%d %s" % (int(result["wind"]["chill"]), units["temp"])],
             ["Humidity", "%s%%" % result["atmosphere"]["humidity"]],
             ["Air pressure", "%s %s" % (result["atmosphere"]["pressure"], units["airp"])],
@@ -611,7 +619,7 @@ class WeatherLog(Gtk.Window):
                 float(result["condition"]["temp"]),
                 float(result["wind"]["chill"]),
                 float(result["wind"]["speed"]),
-                utility_functions.degree_to_direction(int(result["wind"]["direction"])),
+                degrees.degree_to_direction(int(result["wind"]["direction"])),
                 float(result["atmosphere"]["humidity"]),
                 float(result["atmosphere"]["pressure"]),
                 ["Steady", "Rising", "Falling"][int(result["atmosphere"]["rising"])],
@@ -631,8 +639,8 @@ class WeatherLog(Gtk.Window):
             return
         
         # Get the first and last entered dates.
-        days, months, years = utility_functions.split_date(data[0][0])
-        daye, monthe, yeare = utility_functions.split_date(data[len(data) - 1][0])
+        days, months, years = dates.split_date(data[0][0])
+        daye, monthe, yeare = dates.split_date(data[len(data) - 1][0])
         
         # Get the starting date.
         start_dlg = CalendarDialog(self, "Info in Range - %s" % last_profile, "Select the starting date:", days, months, years)
@@ -646,7 +654,7 @@ class WeatherLog(Gtk.Window):
             return
             
         # Check to make sure this date is valid, and cancel the action if not.
-        if date1 not in utility_functions.get_column(data, 0):
+        if date1 not in datasets.get_column(data, 0):
             show_error_dialog(self, "%s Info in Range - %s" % last_profile, "%s is not a valid date." % date1)
             return
         
@@ -662,13 +670,13 @@ class WeatherLog(Gtk.Window):
             return
         
         # Check to make sure this date is valid, and cancel the action if not.
-        if date2 not in utility_functions.get_column(data, 0):
+        if date2 not in datasets.get_column(data, 0):
             show_error_dialog(self, "Info in Range - %s" % last_profile, "%s is not a valid date." % date2)
             return
         
         # Convert the dates to ISO notation for comparison.
-        nDate1 = utility_functions.date_to_iso(day1, month1, year1)
-        nDate2 = utility_functions.date_to_iso(day2, month2, year2)
+        nDate1 = dates.date_to_iso(day1, month1, year1)
+        nDate2 = dates.date_to_iso(day2, month2, year2)
         
         # Check to make sure this date is later than the starting date, 
         # and cancel the action if not.
@@ -677,7 +685,7 @@ class WeatherLog(Gtk.Window):
             return
         
         # Get the indices.
-        date_col = utility_functions.get_column(data, 0)
+        date_col = datasets.get_column(data, 0)
         index1 = date_col.index(date1)
         index2 = date_col.index(date2)
         
@@ -783,8 +791,8 @@ class WeatherLog(Gtk.Window):
             return
         
         # Get the first and last entered dates.
-        days, months, years = utility_functions.split_date(data[0][0])
-        daye, monthe, yeare = utility_functions.split_date(data[len(data) - 1][0])
+        days, months, years = dates.split_date(data[0][0])
+        daye, monthe, yeare = dates.split_date(data[len(data) - 1][0])
         
         # Get the starting date.
         start_dlg = CalendarDialog(self, "Charts in Range - %s" % last_profile, "Select the starting date:", days, months, years)
@@ -798,7 +806,7 @@ class WeatherLog(Gtk.Window):
             return
             
         # Check to make sure this date is valid, and cancel the action if not.
-        if date1 not in utility_functions.get_column(data, 0):
+        if date1 not in datasets.get_column(data, 0):
             show_error_dialog(self, "Charts in Range - %s" % last_profile, "%s is not a valid date." % date1)
             return
         
@@ -814,13 +822,13 @@ class WeatherLog(Gtk.Window):
             return
         
         # Check to make sure this date is valid, and cancel the action if not.
-        if date2 not in utility_functions.get_column(data, 0):
+        if date2 not in datasets.get_column(data, 0):
             show_error_dialog(self, "Charts in Range - %s" % last_profile, "%s is not a valid date." % date2)
             return
         
         # Convert the dates to ISO notation for comparison.
-        nDate1 = utility_functions.date_to_iso(day1, month1, year1)
-        nDate2 = utility_functions.date_to_iso(day2, month2, year2)
+        nDate1 = dates.date_to_iso(day1, month1, year1)
+        nDate2 = dates.date_to_iso(day2, month2, year2)
         
         # Check to make sure this date is later than the starting date, 
         # and cancel the action if not.
@@ -829,7 +837,7 @@ class WeatherLog(Gtk.Window):
             return
         
         # Get the indices.
-        date_col = utility_functions.get_column(data, 0)
+        date_col = datasets.get_column(data, 0)
         index1 = date_col.index(date1)
         index2 = date_col.index(date2)
         
@@ -934,8 +942,8 @@ class WeatherLog(Gtk.Window):
             return
         
         # Get the first and last entered dates.
-        days, months, years = utility_functions.split_date(data[0][0])
-        daye, monthe, yeare = utility_functions.split_date(data[len(data) - 1][0])
+        days, months, years = dates.split_date(data[0][0])
+        daye, monthe, yeare = dates.split_date(data[len(data) - 1][0])
         
         # Get the starting date.
         start_dlg = CalendarDialog(self, "Graphs in Range - %s" % last_profile, "Select the starting date:", days, months, years)
@@ -949,7 +957,7 @@ class WeatherLog(Gtk.Window):
             return
             
         # Check to make sure this date is valid, and cancel the action if not.
-        if date1 not in utility_functions.get_column(data, 0):
+        if date1 not in datasets.get_column(data, 0):
             show_error_dialog(self, "Graphs in Range - %s" % last_profile, "%s is not a valid date." % date1)
             return
         
@@ -965,13 +973,13 @@ class WeatherLog(Gtk.Window):
             return
         
         # Check to make sure this date is valid, and cancel the action if not.
-        if date2 not in utility_functions.get_column(data, 0):
+        if date2 not in datasets.get_column(data, 0):
             show_error_dialog(self, "Graphs in Range - %s" % last_profile, "%s is not a valid date." % date2)
             return
         
         # Convert the dates to ISO notation for comparison.
-        nDate1 = utility_functions.date_to_iso(day1, month1, year1)
-        nDate2 = utility_functions.date_to_iso(day2, month2, year2)
+        nDate1 = dates.date_to_iso(day1, month1, year1)
+        nDate2 = dates.date_to_iso(day2, month2, year2)
         
         # Check to make sure this date is later than the starting date, 
         # and cancel the action if not.
@@ -980,7 +988,7 @@ class WeatherLog(Gtk.Window):
             return
         
         # Get the indices.
-        date_col = utility_functions.get_column(data, 0)
+        date_col = datasets.get_column(data, 0)
         index1 = date_col.index(date1)
         index2 = date_col.index(date2)
         
@@ -1237,13 +1245,13 @@ class WeatherLog(Gtk.Window):
         if len(ndata) == 0:
             show_alert_dialog(self, "Import - %s" % last_profile, "There is no data to import.")
             return
-        if not utility_functions.validate_data(ndata):
+        if not validate.validate_data(ndata):
             show_error_dialog(self, "Import - %s" % last_profile, "Data is not valid.")
             return
         
         # Ask the user what dates they want to import.
         if not config["import_all"]:
-            date_dlg = ImportSelectionDialog(self, "Import - %s" % last_profile, utility_functions.get_column(ndata, 0))
+            date_dlg = ImportSelectionDialog(self, "Import - %s" % last_profile, datasets.get_column(ndata, 0))
             response = date_dlg.run()
             model, treeiter = date_dlg.treeview.get_selection().get_selected_rows()
             date_dlg.destroy()
@@ -1306,13 +1314,13 @@ class WeatherLog(Gtk.Window):
             return
         
         # If the imported data is invalid, don't continue.
-        if not utility_functions.validate_data(data2):
+        if not validate.validate_data(data2):
             show_error_dialog(self, "Import and Merge - %s" % last_profile, "Data is not valid.")
             return
         
         # Ask the user what dates they want to import.
         if not config["import_all"]:
-            date_dlg = ImportSelectionDialog(self, "Import and Merge - %s" % last_profile, utility_functions.get_column(data2, 0))
+            date_dlg = ImportSelectionDialog(self, "Import and Merge - %s" % last_profile, datasets.get_column(data2, 0))
             response = date_dlg.run()
             model, treeiter = date_dlg.treeview.get_selection().get_selected_rows()
             date_dlg.destroy()
@@ -1344,7 +1352,7 @@ class WeatherLog(Gtk.Window):
         
         # Filter the new data to make sure there are no duplicates.
         new_data = []
-        date_col = utility_functions.get_column(data, 0)
+        date_col = datasets.get_column(data, 0)
         for i in data3:
             
             # If the date already appears, don't include it.
@@ -1381,9 +1389,9 @@ class WeatherLog(Gtk.Window):
             
         # Validate the name. If it contains a non-alphanumeric character or is just space,
         # show a dialog and cancel the action.
-        validate = utility_functions.validate_profile(main_dir, name)
-        if validate != "":
-            show_error_dialog(self, "Import as New Dataset", validate)
+        valid = validate.validate_profile(main_dir, name)
+        if valid != "":
+            show_error_dialog(self, "Import as New Dataset", valid)
             return
 
         # Get the filename.
@@ -1402,13 +1410,13 @@ class WeatherLog(Gtk.Window):
             return
         
         # If the imported data is invalid, don't continue.
-        if not utility_functions.validate_data(ndata):
+        if not validate.validate_data(ndata):
             show_error_dialog(self, "Import as New Dataset - %s" % name, "Data is not valid.")
             return
         
         # Ask the user what dates they want to import.
         if not config["import_all"]:
-            date_dlg = ImportSelectionDialog(self, "Import as New Profile - %s" % name, utility_functions.get_column(ndata, 0))
+            date_dlg = ImportSelectionDialog(self, "Import as New Profile - %s" % name, datasets.get_column(ndata, 0))
             response = date_dlg.run()
             model, treeiter = date_dlg.treeview.get_selection().get_selected_rows()
             date_dlg.destroy()
@@ -1652,14 +1660,14 @@ class WeatherLog(Gtk.Window):
             return
         
         # Validate the name. If the name isn't valid, don't continue.
-        validate = utility_functions.validate_profile(main_dir, name)
-        if validate.endswith("\".\")."):
-            show_error_dialog(self, "Add Dataset", validate)
+        valid = validate.validate_profile(main_dir, name)
+        if valid.endswith("\".\")."):
+            show_error_dialog(self, "Add Dataset", valid)
             return
         
         # If the name is already in use, ask the user is they want to delete the old profile.
-        elif validate.endswith("already in use."):
-            del_old = show_question_dialog(self, "Add Dataset", "%s\n\nWould you like to delete the existing dataset?" % validate)
+        elif valid.endswith("already in use."):
+            del_old = show_question_dialog(self, "Add Dataset", "%s\n\nWould you like to delete the existing dataset?" % valid)
             if del_old != Gtk.ResponseType.OK:
                 return
             
@@ -1733,14 +1741,14 @@ class WeatherLog(Gtk.Window):
             return
         
         # Validate the name. If the name isn't valid, don't continue.
-        validate = utility_functions.validate_profile(main_dir, name)
-        if validate.endswith("\".\")."):
-            show_error_dialog(self, "Rename Dataset", validate)
+        valid = validate.validate_profile(main_dir, name)
+        if valid.endswith("\".\")."):
+            show_error_dialog(self, "Rename Dataset", valid)
             return
         
         # If the name is already in use, ask the user is they want to delete the old profile.
-        elif validate.endswith("already in use."):
-            del_old = show_question_dialog(self, "Rename Dataset", "%s\n\nWould you like to delete the existing dataset?" % validate)
+        elif valid.endswith("already in use."):
+            del_old = show_question_dialog(self, "Rename Dataset", "%s\n\nWould you like to delete the existing dataset?" % valid)
             if del_old != Gtk.ResponseType.OK:
                 return
             
@@ -1798,7 +1806,7 @@ class WeatherLog(Gtk.Window):
         
         # Filter the new data to make sure there are no duplicates.
         new_data = []
-        date_col = utility_functions.get_column(data, 0)
+        date_col = datasets.get_column(data, 0)
         for i in data2:
             
             # If the date already appears, don't include it.
@@ -1848,9 +1856,9 @@ class WeatherLog(Gtk.Window):
             return
         
         # Validate the name. If the name isn't valid, don't continue.
-        validate = utility_functions.validate_profile(main_dir, name)
-        if validate != "":
-            show_error_dialog(self, "Copy Data to New Dataset", validate)
+        valid = validate.validate_profile(main_dir, name)
+        if valid != "":
+            show_error_dialog(self, "Copy Data to New Dataset", valid)
             return
             
         # Get the dates to move or copy.
@@ -1977,7 +1985,7 @@ class WeatherLog(Gtk.Window):
         
         # Filter the new data to make sure there are no duplicates.
         new_data = []
-        date_col = utility_functions.get_column(data2, 0)
+        date_col = datasets.get_column(data2, 0)
         for i in ndata:
             
             # If the date already appears, don't include it.
@@ -2044,7 +2052,7 @@ class WeatherLog(Gtk.Window):
                 if response == Gtk.ResponseType.OK:
                     
                     # Convert the data.
-                    new_data = utility_functions.convert(data, units_)
+                    new_data = convert.convert(data, units_)
                     
                     # Update the list.
                     data[:] = []
@@ -2102,7 +2110,7 @@ class WeatherLog(Gtk.Window):
                 if response == Gtk.ResponseType.OK:
                     
                     # Convert the data.
-                    new_data = utility_functions.convert(data, config["units"])
+                    new_data = convert.convert(data, config["units"])
                     
                     # Update the list.
                     data[:] = []

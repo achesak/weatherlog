@@ -9,8 +9,8 @@ import datetime
 # Import collections.Counter for getting the mode of the data.
 from collections import Counter
 
-# Import the utility functions.
-import weatherlog_resources.utility_functions as utility_functions
+# Import the dataset functions.
+import weatherlog_resources.datasets as datasets
 # Import the calculation functions.
 import weatherlog_resources.calculations as calculations
 
@@ -19,7 +19,7 @@ def general_info(data, units):
     """Gets the general info."""
     
     # Get the date data.
-    date_data = utility_functions.get_column(data, 0)
+    date_data = datasets.get_column(data, 0)
     date_first = date_data[0]
     date_last = date_data[len(date_data) - 1]
     date_first2 = datetime.datetime.strptime(date_first, "%d/%m/%Y")
@@ -28,14 +28,14 @@ def general_info(data, units):
     day_num = len(data)
     
     # Get the temperature data.
-    temp_data = utility_functions.convert_float(utility_functions.get_column(data, 1))
+    temp_data = datasets.convert_float(datasets.get_column(data, 1))
     temp_low = min(temp_data)
     temp_high = max(temp_data)
     temp_avg = calculations.mean(temp_data)
     
     # Get the precipitation data.
-    prec_data1, prec_data2 = utility_functions.split_list(utility_functions.get_column(data, 2))
-    prec_data1 = utility_functions.convert_float(utility_functions.none_to_zero(prec_data1))
+    prec_data1, prec_data2 = datasets.split_list(datasets.get_column(data, 2))
+    prec_data1 = datasets.convert_float(datasets.none_to_zero(prec_data1))
     try:
         prec_low = min(prec_data1)
         prec_high = max(prec_data1)
@@ -46,8 +46,8 @@ def general_info(data, units):
         prec_avg = "None"
     
     # Get the wind data.
-    wind_data1, wind_data2 = utility_functions.split_list(utility_functions.get_column(data, 3))
-    wind_data1 = utility_functions.convert_float(utility_functions.none_to_zero(wind_data1))
+    wind_data1, wind_data2 = datasets.split_list(datasets.get_column(data, 3))
+    wind_data1 = datasets.convert_float(datasets.none_to_zero(wind_data1))
     try:
         wind_low = min(wind_data1)
         wind_high = max(wind_data1)
@@ -58,20 +58,20 @@ def general_info(data, units):
         wind_avg = "None"
     
     # Get the humidity data.
-    humi_data = utility_functions.convert_float(utility_functions.get_column(data, 4))
+    humi_data = datasets.convert_float(datasets.get_column(data, 4))
     humi_low = min(humi_data)
     humi_high = max(humi_data)
     humi_avg = calculations.mean(humi_data)
     
     # Get the air pressure data.
-    airp_data1, airp_data2 = utility_functions.split_list(utility_functions.get_column(data, 5))
-    airp_data1 = utility_functions.convert_float(airp_data1)
+    airp_data1, airp_data2 = datasets.split_list(datasets.get_column(data, 5))
+    airp_data1 = datasets.convert_float(airp_data1)
     airp_low = min(airp_data1)
     airp_high = max(airp_data1)
     airp_avg = calculations.mean(airp_data1)
     
     # Get the cloud cover data.
-    clou_data = Counter(utility_functions.get_column(data, 6))
+    clou_data = Counter(datasets.get_column(data, 6))
     clou_mode = clou_data.most_common(1)[0][0]
     
     # Change any values, if needed.
@@ -113,7 +113,7 @@ def temp_info(data, units):
     """"Gets the temperature info."""
     
     # Get the data.
-    temp_data = utility_functions.convert_float(utility_functions.get_column(data, 1))
+    temp_data = datasets.convert_float(datasets.get_column(data, 1))
     temp_low = min(temp_data)
     temp_high = max(temp_data)
     temp_avg = calculations.mean(temp_data)
@@ -138,10 +138,10 @@ def prec_info(data, units):
     """"Gets the precipitation info."""
     
     # Get the data.
-    prec_data1, prec_data2 = utility_functions.split_list(utility_functions.get_column(data, 2))
-    prec_split = utility_functions.split_list2(utility_functions.get_column(data, 2))
-    prec_data1 = utility_functions.none_to_zero(prec_data1)
-    prec_data1 = utility_functions.convert_float(prec_data1)
+    prec_data1, prec_data2 = datasets.split_list(datasets.get_column(data, 2))
+    prec_split = datasets.split_list2(datasets.get_column(data, 2))
+    prec_data1 = datasets.none_to_zero(prec_data1)
+    prec_data1 = datasets.convert_float(prec_data1)
     try:
         prec_low = min(prec_data1)
         prec_high = max(prec_data1)
@@ -217,9 +217,9 @@ def wind_info(data, units):
     """Gets the wind info."""
     
     # Get the data.
-    wind_data1, wind_data2 = utility_functions.split_list(utility_functions.get_column(data, 3))
-    wind_data1 = utility_functions.none_to_zero(wind_data1)
-    wind_data1 = utility_functions.convert_float(wind_data1)
+    wind_data1, wind_data2 = datasets.split_list(datasets.get_column(data, 3))
+    wind_data1 = datasets.none_to_zero(wind_data1)
+    wind_data1 = datasets.convert_float(wind_data1)
     try:
         wind_low = min(wind_data1)
         wind_high = max(wind_data1)
@@ -258,7 +258,7 @@ def humi_info(data, units):
     """Gets the humidity info."""
     
     # Get the data.
-    humi_data = utility_functions.convert_float(utility_functions.get_column(data, 4))
+    humi_data = datasets.convert_float(datasets.get_column(data, 4))
     humi_low = min(humi_data)
     humi_high = max(humi_data)
     humi_avg = calculations.mean(humi_data)
@@ -283,8 +283,8 @@ def airp_info(data, units):
     """Gets the air pressure info."""
     
     # Get the data.
-    airp_data1, airp_data2 = utility_functions.split_list(utility_functions.get_column(data, 5))
-    airp_data1 = utility_functions.convert_float(airp_data1)
+    airp_data1, airp_data2 = datasets.split_list(datasets.get_column(data, 5))
+    airp_data1 = datasets.convert_float(airp_data1)
     airp_low = min(airp_data1)
     airp_high = max(airp_data1)
     airp_avg = calculations.mean(airp_data1)
@@ -323,7 +323,7 @@ def clou_info(data, units):
     
     # Get the data.
     # Put the items into a collection.
-    clou_data = Counter(utility_functions.get_column(data, 6))
+    clou_data = Counter(datasets.get_column(data, 6))
     # Find how many times the items appear.
     m_list = clou_data.most_common()
     # Convert the list to a dictionary.

@@ -7,8 +7,8 @@
 # Import datetime for date calculations.
 import datetime
 
-# Import the utility functions.
-import weatherlog_resources.utility_functions as utility_functions
+# Import the dataset functions.
+import weatherlog_resources.datasets as datasets
 # Import date2num for converting dates to numbers.
 from matplotlib.dates import date2num
 
@@ -27,21 +27,21 @@ def get_data(data):
     """Gets the graph data."""
     
     # Get the date data.
-    date_data = utility_functions.get_column(data, 0)
+    date_data = datasets.get_column(data, 0)
     new_dates = get_dates(date_data)
     
     # Get the data.
-    temp_data = utility_functions.convert_float(utility_functions.get_column(data, 1))
-    prec_data1, prec_data2 = utility_functions.split_list(utility_functions.get_column(data, 2))
-    prec_data = utility_functions.convert_float(utility_functions.none_to_zero(prec_data1))
-    wind_data1, wind_data2 = utility_functions.split_list(utility_functions.get_column(data, 3))
-    wind_data = utility_functions.convert_float(utility_functions.none_to_zero(wind_data1))
-    humi_data = utility_functions.convert_float(utility_functions.get_column(data, 4))
-    airp_data1, airp_data2 = utility_functions.split_list(utility_functions.get_column(data, 5))
-    airp_data = utility_functions.convert_float(airp_data1)
-    clou_data = utility_functions.get_column(data, 6)
+    temp_data = datasets.convert_float(datasets.get_column(data, 1))
+    prec_data1, prec_data2 = datasets.split_list(datasets.get_column(data, 2))
+    prec_data = datasets.convert_float(datasets.none_to_zero(prec_data1))
+    wind_data1, wind_data2 = datasets.split_list(datasets.get_column(data, 3))
+    wind_data = datasets.convert_float(datasets.none_to_zero(wind_data1))
+    humi_data = datasets.convert_float(datasets.get_column(data, 4))
+    airp_data1, airp_data2 = datasets.split_list(datasets.get_column(data, 5))
+    airp_data = datasets.convert_float(airp_data1)
+    clou_data = datasets.get_column(data, 6)
     
-    prec_split = utility_functions.split_list2(utility_functions.get_column(data, 2))
+    prec_split = datasets.split_list2(datasets.get_column(data, 2))
     prec_total = 0
     prec_total_rain = 0
     prec_total_snow = 0
