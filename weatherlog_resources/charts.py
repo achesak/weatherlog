@@ -9,8 +9,8 @@ from collections import Counter
 
 # Import the utility functions.
 import weatherlog_resources.utility_functions as utility_functions
-# Import the info functions.
-import weatherlog_resources.info_functions as info_functions
+# Import the calculation functions.
+import weatherlog_resources.calculations as calculations
 
 
 def temp_chart(data, units):
@@ -20,8 +20,8 @@ def temp_chart(data, units):
     temp_data = utility_functions.convert_float(utility_functions.get_column(data, 1))
     temp_low = min(temp_data)
     temp_high = max(temp_data)
-    temp_avg = info_functions.mean(temp_data)
-    temp_median = info_functions.median(temp_data)
+    temp_avg = calculations.mean(temp_data)
+    temp_median = calculations.median(temp_data)
     
     # Calculate and add the data.
     data2 = []
@@ -65,8 +65,8 @@ def chil_chart(data, units):
     chil_data = utility_functions.convert_float(utility_functions.get_column(data, 2))
     chil_low = min(chil_data)
     chil_high = max(chil_data)
-    chil_avg = info_functions.mean(chil_data)
-    chil_median = info_functions.median(chil_data)
+    chil_avg = calculations.mean(chil_data)
+    chil_median = calculations.median(chil_data)
     
     # Calculate and add the data.
     data2 = []
@@ -113,8 +113,8 @@ def prec_chart(data, units):
     prec_data1 = utility_functions.convert_float(prec_data1)
     prec_low = min(prec_data1)
     prec_high = max(prec_data1)
-    prec_avg = info_functions.mean(prec_data1)
-    prec_median = info_functions.median(prec_data1)
+    prec_avg = calculations.mean(prec_data1)
+    prec_median = calculations.median(prec_data1)
     
     # Calculate and add the data.
     data2 = []
@@ -160,8 +160,8 @@ def wind_chart(data, units):
     wind_data1 = utility_functions.convert_float(wind_data1)
     wind_low = min(wind_data1)
     wind_high = max(wind_data1)
-    wind_avg = info_functions.mean(wind_data1)
-    wind_median = info_functions.median(wind_data1)
+    wind_avg = calculations.mean(wind_data1)
+    wind_median = calculations.median(wind_data1)
     
     # Calculate and add the data.
     data2 = []
@@ -205,8 +205,8 @@ def humi_chart(data, units):
     humi_data = utility_functions.convert_float(utility_functions.get_column(data, 5))
     humi_low = min(humi_data)
     humi_high = max(humi_data)
-    humi_avg = info_functions.mean(humi_data)
-    humi_median = info_functions.median(humi_data)
+    humi_avg = calculations.mean(humi_data)
+    humi_median = calculations.median(humi_data)
     
     # Calculate and add the data.
     data2 = []
@@ -251,8 +251,8 @@ def airp_chart(data, units):
     airp_data1 = utility_functions.convert_float(airp_data1)
     airp_low = min(airp_data1)
     airp_high = max(airp_data1)
-    airp_avg = info_functions.mean(airp_data1)
-    airp_median = info_functions.median(airp_data1)
+    airp_avg = calculations.mean(airp_data1)
+    airp_median = calculations.median(airp_data1)
     
     # Calculate and add the data.
     data2 = []
@@ -296,8 +296,8 @@ def visi_chart(data, units):
     visi_data = utility_functions.convert_float(utility_functions.get_column(data, 7))
     visi_low = min(visi_data)
     visi_high = max(visi_data)
-    visi_avg = info_functions.mean(visi_data)
-    visi_median = info_functions.median(visi_data)
+    visi_avg = calculations.mean(visi_data)
+    visi_median = calculations.median(visi_data)
     
     # Calculate and add the data.
     data2 = []

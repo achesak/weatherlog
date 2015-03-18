@@ -6,10 +6,6 @@
 
 # Import GTK for the dialog.
 from gi.repository import Gtk
-# Import the functions for various tasks.
-from .. import utility_functions
-# Import the functions for getting the data.
-from .. import info_functions
 
 
 class GenericChartDialog(Gtk.Dialog):

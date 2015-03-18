@@ -11,8 +11,8 @@ from collections import Counter
 
 # Import the utility functions.
 import weatherlog_resources.utility_functions as utility_functions
-# Import the info functions.
-import weatherlog_resources.info_functions as info_functions
+# Import the calculation functions.
+import weatherlog_resources.calculations as calculations
 
 
 def general_info(data, units):
@@ -31,7 +31,7 @@ def general_info(data, units):
     temp_data = utility_functions.convert_float(utility_functions.get_column(data, 1))
     temp_low = min(temp_data)
     temp_high = max(temp_data)
-    temp_avg = info_functions.mean(temp_data)
+    temp_avg = calculations.mean(temp_data)
     
     # Get the precipitation data.
     prec_data1, prec_data2 = utility_functions.split_list(utility_functions.get_column(data, 2))
@@ -39,7 +39,7 @@ def general_info(data, units):
     try:
         prec_low = min(prec_data1)
         prec_high = max(prec_data1)
-        prec_avg = info_functions.mean(prec_data1)
+        prec_avg = calculations.mean(prec_data1)
     except:
         prec_low = "None"
         prec_high = "None"
@@ -51,7 +51,7 @@ def general_info(data, units):
     try:
         wind_low = min(wind_data1)
         wind_high = max(wind_data1)
-        wind_avg = info_functions.mean(wind_data1)
+        wind_avg = calculations.mean(wind_data1)
     except:
         wind_low = "None"
         wind_high = "None"
@@ -61,14 +61,14 @@ def general_info(data, units):
     humi_data = utility_functions.convert_float(utility_functions.get_column(data, 4))
     humi_low = min(humi_data)
     humi_high = max(humi_data)
-    humi_avg = info_functions.mean(humi_data)
+    humi_avg = calculations.mean(humi_data)
     
     # Get the air pressure data.
     airp_data1, airp_data2 = utility_functions.split_list(utility_functions.get_column(data, 5))
     airp_data1 = utility_functions.convert_float(airp_data1)
     airp_low = min(airp_data1)
     airp_high = max(airp_data1)
-    airp_avg = info_functions.mean(airp_data1)
+    airp_avg = calculations.mean(airp_data1)
     
     # Get the cloud cover data.
     clou_data = Counter(utility_functions.get_column(data, 6))
@@ -116,10 +116,10 @@ def temp_info(data, units):
     temp_data = utility_functions.convert_float(utility_functions.get_column(data, 1))
     temp_low = min(temp_data)
     temp_high = max(temp_data)
-    temp_avg = info_functions.mean(temp_data)
-    temp_median = info_functions.median(temp_data)
-    temp_range = info_functions.range(temp_data)
-    temp_mode = info_functions.mode(temp_data)
+    temp_avg = calculations.mean(temp_data)
+    temp_median = calculations.median(temp_data)
+    temp_range = calculations.range(temp_data)
+    temp_mode = calculations.mode(temp_data)
     
     # Create the data list.
     data2 = [
@@ -145,9 +145,9 @@ def prec_info(data, units):
     try:
         prec_low = min(prec_data1)
         prec_high = max(prec_data1)
-        prec_avg = info_functions.mean(prec_data1)
-        prec_median = info_functions.median(prec_data1)
-        prec_range = info_functions.range(prec_data1)
+        prec_avg = calculations.mean(prec_data1)
+        prec_median = calculations.median(prec_data1)
+        prec_range = calculations.range(prec_data1)
     except:
         prec_low = "None"
         prec_high = "None"
@@ -181,7 +181,7 @@ def prec_info(data, units):
         elif i[1] == "Sleet":
             prec_total_sleet += float(i[0])
             prec_sleet += 1
-    prec_mode = info_functions.mode(prec_data2)
+    prec_mode = calculations.mode(prec_data2)
     
     # Change any values, if needed.
     prec_low = "None" if prec_low == "None" else ("%.2f %s" % (prec_low, units["prec"]))
@@ -223,16 +223,16 @@ def wind_info(data, units):
     try:
         wind_low = min(wind_data1)
         wind_high = max(wind_data1)
-        wind_avg = info_functions.mean(wind_data1)
-        wind_median = info_functions.median(wind_data1)
-        wind_range = info_functions.range(wind_data1)
+        wind_avg = calculations.mean(wind_data1)
+        wind_median = calculations.median(wind_data1)
+        wind_range = calculations.range(wind_data1)
     except:
         wind_low = "None"
         wind_high = "None"
         wind_avg = "None"
         wind_median = "None"
         wind_range = "None"
-    wind_mode = info_functions.mode(wind_data2)
+    wind_mode = calculations.mode(wind_data2)
     
     # Change any values, if needed.
     wind_low = "None" if wind_low == "None" else ("%.2f %s" % (wind_low, units["wind"]))
@@ -261,10 +261,10 @@ def humi_info(data, units):
     humi_data = utility_functions.convert_float(utility_functions.get_column(data, 4))
     humi_low = min(humi_data)
     humi_high = max(humi_data)
-    humi_avg = info_functions.mean(humi_data)
-    humi_median = info_functions.median(humi_data)
-    humi_range = info_functions.range(humi_data)
-    humi_mode = info_functions.mode(humi_data)
+    humi_avg = calculations.mean(humi_data)
+    humi_median = calculations.median(humi_data)
+    humi_range = calculations.range(humi_data)
+    humi_mode = calculations.mode(humi_data)
     
     # Create the data list.
     data2 = [
@@ -287,10 +287,10 @@ def airp_info(data, units):
     airp_data1 = utility_functions.convert_float(airp_data1)
     airp_low = min(airp_data1)
     airp_high = max(airp_data1)
-    airp_avg = info_functions.mean(airp_data1)
-    airp_median = info_functions.median(airp_data1)
-    airp_range = info_functions.range(airp_data1)
-    airp_mode = info_functions.mode(airp_data1)
+    airp_avg = calculations.mean(airp_data1)
+    airp_median = calculations.median(airp_data1)
+    airp_range = calculations.range(airp_data1)
+    airp_mode = calculations.mode(airp_data1)
     airp_steady = 0
     airp_rising = 0
     airp_falling = 0
