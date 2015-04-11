@@ -33,8 +33,14 @@ def general_info(data, units):
     temp_high = max(temp_data)
     temp_avg = calculations.mean(temp_data)
     
+    # Get the wind chill data.
+    chil_data = datasets.convert_float(datasets.get_column(data, 2))
+    chil_low = min(chil_data)
+    chil_high = max(chil_data)
+    chil_avg = calculations.mean(chil_data)
+    
     # Get the precipitation data.
-    prec_data1, prec_data2 = datasets.split_list(datasets.get_column(data, 2))
+    prec_data1, prec_data2 = datasets.split_list(datasets.get_column(data, 3))
     prec_data1 = datasets.convert_float(datasets.none_to_zero(prec_data1))
     try:
         prec_low = min(prec_data1)
@@ -46,7 +52,7 @@ def general_info(data, units):
         prec_avg = "None"
     
     # Get the wind data.
-    wind_data1, wind_data2 = datasets.split_list(datasets.get_column(data, 3))
+    wind_data1, wind_data2 = datasets.split_list(datasets.get_column(data, 4))
     wind_data1 = datasets.convert_float(datasets.none_to_zero(wind_data1))
     try:
         wind_low = min(wind_data1)
@@ -58,21 +64,30 @@ def general_info(data, units):
         wind_avg = "None"
     
     # Get the humidity data.
-    humi_data = datasets.convert_float(datasets.get_column(data, 4))
+    humi_data = datasets.convert_float(datasets.get_column(data, 5))
     humi_low = min(humi_data)
     humi_high = max(humi_data)
     humi_avg = calculations.mean(humi_data)
     
     # Get the air pressure data.
-    airp_data1, airp_data2 = datasets.split_list(datasets.get_column(data, 5))
+    airp_data1, airp_data2 = datasets.split_list(datasets.get_column(data, 6))
     airp_data1 = datasets.convert_float(airp_data1)
     airp_low = min(airp_data1)
     airp_high = max(airp_data1)
     airp_avg = calculations.mean(airp_data1)
     
+    # Get the visibility data.
+    visi_data = datasets.convert_float(datasets.get_column(data, 7))
+    visi_low = min(visi_data)
+    visi_high = max(visi_data)
+    visi_avg = calculations.mean(visi_data)
+    
     # Get the cloud cover data.
-    clou_data = Counter(datasets.get_column(data, 6))
-    clou_mode = clou_data.most_common(1)[0][0]
+    clou_data = datasets.split_list3(datasets.get_column(data, 8))
+    clou_data1 = Counter(clou_data[0])
+    clou_data2 = Counter(datasets.strip_items(clou_data[1], ["(", ")"]))
+    clou_mode1 = clou_data1.most_common(1)[0][0]
+    clou_mode2 = clou_data2.most_common(1)[0][0]
     
     # Change any values, if needed.
     prec_low = "None" if prec_low == "None" else ("%.2f %s" % (prec_low, units["prec"]))
@@ -91,6 +106,9 @@ def general_info(data, units):
         ["Lowest temperature", "%.2f %s" % (temp_low, units["temp"])], 
         ["Highest temperature", "%.2f %s" % (temp_high, units["temp"])],
         ["Average temperature", "%.2f %s" % (temp_avg, units["temp"])],
+        ["Lowest wind chill", "%.2f %s" % (chil_low, units["temp"])], 
+        ["Highest wind chill", "%.2f %s" % (chil_high, units["temp"])],
+        ["Average wind chill", "%.2f %s" % (chil_avg, units["temp"])],
         ["Lowest precipitation", prec_low],
         ["Highest precipitation", prec_high],
         ["Average precipitation", prec_avg],
@@ -103,7 +121,11 @@ def general_info(data, units):
         ["Lowest air pressure", "%.2f %s" % (airp_low, units["airp"])],
         ["Highest air pressure", "%.2f %s" % (airp_high, units["airp"])],
         ["Average air pressure", "%.2f %s" % (airp_avg, units["airp"])],
-        ["Most common cloud cover", "%s" % clou_mode]
+        ["Lowest visibility", "%.2f %s" % (visi_low, units["visi"])], 
+        ["Highest visibility", "%.2f %s" % (visi_high, units["visi"])],
+        ["Average visibility", "%.2f %s" % (visi_avg, units["visi"])],
+        ["Most common cloud cover", "%s" % clou_mode1],
+        ["Most common cloud type", "%s" % clou_mode2]
     ]
     
     return data2
@@ -138,8 +160,8 @@ def prec_info(data, units):
     """"Gets the precipitation info."""
     
     # Get the data.
-    prec_data1, prec_data2 = datasets.split_list(datasets.get_column(data, 2))
-    prec_split = datasets.split_list2(datasets.get_column(data, 2))
+    prec_data1, prec_data2 = datasets.split_list(datasets.get_column(data, 3))
+    prec_split = datasets.split_list2(datasets.get_column(data, 3))
     prec_data1 = datasets.none_to_zero(prec_data1)
     prec_data1 = datasets.convert_float(prec_data1)
     try:
@@ -217,7 +239,7 @@ def wind_info(data, units):
     """Gets the wind info."""
     
     # Get the data.
-    wind_data1, wind_data2 = datasets.split_list(datasets.get_column(data, 3))
+    wind_data1, wind_data2 = datasets.split_list(datasets.get_column(data, 4))
     wind_data1 = datasets.none_to_zero(wind_data1)
     wind_data1 = datasets.convert_float(wind_data1)
     try:
@@ -258,7 +280,7 @@ def humi_info(data, units):
     """Gets the humidity info."""
     
     # Get the data.
-    humi_data = datasets.convert_float(datasets.get_column(data, 4))
+    humi_data = datasets.convert_float(datasets.get_column(data, 5))
     humi_low = min(humi_data)
     humi_high = max(humi_data)
     humi_avg = calculations.mean(humi_data)
@@ -283,7 +305,7 @@ def airp_info(data, units):
     """Gets the air pressure info."""
     
     # Get the data.
-    airp_data1, airp_data2 = datasets.split_list(datasets.get_column(data, 5))
+    airp_data1, airp_data2 = datasets.split_list(datasets.get_column(data, 6))
     airp_data1 = datasets.convert_float(airp_data1)
     airp_low = min(airp_data1)
     airp_high = max(airp_data1)
@@ -322,34 +344,72 @@ def clou_info(data, units):
     """Gets the cloud cover info."""
     
     # Get the data.
-    # Put the items into a collection.
-    clou_data = Counter(datasets.get_column(data, 6))
-    # Find how many times the items appear.
-    m_list = clou_data.most_common()
-    # Convert the list to a dictionary.
-    m_dict = {}
-    for i in m_list:
-        m_dict[i[0]] = i[1]
+    clou_data1, clou_data2 = datasets.split_list3(datasets.get_column(data, 8))
+    # Get the number of days of each cloud cover.
+    clou_cover = Counter(clou_data1)
+    m_list1 = clou_cover.most_common()
+    m_dict1 = {}
+    for i in m_list1:
+        m_dict1[i[0]] = i[1]
+    # Get the number of days of each cloud type.
+    clou_type = Counter(datasets.strip_items(clou_data2, ["(", ")"]))
+    m_list2 = clou_type.most_common()
+    m_dict2 = {}
+    for i in m_list2:
+        m_dict2[i[0]] = i[1]
     
     # If any of the items don't appear, add dict items for them, with the values set to 0.
-    if not "Sunny" in m_dict:
-        m_dict["Sunny"] = 0
-    if not "Mostly Sunny" in m_dict:
-        m_dict["Mostly Sunny"] = 0
-    if not "Partly Cloudy" in m_dict:
-        m_dict["Partly Cloudy"] = 0
-    if not "Mostly Cloudy" in m_dict:
-        m_dict["Mostly Cloudy"] = 0
-    if not "Cloudy" in m_dict:
-        m_dict["Cloudy"] = 0
+    if not "Sunny" in m_dict1:
+        m_dict1["Sunny"] = 0
+    if not "Mostly Sunny" in m_dict1:
+        m_dict1["Mostly Sunny"] = 0
+    if not "Partly Cloudy" in m_dict1:
+        m_dict1["Partly Cloudy"] = 0
+    if not "Mostly Cloudy" in m_dict1:
+        m_dict1["Mostly Cloudy"] = 0
+    if not "Cloudy" in m_dict1:
+        m_dict1["Cloudy"] = 0
+    if not "None" in m_dict2:
+        m_dict2["None"] = 0
+    if not "Unknown" in m_dict2:
+        m_dict2["Unknown"] = 0
+    if not "Cirrus" in m_dict2:
+        m_dict2["Cirrus"] = 0
+    if not "Cirrocumulus" in m_dict2:
+        m_dict2["Cirrocumulus"] = 0
+    if not "Cirrostratus" in m_dict2:
+        m_dict2["Cirrostratus"] = 0
+    if not "Cumulonimbus" in m_dict2:
+        m_dict2["Cumulonimbus"] = 0
+    if not "Altocumulus" in m_dict2:
+        m_dict2["Altocumulus"] = 0
+    if not "Altostratus" in m_dict2:
+        m_dict2["Altostratus"] = 0
+    if not "Stratus" in m_dict2:
+        m_dict2["Stratus"] = 0
+    if not "Cumulus" in m_dict2:
+        m_dict2["Cumulus"] = 0
+    if not "Stratocumulus" in m_dict2:
+        m_dict2["Stratocumulus"] = 0
     
     # Create the data list.
     data2 = [
-        ["Days sunny", "%s day%s" % (m_dict["Sunny"], "" if m_dict["Sunny"] == 1 else "s")],
-        ["Days mostly sunny", "%s day%s" % (m_dict["Mostly Sunny"], "" if m_dict["Mostly Sunny"] == 1 else "s")],
-        ["Days partly cloudy", "%s day%s" % (m_dict["Partly Cloudy"], "" if m_dict["Partly Cloudy"] == 1 else "s")],
-        ["Days mostly cloudy", "%s day%s" % (m_dict["Mostly Cloudy"], "" if m_dict["Mostly Cloudy"] == 1 else "s")],
-        ["Days cloudy", "%s day%s" % (m_dict["Cloudy"], "" if m_dict["Cloudy"] == 1 else "s")]
+        ["Days sunny", "%s day%s" % (m_dict1["Sunny"], "" if m_dict1["Sunny"] == 1 else "s")],
+        ["Days mostly sunny", "%s day%s" % (m_dict1["Mostly Sunny"], "" if m_dict1["Mostly Sunny"] == 1 else "s")],
+        ["Days partly cloudy", "%s day%s" % (m_dict1["Partly Cloudy"], "" if m_dict1["Partly Cloudy"] == 1 else "s")],
+        ["Days mostly cloudy", "%s day%s" % (m_dict1["Mostly Cloudy"], "" if m_dict1["Mostly Cloudy"] == 1 else "s")],
+        ["Days cloudy", "%s day%s" % (m_dict1["Cloudy"], "" if m_dict1["Cloudy"] == 1 else "s")],
+        ["Days with no clouds", "%s day%s" % (m_dict2["None"], "" if m_dict2["None"] == 1 else "s")],
+        ["Days with unknown clouds", "%s day%s" % (m_dict2["Unknown"], "" if m_dict2["Unknown"] == 1 else "s")],
+        ["Days with cirrus", "%s day%s" % (m_dict2["Cirrus"], "" if m_dict2["Cirrus"] == 1 else "s")],
+        ["Days with cirrocumulus", "%s day%s" % (m_dict2["Cirrocumulus"], "" if m_dict2["Cirrocumulus"] == 1 else "s")],
+        ["Days with cirrostratos", "%s day%s" % (m_dict2["Cirrostratus"], "" if m_dict2["Cirrostratus"] == 1 else "s")],
+        ["Days with cumulonimbus", "%s day%s" % (m_dict2["Cumulonimbus"], "" if m_dict2["Cumulonimbus"] == 1 else "s")],
+        ["Days with altocumulus", "%s day%s" % (m_dict2["Altocumulus"], "" if m_dict2["Altocumulus"] == 1 else "s")],
+        ["Days with altostratus", "%s day%s" % (m_dict2["Altostratus"], "" if m_dict2["Altostratus"] == 1 else "s")],
+        ["Days with stratus", "%s day%s" % (m_dict2["Stratus"], "" if m_dict2["Stratus"] == 1 else "s")],
+        ["Days with cumulus", "%s day%s" % (m_dict2["Cumulus"], "" if m_dict2["Cumulus"] == 1 else "s")],
+        ["Days with stratocumulus", "%s day%s" % (m_dict2["Stratocumulus"], "" if m_dict2["Stratocumulus"] == 1 else "s")]
     ]
     
     return data2
