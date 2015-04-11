@@ -365,6 +365,31 @@ def airp_info(data, units):
     return data2
 
 
+def visi_info(data, units):
+    """"Gets the visibility info."""
+    
+    # Get the data.
+    visi_data = datasets.convert_float(datasets.get_column(data, 2))
+    visi_low = min(visi_data)
+    visi_high = max(visi_data)
+    visi_avg = calculations.mean(visi_data)
+    visi_median = calculations.median(visi_data)
+    visi_range = calculations.range(visi_data)
+    visi_mode = calculations.mode(visi_data)
+    
+    # Create the data list.
+    data2 = [
+        ["Lowest visibility", "%.2f %s" % (visi_low, units["visi"])],
+        ["Highest visibility", "%.2f %s" % (visi_high, units["visi"])],
+        ["Average visibility", "%.2f %s" % (visi_avg, units["visi"])],
+        ["Median visibility", "%.2f %s" % (visi_median, units["visi"])],
+        ["Range of visibility", "%.2f %s" % (visi_range, units["visi"])],
+        ["Most common visibility", "%.2f %s" % (visi_mode, units["visi"])]
+    ]
+    
+    return data2
+
+
 def clou_info(data, units):
     """Gets the cloud cover info."""
     

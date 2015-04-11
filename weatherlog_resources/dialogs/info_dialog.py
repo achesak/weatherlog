@@ -145,6 +145,23 @@ class GenericInfoDialog(Gtk.Dialog):
         scrolled_win6.set_vexpand(True)
         scrolled_win6.add(info_box6)
         
+        # Tab 10: Visibility info.
+        info_box10 = Gtk.Box()
+        info_box10_lbl = Gtk.Label("Visibility")
+        self.liststore10 = Gtk.ListStore(str, str)
+        self.treeview10 = Gtk.TreeView(model = self.liststore10)
+        cate_text10 = Gtk.CellRendererText()
+        cate_col10 = Gtk.TreeViewColumn("Field", cate_text10, text = 0)
+        self.treeview10.append_column(cate_col10)
+        valu_text10 = Gtk.CellRendererText()
+        valu_col10 = Gtk.TreeViewColumn("Value", valu_text10, text = 1)
+        self.treeview10.append_column(valu_col10)
+        info_box10.pack_start(self.treeview10, fill = True, expand = True, padding = 0)
+        scrolled_win10 = Gtk.ScrolledWindow()
+        scrolled_win10.set_hexpand(True)
+        scrolled_win10.set_vexpand(True)
+        scrolled_win10.add(info_box10)
+        
         # Tab 7: Cloud Cover info.
         info_box7 = Gtk.Box()
         info_box7_lbl = Gtk.Label("Cloud Cover")
@@ -187,6 +204,7 @@ class GenericInfoDialog(Gtk.Dialog):
         notebook.append_page(scrolled_win4, info_box4_lbl)
         notebook.append_page(scrolled_win5, info_box5_lbl)
         notebook.append_page(scrolled_win6, info_box6_lbl)
+        notebook.append_page(scrolled_win10, info_box10_lbl)
         notebook.append_page(scrolled_win7, info_box7_lbl)
         notebook.append_page(scrolled_win8, info_box8_lbl)
         info_box.add(notebook)
@@ -207,8 +225,10 @@ class GenericInfoDialog(Gtk.Dialog):
         for i in data[6]:
             self.liststore6.append(i)
         for i in data[7]:
-            self.liststore7.append(i)
+            self.liststore10.append(i)
         for i in data[8]:
+            self.liststore7.append(i)
+        for i in data[9]:
             self.liststore8.append(i)
         
         # Show the dialog. There's no need to get the response.

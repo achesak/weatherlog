@@ -755,6 +755,7 @@ class WeatherLog(Gtk.Window):
             info.wind_info(data, units),
             info.humi_info(data, units),
             info.airp_info(data, units),
+            info.visi_info(data, units),
             info.clou_info(data, units),
             info.note_info(data, units)
         ]
