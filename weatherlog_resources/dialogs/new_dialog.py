@@ -259,7 +259,7 @@ class AddNewDialog(Gtk.Dialog):
         
         # If there was an error, tell the user and cancel the action.
         if "error" in data:
-            show_error_dialog(self, "Add New - %s" % profile, data["error"])
+            show_error_dialog(self, "Add New - %s" % profile, "Error:\n\n%s" % data["error"])
             return False
         
         # Set the temperature field.
