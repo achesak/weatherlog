@@ -47,9 +47,7 @@ class GenericGraphDialog(Gtk.Dialog):
         a1.set_xlabel("Date")
         a1.set_ylabel("Temperature")
         a1.set_xticks(data[1])
-        a1.set_xticklabels(
-                data[0], rotation = "vertical"
-        )
+        a1.set_xticklabels(data[0], rotation = "vertical")
         canvas1 = FigureCanvas(f1)
         scrolled_win1 = Gtk.ScrolledWindow()
         scrolled_win1.set_hexpand(True)
@@ -67,9 +65,7 @@ class GenericGraphDialog(Gtk.Dialog):
         a2.set_xlabel("Date")
         a2.set_ylabel("Precipitation")
         a2.set_xticks(data[1])
-        a2.set_xticklabels(
-                data[0], rotation = "vertical"
-        )
+        a2.set_xticklabels(data[0], rotation = "vertical")
         canvas2 = FigureCanvas(f2)
         scrolled_win2 = Gtk.ScrolledWindow()
         scrolled_win2.set_hexpand(True)
@@ -121,9 +117,7 @@ class GenericGraphDialog(Gtk.Dialog):
         a3.set_xlabel("Date")
         a3.set_ylabel("Wind Speed")
         a3.set_xticks(data[1])
-        a3.set_xticklabels(
-                data[0], rotation = "vertical"
-        )
+        a3.set_xticklabels(data[0], rotation = "vertical")
         canvas3 = FigureCanvas(f3)
         scrolled_win3 = Gtk.ScrolledWindow()
         scrolled_win3.set_hexpand(True)
@@ -141,9 +135,7 @@ class GenericGraphDialog(Gtk.Dialog):
         a4.set_xlabel("Date")
         a4.set_ylabel("Humidity")
         a4.set_xticks(data[1])
-        a4.set_xticklabels(
-                data[0], rotation = "vertical"
-        )
+        a4.set_xticklabels(data[0], rotation = "vertical")
         canvas4 = FigureCanvas(f4)
         scrolled_win4 = Gtk.ScrolledWindow()
         scrolled_win4.set_hexpand(True)
@@ -161,9 +153,7 @@ class GenericGraphDialog(Gtk.Dialog):
         a5.set_xlabel("Date")
         a5.set_ylabel("Air Pressure")
         a5.set_xticks(data[1])
-        a5.set_xticklabels(
-                data[0], rotation = "vertical"
-        )
+        a5.set_xticklabels(data[0], rotation = "vertical")
         canvas5 = FigureCanvas(f5)
         scrolled_win5 = Gtk.ScrolledWindow()
         scrolled_win5.set_hexpand(True)
@@ -187,7 +177,7 @@ class GenericGraphDialog(Gtk.Dialog):
         scrolled_win8.set_vexpand(True)
         scrolled_win8.add(canvas8)
         
-        # Tab 9: Cloud Cover change bar graph
+        # Tab 9: Cloud Cover bar graph
         info_box9 = Gtk.Box()
         info_box9_lbl = Gtk.Label("Cloud Cover")
         f9 = Figure(figsize = (12, 6))
@@ -204,6 +194,25 @@ class GenericGraphDialog(Gtk.Dialog):
         scrolled_win9.set_vexpand(True)
         scrolled_win9.add(canvas9)
         
+        # Tab 10: Cloud Type bar graph
+        info_box10 = Gtk.Box()
+        info_box10_lbl = Gtk.Label("Cloud Type")
+        f10 = Figure(figsize = (12, 6))
+        f10.subplots_adjust(bottom = 0.25)
+        a10 = f10.add_subplot(1,1,1)
+        a10.bar([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10], data[11], width = 0.5)
+        a10.set_xlabel("Cloud Type")
+        a10.set_ylabel("Number of Days")
+        a10.set_title("Cloud Type - %s" % last_profile)
+        a10.set_xticks([0.25, 1.25, 2.25, 3.25, 4.25, 5.25, 6.25, 7.25, 8.25, 9.25, 10.25])
+        a10.set_xticklabels(["None", "Unknown", "Cirrus", "Cirrocumulus", "Cirrostratus", "Cumulonimbus",
+                            "Altocumulus", "Altostratus", "Stratus", "Cumulus", "Stratocumulus"], rotation="vertical")
+        canvas10 = FigureCanvas(f10)
+        scrolled_win10 = Gtk.ScrolledWindow()
+        scrolled_win10.set_hexpand(True)
+        scrolled_win10.set_vexpand(True)
+        scrolled_win10.add(canvas10)
+        
         # Add the tabs to the notebook.
         notebook.append_page(scrolled_win1, info_box1_lbl)
         notebook.append_page(scrolled_win2, info_box2_lbl)
@@ -214,6 +223,7 @@ class GenericGraphDialog(Gtk.Dialog):
         notebook.append_page(scrolled_win5, info_box5_lbl)
         notebook.append_page(scrolled_win8, info_box8_lbl)
         notebook.append_page(scrolled_win9, info_box9_lbl)
+        notebook.append_page(scrolled_win10, info_box10_lbl)
         info_box.add(notebook)
         
         # Show the dialog. There's no need to get the response.
