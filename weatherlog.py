@@ -750,6 +750,7 @@ class WeatherLog(Gtk.Window):
         data2 = [
             info.general_info(data, units),
             info.temp_info(data, units),
+            info.chil_info(data, units),
             info.prec_info(data, units),
             info.wind_info(data, units),
             info.humi_info(data, units),

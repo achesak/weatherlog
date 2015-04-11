@@ -156,6 +156,31 @@ def temp_info(data, units):
     return data2
 
 
+def chil_info(data, units):
+    """"Gets the wind chill info."""
+    
+    # Get the data.
+    chil_data = datasets.convert_float(datasets.get_column(data, 2))
+    chil_low = min(chil_data)
+    chil_high = max(chil_data)
+    chil_avg = calculations.mean(chil_data)
+    chil_median = calculations.median(chil_data)
+    chil_range = calculations.range(chil_data)
+    chil_mode = calculations.mode(chil_data)
+    
+    # Create the data list.
+    data2 = [
+        ["Lowest wind chill", "%.2f %s" % (chil_low, units["temp"])],
+        ["Highest wind chill", "%.2f %s" % (chil_high, units["temp"])],
+        ["Average wind chill", "%.2f %s" % (chil_avg, units["temp"])],
+        ["Median wind chill", "%.2f %s" % (chil_median, units["temp"])],
+        ["Range of wind chills", "%.2f %s" % (chil_range, units["temp"])],
+        ["Most common wind chill", "%.2f %s" % (chil_mode, units["temp"])]
+    ]
+    
+    return data2
+
+
 def prec_info(data, units):
     """"Gets the precipitation info."""
     
@@ -423,7 +448,7 @@ def note_info(data, units):
     
     # Loop through the list, appending the dates and notes.
     for i in range(0, len(data)):
-        if data[i][7] != "":
-            data2.append([data[i][0], data[i][7]])
+        if data[i][9] != "":
+            data2.append([data[i][0], data[i][9]])
     
     return data2

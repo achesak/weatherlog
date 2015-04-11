@@ -60,6 +60,23 @@ class GenericInfoDialog(Gtk.Dialog):
         scrolled_win2.set_vexpand(True)
         scrolled_win2.add(info_box2)
         
+        # Tab 9: Wind Chill info.
+        info_box9 = Gtk.Box()
+        info_box9_lbl = Gtk.Label("Wind Chill")
+        self.liststore9 = Gtk.ListStore(str, str)
+        self.treeview9 = Gtk.TreeView(model = self.liststore9)
+        cate_text9 = Gtk.CellRendererText()
+        cate_col9 = Gtk.TreeViewColumn("Field", cate_text9, text = 0)
+        self.treeview9.append_column(cate_col9)
+        valu_text9 = Gtk.CellRendererText()
+        valu_col9 = Gtk.TreeViewColumn("Value", valu_text9, text = 1)
+        self.treeview9.append_column(valu_col9)
+        info_box9.pack_start(self.treeview9, fill = True, expand = True, padding = 0)
+        scrolled_win9 = Gtk.ScrolledWindow()
+        scrolled_win9.set_hexpand(True)
+        scrolled_win9.set_vexpand(True)
+        scrolled_win9.add(info_box9)
+        
         # Tab 3: Precipitation info.
         info_box3 = Gtk.Box()
         info_box3_lbl = Gtk.Label("Precipitation")
@@ -165,6 +182,7 @@ class GenericInfoDialog(Gtk.Dialog):
         # Add the tabs to the notebook.
         notebook.append_page(scrolled_win1, info_box1_lbl)
         notebook.append_page(scrolled_win2, info_box2_lbl)
+        notebook.append_page(scrolled_win9, info_box9_lbl)
         notebook.append_page(scrolled_win3, info_box3_lbl)
         notebook.append_page(scrolled_win4, info_box4_lbl)
         notebook.append_page(scrolled_win5, info_box5_lbl)
@@ -179,16 +197,18 @@ class GenericInfoDialog(Gtk.Dialog):
         for i in data[1]:
             self.liststore2.append(i)
         for i in data[2]:
-            self.liststore3.append(i)
+            self.liststore9.append(i)
         for i in data[3]:
-            self.liststore4.append(i)
+            self.liststore3.append(i)
         for i in data[4]:
-            self.liststore5.append(i)
+            self.liststore4.append(i)
         for i in data[5]:
-            self.liststore6.append(i)
+            self.liststore5.append(i)
         for i in data[6]:
-            self.liststore7.append(i)
+            self.liststore6.append(i)
         for i in data[7]:
+            self.liststore7.append(i)
+        for i in data[8]:
             self.liststore8.append(i)
         
         # Show the dialog. There's no need to get the response.
