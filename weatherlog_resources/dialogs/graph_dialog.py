@@ -54,6 +54,24 @@ class GenericGraphDialog(Gtk.Dialog):
         scrolled_win1.set_vexpand(True)
         scrolled_win1.add(canvas1)
         
+        # Tab 11: Wind Chill graph.
+        info_box11 = Gtk.Box()
+        info_box11_lbl = Gtk.Label("Wind Chill")
+        f11 = Figure(figsize = (12, 6))
+        f11.subplots_adjust(bottom = 0.2)
+        a11 = f11.add_subplot(1,1,1)
+        a11.plot(data[1], data[12])
+        a11.set_title("Wind Chill - %s" % last_profile)
+        a11.set_xlabel("Date")
+        a11.set_ylabel("Wind Chill")
+        a11.set_xticks(data[1])
+        a11.set_xticklabels(data[0], rotation = "vertical")
+        canvas11 = FigureCanvas(f11)
+        scrolled_win11 = Gtk.ScrolledWindow()
+        scrolled_win11.set_hexpand(True)
+        scrolled_win11.set_vexpand(True)
+        scrolled_win11.add(canvas11)
+        
         # Tab 2: Precipitation graph.
         info_box2 = Gtk.Box()
         info_box2_lbl = Gtk.Label("Precipitation")
@@ -177,6 +195,24 @@ class GenericGraphDialog(Gtk.Dialog):
         scrolled_win8.set_vexpand(True)
         scrolled_win8.add(canvas8)
         
+        # Tab 12: Wind Chill graph.
+        info_box12 = Gtk.Box()
+        info_box12_lbl = Gtk.Label("Visibility")
+        f12 = Figure(figsize = (12, 6))
+        f12.subplots_adjust(bottom = 0.2)
+        a12 = f12.add_subplot(1,1,1)
+        a12.plot(data[1], data[13])
+        a12.set_title("Visibility - %s" % last_profile)
+        a12.set_xlabel("Date")
+        a12.set_ylabel("Visibility")
+        a12.set_xticks(data[1])
+        a12.set_xticklabels(data[0], rotation = "vertical")
+        canvas12 = FigureCanvas(f12)
+        scrolled_win12 = Gtk.ScrolledWindow()
+        scrolled_win12.set_hexpand(True)
+        scrolled_win12.set_vexpand(True)
+        scrolled_win12.add(canvas12)
+        
         # Tab 9: Cloud Cover bar graph
         info_box9 = Gtk.Box()
         info_box9_lbl = Gtk.Label("Cloud Cover")
@@ -215,6 +251,7 @@ class GenericGraphDialog(Gtk.Dialog):
         
         # Add the tabs to the notebook.
         notebook.append_page(scrolled_win1, info_box1_lbl)
+        notebook.append_page(scrolled_win11, info_box11_lbl)
         notebook.append_page(scrolled_win2, info_box2_lbl)
         notebook.append_page(scrolled_win6, info_box6_lbl)
         notebook.append_page(scrolled_win7, info_box7_lbl)
@@ -222,6 +259,7 @@ class GenericGraphDialog(Gtk.Dialog):
         notebook.append_page(scrolled_win4, info_box4_lbl)
         notebook.append_page(scrolled_win5, info_box5_lbl)
         notebook.append_page(scrolled_win8, info_box8_lbl)
+        notebook.append_page(scrolled_win12, info_box12_lbl)
         notebook.append_page(scrolled_win9, info_box9_lbl)
         notebook.append_page(scrolled_win10, info_box10_lbl)
         info_box.add(notebook)

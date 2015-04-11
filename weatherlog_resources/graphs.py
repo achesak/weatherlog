@@ -32,6 +32,7 @@ def get_data(data):
     
     # Get the data.
     temp_data = datasets.convert_float(datasets.get_column(data, 1))
+    chil_data = datasets.convert_float(datasets.get_column(data, 2))
     prec_data1, prec_data2 = datasets.split_list(datasets.get_column(data, 3))
     prec_data = datasets.convert_float(datasets.none_to_zero(prec_data1))
     wind_data1, wind_data2 = datasets.split_list(datasets.get_column(data, 4))
@@ -39,6 +40,7 @@ def get_data(data):
     humi_data = datasets.convert_float(datasets.get_column(data, 5))
     airp_data1, airp_data2 = datasets.split_list(datasets.get_column(data, 6))
     airp_data = datasets.convert_float(airp_data1)
+    visi_data = datasets.convert_float(datasets.get_column(data, 7))
     clou_data1, clou_data2 = datasets.split_list3(datasets.get_column(data, 8))
     clou_data2 = datasets.strip_items(clou_data2, ["(", ")"])
     
@@ -129,6 +131,6 @@ def get_data(data):
             clou_types[10] += 1
     
     data = [date_data, new_dates, temp_data, prec_data, wind_data, humi_data, airp_data, prec_amount,
-            prec_days, airp_change, clou_days, clou_types]
+            prec_days, airp_change, clou_days, clou_types, chil_data, visi_data]
     
     return data
