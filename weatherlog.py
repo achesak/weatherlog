@@ -1120,7 +1120,7 @@ class WeatherLog(Gtk.Window):
         
         # Get the selection mode and all of the fields, conditions, and values.
         sel_dlg = SelectDataAdvancedDialog(self, last_profile)
-        response = sel_dlg.run()
+        """response = sel_dlg.run()
         sel_mode = sel_dlg.mode_com.get_active_text()
         temp_chk = sel_dlg.sel_chk1.get_active()
         temp_op = sel_dlg.op_com1.get_active_text()
@@ -1219,7 +1219,7 @@ class WeatherLog(Gtk.Window):
             
             # Export the info.
             if response2 == Gtk.ResponseType.OK:
-                export_info.export_subset(filtered, units, filename)
+                export_info.export_subset(filtered, units, filename)"""
     
     
     def import_file(self, event):
