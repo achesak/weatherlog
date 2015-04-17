@@ -27,7 +27,7 @@ class DateSelectionDialog(Gtk.Dialog):
         info_box.add(info_grid)
         
         # Create the label.
-        info_lbl = Gtk.Label("Select the dates:")
+        info_lbl = Gtk.Label("Choose dates:")
         info_lbl.set_alignment(0, 0.5)
         info_grid.add(info_lbl)
         

@@ -8,23 +8,24 @@
 from gi.repository import Gtk
 
 
-class SelectDataSimpleDialog(Gtk.Dialog):
+class SelectDataSimpleDialog(Gtk.Window):
     """Shows the simple data selection dialog."""
     def __init__(self, parent, profile):
         """Create the dialog."""
         
         # This window should be modal.
-        Gtk.Dialog.__init__(self, "Select Data - %s" % profile, parent, Gtk.DialogFlags.MODAL)
+        Gtk.Window.__init__(self)
+        self.set_title("Select Data - %s" % profile)
         self.set_resizable(False)
         
         # Add the buttons.
-        self.add_button("Cancel", Gtk.ResponseType.CANCEL)
-        self.add_button("OK", Gtk.ResponseType.OK)
+        #self.add_button("Cancel", Gtk.ResponseType.CANCEL)
+        #self.add_button("OK", Gtk.ResponseType.OK)
         
         # Create the grid.
-        sel_box = self.get_content_area()
+        #sel_box = self.get_content_area()
         sel_grid = Gtk.Grid()
-        sel_box.add(sel_grid)
+        self.add(sel_grid)
         
         # Create the labels, comboboxes, and entry.
         sel_lbl1 = Gtk.Label("Select ")
