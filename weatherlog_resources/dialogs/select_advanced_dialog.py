@@ -38,17 +38,41 @@ class SelectDataAdvancedDialog(Gtk.Window):
         sel_grid = Gtk.Grid()
         self.add(sel_grid)
         
-        # Create the selection mode label and list.
-        mode_box = Gtk.Box()
-        mode_lbl = Gtk.Label("Selection Mode:  ")
+        # Create the labels and input widgets.
+        add_grid = Gtk.Grid()
+        mode_lbl = Gtk.Label("Mode:  ")
         mode_lbl.set_alignment(0, 0.5)
-        mode_box.pack_start(mode_lbl, False, False, 0)
+        add_grid.add(mode_lbl)
         self.mode_com = Gtk.ComboBoxText()
         for i in ["Match All", "Match At Least One", "Match None"]:
             self.mode_com.append_text(i)
         self.mode_com.set_active(0)
-        mode_box.pack_end(self.mode_com, True, True, 0)
-        sel_grid.add(mode_box)
+        self.mode_com.set_hexpand(True)
+        add_grid.attach_next_to(self.mode_com, mode_lbl, Gtk.PositionType.RIGHT, 1, 1)
+        field_lbl = Gtk.Label("Field: ")
+        field_lbl.set_alignment(0, 0.5)
+        add_grid.attach_next_to(field_lbl, mode_lbl, Gtk.PositionType.BOTTOM, 1, 1)
+        self.field_com = Gtk.ComboBoxText()
+        for i in ["Temperature", "Wind Chill", "Precipitation Amount", "Precipition Type", "Wind Speed", "Wind Direction",
+                  "Humidity", "Air Pressure Change", "Visibility", "Cloud Cover", "Cloud Type"]:
+            self.field_com.append_text(i)
+        self.field_com.set_active(0)
+        add_grid.attach_next_to(self.field_com, field_lbl, Gtk.PositionType.RIGHT, 1, 1)
+        cond_lbl = Gtk.Label("Condition: ")
+        cond_lbl.set_alignment(0, 0.5)
+        add_grid.attach_next_to(cond_lbl, field_lbl, Gtk.PositionType.BOTTOM, 1, 1)
+        self.cond_com = Gtk.ComboBoxText()
+        for i in ["Equal To", "Not Equal To", "Greater Than", "Less Than", "Greater Than or Equal To", "Less Than or Equal To",
+                  "Between", "Between (Inclusive)", "Outside", "Outside (Inclusive)"]:
+            self.cond_com.append_text(i)
+        self.cond_com.set_active(0)
+        add_grid.attach_next_to(self.cond_com, cond_lbl, Gtk.PositionType.RIGHT, 1, 1)
+        value_lbl = Gtk.Label("Value: ")
+        value_lbl.set_alignment(0, 0.5)
+        add_grid.attach_next_to(value_lbl, cond_lbl, Gtk.PositionType.BOTTOM, 1, 1)
+        self.value_ent = Gtk.Entry()
+        add_grid.attach_next_to(self.value_ent, value_lbl, Gtk.PositionType.RIGHT, 1, 1)
+        sel_grid.add(add_grid)
         
         # Create the data conditions listbox.
         self.liststore = Gtk.ListStore(str, str, str)
@@ -65,7 +89,7 @@ class SelectDataAdvancedDialog(Gtk.Window):
         self.treeview.set_hexpand(True)
         self.treeview.set_vexpand(True)
         self.treeview.get_selection().set_mode(Gtk.SelectionMode.MULTIPLE)
-        sel_grid.attach_next_to(self.treeview, mode_box, Gtk.PositionType.BOTTOM, 1, 1)
+        sel_grid.attach_next_to(self.treeview, add_grid, Gtk.PositionType.BOTTOM, 1, 1)
         
         # Create the buttons.
         sel_box = Gtk.Box()
@@ -134,61 +158,16 @@ class SelectDataAdvancedDialog(Gtk.Window):
     def add_condition(self, widget):
         """Shows the add condition dialog."""
         
-        # Create the dialog.
-        add_dlg = Gtk.Dialog("Add Condition", self, Gtk.DialogFlags.MODAL)
+        # Get the entered values
+        field = self.field_com.get_active_text()
+        condition = self.cond_com.get_active_text()
+        value = self.value_ent.get_text()
         
-        # Add the buttons.
-        add_dlg.add_button("Cancel", Gtk.ResponseType.CANCEL)
-        add_dlg.add_button("OK", Gtk.ResponseType.OK)
-        
-        # Create the grid.
-        add_grid = Gtk.Grid()
-        add_dlg.get_content_area().add(add_grid)
-        
-        # Create the labels and input widgets.
-        field_lbl = Gtk.Label("Field: ")
-        field_lbl.set_alignment(0, 0.5)
-        add_grid.add(field_lbl)
-        field_com = Gtk.ComboBoxText()
-        for i in ["Temperature", "Wind Chill", "Precipitation Amount", "Precipition Type", "Wind Speed", "Wind Direction",
-                  "Humidity", "Air Pressure Change", "Visibility", "Cloud Cover", "Cloud Type"]:
-            field_com.append_text(i)
-        field_com.set_active(0)
-        add_grid.attach_next_to(field_com, field_lbl, Gtk.PositionType.RIGHT, 1, 1)
-        cond_lbl = Gtk.Label("Condition: ")
-        cond_lbl.set_alignment(0, 0.5)
-        add_grid.attach_next_to(cond_lbl, field_lbl, Gtk.PositionType.BOTTOM, 1, 1)
-        cond_com = Gtk.ComboBoxText()
-        for i in ["Equal To", "Not Equal To", "Greater Than", "Less Than", "Greater Than or Equal To", "Less Than or Equal To",
-                  "Between", "Between (Inclusive)", "Outside", "Outside (Inclusive)"]:
-            cond_com.append_text(i)
-        cond_com.set_active(0)
-        add_grid.attach_next_to(cond_com, cond_lbl, Gtk.PositionType.RIGHT, 1, 1)
-        value_lbl = Gtk.Label("Value: ")
-        value_lbl.set_alignment(0, 0.5)
-        add_grid.attach_next_to(value_lbl, cond_lbl, Gtk.PositionType.BOTTOM, 1, 1)
-        value_ent = Gtk.Entry()
-        add_grid.attach_next_to(value_ent, value_lbl, Gtk.PositionType.RIGHT, 1, 1)
-        
-        
-        # Show the dialog and get the input.
-        add_dlg.show_all()
-        response = add_dlg.run()
-        
-        if response == Gtk.ResponseType.OK:
-            
-            field = field_com.get_active_text()
-            condition = cond_com.get_active_text()
-            value = value_ent.get_text()
-            
-            # Validate the data, and add if it's acceptable.
-            if not self.check_operator(field, condition) and not self.check_used(field) and not self.check_two(condition, value) and \
-               not self.check_one(condition, value):
-                self.liststore.append([field, condition, value])
-                self.conditions.append([field, condition, value])
-        
-        # Close the dialog.
-        add_dlg.destroy()
+        # Validate the data, and add if it's acceptable.
+        if not self.check_operator(field, condition) and not self.check_used(field) and not self.check_two(condition, value) and \
+            not self.check_one(condition, value):
+            self.liststore.append([field, condition, value])
+            self.conditions.append([field, condition, value])
     
     
     def remove_condition(self, widget):
