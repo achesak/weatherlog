@@ -22,25 +22,15 @@ def filter_data(data, condition):
     # Get the column of the data that is being filtered.
     string_compare = False
     col = []
-    if condition[0] == "temperature":
+    field = condition[0].lower()
+    if field == "temperature":
         col = datasets.convert_float(datasets.get_column(data, 1))
-    elif condition[0] == "precipitation amount":
-        col = datasets.get_column(data, 2)
-        col = datasets.convert_float(datasets.none_to_zero(datasets.split_list(col)[0]))
-    elif condition[0] == "precipitation type":
-        string_compare = True
-        ncol = datasets.get_column(data, 2)
-        col = []
-        for i in ncol:
-            if i == "None":
-                col.append(i)
-            else:
-                i_split = i.split(" ")
-                col.append(i_split[1])
-    elif condition[0] == "wind speed":
+    elif field == "wind chill":
+        col = datasets.convert_float(datasets.get_column(data, 2))
+    elif field == "precipitation amount":
         col = datasets.get_column(data, 3)
         col = datasets.convert_float(datasets.none_to_zero(datasets.split_list(col)[0]))
-    elif condition[0] == "wind direction":
+    elif field == "precipitation type":
         string_compare = True
         ncol = datasets.get_column(data, 3)
         col = []
@@ -50,20 +40,38 @@ def filter_data(data, condition):
             else:
                 i_split = i.split(" ")
                 col.append(i_split[1])
-    elif condition[0] == "humidity":
-        col = datasets.convert_float(datasets.get_column(data, 4))
-    elif condition[0] == "air pressure":
-        col = datasets.convert_float(datasets.split_list(datasets.get_column(data, 5))[0])
-    elif condition[0] == "air pressure change":
+    elif field == "wind speed":
+        col = datasets.get_column(data, 4)
+        col = datasets.convert_float(datasets.none_to_zero(datasets.split_list(col)[0]))
+    elif field == "wind direction":
         string_compare = True
-        col = datasets.split_list(datasets.get_column(data, 5))[1]
-    elif condition[0] == "cloud cover":
+        ncol = datasets.get_column(data, 4)
+        col = []
+        for i in ncol:
+            if i == "None":
+                col.append(i)
+            else:
+                i_split = i.split(" ")
+                col.append(i_split[1])
+    elif field == "humidity":
+        col = datasets.convert_float(datasets.get_column(data, 5))
+    elif field == "air pressure":
+        col = datasets.convert_float(datasets.split_list(datasets.get_column(data, 6))[0])
+    elif field == "air pressure change":
         string_compare = True
-        col = datasets.get_column(data, 6)
+        col = datasets.split_list(datasets.get_column(data, 6))[1]
+    elif field == "visibility":
+        col = datasets.convert_float(datasets.get_column(data, 7))
+    elif field == "cloud cover":
+        string_compare = True
+        col = datasets.split_list3(datasets.get_column(data, 8))[0]
+    elif field == "cloud type":
+        string_compare = True
+        col = datasets.strip_items(datasets.split_list3(datasets.get_column(data, 8))[1], ["(", ")"])
     
     # Loop through the data, and add it to the filtered list if it matches the condition.
     for i in range(0, len(data)):
-        matches = filter_compare(col[i], condition[1], condition[2], string_compare)
+        matches = filter_compare(col[i], condition[1].lower(), condition[2], string_compare)
         if matches:
             filtered.append(data[i])
     
@@ -76,7 +84,6 @@ def filter_compare(item, operator, value, string_compare):
     # Remove all whitespace from the value and the item to compare.
     value = "".join(value.split())
     value = [value]
-    
     # If there are multiple values specified, split them.
     if "," in value[0]:
         value = value[0].split(",")

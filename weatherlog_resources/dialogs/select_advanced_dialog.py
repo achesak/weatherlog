@@ -8,13 +8,19 @@
 from gi.repository import Gtk
 # Import the dataset functions.
 import weatherlog_resources.datasets as datasets
+# Import the functions for filtering data.
+import weatherlog_resources.filter_data as filter_data
+# Import the functions for exporting info.
+import weatherlog_resources.export_info as export_info
+# Import the subset display dialog.
+from weatherlog_resources.dialogs.data_subset_dialog import DataSubsetDialog
 # Import generic dialogs.
 from weatherlog_resources.dialogs.misc_dialogs import *
 
 
 class SelectDataAdvancedDialog(Gtk.Window):
     """Shows the advanced data selection dialog."""
-    def __init__(self, parent, profile):
+    def __init__(self, parent, profile, data, config, units):
         """Create the dialog."""
         
         # Create the window
@@ -23,10 +29,26 @@ class SelectDataAdvancedDialog(Gtk.Window):
         self.set_resizable(True)
         self.set_default_size(400, 300)
         self.conditions = []
+        self.last_profile = profile
+        self.data = data
+        self.config = config
+        self.units = units
         
         # Create the box
         sel_grid = Gtk.Grid()
         self.add(sel_grid)
+        
+        # Create the selection mode label and list.
+        mode_box = Gtk.Box()
+        mode_lbl = Gtk.Label("Selection Mode:  ")
+        mode_lbl.set_alignment(0, 0.5)
+        mode_box.pack_start(mode_lbl, False, False, 0)
+        self.mode_com = Gtk.ComboBoxText()
+        for i in ["Match All", "Match At Least One", "Match None"]:
+            self.mode_com.append_text(i)
+        self.mode_com.set_active(0)
+        mode_box.pack_end(self.mode_com, True, True, 0)
+        sel_grid.add(mode_box)
         
         # Create the data conditions listbox.
         self.liststore = Gtk.ListStore(str, str, str)
@@ -43,11 +65,12 @@ class SelectDataAdvancedDialog(Gtk.Window):
         self.treeview.set_hexpand(True)
         self.treeview.set_vexpand(True)
         self.treeview.get_selection().set_mode(Gtk.SelectionMode.MULTIPLE)
-        sel_grid.add(self.treeview)
+        sel_grid.attach_next_to(self.treeview, mode_box, Gtk.PositionType.BOTTOM, 1, 1)
         
         # Create the buttons.
         sel_box = Gtk.Box()
         self.ok_btn = Gtk.Button(label = "OK")
+        self.ok_btn.connect("clicked", self.view_subset)
         sel_box.pack_end(self.ok_btn, True, True, 0)
         self.cancel_btn = Gtk.Button(label = "Cancel")
         self.cancel_btn.connect("clicked", lambda x: self.destroy())
@@ -195,4 +218,64 @@ class SelectDataAdvancedDialog(Gtk.Window):
         self.liststore.clear()
         for i in self.conditions:
             self.liststore.append(i)
+    
+    def view_subset(self, widget):
+        """Filters the data and displays the subset."""
+        
+        # Get the selection mode and conditions.
+        sel_mode = self.mode_com.get_active_text().lower()
+        conditions = []
+        for i in self.liststore:
+            if i[2].lstrip().rstrip() == "":
+                continue
+            conditions.append(i[:])
+        
+        # Loop through the conditions and filter the data.
+        filtered = []
+        first = True
+        for i in conditions:
             
+            # Get the filtered list.
+            subset = filter_data.filter_data(self.data, i)
+            
+            # If this is the first condition, add all the data to the filtered list.
+            if first:
+                filtered += subset
+                first = False
+            
+            # Otherwise, make sure it is combined correctly.
+            # AND combination mode:
+            elif sel_mode == "match all":
+                filtered = filter_data.filter_and(filtered, subset)
+            
+            # OR combination mode or NOT combination mode:
+            elif sel_mode == "match at least one" or sel_mode == "match none":
+                filtered = filter_data.filter_or(filtered, subset)
+        
+        # If the NOT combination mode is used, apply that filter as well.
+        if sel_mode == "match none":
+            filtered = filter_data.filter_not(filtered, data)
+        
+        # If there are no items that match the condition, don't show the main dialog.
+        if len(filtered) == 0:
+            show_alert_dialog(self, "Data Subset - %s" % self.last_profile, "No data matches the specified condition(s).")
+            return
+        
+        # Show the subset.
+        sub_dlg = DataSubsetDialog(self, "Data Subset - %s" % self.last_profile, filtered, self.config["show_units"], self.units)
+        response = sub_dlg.run()
+        sub_dlg.destroy()
+        
+        # If the user clicked Export:
+        if response == 9:
+            
+            # Get the filename.
+            export_dlg = Gtk.FileChooserDialog("Export Data Subset - %s" % self.last_profile, self, Gtk.FileChooserAction.SAVE, (Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL, Gtk.STOCK_SAVE, Gtk.ResponseType.OK))
+            export_dlg.set_do_overwrite_confirmation(True)
+            response2 = export_dlg.run()
+            filename = export_dlg.get_filename()
+            export_dlg.close()
+            
+            # Export the info.
+            if response2 == Gtk.ResponseType.OK:
+                export_info.export_subset(filtered, self.units, filename)

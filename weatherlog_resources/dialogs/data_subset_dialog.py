@@ -15,14 +15,14 @@ class DataSubsetDialog(Gtk.Dialog):
         
         # This window should be modal.
         Gtk.Dialog.__init__(self, title, parent, Gtk.DialogFlags.MODAL)
-        self.set_default_size(800, 300)
+        self.set_default_size(1200, 500)
         
         # Add the buttons.
         self.add_button("Export", 9)
         self.add_button("Close", Gtk.ResponseType.CLOSE)
         
         # Create the data columns.
-        self.liststore = Gtk.ListStore(str, str, str, str, str, str, str, str)
+        self.liststore = Gtk.ListStore(str, str, str, str, str, str, str, str, str, str)
         self.treeview = Gtk.TreeView(model = self.liststore)
         date_text = Gtk.CellRendererText()
         self.date_col = Gtk.TreeViewColumn("Date", date_text, text = 0)
