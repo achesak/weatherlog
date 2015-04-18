@@ -24,8 +24,7 @@
         <menuitem action="export_pastebin_csv" />
       </menu>
       <separator />
-      <menuitem action="reload_current" />
-      <menuitem action="manual_save" />
+      <menuitem action="save_data" />
     </menu>
     <menu action="info_global_menu">
       <menuitem action="info" />

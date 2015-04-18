@@ -12,7 +12,7 @@
 
 # Released under the MIT open source license:
 license_text = """
-Copyright (c) 2013-2014 Adam Chesak
+Copyright (c) 2013-2015 Adam Chesak
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -238,8 +238,7 @@ class WeatherLog(Gtk.Window):
             ("export_pastebin", None, "Export to Paste_bin...", None, None, lambda x: self.export_pastebin("raw")),
             ("export_pastebin_html", None, "_Export to Pastebin (HTML)...", None, None, lambda x: self.export_pastebin("html")),
             ("export_pastebin_csv", None, "E_xport to Pastebin (CSV)...", None, None, lambda x: self.export_pastebin("csv")),
-            ("reload_current", None, "Reload _Current Data...", "F5", None, self.reload_current),
-            ("manual_save", None, "Man_ual Save...", "<Control>m", None, lambda x: self.save(show_dialog = True, automatic = False))
+            ("save_data", None, "Sa_ve Data...", "<Control>v", None, lambda x: self.save(show_dialog = True, automatic = False))
         ])
         action_group.add_actions([
             ("info_global_menu", None, "_Info"),
@@ -2104,7 +2103,7 @@ class WeatherLog(Gtk.Window):
         
         # Show the dialog, if specified.
         if show_dialog:
-            show_alert_dialog(self, "Manual Save - %s" % last_profile, "Data has been saved.")
+            show_alert_dialog(self, "Save Data - %s" % last_profile, "Data has been saved.")
     
     
     def update_title(self):
@@ -2115,35 +2114,6 @@ class WeatherLog(Gtk.Window):
             self.set_title("WeatherLog - %s - %s to %s" % (last_profile, (data[0][0] if len(data) != 0 else "None"), (data[len(data)-1][0] if len(data) != 0 else "None")))
         else:
             self.set_title("WeatherLog - %s" % last_profile)
-    
-    
-    def reload_current(self, event):
-        """Reloads the current data."""
-        
-        global data
-        
-        # Show the confirmation dialog, but only if auto-saving isn't turned on.
-        if config["auto_save"] == False:
-            response = show_question_dialog(self, "Reload Current Data - %s" % last_profile, "Are you sure you want to reload the current data?\n\nUnsaved changes will be lost.")
-        else:
-            response = Gtk.ResponseType.OK
-        
-        # If the user wants to continue:
-        if response == Gtk.ResponseType.OK:
-            
-            # Clear the list.
-            data[:] = []
-            self.liststore.clear()
-            
-            # Load the data.   
-            data = io.read_profile(main_dir, last_profile)
-            
-            # Update the list.
-            for i in data:
-                self.liststore.append(i)
-        
-        # Tell the user the data has been reloaded.
-        show_alert_dialog(self, "Reload Current Data - %s" % last_profile, "Data has been reloaded.")
     
     
     def show_about(self, event):
