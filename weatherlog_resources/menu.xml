@@ -18,11 +18,7 @@
       <menuitem action="import_merge" />
       <menuitem action="import_profile" />
       <menuitem action="export" />
-      <menu action="export_menu">
-        <menuitem action="export_pastebin" />
-        <menuitem action="export_pastebin_html" />
-        <menuitem action="export_pastebin_csv" />
-      </menu>
+      <menuitem action="export_pastebin" />
       <separator />
       <menuitem action="save_data" />
     </menu>

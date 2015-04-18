@@ -137,6 +137,8 @@ from weatherlog_resources.dialogs.import_selection_dialog import ImportSelection
 from weatherlog_resources.dialogs.location_dialog import LocationDialog
 # Import the dialog for displaying the current weather.
 from weatherlog_resources.dialogs.weather_dialog import CurrentWeatherDialog
+# Import the dialog for exporting to Pastebin.
+from weatherlog_resources.dialogs.export_pastebin_dialog import ExportPastebinDialog
 # Import the miscellaneous dialogs.
 from weatherlog_resources.dialogs.misc_dialogs import show_alert_dialog, show_error_dialog, show_question_dialog, show_file_dialog, show_save_dialog, show_no_data_dialog
 # Import python-weather-api for getting the current weather.
@@ -230,15 +232,9 @@ class WeatherLog(Gtk.Window):
             ("import", Gtk.STOCK_OPEN, "_Import...", None, "Import data from a file", self.import_file),
             ("import_merge", None, "Imp_ort and Merge...", "<Control><Shift>o", None, self.import_merge),
             ("import_profile", None, "Import as New _Dataset...", None, None, self.import_new_profile),
-            ("export", Gtk.STOCK_SAVE, "_Export...", None, "Export data to a file", self.export_file)
-        ])
-        action_weather_export_group = Gtk.Action("export_menu", "E_xport to", None, None)
-        action_group.add_action(action_weather_export_group)
-        action_group.add_actions([
-            ("export_pastebin", None, "Export to Paste_bin...", None, None, lambda x: self.export_pastebin("raw")),
-            ("export_pastebin_html", None, "_Export to Pastebin (HTML)...", None, None, lambda x: self.export_pastebin("html")),
-            ("export_pastebin_csv", None, "E_xport to Pastebin (CSV)...", None, None, lambda x: self.export_pastebin("csv")),
-            ("save_data", None, "Sa_ve Data...", "<Control>v", None, lambda x: self.save(show_dialog = True, automatic = False))
+            ("export", Gtk.STOCK_SAVE, "_Export...", None, "Export data to a file", self.export_file),
+            ("export_pastebin", None, "Export to _Pastebin...", None, None, self.export_pastebin),
+            ("save_data", None, "_Save Data...", "<Control>v", None, lambda x: self.save(show_dialog = True, automatic = False))
         ])
         action_group.add_actions([
             ("info_global_menu", None, "_Info"),
@@ -1343,6 +1339,17 @@ class WeatherLog(Gtk.Window):
             show_alert_dialog(self, "Export to Pastebin - %s" % last_profile, "There is no data to export.")
             return
         
+        # Show the dialog and get the user's response.
+        pas_dlg = ExportPastebinDialog(self, "Export to Pastebin - %s" % last_profile)
+        response = pas_dlg.run()
+        name = pas_dlg.nam_ent.get_text()
+        mode = pas_dlg.for_com.get_active_text().lower()
+        pas_dlg.destroy()
+        
+        # If the user didn't click OK, don't continue.
+        if response != Gtk.ResponseType.OK:
+            return
+        
         # Convert the data.
         if mode == "html":
             new_data = export.html(data, units)
@@ -1359,6 +1366,8 @@ class WeatherLog(Gtk.Window):
             api["api_paste_format"] = "html5"
         elif mode == "raw":
             api["api_paste_format"] = "javascript"
+        if name.lstrip().rstrip() != "":
+            api["api_paste_name"] = name.lstrip().rstrip()
         
         # Upload the text.
         try:
