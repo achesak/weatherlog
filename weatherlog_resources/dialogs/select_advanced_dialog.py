@@ -6,6 +6,8 @@
 
 # Import GTK for the dialog.
 from gi.repository import Gtk
+# Import the dataset functions.
+import weatherlog_resources.datasets as datasets
 # Import generic dialogs.
 from weatherlog_resources.dialogs.misc_dialogs import *
 
@@ -20,7 +22,7 @@ class SelectDataAdvancedDialog(Gtk.Window):
         self.set_title("View Data Subset - %s" % profile)
         self.set_resizable(True)
         self.set_default_size(400, 300)
-        self.used_fields = []
+        self.conditions = []
         
         # Create the box
         sel_grid = Gtk.Grid()
@@ -40,6 +42,7 @@ class SelectDataAdvancedDialog(Gtk.Window):
         self.treeview.append_column(self.value_col)
         self.treeview.set_hexpand(True)
         self.treeview.set_vexpand(True)
+        self.treeview.get_selection().set_mode(Gtk.SelectionMode.MULTIPLE)
         sel_grid.add(self.treeview)
         
         # Create the buttons.
@@ -50,6 +53,7 @@ class SelectDataAdvancedDialog(Gtk.Window):
         self.cancel_btn.connect("clicked", lambda x: self.destroy())
         sel_box.pack_end(self.cancel_btn, True, True, 0)
         self.remove_btn = Gtk.Button(label = "Remove")
+        self.remove_btn.connect("clicked", self.remove_condition)
         sel_box.pack_end(self.remove_btn, True, True, 0)
         self.add_btn = Gtk.Button(label = "Add")
         self.add_btn.connect("clicked", self.add_condition)
@@ -76,7 +80,7 @@ class SelectDataAdvancedDialog(Gtk.Window):
     def check_used(self, field):
         """Checks if the selected field has already been used."""
         
-        if field in self.used_fields:
+        if field in datasets.get_column(self.conditions, 0):
             show_error_dialog(self, "Add Condition", "A condition for %s has already been entered." % field)
             return True
         return False
@@ -158,7 +162,37 @@ class SelectDataAdvancedDialog(Gtk.Window):
             if not self.check_operator(field, condition) and not self.check_used(field) and not self.check_two(condition, value) and \
                not self.check_one(condition, value):
                 self.liststore.append([field, condition, value])
-                self.used_fields.append(field)
+                self.conditions.append([field, condition, value])
         
         # Close the dialog.
         add_dlg.destroy()
+    
+    
+    def remove_condition(self, widget):
+        """Removes the selected condition."""
+        
+        # Get the selected conditions.
+        model, treeiter = self.treeview.get_selection().get_selected_rows()
+        conds = []
+        for i in treeiter:
+            conds.append(model[i][0])
+        
+        # Don't continue if nothing was selected.
+        if len(conds) == 0:
+            show_error_dialog(self, "Remove Condition", "No conditions selected.")
+            return
+        
+        # Confirm that the user wants to remove the selected conditions.
+        response = show_question_dialog(self, "Remove Condition", "Are you sure you want to remove the selected condition%s?" % ("s" if len(conds) > 1 else ""))
+        if response != Gtk.ResponseType.OK:
+            return
+        
+        # Remove the conditions and update the UI.
+        for i in conds:
+            index = datasets.get_column(self.conditions, 0).index(i)
+            del self.conditions[index]
+        
+        self.liststore.clear()
+        for i in self.conditions:
+            self.liststore.append(i)
+            

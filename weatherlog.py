@@ -127,8 +127,7 @@ from weatherlog_resources.dialogs.options_dialog import OptionsDialog
 from weatherlog_resources.dialogs.chart_dialog import GenericChartDialog
 # Import the dialog for displaying the graphs.
 from weatherlog_resources.dialogs.graph_dialog import GenericGraphDialog
-# Import the dialogs for selecting data subsets.
-from weatherlog_resources.dialogs.select_simple_dialog import SelectDataSimpleDialog
+# Import the dialog for selecting data subsets.
 from weatherlog_resources.dialogs.select_advanced_dialog import SelectDataAdvancedDialog
 # Import the dialog for displaying data subsets.
 from weatherlog_resources.dialogs.data_subset_dialog import DataSubsetDialog
