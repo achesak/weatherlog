@@ -253,8 +253,7 @@ class WeatherLog(Gtk.Window):
             ("graphs", None, "_Graphs...", "<Control>g", None, lambda x: self.show_graph_generic(data = data)),
             ("graphs_range", None, "Gra_phs in Range...", "<Control><Shift>g", None, lambda x: self.graph_range()),
             ("graphs_selected", None, "Grap_hs for Selected Dates...", None, None, lambda x: self.graph_selected()),
-            ("select_data", None, "Select _Data...", "<Control>d", None, self.select_data_simple),
-            ("select_data_advanced", None, "Select Data (_Advanced)...", "<Control><Shift>d", None, self.select_data_advanced)
+            ("view_subset", None, "View _Data Subset...", "<Control>d", None, self.select_data_advanced),
         ])
         action_group.add_actions([
             ("profiles_menu", None, "_Datasets"),
@@ -1058,61 +1057,6 @@ class WeatherLog(Gtk.Window):
         graph_dlg = GenericGraphDialog(self, "Graphs - %s" % last_profile, data2, last_profile, units)
         response = graph_dlg.run()
         graph_dlg.destroy()
-    
-    
-    def select_data_simple(self, event):
-        """Shows the simple data selection dialog."""
-        
-        # Get the field, condition, and value.
-        sel_dlg = SelectDataSimpleDialog(self, last_profile)
-        response = sel_dlg.run()
-        field = sel_dlg.field_com.get_active_text()
-        operator = sel_dlg.op_com.get_active_text()
-        value = sel_dlg.value_ent.get_text()
-        sel_dlg.destroy()
-        
-        # If the user did not press OK, don't continue.
-        if response != Gtk.ResponseType.OK:
-            return
-        
-        # If the column that is being compared is precipitation type, wind direction, air pressure change, 
-        # or cloud cover, and the comparison is numerical, don't continue.
-        if field == "precipitation type" or field == "wind direction" or field == "air pressure change" or field == "cloud cover":
-            if operator != "equal to" and operator != "not equal to":
-                show_error_dialog(self, "Select Data - %s" % last_profile, "Invalid comparison: %s cannot use the \"%s\" operator." % (field, operator))
-                return
-        
-        # If the value was left blank, show and error message and don't continue.
-        if value.lstrip().rstrip() == "":
-            show_error_dialog(self, "Select Data - %s" % last_profile, "Value field cannot be left blank.")
-            return
-        
-        # Filter the list.
-        filtered = filter_data.filter_data(data, [field, operator, value])
-        
-        # If there are no items that match the condition, don't show the main dialog.
-        if len(filtered) == 0:
-            show_alert_dialog(self, "Data Subset - %s" % last_profile, "No data matches the specified condition.")
-            return
-        
-        # Show the subset.
-        sub_dlg = DataSubsetDialog(self, "Data Subset - %s" % last_profile, filtered, config["show_units"], units)
-        response = sub_dlg.run()
-        sub_dlg.destroy()
-        
-        # If the user clicked Export:
-        if response == 9:
-            
-            # Get the filename.
-            export_dlg = Gtk.FileChooserDialog("Export Data Subset - %s" % last_profile, self, Gtk.FileChooserAction.SAVE, (Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL, Gtk.STOCK_SAVE, Gtk.ResponseType.OK))
-            export_dlg.set_do_overwrite_confirmation(True)
-            response2 = export_dlg.run()
-            filename = export_dlg.get_filename()
-            export_dlg.close()
-            
-            # Export the info.
-            if response2 == Gtk.ResponseType.OK:
-                export_info.export_subset(filtered, units, filename)
     
     
     def select_data_advanced(self, event):

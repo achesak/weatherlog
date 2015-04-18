@@ -40,8 +40,7 @@
       <menuitem action="graphs_range" />
       <menuitem action="graphs_selected" />
       <separator />
-      <menuitem action="select_data" />
-      <menuitem action="select_data_advanced" />
+      <menuitem action="view_subset" />
     </menu>
     <menu action="profiles_menu">
       <menuitem action="switch_profile" />

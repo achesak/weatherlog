@@ -17,9 +17,9 @@ class SelectDataAdvancedDialog(Gtk.Window):
         
         # Create the window
         Gtk.Window.__init__(self)
-        self.set_title("Select Data - %s" % profile)
+        self.set_title("View Data Subset - %s" % profile)
         self.set_resizable(True)
-        self.set_default_size(300, 300)
+        self.set_default_size(400, 300)
         self.used_fields = []
         
         # Create the box
@@ -47,6 +47,7 @@ class SelectDataAdvancedDialog(Gtk.Window):
         self.ok_btn = Gtk.Button(label = "OK")
         sel_box.pack_end(self.ok_btn, True, True, 0)
         self.cancel_btn = Gtk.Button(label = "Cancel")
+        self.cancel_btn.connect("clicked", lambda x: self.destroy())
         sel_box.pack_end(self.cancel_btn, True, True, 0)
         self.remove_btn = Gtk.Button(label = "Remove")
         sel_box.pack_end(self.remove_btn, True, True, 0)
@@ -55,121 +56,7 @@ class SelectDataAdvancedDialog(Gtk.Window):
         sel_box.pack_end(self.add_btn, True, True, 0)
         sel_grid.attach_next_to(sel_box, self.treeview, Gtk.PositionType.BOTTOM, 1, 1)
         
-        """
-        # Create the selection mode label and combobox.
-        mode_lbl = Gtk.Label("Selection mode: ")
-        sel_grid.add(mode_lbl)
-        self.mode_com = Gtk.ComboBoxText()
-        for i in ["match all", "match at least one", "match none"]:
-            self.mode_com.append_text(i)
-        self.mode_com.set_active(0)
-        sel_grid.attach_next_to(self.mode_com, mode_lbl, Gtk.PositionType.RIGHT, 1, 1)
-        
-        # Create the main grid.
-        sel_list = Gtk.Grid()
-        sel_box.add(sel_list)
-        
-        # Create the temperature row.
-        self.sel_chk1 = Gtk.CheckButton("Temperature ")
-        sel_list.add(self.sel_chk1)
-        self.op_com1 = Gtk.ComboBoxText()
-        for i in ["equal to", "not equal to", "greater than", "less than", "greater than or equal to", "less than or equal to", "between", "between (inclusive)", "outside", "outside (inclusive)"]:
-            self.op_com1.append_text(i)
-        self.op_com1.set_active(0)
-        sel_list.attach_next_to(self.op_com1, self.sel_chk1, Gtk.PositionType.RIGHT, 1, 1)
-        self.value_ent1 = Gtk.Entry()
-        sel_list.attach_next_to(self.value_ent1, self.op_com1, Gtk.PositionType.RIGHT, 1, 1)
-        
-        # Create the precipitation amount row.
-        self.sel_chk2 = Gtk.CheckButton("Precipitation amount ")
-        sel_list.attach_next_to(self.sel_chk2, self.sel_chk1, Gtk.PositionType.BOTTOM, 1, 1)
-        self.op_com2 = Gtk.ComboBoxText()
-        for i in ["equal to", "not equal to", "greater than", "less than", "greater than or equal to", "less than or equal to", "between", "between (inclusive)", "outside", "outside (inclusive)"]:
-            self.op_com2.append_text(i)
-        self.op_com2.set_active(0)
-        sel_list.attach_next_to(self.op_com2, self.sel_chk2, Gtk.PositionType.RIGHT, 1, 1)
-        self.value_ent2 = Gtk.Entry()
-        sel_list.attach_next_to(self.value_ent2, self.op_com2, Gtk.PositionType.RIGHT, 1, 1)
-        
-        # Create the precipitation type row.
-        self.sel_chk3 = Gtk.CheckButton("Precipitation type ")
-        sel_list.attach_next_to(self.sel_chk3, self.sel_chk2, Gtk.PositionType.BOTTOM, 1, 1)
-        self.op_com3 = Gtk.ComboBoxText()
-        for i in ["equal to", "not equal to"]:
-            self.op_com3.append_text(i)
-        self.op_com3.set_active(0)
-        sel_list.attach_next_to(self.op_com3, self.sel_chk3, Gtk.PositionType.RIGHT, 1, 1)
-        self.value_ent3 = Gtk.Entry()
-        sel_list.attach_next_to(self.value_ent3, self.op_com3, Gtk.PositionType.RIGHT, 1, 1)
-        
-        # Create the wind speed row.
-        self.sel_chk4 = Gtk.CheckButton("Wind speed ")
-        sel_list.attach_next_to(self.sel_chk4, self.sel_chk3, Gtk.PositionType.BOTTOM, 1, 1)
-        self.op_com4 = Gtk.ComboBoxText()
-        for i in ["equal to", "not equal to", "greater than", "less than", "greater than or equal to", "less than or equal to", "between", "between (inclusive)", "outside", "outside (inclusive)"]:
-            self.op_com4.append_text(i)
-        self.op_com4.set_active(0)
-        sel_list.attach_next_to(self.op_com4, self.sel_chk4, Gtk.PositionType.RIGHT, 1, 1)
-        self.value_ent4 = Gtk.Entry()
-        sel_list.attach_next_to(self.value_ent4, self.op_com4, Gtk.PositionType.RIGHT, 1, 1)
-        
-        # Create the wind direction row.
-        self.sel_chk5 = Gtk.CheckButton("Wind direction ")
-        sel_list.attach_next_to(self.sel_chk5, self.sel_chk4, Gtk.PositionType.BOTTOM, 1, 1)
-        self.op_com5 = Gtk.ComboBoxText()
-        for i in ["equal to", "not equal to"]:
-            self.op_com5.append_text(i)
-        self.op_com5.set_active(0)
-        sel_list.attach_next_to(self.op_com5, self.sel_chk5, Gtk.PositionType.RIGHT, 1, 1)
-        self.value_ent5 = Gtk.Entry()
-        sel_list.attach_next_to(self.value_ent5, self.op_com5, Gtk.PositionType.RIGHT, 1, 1)
-        
-        # Create the humidity row.
-        self.sel_chk6 = Gtk.CheckButton("Humidity ")
-        sel_list.attach_next_to(self.sel_chk6, self.sel_chk5, Gtk.PositionType.BOTTOM, 1, 1)
-        self.op_com6 = Gtk.ComboBoxText()
-        for i in ["equal to", "not equal to", "greater than", "less than", "greater than or equal to", "less than or equal to", "between", "between (inclusive)", "outside", "outside (inclusive)"]:
-            self.op_com6.append_text(i)
-        self.op_com6.set_active(0)
-        sel_list.attach_next_to(self.op_com6, self.sel_chk6, Gtk.PositionType.RIGHT, 1, 1)
-        self.value_ent6 = Gtk.Entry()
-        sel_list.attach_next_to(self.value_ent6, self.op_com6, Gtk.PositionType.RIGHT, 1, 1)
-        
-        # Create the air pressure row.
-        self.sel_chk7 = Gtk.CheckButton("Air pressure ")
-        sel_list.attach_next_to(self.sel_chk7, self.sel_chk6, Gtk.PositionType.BOTTOM, 1, 1)
-        self.op_com7 = Gtk.ComboBoxText()
-        for i in ["equal to", "not equal to", "greater than", "less than", "greater than or equal to", "less than or equal to", "between", "between (inclusive)", "outside", "outside (inclusive)"]:
-            self.op_com7.append_text(i)
-        self.op_com7.set_active(0)
-        sel_list.attach_next_to(self.op_com7, self.sel_chk7, Gtk.PositionType.RIGHT, 1, 1)
-        self.value_ent7 = Gtk.Entry()
-        sel_list.attach_next_to(self.value_ent7, self.op_com7, Gtk.PositionType.RIGHT, 1, 1)
-        
-        # Create the air pressure change row.
-        self.sel_chk8 = Gtk.CheckButton("Air pressure change ")
-        sel_list.attach_next_to(self.sel_chk8, self.sel_chk7, Gtk.PositionType.BOTTOM, 1, 1)
-        self.op_com8 = Gtk.ComboBoxText()
-        for i in ["equal to", "not equal to"]:
-            self.op_com8.append_text(i)
-        self.op_com8.set_active(0)
-        sel_list.attach_next_to(self.op_com8, self.sel_chk8, Gtk.PositionType.RIGHT, 1, 1)
-        self.value_ent8 = Gtk.Entry()
-        sel_list.attach_next_to(self.value_ent8, self.op_com8, Gtk.PositionType.RIGHT, 1, 1)
-        
-        # Create the cloud cover row.
-        self.sel_chk9 = Gtk.CheckButton("Cloud cover ")
-        sel_list.attach_next_to(self.sel_chk9, self.sel_chk8, Gtk.PositionType.BOTTOM, 1, 1)
-        self.op_com9 = Gtk.ComboBoxText()
-        for i in ["equal to", "not equal to"]:
-            self.op_com9.append_text(i)
-        self.op_com9.set_active(0)
-        sel_list.attach_next_to(self.op_com9, self.sel_chk9, Gtk.PositionType.RIGHT, 1, 1)
-        self.value_ent9 = Gtk.Entry()
-        sel_list.attach_next_to(self.value_ent9, self.op_com9, Gtk.PositionType.RIGHT, 1, 1)
-        """
-        
-        # Show the dialog.
+        # Show the window.
         self.show_all()
     
     
@@ -195,10 +82,21 @@ class SelectDataAdvancedDialog(Gtk.Window):
         return False
     
     
+    def check_one(self, operator, value):
+        """Checks if there is one value, if the operator requires that."""
+        
+        if operator != "Between" and operator !=  "Between (Inclusive)" and operator != "Outside" and \
+           operator != "Outside (Inclusive)" and operator != "Equal To" and operator != "Not Equal To":
+            if value.count(",") != 0:
+                show_error_dialog(self, "Add Condition", "The \"%s\" operator requires only one value to be specified." % operator)
+                return True
+        return False
+    
+    
     def check_two(self, operator, value):
         """Checks if there are two values, if the operator requires that."""
         
-        if operator == "Between" or operator ==  "Between (Inclusive)" or operator ==  "Outside" or \
+        if operator == "Between" or operator == "Between (Inclusive)" or operator == "Outside" or \
            operator == "Outside (Inclusive)":
             if value.count(",") != 1:
                 show_error_dialog(self, "Add Condition", "The \"%s\" operator requires two values to be specified, separated with a comma." % operator)
@@ -248,15 +146,19 @@ class SelectDataAdvancedDialog(Gtk.Window):
         
         # Show the dialog and get the input.
         add_dlg.show_all()
-        add_dlg.run()
-        field = field_com.get_active_text()
-        condition = cond_com.get_active_text()
-        value = value_ent.get_text()
+        response = add_dlg.run()
         
-        # Validate the data, and add if it's acceptable.
-        if not self.check_operator(field, condition) and not self.check_used(field) and not self.check_two(condition, value):
-            self.liststore.append([field, condition, value])
-            self.used_fields.append(field)
+        if response == Gtk.ResponseType.OK:
+            
+            field = field_com.get_active_text()
+            condition = cond_com.get_active_text()
+            value = value_ent.get_text()
+            
+            # Validate the data, and add if it's acceptable.
+            if not self.check_operator(field, condition) and not self.check_used(field) and not self.check_two(condition, value) and \
+               not self.check_one(condition, value):
+                self.liststore.append([field, condition, value])
+                self.used_fields.append(field)
         
         # Close the dialog.
         add_dlg.destroy()
