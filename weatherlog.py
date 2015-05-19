@@ -365,6 +365,13 @@ class WeatherLog(Gtk.Window):
         ctyp = new_dlg.clou_com2.get_active_text()
         visi = new_dlg.visi_sbtn.get_value()
         note = new_dlg.note_ent.get_text().strip()
+        
+        temp_unit = new_dlg.temp_unit.get_active_text()
+        chil_unit = new_dlg.chil_unit.get_active_text()
+        prec_unit = new_dlg.prec_unit.get_active_text()
+        wind_unit = new_dlg.wind_unit.get_active_text()
+        visi_unit = new_dlg.visi_unit.get_active_text()
+        
         new_dlg.destroy()
         
         # If the user did not click OK, don't continue:
@@ -382,6 +389,12 @@ class WeatherLog(Gtk.Window):
             show_error_dialog(self, "Add New", "The date %s has already been entered." % date)
             
         else:
+            
+            # Check that all fields are in the correct units, and convert if necessary.
+            convert_check = [temp, chil, prec, wind, visi]
+            convert_units = [temp_unit, chil_unit, prec_unit, wind_unit, visi_unit]
+            (temp, chil, prec, wind, visi) = convert.new_convert(units, convert_check, convert_units)
+            
             # Format the data and add it to the list.
             new_data = [date,
                         ("%.2f" % temp),

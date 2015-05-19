@@ -57,3 +57,58 @@ def convert(data2, units):
                 data[i][3] = " ".join(split)
     
     return data
+
+
+def new_convert(units_main, data2, units):
+    """Converts the data from the Add New and Edit dialogs."""
+    
+    data = data2[:]
+    mode = "metric" if units_main["prec"] == "cm" else "imperial"
+    
+    # Convert everything to metric:
+    if mode == "metric":
+        
+        # Temperature:
+        if units[0].endswith("F"):
+            data[0] = (float(data[0]) - 32) * (5 / 9)
+        
+        # Wind Chill:
+        if units[1].endswith("F"):
+            data[1] = (float(data[1]) - 32) * (5 / 9)
+        
+        # Precipitation:
+        if units[2] == "in":
+            data[2] = float(data[2]) * 2.54
+        
+        # Wind Speed:
+        if units[3] == "mph":
+            data[3] = float(data[3]) * 1.60934
+        
+        # Visibility:
+        if units[4] == "mi":
+            data[4] = float(data[4]) / 0.62137
+    
+    # Convert everything to imperial:
+    elif mode == "imperial":
+        
+        # Temperature:
+        if units[0].endswith("C"):
+            data[0] = (float(data[0]) * (9 / 5)) + 32
+        
+        # Wind Chill:
+        if units[1].endswith("C"):
+            data[1] = (float(data[1]) * (9 / 5)) + 32
+        
+        # Precipitation:
+        if units[2] == "cm":
+            data[2] = float(data[2]) / 2.54
+        
+        # Wind Speed:
+        if units[3] == "kph":
+            data[3] = float(data[3]) / 1.60934
+        
+        # Visibility:
+        if units[4] == "km":
+            data[4] == float(data[4]) * 0.62137
+    
+    return data
