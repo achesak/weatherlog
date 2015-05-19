@@ -441,6 +441,7 @@ class WeatherLog(Gtk.Window):
         edit_dlg = EditDialog(self, last_profile, data[index], date, units)
         response = edit_dlg.run()
         temp = edit_dlg.temp_sbtn.get_value()
+        chil = edit_dlg.chil_sbtn.get_value()
         prec = edit_dlg.prec_sbtn.get_value()
         prec_type = edit_dlg.prec_com.get_active_text()
         wind = edit_dlg.wind_sbtn.get_value()
@@ -449,7 +450,16 @@ class WeatherLog(Gtk.Window):
         airp = edit_dlg.airp_sbtn.get_value()
         airp_read = edit_dlg.airp_com.get_active_text()
         clou = edit_dlg.clou_com.get_active_text()
+        ctyp = edit_dlg.clou_com2.get_active_text()
+        visi = edit_dlg.visi_sbtn.get_value()
         note = edit_dlg.note_ent.get_text().strip()
+        
+        temp_unit = edit_dlg.temp_unit.get_active_text()
+        chil_unit = edit_dlg.chil_unit.get_active_text()
+        prec_unit = edit_dlg.prec_unit.get_active_text()
+        wind_unit = edit_dlg.wind_unit.get_active_text()
+        visi_unit = edit_dlg.visi_unit.get_active_text()
+        
         edit_dlg.destroy()
         
         # If the user did not click OK, don't continue.
@@ -462,8 +472,22 @@ class WeatherLog(Gtk.Window):
         if not wind:
             wind_dir = "None"
         
+        # Check that all fields are in the correct units, and convert if necessary.
+        convert_check = [temp, chil, prec, wind, visi]
+        convert_units = [temp_unit, chil_unit, prec_unit, wind_unit, visi_unit]
+        (temp, chil, prec, wind, visi) = convert.new_convert(units, convert_check, convert_units)
+        
         # Create and store the edited list of data.
-        new_data = [date, ("%.2f" % temp), "%s%s" % ((("%.2f" % prec) + " " if prec_type != "None" else ""), prec_type), "%s%s" % ((("%.2f" % wind) + " " if wind_dir != "None" else ""), wind_dir), ("%.2f" % humi), ("%.2f %s" % (airp, airp_read)), clou, note]
+        new_data = [date,
+                    ("%.2f" % temp),
+                    ("%.2f" % chil),
+                    "%s%s" % ((("%.2f" % prec) + " " if prec_type != "None" else ""), prec_type),
+                    "%s%s" % ((("%.2f" % wind) + " " if wind_dir != "None" else ""), wind_dir),
+                    ("%.2f" % humi),
+                    ("%.2f %s" % (airp, airp_read)),
+                    ("%.2f" % visi),
+                    "%s (%s)" % (clou, ctyp),
+                    note]
         data[index] = new_data
         
         # Update the UI.

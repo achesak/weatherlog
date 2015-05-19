@@ -6,6 +6,8 @@
 
 # Import GTK for the dialog.
 from gi.repository import Gtk
+# Import the functions for working with datasets.
+import weatherlog_resources.datasets as datasets
 # Import the dialogs.
 from weatherlog_resources.dialogs.misc_dialogs import *
 
@@ -15,33 +17,34 @@ class EditDialog(Gtk.Dialog):
     def __init__(self, parent, profile, data, date, units):
         """Create the dialog."""
         
+        # Determine the default units.
+        unit = 0
+        if units["prec"] == "in":
+            unit = 1
+        
         # This window should be modal.
         Gtk.Dialog.__init__(self, "Edit %s - %s" % (date, profile), parent, Gtk.DialogFlags.MODAL)
         self.set_resizable(False)
+        
+        # Create the tab notebook.
+        notebook = Gtk.Notebook()
+        notebook.set_tab_pos(Gtk.PositionType.LEFT)
         
         # Add the buttons.
         self.add_button("Cancel", Gtk.ResponseType.CANCEL)
         self.add_button("OK", Gtk.ResponseType.OK)
         
-        # Create the grid.
+        # Create the grids.
         new_box = self.get_content_area()
-        new_grid = Gtk.Grid()
-        # Add the grid to the dialog's content area.
-        new_box.add(new_grid)
+        new_grid2 = Gtk.Grid()
+        new_grid3 = Gtk.Grid()
+        new_grid2_lbl = Gtk.Label("Data 1")
+        new_grid3_lbl = Gtk.Label("Data 2")
         
-        # Create the Date label and calendar.
-        date_lbl = Gtk.Label("Date: ")
-        date_lbl.set_alignment(0, 0.5)
-        new_grid.add(date_lbl)
-        self.date_ent = Gtk.Entry()
-        self.date_ent.set_text(date)
-        self.date_ent.set_editable(False)
-        new_grid.attach_next_to(self.date_ent, date_lbl, Gtk.PositionType.RIGHT, 2, 1)
-        
-        # Create the Temperature label and spinbutton.
-        temp_lbl = Gtk.Label("Temperature (%s): " % units["temp"])
+        # Temperature entry
+        temp_lbl = Gtk.Label("Temperature: ")
         temp_lbl.set_alignment(0, 0.5)
-        new_grid.attach_next_to(temp_lbl, date_lbl, Gtk.PositionType.BOTTOM, 1, 1)
+        new_grid2.add(temp_lbl)
         if units["temp"] == "°C":
             temp_adj = Gtk.Adjustment(lower = -100, upper = 100, step_increment = 1)
         else:
@@ -49,143 +52,209 @@ class EditDialog(Gtk.Dialog):
         self.temp_sbtn = Gtk.SpinButton(digits = 2, adjustment = temp_adj)
         self.temp_sbtn.set_numeric(False)
         self.temp_sbtn.set_value(0)
-        new_grid.attach_next_to(self.temp_sbtn, temp_lbl, Gtk.PositionType.RIGHT, 2, 1)
+        new_grid2.attach_next_to(self.temp_sbtn, temp_lbl, Gtk.PositionType.RIGHT, 1, 1)
+        self.temp_unit = Gtk.ComboBoxText()
+        for i in ["°C", "°F"]:
+            self.temp_unit.append_text(i)
+        self.temp_unit.set_active(unit)
+        new_grid2.attach_next_to(self.temp_unit, self.temp_sbtn, Gtk.PositionType.RIGHT, 1, 1)
         
-        # Create the Precipitation label, spinbutton, and combobox.
-        prec_lbl = Gtk.Label("Precipitation (%s): " % units["prec"])
+        # Wind Chill entry
+        chil_lbl = Gtk.Label("Wind Chill: ")
+        chil_lbl.set_alignment(0, 0.5)
+        new_grid2.attach_next_to(chil_lbl, temp_lbl, Gtk.PositionType.BOTTOM, 1, 1)
+        if units["temp"] == "°C":
+            chil_adj = Gtk.Adjustment(lower = -100, upper = 100, step_increment = 1)
+        else:
+            chil_adj = Gtk.Adjustment(lower = -150, upper = 150, step_increment = 1)
+        self.chil_sbtn = Gtk.SpinButton(digits = 2, adjustment = chil_adj)
+        self.chil_sbtn.set_numeric(False)
+        self.chil_sbtn.set_value(0)
+        new_grid2.attach_next_to(self.chil_sbtn, chil_lbl, Gtk.PositionType.RIGHT, 1, 1)
+        self.chil_unit = Gtk.ComboBoxText()
+        for i in ["°C", "°F"]:
+            self.chil_unit.append_text(i)
+        self.chil_unit.set_active(unit)
+        new_grid2.attach_next_to(self.chil_unit, self.chil_sbtn, Gtk.PositionType.RIGHT, 1, 1)
+        
+        # Precipitation entry
+        prec_lbl = Gtk.Label("Precipitation: ")
         prec_lbl.set_alignment(0, 0.5)
-        new_grid.attach_next_to(prec_lbl, temp_lbl, Gtk.PositionType.BOTTOM, 1, 1)
+        new_grid2.attach_next_to(prec_lbl, chil_lbl, Gtk.PositionType.BOTTOM, 1, 1)
         prec_adj = Gtk.Adjustment(lower = 0, upper = 100, step_increment = 1)
         self.prec_sbtn = Gtk.SpinButton(digits = 2, adjustment = prec_adj)
         self.prec_sbtn.set_numeric(False)
         self.prec_sbtn.set_value(0)
-        self.prec_sbtn.set_sensitive(False)
-        new_grid.attach_next_to(self.prec_sbtn, prec_lbl, Gtk.PositionType.RIGHT, 1, 1)
+        new_grid2.attach_next_to(self.prec_sbtn, prec_lbl, Gtk.PositionType.RIGHT, 1, 1)
+        self.prec_unit = Gtk.ComboBoxText()
+        for i in ["cm", "in"]:
+            self.prec_unit.append_text(i)
+        self.prec_unit.set_active(unit)
+        new_grid2.attach_next_to(self.prec_unit, self.prec_sbtn, Gtk.PositionType.RIGHT, 1, 1)
+        
+        # Precipitation Type entry
+        prec_lbl2 = Gtk.Label("Precipitation Type: ")
+        prec_lbl2.set_alignment(0, 0.5)
+        new_grid2.attach_next_to(prec_lbl2, prec_lbl, Gtk.PositionType.BOTTOM, 1, 1)
         self.prec_com = Gtk.ComboBoxText()
         for i in ["None", "Rain", "Snow", "Hail", "Sleet"]:
             self.prec_com.append_text(i)
         self.prec_com.set_active(0)
-        new_grid.attach_next_to(self.prec_com, self.prec_sbtn, Gtk.PositionType.RIGHT, 1, 1)
+        new_grid2.attach_next_to(self.prec_com, prec_lbl2, Gtk.PositionType.RIGHT, 2, 1)
         
-        # Create the Wind label, spinbutton, and combobox.
-        wind_lbl = Gtk.Label("Wind (%s): " % units["wind"])
+        # Wind Speed entry
+        wind_lbl = Gtk.Label("Wind Speed: ")
         wind_lbl.set_alignment(0, 0.5)
-        new_grid.attach_next_to(wind_lbl, prec_lbl, Gtk.PositionType.BOTTOM, 1, 1)
+        new_grid2.attach_next_to(wind_lbl, prec_lbl2, Gtk.PositionType.BOTTOM, 1, 1)
         wind_adj = Gtk.Adjustment(lower = 0, upper = 500, step_increment = 1)
         self.wind_sbtn = Gtk.SpinButton(digits = 2, adjustment = wind_adj)
         self.wind_sbtn.set_numeric(False)
         self.wind_sbtn.set_value(0)
-        self.wind_sbtn.set_sensitive(False)
-        new_grid.attach_next_to(self.wind_sbtn, wind_lbl, Gtk.PositionType.RIGHT, 1, 1)
+        new_grid2.attach_next_to(self.wind_sbtn, wind_lbl, Gtk.PositionType.RIGHT, 1, 1)
+        self.wind_unit = Gtk.ComboBoxText()
+        for i in ["kph", "mph"]:
+            self.wind_unit.append_text(i)
+        self.wind_unit.set_active(unit)
+        new_grid2.attach_next_to(self.wind_unit, self.wind_sbtn, Gtk.PositionType.RIGHT, 1, 1)
+        
+        # Wind Direction entry
+        wind_lbl2 = Gtk.Label("Wind Direction: ")
+        wind_lbl2.set_alignment(0, 0.5)
+        new_grid2.attach_next_to(wind_lbl2, wind_lbl, Gtk.PositionType.BOTTOM, 1, 1)
         self.wind_com = Gtk.ComboBoxText()
         for i in ["None", "N", "NNE", "NE", "ENE", "E", "ESE", "SE", "SSE", "S", "SSW", "SW", "WSW", "W", "WNW", "NW", "NNW"]:
             self.wind_com.append_text(i)
         self.wind_com.set_active(0)
-        new_grid.attach_next_to(self.wind_com, self.wind_sbtn, Gtk.PositionType.RIGHT, 1, 1)
+        new_grid2.attach_next_to(self.wind_com, wind_lbl2, Gtk.PositionType.RIGHT, 2, 1)
         
-        # Create the Humidity label and spinbutton.
-        humi_lbl = Gtk.Label("Humidity (%): ")
+        # Humidity entry
+        humi_lbl = Gtk.Label("Humidity %: ")
         humi_lbl.set_alignment(0, 0.5)
-        new_grid.attach_next_to(humi_lbl, wind_lbl, Gtk.PositionType.BOTTOM, 1, 1)
+        new_grid3.add(humi_lbl)
         humi_adj = Gtk.Adjustment(lower = 0, upper = 100, step_increment = 1)
         self.humi_sbtn = Gtk.SpinButton(digits = 2, adjustment = humi_adj)
         self.humi_sbtn.set_numeric(False)
         self.humi_sbtn.set_value(0)
-        new_grid.attach_next_to(self.humi_sbtn, humi_lbl, Gtk.PositionType.RIGHT, 2, 1)
+        new_grid3.attach_next_to(self.humi_sbtn, humi_lbl, Gtk.PositionType.RIGHT, 2, 1)
         
-        # Create the Air Pressure label, spinbutton, and combobox.
-        airp_lbl = Gtk.Label("Air Pressure (%s): " % units["airp"])
+        # Air Pressure entry
+        airp_lbl = Gtk.Label("Air Pressure: ")
         airp_lbl.set_alignment(0, 0.5)
-        new_grid.attach_next_to(airp_lbl, humi_lbl, Gtk.PositionType.BOTTOM, 1, 1)
+        new_grid3.attach_next_to(airp_lbl, humi_lbl, Gtk.PositionType.BOTTOM, 1, 1)
         airp_adj = Gtk.Adjustment(lower = 0, upper = 2000, step_increment = 1)
         self.airp_sbtn = Gtk.SpinButton(digits = 2, adjustment = airp_adj)
         self.airp_sbtn.set_numeric(False)
         self.airp_sbtn.set_value(0)
-        new_grid.attach_next_to(self.airp_sbtn, airp_lbl, Gtk.PositionType.RIGHT, 1, 1)
+        new_grid3.attach_next_to(self.airp_sbtn, airp_lbl, Gtk.PositionType.RIGHT, 1, 1)
+        self.airp_unit = Gtk.ComboBoxText()
+        for i in ["hPa", "mbar"]:
+            self.airp_unit.append_text(i)
+        self.airp_unit.set_active(unit)
+        new_grid3.attach_next_to(self.airp_unit, self.airp_sbtn, Gtk.PositionType.RIGHT, 1, 1)
+        
+        # Air Pressure Change entry
+        airp_lbl2 = Gtk.Label("Air Pressure Change: ")
+        airp_lbl2.set_alignment(0, 0.5)
+        new_grid3.attach_next_to(airp_lbl2, airp_lbl, Gtk.PositionType.BOTTOM, 1, 1)
         self.airp_com = Gtk.ComboBoxText()
         for i in ["Steady", "Rising", "Falling"]:
             self.airp_com.append_text(i)
         self.airp_com.set_active(0)
-        new_grid.attach_next_to(self.airp_com, self.airp_sbtn, Gtk.PositionType.RIGHT, 1, 1)
+        new_grid3.attach_next_to(self.airp_com, airp_lbl2, Gtk.PositionType.RIGHT, 2, 1)
         
-        # Create the Cloud Cover label and combobox.
+        # Visibility entry
+        visi_lbl = Gtk.Label("Visibility: ")
+        visi_lbl.set_alignment(0, 0.5)
+        new_grid3.attach_next_to(visi_lbl, airp_lbl2, Gtk.PositionType.BOTTOM, 1, 1)
+        visi_adj = Gtk.Adjustment(lower = 0, upper = 1000, step_increment = 1)
+        self.visi_sbtn = Gtk.SpinButton(digits = 2, adjustment = visi_adj)
+        self.visi_sbtn.set_numeric(False)
+        self.visi_sbtn.set_value(0)
+        new_grid3.attach_next_to(self.visi_sbtn, visi_lbl, Gtk.PositionType.RIGHT, 1, 1)
+        self.visi_unit = Gtk.ComboBoxText()
+        for i in ["km", "mi"]:
+            self.visi_unit.append_text(i)
+        self.visi_unit.set_active(unit)
+        new_grid3.attach_next_to(self.visi_unit, self.visi_sbtn, Gtk.PositionType.RIGHT, 1, 1)
+        
+        # Cloud Cover entry
         clou_lbl = Gtk.Label("Cloud Cover: ")
         clou_lbl.set_alignment(0, 0.5)
-        new_grid.attach_next_to(clou_lbl, airp_lbl, Gtk.PositionType.BOTTOM, 1, 1)
+        new_grid3.attach_next_to(clou_lbl, visi_lbl, Gtk.PositionType.BOTTOM, 1, 1)
         self.clou_com = Gtk.ComboBoxText()
         for i in ["Sunny", "Mostly Sunny", "Partly Cloudy", "Mostly Cloudy", "Cloudy"]:
             self.clou_com.append_text(i)
         self.clou_com.set_active(0)
-        new_grid.attach_next_to(self.clou_com, clou_lbl, Gtk.PositionType.RIGHT, 2, 1)
+        new_grid3.attach_next_to(self.clou_com, clou_lbl, Gtk.PositionType.RIGHT, 2, 1)
         
-        # Create the Notes label and entry.
+        # Cloud Type entry
+        clou_lbl2 = Gtk.Label("Cloud Type: ")
+        clou_lbl2.set_alignment(0, 0.5)
+        new_grid3.attach_next_to(clou_lbl2, clou_lbl, Gtk.PositionType.BOTTOM, 1, 1)
+        self.clou_com2 = Gtk.ComboBoxText()
+        for i in ["None", "Unknown", "Cirrus", "Cirrocumulus", "Cirrostratus", "Cumulonimbus", "Altocumulus", "Altostratus",
+                  "Stratus", "Cumulus", "Stratocumulus"]:
+            self.clou_com2.append_text(i)
+        self.clou_com2.set_active(0)
+        new_grid3.attach_next_to(self.clou_com2, clou_lbl2, Gtk.PositionType.RIGHT, 2, 1)
+        
+        # Notes entry
         note_lbl = Gtk.Label("Notes: ")
         note_lbl.set_alignment(0, 0.5)
-        new_grid.attach_next_to(note_lbl, clou_lbl, Gtk.PositionType.BOTTOM, 1, 1)
+        new_grid3.attach_next_to(note_lbl, clou_lbl2, Gtk.PositionType.BOTTOM, 1, 1)
         self.note_ent = Gtk.Entry()
-        new_grid.attach_next_to(self.note_ent, note_lbl, Gtk.PositionType.RIGHT, 2, 1)
+        new_grid3.attach_next_to(self.note_ent, note_lbl, Gtk.PositionType.RIGHT, 2, 1)
         
-        # Bind the events for enabling the comboboxes.
-        self.prec_com.connect("changed", self.enable_prec)
-        self.wind_com.connect("changed", self.enable_wind)
+        # Add the notebook.
+        self.get_content_area().add(notebook)
+        
+        # Add the tabs to the notebook.
+        notebook.append_page(new_grid2, new_grid2_lbl)
+        notebook.append_page(new_grid3, new_grid3_lbl)
         
         # Set the values.
         self.temp_sbtn.set_value(float(data[1]))
-        if data[2] != "None":
-            d2 = data[2].split(" ")
+        self.chil_sbtn.set_value(float(data[2]))
+        if data[3] != "None":
+            d2 = data[3].split(" ")
             prec_list = ["None", "Rain", "Snow", "Hail", "Sleet"]
             for i in range(0, len(prec_list)):
                 if d2[1] == prec_list[i]:
                     self.prec_com.set_active(i)
                     break
             self.prec_sbtn.set_value(float(d2[0]))
-        if data[3] != "None":
-            d3 = data[3].split(" ")
+        if data[4] != "None":
+            d3 = data[4].split(" ")
             wind_list = ["None", "N", "NNE", "NE", "ENE", "E", "ESE", "SE", "SSE", "S", "SSW", "SW", "WSW", "W", "WNW", "NW", "NNW"]
             for i in range(0, len(wind_list)):
                 if d3[1] == wind_list[i]:
                     self.wind_com.set_active(i)
                     break
             self.wind_sbtn.set_value(float(d3[0]))
-        self.humi_sbtn.set_value(float(data[4]))
-        d5 = data[5].split(" ")
+        self.humi_sbtn.set_value(float(data[5]))
+        d5 = data[6].split(" ")
         airp_list = ["Steady", "Rising", "Falling"]
         for i in range(0, len(airp_list)):
             if d5[1] == airp_list[i]:
                 self.airp_com.set_active(i)
                 break
         self.airp_sbtn.set_value(float(d5[0]))
-        clou_list = ["Sunny", "Mostly Sunny", "Partly Cloudy", "Mostly Cloudy", "Cloudy"]
-        for i in range(0, len(clou_list)):
-            if data[6] == clou_list[i]:
+        self.visi_sbtn.set_value(float(data[7]))
+        clou_list1 = ["Sunny", "Mostly Sunny", "Partly Cloudy", "Mostly Cloudy", "Cloudy"]
+        clou_list2 = ["None", "Unknown", "Cirrus", "Cirrocumulus", "Cirrostratus", "Cumulonimbus", "Altocumulus", "Altostratus", 
+                      "Stratus", "Cumulus", "Stratocumulus"]
+        d81, d82 = datasets.split_list3([data[8]])
+        d82 = datasets.strip_items(d82, ["(", ")"])
+        for i in range(0, len(clou_list1)):
+            if d81[0] == clou_list1[i]:
                 self.clou_com.set_active(i)
                 break
-        self.note_ent.set_text(data[7])
+        for i in range(0, len(clou_list2)):
+            if d82[0] == clou_list2[i]:
+                self.clou_com2.set_active(i)
+                break
+        self.note_ent.set_text(data[9])
         
         # Show the dialog. The response gets handled by the function
         # in the main class.
         self.show_all()
-        
-    
-    def enable_prec(self, widget):
-        """Enable or disable the precipitation spinbutton."""
-        
-        # If the value is None, disable the spinbutton.
-        if widget.get_active_text() == "None":
-            self.prec_sbtn.set_sensitive(False)
-        
-		# Otherwise, enable the spinbutton.
-        else:
-            self.prec_sbtn.set_sensitive(True)
-    
-    
-    def enable_wind(self, widget):
-        """Enable or disable the wind spinbutton."""
-        
-        # If the value is None, disable the spinbutton.
-        if widget.get_active_text() == "None":
-            self.wind_sbtn.set_sensitive(False)
-        
-        # Otherwise, enable the spinbutton.
-        else:
-            self.wind_sbtn.set_sensitive(True)

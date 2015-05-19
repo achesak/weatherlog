@@ -173,10 +173,25 @@ class AddNewDialog(Gtk.Dialog):
         self.airp_com.set_active(0)
         new_grid3.attach_next_to(self.airp_com, airp_lbl2, Gtk.PositionType.RIGHT, 2, 1)
         
+        # Visibility entry
+        visi_lbl = Gtk.Label("Visibility: ")
+        visi_lbl.set_alignment(0, 0.5)
+        new_grid3.attach_next_to(visi_lbl, airp_lbl2, Gtk.PositionType.BOTTOM, 1, 1)
+        visi_adj = Gtk.Adjustment(lower = 0, upper = 1000, step_increment = 1)
+        self.visi_sbtn = Gtk.SpinButton(digits = 2, adjustment = visi_adj)
+        self.visi_sbtn.set_numeric(False)
+        self.visi_sbtn.set_value(0)
+        new_grid3.attach_next_to(self.visi_sbtn, visi_lbl, Gtk.PositionType.RIGHT, 1, 1)
+        self.visi_unit = Gtk.ComboBoxText()
+        for i in ["km", "mi"]:
+            self.visi_unit.append_text(i)
+        self.visi_unit.set_active(unit)
+        new_grid3.attach_next_to(self.visi_unit, self.visi_sbtn, Gtk.PositionType.RIGHT, 1, 1)
+        
         # Cloud Cover entry
         clou_lbl = Gtk.Label("Cloud Cover: ")
         clou_lbl.set_alignment(0, 0.5)
-        new_grid3.attach_next_to(clou_lbl, airp_lbl2, Gtk.PositionType.BOTTOM, 1, 1)
+        new_grid3.attach_next_to(clou_lbl, visi_lbl, Gtk.PositionType.BOTTOM, 1, 1)
         self.clou_com = Gtk.ComboBoxText()
         for i in ["Sunny", "Mostly Sunny", "Partly Cloudy", "Mostly Cloudy", "Cloudy"]:
             self.clou_com.append_text(i)
@@ -194,25 +209,10 @@ class AddNewDialog(Gtk.Dialog):
         self.clou_com2.set_active(0)
         new_grid3.attach_next_to(self.clou_com2, clou_lbl2, Gtk.PositionType.RIGHT, 2, 1)
         
-        # Visibility entry
-        visi_lbl = Gtk.Label("Visibility: ")
-        visi_lbl.set_alignment(0, 0.5)
-        new_grid3.attach_next_to(visi_lbl, clou_lbl2, Gtk.PositionType.BOTTOM, 1, 1)
-        visi_adj = Gtk.Adjustment(lower = 0, upper = 1000, step_increment = 1)
-        self.visi_sbtn = Gtk.SpinButton(digits = 2, adjustment = visi_adj)
-        self.visi_sbtn.set_numeric(False)
-        self.visi_sbtn.set_value(0)
-        new_grid3.attach_next_to(self.visi_sbtn, visi_lbl, Gtk.PositionType.RIGHT, 1, 1)
-        self.visi_unit = Gtk.ComboBoxText()
-        for i in ["km", "mi"]:
-            self.visi_unit.append_text(i)
-        self.visi_unit.set_active(unit)
-        new_grid3.attach_next_to(self.visi_unit, self.visi_sbtn, Gtk.PositionType.RIGHT, 1, 1)
-        
         # Notes entry
         note_lbl = Gtk.Label("Notes: ")
         note_lbl.set_alignment(0, 0.5)
-        new_grid3.attach_next_to(note_lbl, visi_lbl, Gtk.PositionType.BOTTOM, 1, 1)
+        new_grid3.attach_next_to(note_lbl, clou_lbl2, Gtk.PositionType.BOTTOM, 1, 1)
         self.note_ent = Gtk.Entry()
         new_grid3.attach_next_to(self.note_ent, note_lbl, Gtk.PositionType.RIGHT, 2, 1)
         
