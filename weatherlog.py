@@ -311,7 +311,7 @@ class WeatherLog(Gtk.Window):
         
         # Show the dialog telling the user the dataset couldn't be found, if neccessary:
         if not profile_exists:
-            show_alert_dialog(self, "WeatherLog", "The dataset \"%s\" could not be found." % original_profile)
+            show_alert_dialog(self, "WeatherLog", "The dataset \"%s\" could not be found and was not loaded." % original_profile)
             self.save(show_dialog = False)
     
     
@@ -1116,7 +1116,7 @@ class WeatherLog(Gtk.Window):
             
         # Confirm that the user wants to overwrite the data, if the profile isn't blank.
         if len(data) > 0:
-            response2 = show_question_dialog(self, "Import - %s" % last_profile, "Are you sure you want to import the data?\n\nCurrent data will be overwritten.")
+            response2 = show_question_dialog(self, "Import - %s" % last_profile, "Are you sure you want to import the data?\n\nAll current data will be overwritten.")
             if response2 != Gtk.ResponseType.OK:
                 return
         
@@ -1125,7 +1125,7 @@ class WeatherLog(Gtk.Window):
         
         # If the imported data is empty or invalid, don't continue.
         if len(ndata) == 0:
-            show_alert_dialog(self, "Import - %s" % last_profile, "There is no data to import.")
+            show_alert_dialog(self, "Import - %s" % last_profile, "The selected file contains no data to import.")
             return
         if not validate.validate_data(ndata):
             show_error_dialog(self, "Import - %s" % last_profile, "Data is not valid.")
@@ -1192,7 +1192,7 @@ class WeatherLog(Gtk.Window):
         
         # If the imported data is empty, don't continue.
         if len(data2) == 0:
-            show_alert_dialog(self, "Import and Merge - %s" % last_profile, "There is no data to import.")
+            show_alert_dialog(self, "Import and Merge - %s" % last_profile, "The selected file contains no data to import.")
             return
         
         # If the imported data is invalid, don't continue.
@@ -1288,7 +1288,7 @@ class WeatherLog(Gtk.Window):
         
         # If the imported data is empty, don't continue.
         if len(ndata) == 0:
-            show_alert_dialog(self, "Import as New Dataset - %s" % name, "There is no data to import.")
+            show_alert_dialog(self, "Import as New Dataset - %s" % name, "The selected file contains no data to import.")
             return
         
         # If the imported data is invalid, don't continue.
@@ -1943,7 +1943,7 @@ class WeatherLog(Gtk.Window):
             
             # If the units changed, ask the user if they want to convert the data.
             if current_units != units_:
-                response = show_question_dialog(opt_dlg, "Options", "The units have changed from %s to %s.\n\nWould you like to convert the data to the new units?" % (current_units, config["units"]))
+                response = show_question_dialog(opt_dlg, "Options", "The units have changed from %s to %s.\n\nWould you like to convert the current data to the new units?" % (current_units, config["units"]))
                 if response == Gtk.ResponseType.OK:
                     
                     # Convert the data.
@@ -2001,7 +2001,7 @@ class WeatherLog(Gtk.Window):
             
             # If the units changed, ask the user if they want to convert the data.
             if current_units != config["units"]:
-                response = show_question_dialog(opt_dlg, "Options", "The units have changed from %s to %s.\n\nWould you like to convert the data to the new units?" % (current_units, config["units"]))
+                response = show_question_dialog(opt_dlg, "Options", "The units have changed from %s to %s.\n\nWould you like to convert the current data to the new units?" % (current_units, config["units"]))
                 if response == Gtk.ResponseType.OK:
                     
                     # Convert the data.
