@@ -691,7 +691,7 @@ class WeatherLog(Gtk.Window):
         
         # Check to make sure this date is valid, and cancel the action if not.
         if start_index == -1:
-            show_error_dialog(self, "Info in Range - %s" % last_profile, "%s is not a valid date." % date1)
+            show_error_dialog(self, "Info in Range - %s" % last_profile, "%s is not a valid date.\n\nThis date is not present and is not before any other dates." % date1)
             return
         
         # Get the ending date.
@@ -711,7 +711,7 @@ class WeatherLog(Gtk.Window):
         
         # Check to make sure this date is valid, and cancel the action if not.
         if end_index == -1:
-            show_error_dialog(self, "Info in Range - %s" % last_profile, "%s is not a valid date." % date2)
+            show_error_dialog(self, "Info in Range - %s" % last_profile, "%s is not a valid date.\n\nThis date is not present and is not after any other dates." % date2)
             return
         
         # Check to make sure this date is later than the starting date, 
@@ -847,7 +847,7 @@ class WeatherLog(Gtk.Window):
         
         # Check to make sure this date is valid, and cancel the action if not.
         if start_index == -1:
-            show_error_dialog(self, "Charts in Range - %s" % last_profile, "%s is not a valid date." % date1)
+            show_error_dialog(self, "Charts in Range - %s" % last_profile, "%s is not a valid date.\n\nThis date is not present and is not before any other dates." % date1)
             return
         
         # Get the ending date.
@@ -867,7 +867,7 @@ class WeatherLog(Gtk.Window):
         
         # Check to make sure this date is valid, and cancel the action if not.
         if end_index == -1:
-            show_error_dialog(self, "Charts in Range - %s" % last_profile, "%s is not a valid date." % date2)
+            show_error_dialog(self, "Charts in Range - %s" % last_profile, "%s is not a valid date.\n\nThis date is not present and is not after any other dates." % date2)
             return
         
         # Check to make sure this date is later than the starting date, 
@@ -1000,7 +1000,7 @@ class WeatherLog(Gtk.Window):
         
         # Check to make sure this date is valid, and cancel the action if not.
         if start_index == -1:
-            show_error_dialog(self, "Graphs in Range - %s" % last_profile, "%s is not a valid date." % date1)
+            show_error_dialog(self, "Graphs in Range - %s" % last_profile, "%s is not a valid date.\n\nThis date is not present and is not before any other dates." % date1)
             return
         
         # Get the ending date.
@@ -1020,7 +1020,7 @@ class WeatherLog(Gtk.Window):
         
         # Check to make sure this date is valid, and cancel the action if not.
         if end_index == -1:
-            show_error_dialog(self, "Graphs in Range - %s" % last_profile, "%s is not a valid date." % date2)
+            show_error_dialog(self, "Graphs in Range - %s" % last_profile, "%s is not a valid date.\n\nThis date is not present and is not after any other dates." % date2)
             return
         
         # Check to make sure this date is later than the starting date, 
