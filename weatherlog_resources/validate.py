@@ -24,22 +24,29 @@ def validate_profile(main_dir, name):
 
 
 def validate_data(data):
-    """Validates imported data."""
+    """Validates imported data.
+       Return codes:
+       1 - No error, data validated
+       0 - Data is not a list
+       -1 - Sub-data are not lists
+       -2 - Sub-lists must have the correct length
+       -3 - Each item in the sub-lists must be a string
+    """
     
     # Test 1: must be a list.
     if not isinstance(data, list):
-        return False
+        return 0
     
     # Test 2: each item must be a list.
-    # Test 3: each item must have the correct length (8).
+    # Test 3: each item must have the correct length (10).
     # Test 4: each item of this list must be a string.
     for i in data:
         if not isinstance(i, list):
-            return False
+            return -1
         if len(i) != 10:
-            return False
+            return -2
         for j in i:
             if not isinstance(j, str):
-                return False
+                return -3
     
-    return True
+    return 1

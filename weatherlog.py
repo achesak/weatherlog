@@ -1105,6 +1105,12 @@ class WeatherLog(Gtk.Window):
     def import_file(self, event):
         """Imports data from a file."""
         
+        validate_desc = {1: "No error, this should never display.",
+                         0: "Data is not a list.",
+                         -1: "One or more items in the data are not lists.",
+                         -2: "One or more lists do not have the correct length.",
+                         -3: "One or more data fields are not strings."}
+        
         global data
         
         # Get the filename.
@@ -1127,8 +1133,9 @@ class WeatherLog(Gtk.Window):
         if len(ndata) == 0:
             show_alert_dialog(self, "Import - %s" % last_profile, "The selected file contains no data to import.")
             return
-        if not validate.validate_data(ndata):
-            show_error_dialog(self, "Import - %s" % last_profile, "Data is not valid.")
+        validate_error = validate.validate_data(ndata)
+        if validate_error != 1:
+            show_error_dialog(self, "Import - %s" % last_profile, "The data in the selected file is not valid. %s" % validate_desc[validate_error])
             return
         
         # Ask the user what dates they want to import.
@@ -1178,6 +1185,12 @@ class WeatherLog(Gtk.Window):
     def import_merge(self, event):
         """Imports data and merges it into the current list."""
         
+        validate_desc = {1: "No error, this should never display.",
+                         0: "Data is not a list.",
+                         -1: "One or more items in the data are not lists.",
+                         -2: "One or more lists do not have the correct length.",
+                         -3: "One or more data fields are not strings."}
+        
         global data
         
         # Get the filename.
@@ -1190,14 +1203,13 @@ class WeatherLog(Gtk.Window):
         # Read the data.
         data2 = io.read_profile(filename = filename)
         
-        # If the imported data is empty, don't continue.
+        # If the imported data is empty or invalid, don't continue.
         if len(data2) == 0:
             show_alert_dialog(self, "Import and Merge - %s" % last_profile, "The selected file contains no data to import.")
             return
-        
-        # If the imported data is invalid, don't continue.
-        if not validate.validate_data(data2):
-            show_error_dialog(self, "Import and Merge - %s" % last_profile, "Data is not valid.")
+        validate_error = validate.validate_data(data2)
+        if validate_error != 1:
+            show_error_dialog(self, "Import and Merge - %s" % last_profile, "The data in the selected file is not valid. %s" % validate_desc[validate_error])
             return
         
         # Ask the user what dates they want to import.
@@ -1256,6 +1268,12 @@ class WeatherLog(Gtk.Window):
     def import_new_profile(self, event):
         """Imports data from a file and inserts it in a new profile."""
         
+        validate_desc = {1: "No error, this should never display.",
+                         0: "Data is not a list.",
+                         -1: "One or more items in the data are not lists.",
+                         -2: "One or more lists do not have the correct length.",
+                         -3: "One or more data fields are not strings."}
+        
         global last_profile
         global data
         
@@ -1286,14 +1304,13 @@ class WeatherLog(Gtk.Window):
         # Read and add the data.
         ndata = io.read_profile(filename = filename)
         
-        # If the imported data is empty, don't continue.
+        # If the imported data is empty or invalid, don't continue.
         if len(ndata) == 0:
             show_alert_dialog(self, "Import as New Dataset - %s" % name, "The selected file contains no data to import.")
             return
-        
-        # If the imported data is invalid, don't continue.
-        if not validate.validate_data(ndata):
-            show_error_dialog(self, "Import as New Dataset - %s" % name, "Data is not valid.")
+        validate_error = validate.validate_data(ndata)
+        if validate_error != 1:
+            show_error_dialog(self, "Import as New Dataset - %s" % name, "The data in the selected file is not valid. %s" % validate_desc[validate_error])
             return
         
         # Ask the user what dates they want to import.
