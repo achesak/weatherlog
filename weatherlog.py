@@ -384,37 +384,43 @@ class WeatherLog(Gtk.Window):
         if not wind:
             wind_dir = "None"
         
-        # If the date has already been entered, tell the user and don't continue.
+        # If the date has already been entered, tell the user and prompt to continue.
         if date in datasets.get_column(data, 0):
-            show_error_dialog(self, "Add New", "The date %s has already been entered." % date)
+            overwrite = show_question_dialog(self, "Add New", "The date %s has already been entered.\n\nOverwrite with new data?" % date)
             
-        else:
+            if overwrite == Gtk.ResponseType.OK:
+                # Delete the existing data.
+                index = datasets.get_column(data, 0).index(date)
+                del data[index]
+            else:
+                return
             
-            # Check that all fields are in the correct units, and convert if necessary.
-            convert_check = [temp, chil, prec, wind, visi]
-            convert_units = [temp_unit, chil_unit, prec_unit, wind_unit, visi_unit]
-            (temp, chil, prec, wind, visi) = convert.new_convert(units, convert_check, convert_units)
-            
-            # Format the data and add it to the list.
-            new_data = [date,
-                        ("%.2f" % temp),
-                        ("%.2f" % chil),
-                        "%s%s" % ((("%.2f" % prec) + " " if prec_type != "None" else ""), prec_type),
-                        "%s%s" % ((("%.2f" % wind) + " " if wind_dir != "None" else ""), wind_dir),
-                        ("%.2f" % humi),
-                        ("%.2f %s" % (airp, airp_read)),
-                        ("%.2f" % visi),
-                        "%s (%s)" % (clou, ctyp),
-                        note]
-            data.append(new_data)
-            
-            # Sort the list by date.
-            data = sorted(data, key = lambda x: datetime.datetime.strptime(x[0], "%d/%m/%Y"))
-            
-            # Update the UI.
-            self.liststore.clear()
-            for i in data:
-                self.liststore.append(i)
+
+        # Check that all fields are in the correct units, and convert if necessary.
+        convert_check = [temp, chil, prec, wind, visi]
+        convert_units = [temp_unit, chil_unit, prec_unit, wind_unit, visi_unit]
+        (temp, chil, prec, wind, visi) = convert.new_convert(units, convert_check, convert_units)
+        
+        # Format the data and add it to the list.
+        new_data = [date,
+                    ("%.2f" % temp),
+                    ("%.2f" % chil),
+                    "%s%s" % ((("%.2f" % prec) + " " if prec_type != "None" else ""), prec_type),
+                    "%s%s" % ((("%.2f" % wind) + " " if wind_dir != "None" else ""), wind_dir),
+                    ("%.2f" % humi),
+                    ("%.2f %s" % (airp, airp_read)),
+                    ("%.2f" % visi),
+                    "%s (%s)" % (clou, ctyp),
+                    note]
+        data.append(new_data)
+        
+        # Sort the list by date.
+        data = sorted(data, key = lambda x: datetime.datetime.strptime(x[0], "%d/%m/%Y"))
+        
+        # Update the UI.
+        self.liststore.clear()
+        for i in data:
+            self.liststore.append(i)
         
         # Update the title and save the data.
         self.update_title()
