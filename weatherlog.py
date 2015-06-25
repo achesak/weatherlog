@@ -717,7 +717,7 @@ class WeatherLog(Gtk.Window):
         # Check to make sure this date is later than the starting date, 
         # and cancel the action if not.
         if end_index < start_index:
-            show_error_dialog(self, "Info in Range - %s" % last_profile, "The ending date must later than the starting date.")
+            show_error_dialog(self, "Info in Range - %s" % last_profile, "The ending date must be after the starting date.")
             return
         
         # Get the new list.
@@ -873,7 +873,7 @@ class WeatherLog(Gtk.Window):
         # Check to make sure this date is later than the starting date, 
         # and cancel the action if not.
         if end_index < start_index:
-            show_error_dialog(self, "Charts in Range - %s" % last_profile, "The ending date must later than the starting date.")
+            show_error_dialog(self, "Charts in Range - %s" % last_profile, "The ending date must be after the starting date.")
             return
         
         # Get the new list.
@@ -1026,7 +1026,7 @@ class WeatherLog(Gtk.Window):
         # Check to make sure this date is later than the starting date, 
         # and cancel the action if not.
         if end_index < start_index:
-            show_error_dialog(self, "Graphs in Range - %s" % last_profile, "The ending date must later than the starting date.")
+            show_error_dialog(self, "Graphs in Range - %s" % last_profile, "The ending date must be after the starting date.")
             return
         
         # Get the new list.
