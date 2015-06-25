@@ -15,7 +15,7 @@ class GenericChartDialog(Gtk.Dialog):
         
         # This window should be modal.
         Gtk.Dialog.__init__(self, title, parent, Gtk.DialogFlags.MODAL)
-        self.set_default_size(800, 300)
+        self.set_default_size(900, 400)
         
         # Create the tab notebook.
         notebook = Gtk.Notebook()
