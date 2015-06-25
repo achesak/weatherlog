@@ -5,7 +5,7 @@
 ################################################################################
 
 # WeatherLog
-# Version 2.3
+# Version 3.0
 
 # WeatherLog is an application for keeping track of the weather and
 # getting information about past trends.
@@ -672,6 +672,9 @@ class WeatherLog(Gtk.Window):
         days, months, years = dates.split_date(data[0][0])
         daye, monthe, yeare = dates.split_date(data[len(data) - 1][0])
         
+        # Get a list of datetimes from the dates.
+        datelist = dates.date_list_datetime(datasets.get_column(data, 0))
+        
         # Get the starting date.
         start_dlg = CalendarDialog(self, "Info in Range - %s" % last_profile, "Select the starting date:", days, months, years)
         response1 = start_dlg.run()
@@ -682,10 +685,14 @@ class WeatherLog(Gtk.Window):
         # If the user did not click OK, don't continue.
         if response1 != Gtk.ResponseType.OK:
             return
-            
+        
+        # Get the starting index.
+        dt_start = datetime.datetime(year1, month1 + 1, day1)
+        start_index = dates.date_above(dt_start, datelist)
+        
         # Check to make sure this date is valid, and cancel the action if not.
-        if date1 not in datasets.get_column(data, 0):
-            show_error_dialog(self, "%s Info in Range - %s" % last_profile, "%s is not a valid date." % date1)
+        if dt_start == -1:
+            show_error_dialog(self, "Info in Range - %s" % last_profile, "%s is not a valid date." % date1)
             return
         
         # Get the ending date.
