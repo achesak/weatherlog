@@ -72,7 +72,7 @@ def date_below(date, datelist):
     # Calculate a list of date differences.
     delta_list = []
     for i in datelist:
-        delta_list.append((i - date).total_seconds())
+        delta_list.append((date - i).total_seconds())
     
     index = -1
     for i in reversed(range(0, len(delta_list))):

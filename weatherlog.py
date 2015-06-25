@@ -659,7 +659,6 @@ class WeatherLog(Gtk.Window):
             self.add_new(False, prefill_data)
             
     
-    
     def info_range(self):
         """Gets the range for the info to display."""
         
@@ -691,7 +690,7 @@ class WeatherLog(Gtk.Window):
         start_index = dates.date_above(dt_start, datelist)
         
         # Check to make sure this date is valid, and cancel the action if not.
-        if dt_start == -1:
+        if start_index == -1:
             show_error_dialog(self, "Info in Range - %s" % last_profile, "%s is not a valid date." % date1)
             return
         
@@ -706,28 +705,23 @@ class WeatherLog(Gtk.Window):
         if response2 != Gtk.ResponseType.OK:
             return
         
+        # Get the ending index.
+        dt_end = datetime.datetime(year2, month2 + 1, day2)
+        end_index = dates.date_below(dt_end, datelist)
+        
         # Check to make sure this date is valid, and cancel the action if not.
-        if date2 not in datasets.get_column(data, 0):
+        if end_index == -1:
             show_error_dialog(self, "Info in Range - %s" % last_profile, "%s is not a valid date." % date2)
             return
         
-        # Convert the dates to ISO notation for comparison.
-        nDate1 = dates.date_to_iso(day1, month1, year1)
-        nDate2 = dates.date_to_iso(day2, month2, year2)
-        
         # Check to make sure this date is later than the starting date, 
         # and cancel the action if not.
-        if date1 == date2 or nDate1 > nDate2:
+        if end_index < start_index:
             show_error_dialog(self, "Info in Range - %s" % last_profile, "The ending date must later than the starting date.")
             return
         
-        # Get the indices.
-        date_col = datasets.get_column(data, 0)
-        index1 = date_col.index(date1)
-        index2 = date_col.index(date2)
-        
         # Get the new list.
-        data2 = data[index1:index2 + 1]
+        data2 = data[start_index:end_index + 1]
         
         # Pass the data to the info dialog.
         self.show_info_generic(data = data2)
@@ -833,6 +827,9 @@ class WeatherLog(Gtk.Window):
         days, months, years = dates.split_date(data[0][0])
         daye, monthe, yeare = dates.split_date(data[len(data) - 1][0])
         
+        # Get a list of datetimes from the dates.
+        datelist = dates.date_list_datetime(datasets.get_column(data, 0))
+        
         # Get the starting date.
         start_dlg = CalendarDialog(self, "Charts in Range - %s" % last_profile, "Select the starting date:", days, months, years)
         response1 = start_dlg.run()
@@ -844,8 +841,12 @@ class WeatherLog(Gtk.Window):
         if response1 != Gtk.ResponseType.OK:
             return
             
+        # Get the starting index.
+        dt_start = datetime.datetime(year1, month1 + 1, day1)
+        start_index = dates.date_above(dt_start, datelist)
+        
         # Check to make sure this date is valid, and cancel the action if not.
-        if date1 not in datasets.get_column(data, 0):
+        if start_index == -1:
             show_error_dialog(self, "Charts in Range - %s" % last_profile, "%s is not a valid date." % date1)
             return
         
@@ -860,28 +861,23 @@ class WeatherLog(Gtk.Window):
         if response2 != Gtk.ResponseType.OK:
             return
         
+        # Get the ending index.
+        dt_end = datetime.datetime(year2, month2 + 1, day2)
+        end_index = dates.date_below(dt_end, datelist)
+        
         # Check to make sure this date is valid, and cancel the action if not.
-        if date2 not in datasets.get_column(data, 0):
+        if end_index == -1:
             show_error_dialog(self, "Charts in Range - %s" % last_profile, "%s is not a valid date." % date2)
             return
         
-        # Convert the dates to ISO notation for comparison.
-        nDate1 = dates.date_to_iso(day1, month1, year1)
-        nDate2 = dates.date_to_iso(day2, month2, year2)
-        
         # Check to make sure this date is later than the starting date, 
         # and cancel the action if not.
-        if date1 == date2 or nDate1 > nDate2:
-            show_error_dialog(self, "Charts in Range - %s" % last_profile, "The ending date must be later than the starting date.")
+        if end_index < start_index:
+            show_error_dialog(self, "Charts in Range - %s" % last_profile, "The ending date must later than the starting date.")
             return
         
-        # Get the indices.
-        date_col = datasets.get_column(data, 0)
-        index1 = date_col.index(date1)
-        index2 = date_col.index(date2)
-        
         # Get the new list.
-        data2 = data[index1:index2 + 1]
+        data2 = data[start_index:end_index + 1]
         
         # Pass the data to the charts dialog.
         self.show_chart_generic(data = data2)
@@ -984,6 +980,9 @@ class WeatherLog(Gtk.Window):
         days, months, years = dates.split_date(data[0][0])
         daye, monthe, yeare = dates.split_date(data[len(data) - 1][0])
         
+        # Get a list of datetimes from the dates.
+        datelist = dates.date_list_datetime(datasets.get_column(data, 0))
+        
         # Get the starting date.
         start_dlg = CalendarDialog(self, "Graphs in Range - %s" % last_profile, "Select the starting date:", days, months, years)
         response1 = start_dlg.run()
@@ -995,8 +994,12 @@ class WeatherLog(Gtk.Window):
         if response1 != Gtk.ResponseType.OK:
             return
             
+        # Get the starting index.
+        dt_start = datetime.datetime(year1, month1 + 1, day1)
+        start_index = dates.date_above(dt_start, datelist)
+        
         # Check to make sure this date is valid, and cancel the action if not.
-        if date1 not in datasets.get_column(data, 0):
+        if start_index == -1:
             show_error_dialog(self, "Graphs in Range - %s" % last_profile, "%s is not a valid date." % date1)
             return
         
@@ -1011,28 +1014,23 @@ class WeatherLog(Gtk.Window):
         if response2 != Gtk.ResponseType.OK:
             return
         
+        # Get the ending index.
+        dt_end = datetime.datetime(year2, month2 + 1, day2)
+        end_index = dates.date_below(dt_end, datelist)
+        
         # Check to make sure this date is valid, and cancel the action if not.
-        if date2 not in datasets.get_column(data, 0):
+        if end_index == -1:
             show_error_dialog(self, "Graphs in Range - %s" % last_profile, "%s is not a valid date." % date2)
             return
         
-        # Convert the dates to ISO notation for comparison.
-        nDate1 = dates.date_to_iso(day1, month1, year1)
-        nDate2 = dates.date_to_iso(day2, month2, year2)
-        
         # Check to make sure this date is later than the starting date, 
         # and cancel the action if not.
-        if date1 == date2 or nDate1 > nDate2:
-            show_error_dialog(self, "Graphs in Range - %s" % last_profile, "The ending date must be later than the starting date.")
+        if end_index < start_index:
+            show_error_dialog(self, "Graphs in Range - %s" % last_profile, "The ending date must later than the starting date.")
             return
         
-        # Get the indices.
-        date_col = datasets.get_column(data, 0)
-        index1 = date_col.index(date1)
-        index2 = date_col.index(date2)
-        
         # Get the new list.
-        data2 = data[index1:index2 + 1]
+        data2 = data[start_index:end_index + 1]
         
         # Pass the data to the charts dialog.
         self.show_graph_generic(data = data2)
