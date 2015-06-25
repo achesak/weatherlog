@@ -10,7 +10,10 @@ import datetime
 # Import the dataset functions.
 import weatherlog_resources.datasets as datasets
 # Import date2num for converting dates to numbers.
-from matplotlib.dates import date2num
+try:
+    from matplotlib.dates import date2num
+except ImportError:
+	pass
 
 
 def get_dates(dates):

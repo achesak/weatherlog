@@ -9,9 +9,12 @@ from gi.repository import Gtk
 # Import datetime for sorting by dates.
 import datetime
 # Import matplotlib for graphing.
-from matplotlib.figure import Figure
-from matplotlib.dates import date2num
-from matplotlib.backends.backend_gtk3agg import FigureCanvasGTK3Agg as FigureCanvas
+try:
+    from matplotlib.figure import Figure
+    from matplotlib.dates import date2num
+    from matplotlib.backends.backend_gtk3agg import FigureCanvasGTK3Agg as FigureCanvas
+except:
+    pass
 
 
 class GenericGraphDialog(Gtk.Dialog):
