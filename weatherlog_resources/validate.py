@@ -13,12 +13,16 @@ import os.path
 def validate_profile(main_dir, name):
     """Validates a profile name."""
     
-    if re.compile("[^a-zA-Z1-90 \.\-\+\(\)\?\!]").match(name) or not name or name.lstrip().rstrip() == "" or name.startswith("."):
-        return "The dataset name \"%s\" is not valid.\n\n1. Dataset names may not be blank.\n2. Dataset names may not be all spaces.\n3. Dataset names may only be letters, numbers, and spaces.\n4. Dataset names may not start with a period (\".\")." % name
-    
+    if not name:
+        return "The dataset name \"%s\" is not valid. Dataset names may not be blank."
+    elif name.lstrip().rstrip() == "":
+        return "The dataset name \"%s\" is not valid. Dataset names may not be all spaces."
+    elif name.startswith("."):
+        return "The dataset name \"%s\" is not valid. Dataset names may not start with a period."
+    elif re.compile("[^a-zA-Z1-90 \.\-\+\(\)\?\!]").match(name):
+        return "The dataset name \"%s\" is not valid. Dataset names may only be letters, numbers, and spaces."
     elif os.path.isdir("%s/profiles/%s" % (main_dir, name)):
         return "The dataset name \"%s\" is already in use." % name
-    
     else:
         return ""
 
