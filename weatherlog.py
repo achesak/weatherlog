@@ -1089,7 +1089,7 @@ class WeatherLog(Gtk.Window):
         
         # If matplotlib isn't installed, don't continue.
         if not matplotlib_installed:
-            show_alert_dialog(self, "Graphs - %s" % last_profile, "matplotlib is required to use the graphing feaures.")
+            show_alert_dialog(self, "Graphs - %s" % last_profile, "The matplotlib library must be installed to view graphs.\n\nIn most Linux distributions this module can be found using a package manager. Source code and Windows downloads can also be found at http://matplotlib.org/")
             return
         
         # Get the data for the graphs.
