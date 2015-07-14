@@ -127,9 +127,9 @@ class GenericGraphDialog(Gtk.Dialog):
         scrolled_win7.set_vexpand(True)
         scrolled_win7.add(canvas7)
         
-        # Tab 5: Wind graph.
+        # Tab 5: Wind Speed graph.
         info_box3 = Gtk.Box()
-        info_box3_lbl = Gtk.Label("Wind")
+        info_box3_lbl = Gtk.Label("Wind Speed")
         f3 = Figure(figsize = (12, 6))
         f3.subplots_adjust(bottom = 0.2)
         a3 = f3.add_subplot(1,1,1)
