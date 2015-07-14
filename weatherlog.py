@@ -218,9 +218,9 @@ class WeatherLog(Gtk.Window):
         action_group = Gtk.ActionGroup("actions")
         action_group.add_actions([
             ("weather_menu", None, "_Weather"),
-            ("add_new", Gtk.STOCK_ADD, "Add _New...", "<Control>n", "Add a new day to the list", self.add_new),
-            ("edit", None, "_Edit...", "<Control>e", None, self.edit),
-            ("remove", Gtk.STOCK_REMOVE, "Remo_ve...", "<Control>r", "Remove a day from the list", self.remove),
+            ("add_new", Gtk.STOCK_ADD, "Add _New Data...", "<Control>n", "Add a new day to the list", self.add_new),
+            ("edit", None, "_Edit Data...", "<Control>e", None, self.edit),
+            ("remove", Gtk.STOCK_REMOVE, "Remo_ve Data...", "<Control>r", "Remove a day from the list", self.remove),
             ("clear_data", Gtk.STOCK_CLEAR, "Clear Current _Data...", None, "Clear the data", self.clear),
             ("clear_all", None, "Clear _All Data...", None, None, self.clear_all),
             ("get_current_here", None, "Get Current _Weather...", "<Control>w", None, lambda x: self.get_weather(True)),
@@ -253,9 +253,9 @@ class WeatherLog(Gtk.Window):
             ("profiles_menu", None, "_Datasets"),
             ("switch_profile", None, "_Switch Dataset...", "<Control><Shift>s", None, self.switch_profile),
             ("add_profile", None, "_Add Dataset...", "<Control><Shift>n", None, self.add_profile),
-            ("remove_profile", None, "_Remove Dataset...", None, None, self.remove_profile),
-            ("rename_profile", None, "Re_name Dataset...", None, None, self.rename_profile),
-            ("merge_profiles", None, "_Merge Dataset...", None, None, self.merge_profiles),
+            ("remove_profile", None, "_Remove Datasets...", None, None, self.remove_profile),
+            ("rename_profile", None, "Re_name Current Dataset...", None, None, self.rename_profile),
+            ("merge_profiles", None, "_Merge Datasets...", None, None, self.merge_profiles),
             ("copy_new", None, "Copy _Data to New Dataset...", None, None, self.data_profile_new),
             ("copy_existing", None, "Copy Data to _Existing Dataset...", None, None, self.data_profile_existing)
         ])
@@ -386,7 +386,7 @@ class WeatherLog(Gtk.Window):
         
         # If the date has already been entered, tell the user and prompt to continue.
         if date in datasets.get_column(data, 0):
-            overwrite = show_question_dialog(self, "Add New", "The date %s has already been entered.\n\nOverwrite with new data?" % date)
+            overwrite = show_question_dialog(self, "Add New Data", "The date %s has already been entered.\n\nOverwrite with new data?" % date)
             
             if overwrite == Gtk.ResponseType.OK:
                 # Delete the existing data.
@@ -437,7 +437,7 @@ class WeatherLog(Gtk.Window):
             date = tm.get_value(ti, 0)
         
         except:
-            show_error_dialog(self, "Edit - %s" % last_profile, "No date selected.")
+            show_error_dialog(self, "Edit Data - %s" % last_profile, "No date selected.")
             return
         
         # Get the index of the date.
@@ -514,7 +514,7 @@ class WeatherLog(Gtk.Window):
             dates.append([i[0]])
         
         # Get the dates to remove.
-        rem_dlg = DateSelectionDialog(self, "Remove - %s" % last_profile, dates)
+        rem_dlg = DateSelectionDialog(self, "Remove Data - %s" % last_profile, dates)
         response = rem_dlg.run()
         model, treeiter = rem_dlg.treeview.get_selection().get_selected_rows()
         rem_dlg.destroy()
@@ -536,7 +536,7 @@ class WeatherLog(Gtk.Window):
         if config["confirm_del"]:
             
             # Confirm that the user wants to delete the row.
-            response = show_question_dialog(self, "Remove - %s" % last_profile, "Are you sure you want to delete the selected date%s?\n\nThis action cannot be undone." % ("s" if len(ndates) > 1 else ""))
+            response = show_question_dialog(self, "Remove Data - %s" % last_profile, "Are you sure you want to delete the selected date%s?\n\nThis action cannot be undone." % ("s" if len(ndates) > 1 else ""))
             if response != Gtk.ResponseType.OK:
                 return
         
@@ -1615,11 +1615,11 @@ class WeatherLog(Gtk.Window):
         
         # If there are no other profiles, cancel the action.
         if len(profiles) == 0:
-            show_alert_dialog(self, "Remove Dataset", "There are no other datasets.")
+            show_alert_dialog(self, "Remove Datasets", "There are no other datasets.")
             return
         
         # Get the profiles to remove.
-        rem_dlg = ProfileSelectionDialog(self, "Remove Dataset", profiles, select_mode = "multiple")
+        rem_dlg = ProfileSelectionDialog(self, "Remove Datasets", profiles, select_mode = "multiple")
         response = rem_dlg.run()
         model, treeiter = rem_dlg.treeview.get_selection().get_selected_rows()
         rem_dlg.destroy()
@@ -1635,7 +1635,7 @@ class WeatherLog(Gtk.Window):
         
         # Only show the confirmation dialog if the user wants that.
         if config["confirm_del"]:
-            response = show_question_dialog(self, "Remove Dataset", "Are you sure you want to remove the dataset%s?\n\nThis action cannot be undone." % ("" if len(profiles) == 1 else "s"))
+            response = show_question_dialog(self, "Remove Datasets", "Are you sure you want to remove the dataset%s?\n\nThis action cannot be undone." % ("" if len(profiles) == 1 else "s"))
             if response != Gtk.ResponseType.OK:
                 return
         
@@ -1651,7 +1651,7 @@ class WeatherLog(Gtk.Window):
         global data
         
         # Get the new profile name.
-        ren_dlg = ProfileNameDialog(self, "Rename Dataset")
+        ren_dlg = ProfileNameDialog(self, "Rename Current Dataset")
         response = ren_dlg.run()
         name = ren_dlg.nam_ent.get_text().lstrip().rstrip()
         ren_dlg.destroy()
@@ -1663,12 +1663,12 @@ class WeatherLog(Gtk.Window):
         # Validate the name. If the name isn't valid, don't continue.
         valid = validate.validate_profile(main_dir, name)
         if valid.endswith("\".\")."):
-            show_error_dialog(self, "Rename Dataset", valid)
+            show_error_dialog(self, "Rename Current Dataset", valid)
             return
         
         # If the name is already in use, ask the user is they want to delete the old profile.
         elif valid.endswith("already in use."):
-            del_old = show_question_dialog(self, "Rename Dataset", "%s\n\nWould you like to delete the existing dataset?" % valid)
+            del_old = show_question_dialog(self, "Rename Current Dataset", "%s\n\nWould you like to delete the existing dataset?" % valid)
             if del_old != Gtk.ResponseType.OK:
                 return
             

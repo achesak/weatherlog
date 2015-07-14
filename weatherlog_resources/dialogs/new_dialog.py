@@ -25,7 +25,7 @@ class AddNewDialog(Gtk.Dialog):
             unit = 1
         
         # This window should be modal.
-        Gtk.Dialog.__init__(self, "Add New - %s" % profile, parent, Gtk.DialogFlags.MODAL)
+        Gtk.Dialog.__init__(self, "Add New Data - %s" % profile, parent, Gtk.DialogFlags.MODAL)
         self.set_resizable(False)
         
         # Create the tab notebook.
