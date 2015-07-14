@@ -614,13 +614,15 @@ class WeatherLog(Gtk.Window):
         ]
         data3 = [
         ]
-        for i in result["forecasts"]:
+        for j in range(0, len(result["forecasts"])):
+            i = result["forecasts"][j]
             data3.append(["Date", i["date"]])
             data3.append(["Day", days[i["day"]]])
             data3.append(["Condition", weather_codes[i["code"]]])
             data3.append(["Low", "%d %s" % (int(i["low"]), units["temp"])])
             data3.append(["High", "%d %s" % (int(i["high"]), units["temp"])])
-            data3.append(["", ""])
+            if j != len(result["forecasts"]) - 1:
+                data3.append(["", ""])
         
         data.append(data1)
         data.append(data2)
