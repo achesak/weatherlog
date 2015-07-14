@@ -248,7 +248,7 @@ class AddNewDialog(Gtk.Dialog):
         if show_prefill_dlg and prefill and user_location and len(user_location) == 5 and station:
             
             # Show the dialog.
-            show_alert_dialog(self, "Add New - %s" % profile, "Temperature, wind, humidity, and air pressure have been pre-filled using data from Yahoo! Weather.\n\nLocation is set to %s, at %s." % (user_location, station))
+            show_alert_dialog(self, "Add New Data - %s" % profile, "Temperature, wind, humidity, and air pressure have been pre-filled using data from Yahoo! Weather.\n\nLocation is set to %s, at %s." % (user_location, station))
     
     
     def prefill(self, user_location, units, profile):
@@ -259,7 +259,7 @@ class AddNewDialog(Gtk.Dialog):
         
         # If there was an error, tell the user and cancel the action.
         if "error" in data:
-            show_error_dialog(self, "Add New - %s" % profile, "Error:\n\n%s" % data["error"])
+            show_error_dialog(self, "Add New Data- %s" % profile, "Error:\n\n%s" % data["error"])
             return False
         
         # Set the temperature field.
