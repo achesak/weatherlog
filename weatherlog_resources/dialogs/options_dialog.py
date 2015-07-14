@@ -32,7 +32,8 @@ class OptionsDialog(Gtk.Dialog):
         opt_grid1_lbl = Gtk.Label("General")
         
         # Create the pre-fill data checkbox.
-        self.pre_chk = Gtk.CheckButton("Pre-fill data")
+        self.pre_chk = Gtk.CheckButton("Automatically fill data")
+        self.pre_chk.set_tooltip_text("Automatically fill in fields when adding new data. Note that this requires the location to be set as well.")
         self.pre_chk.set_active(config["pre-fill"])
         opt_grid1.attach(self.pre_chk, 0, 0, 2, 1)
         
@@ -43,16 +44,19 @@ class OptionsDialog(Gtk.Dialog):
         
         # Create the confirm deletions checkbox.
         self.del_chk = Gtk.CheckButton("Confirm deletions")
+        self.del_chk.set_tooltip_text("Confirm when deleting data or datasets.")
         self.del_chk.set_active(config["confirm_del"])
         opt_grid1.attach_next_to(self.del_chk, self.sav_chk, Gtk.PositionType.BOTTOM, 2, 1)
         
         # Create the import all checkbox.
         self.imp_chk = Gtk.CheckButton("Import all")
+        self.imp_chk.set_tooltip_text("Automatically import all data from the file that has been selected to import.")
         self.imp_chk.set_active(config["import_all"])
         opt_grid1.attach_next_to(self.imp_chk, self.del_chk, Gtk.PositionType.BOTTOM, 2, 1)
         
         # Create the Location label and entry.
         loc_lbl = Gtk.Label("Location: ")
+        loc_lbl.set_tooltip_text("Location used for automatically filling in fields when adding new data. Note that this must be a 5-digit US zip code.")
         loc_lbl.set_alignment(0, 0.5)
         opt_grid1.attach_next_to(loc_lbl, self.imp_chk, Gtk.PositionType.BOTTOM, 1, 1)
         self.loc_ent = Gtk.Entry()
@@ -63,6 +67,7 @@ class OptionsDialog(Gtk.Dialog):
         
         # Create the Units label and combobox.
         unit_lbl = Gtk.Label("Units: ")
+        unit_lbl.set_tooltip_text("Measurement units used for display and conversion.")
         unit_lbl.set_alignment(0, 0.5)
         opt_grid1.attach_next_to(unit_lbl, loc_lbl, Gtk.PositionType.BOTTOM, 1, 1)
         self.unit_com = Gtk.ComboBoxText()
@@ -77,26 +82,31 @@ class OptionsDialog(Gtk.Dialog):
         
         # Create the Restore window size checkbox.
         self.win_chk = Gtk.CheckButton("Restore window size")
+        self.win_chk.set_tooltip_text("Automatically restore window size on application start to the size when previously closed.")
         self.win_chk.set_active(config["restore"])
         opt_grid3.attach(self.win_chk, 0, 0, 2, 1)
         
         # Create the Show dates in title checkbox.
         self.date_chk = Gtk.CheckButton("Show dates in title")
+        self.date_chk.set_tooltip_text("Show starting and ending dates of the dataset in the title bar.")
         self.date_chk.set_active(config["show_dates"])
         opt_grid3.attach(self.date_chk, 0, 1, 2, 1)
         
         # Create the Show units in list checkbox.
         self.unit_chk = Gtk.CheckButton("Show units in list")
+        self.unit_chk.set_tooltip_text("Show measurement units in the data list headers.")
         self.unit_chk.set_active(config["show_units"])
         opt_grid3.attach(self.unit_chk, 0, 2, 2, 1)
         
         # Create the show pre-fill dialog checkbox.
-        self.pdl_chk = Gtk.CheckButton("Show pre-fill dialog")
+        self.pdl_chk = Gtk.CheckButton("Show data filling window")
+        self.pdl_chk.set_tooltip_text("Show a window when data fields have been automatically filled.")
         self.pdl_chk.set_active(config["show_pre-fill"])
         opt_grid3.attach(self.pdl_chk, 0, 3, 2, 1)
         
         # Create the confirm exit checkbox.
-        self.cex_chk = Gtk.CheckButton("Confirm exit")
+        self.cex_chk = Gtk.CheckButton("Confirm application close")
+        self.cex_chk.set_tooltip_text("Show a confirmation window when closing the application.")
         self.cex_chk.set_active(config["confirm_exit"])
         opt_grid3.attach(self.cex_chk, 0, 4, 2, 1)
         
