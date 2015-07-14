@@ -233,8 +233,7 @@ class WeatherLog(Gtk.Window):
             ("import_merge", None, "Imp_ort and Merge...", "<Control><Shift>o", None, self.import_merge),
             ("import_profile", None, "Import as New _Dataset...", None, None, self.import_new_profile),
             ("export", Gtk.STOCK_SAVE, "_Export...", None, "Export data to a file", self.export_file),
-            ("export_pastebin", None, "Export to _Pastebin...", None, None, self.export_pastebin),
-            ("save_data", None, "_Save Data...", "<Control>v", None, lambda x: self.save(show_dialog = True, automatic = False))
+            ("export_pastebin", None, "Export to _Pastebin...", None, None, self.export_pastebin)
         ])
         action_group.add_actions([
             ("info_global_menu", None, "_Info"),
@@ -1500,7 +1499,6 @@ class WeatherLog(Gtk.Window):
                   "pastebin": "d2314ff616133e54f728918b8af1500e",
                   "show_units": True,
                   "show_dates": True,
-                  "auto_save": True,
                   "confirm_del": True,
                   "show_pre-fill": True,
                   "confirm_exit": False,
@@ -1940,7 +1938,6 @@ class WeatherLog(Gtk.Window):
         units_ = opt_dlg.unit_com.get_active_text().lower()
         show_dates = opt_dlg.date_chk.get_active()
         show_units = opt_dlg.unit_chk.get_active()
-        auto_save = opt_dlg.sav_chk.get_active()
         confirm_del = opt_dlg.del_chk.get_active()
         show_prefill = opt_dlg.pdl_chk.get_active()
         confirm_exit = opt_dlg.cex_chk.get_active()
@@ -1957,7 +1954,6 @@ class WeatherLog(Gtk.Window):
             config["units"] = units_
             config["show_dates"] = show_dates
             config["show_units"] = show_units
-            config["auto_save"] = auto_save
             config["confirm_del"] = confirm_del
             config["show_pre-fill"] = show_prefill
             config["confirm_exit"] = confirm_exit
@@ -2015,7 +2011,6 @@ class WeatherLog(Gtk.Window):
                       "pastebin": "d2314ff616133e54f728918b8af1500e",
                       "show_units": True,
                       "show_dates": True,
-                      "auto_save": True,
                       "confirm_del": True,
                       "show_pre-fill": True,
                       "confirm_exit": False,
@@ -2055,10 +2050,6 @@ class WeatherLog(Gtk.Window):
     
     def save(self, show_dialog = True, automatic = True, from_options = False):
         """Saves the data."""
-        
-        # If the user doesn't want automatic saves, don't continue.
-        if automatic and not config["auto_save"] and not from_options:
-            return
         
         if not from_options:
             

@@ -19,8 +19,6 @@
       <menuitem action="import_profile" />
       <menuitem action="export" />
       <menuitem action="export_pastebin" />
-      <separator />
-      <menuitem action="save_data" />
     </menu>
     <menu action="info_global_menu">
       <menuitem action="info" />
