@@ -1384,6 +1384,12 @@ class WeatherLog(Gtk.Window):
         if response != Gtk.ResponseType.OK and response != 98 and response != 99:
             return
         
+        # Error checking for when the HTML and CSV options are chosen. GTK will allow these
+        # to be clicked when no filename has been entered, causing an error. Check to make sure
+        # there was a filename to work around this.
+        if (response == 98 or response == 99) and not filename:
+            return
+        
         # Convert the data if needed.
         if response == 99:
             converted = export.html(data, units)
