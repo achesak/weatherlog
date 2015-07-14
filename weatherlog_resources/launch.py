@@ -212,7 +212,6 @@ def get_config(conf_dir):
                   "pastebin": "d2314ff616133e54f728918b8af1500e",
                   "show_units": True,
                   "show_dates": True,
-                  "auto_save": True,
                   "confirm_del": True,
                   "show_pre-fill": True,
                   "confirm_exit": False,
