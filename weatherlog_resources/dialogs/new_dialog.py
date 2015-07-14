@@ -248,7 +248,7 @@ class AddNewDialog(Gtk.Dialog):
         if show_prefill_dlg and prefill and user_location and len(user_location) == 5 and station:
             
             # Show the dialog.
-            show_alert_dialog(self, "Add New Data - %s" % profile, "Temperature, wind, humidity, and air pressure have been pre-filled using data from Yahoo! Weather.\n\nLocation is set to %s, at %s." % (user_location, station))
+            show_alert_dialog(self, "Add New Data - %s" % profile, "Temperature, wind, humidity, and air pressure have been automatically filled using data from Yahoo! Weather.\n\nLocation is set to %s, at %s." % (user_location, station))
     
     
     def prefill(self, user_location, units, profile):
