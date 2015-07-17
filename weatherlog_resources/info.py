@@ -448,6 +448,8 @@ def clou_info(data, units):
     
     # Create the data list.
     data2 = [
+        ["Most common cloud cover", "%s (%s occurrences)" % (m_list1[0][0], m_list1[0][1])],
+        ["Most common cloud type", "%s (%s occurrences)" % (m_list2[0][0], m_list2[0][1])],
         ["Days sunny", "%s day%s" % (m_dict1["Sunny"], "" if m_dict1["Sunny"] == 1 else "s")],
         ["Days mostly sunny", "%s day%s" % (m_dict1["Mostly Sunny"], "" if m_dict1["Mostly Sunny"] == 1 else "s")],
         ["Days partly cloudy", "%s day%s" % (m_dict1["Partly Cloudy"], "" if m_dict1["Partly Cloudy"] == 1 else "s")],
