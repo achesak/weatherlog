@@ -247,7 +247,7 @@ def prec_info(data, units):
         ["Highest precipitation", prec_high],
         ["Average precipitation", prec_avg],
         ["Median precipitation", prec_median],
-        ["Range precipitation", prec_range],
+        ["Range of precipitation", prec_range],
         ["Total precipitation", "%.2f %s" % (prec_total, units["prec"])],
         ["Total rain", "%.2f %s" % (prec_total_rain, units["prec"])],
         ["Total snow", "%.2f %s" % (prec_total_snow, units["prec"])],
