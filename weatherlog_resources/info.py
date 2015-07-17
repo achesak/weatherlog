@@ -86,8 +86,12 @@ def general_info(data, units):
     clou_data = datasets.split_list3(datasets.get_column(data, 8))
     clou_data1 = Counter(clou_data[0])
     clou_data2 = Counter(datasets.strip_items(clou_data[1], ["(", ")"]))
-    clou_mode1 = clou_data1.most_common(1)[0][0]
-    clou_mode2 = clou_data2.most_common(1)[0][0]
+    clou_data1_counter = clou_data1.most_common(1)[0]
+    clou_data2_counter = clou_data2.most_common(1)[0]
+    clou_mode1 = clou_data1_counter[0]
+    clou_mode1_count = clou_data1_counter[1]
+    clou_mode2 = clou_data2_counter[0]
+    clou_mode2_count = clou_data2_counter[1]
     
     # Change any values, if needed.
     prec_low = "None" if prec_low == "None" else ("%.2f %s" % (prec_low, units["prec"]))
@@ -124,8 +128,8 @@ def general_info(data, units):
         ["Lowest visibility", "%.2f %s" % (visi_low, units["visi"])], 
         ["Highest visibility", "%.2f %s" % (visi_high, units["visi"])],
         ["Average visibility", "%.2f %s" % (visi_avg, units["visi"])],
-        ["Most common cloud cover", "%s" % clou_mode1],
-        ["Most common cloud type", "%s" % clou_mode2]
+        ["Most common cloud cover", "%s (%d occurrences)" % (clou_mode1, clou_mode1_count)],
+        ["Most common cloud type", "%s (%d occurrences)" % (clou_mode2, clou_mode2_count)]
     ]
     
     return data2
@@ -141,7 +145,7 @@ def temp_info(data, units):
     temp_avg = calculations.mean(temp_data)
     temp_median = calculations.median(temp_data)
     temp_range = calculations.range(temp_data)
-    temp_mode = calculations.mode(temp_data)
+    temp_mode, temp_mode_count = calculations.mode(temp_data)
     
     # Create the data list.
     data2 = [
@@ -150,7 +154,7 @@ def temp_info(data, units):
         ["Average temperature", "%.2f %s" % (temp_avg, units["temp"])],
         ["Median temperature", "%.2f %s" % (temp_median, units["temp"])],
         ["Range of temperatures", "%.2f %s" % (temp_range, units["temp"])],
-        ["Most common temperature", "%.2f %s" % (temp_mode, units["temp"])]
+        ["Most common temperature", "%.2f %s (%d occurrences)" % (temp_mode, units["temp"], temp_mode_count)]
     ]
     
     return data2
@@ -166,7 +170,7 @@ def chil_info(data, units):
     chil_avg = calculations.mean(chil_data)
     chil_median = calculations.median(chil_data)
     chil_range = calculations.range(chil_data)
-    chil_mode = calculations.mode(chil_data)
+    chil_mode, chil_mode_count = calculations.mode(chil_data)
     
     # Create the data list.
     data2 = [
@@ -175,7 +179,7 @@ def chil_info(data, units):
         ["Average wind chill", "%.2f %s" % (chil_avg, units["temp"])],
         ["Median wind chill", "%.2f %s" % (chil_median, units["temp"])],
         ["Range of wind chills", "%.2f %s" % (chil_range, units["temp"])],
-        ["Most common wind chill", "%.2f %s" % (chil_mode, units["temp"])]
+        ["Most common wind chill", "%.2f %s (%d occurrences)" % (chil_mode, units["temp"], chil_mode_count)]
     ]
     
     return data2
@@ -228,7 +232,7 @@ def prec_info(data, units):
         elif i[1] == "Sleet":
             prec_total_sleet += float(i[0])
             prec_sleet += 1
-    prec_mode = calculations.mode(prec_data2)
+    prec_mode, prec_mode_count = calculations.mode(prec_data2)
     
     # Change any values, if needed.
     prec_low = "None" if prec_low == "None" else ("%.2f %s" % (prec_low, units["prec"]))
@@ -254,7 +258,7 @@ def prec_info(data, units):
         ["Days with snow", "%d day%s" % (prec_snow, "" if prec_snow == 1 else "s")],
         ["Days with hail", "%d day%s" % (prec_hail, "" if prec_hail == 1 else "s")],
         ["Days with sleet", "%d day%s" % (prec_sleet, "" if prec_sleet == 1 else "s")],
-        ["Most common type of precipitation", "%s" % (prec_mode if prec_mode != "" else "None")]
+        ["Most common precipitation type", "%s (%d occurrences)" % (prec_mode if prec_mode != "" else "None", prec_mode_count)]
     ]
     
     return data2
@@ -279,7 +283,7 @@ def wind_info(data, units):
         wind_avg = "None"
         wind_median = "None"
         wind_range = "None"
-    wind_mode = calculations.mode(wind_data2)
+    wind_mode, wind_mode_count = calculations.mode(wind_data2)
     
     # Change any values, if needed.
     wind_low = "None" if wind_low == "None" else ("%.2f %s" % (wind_low, units["wind"]))
@@ -295,7 +299,7 @@ def wind_info(data, units):
         ["Average wind speed", wind_avg],
         ["Median wind speed", wind_median],
         ["Range of wind speeds", wind_range],
-        ["Most common wind direction", "%s" % (wind_mode if wind_mode != "" else "None")]
+        ["Most common wind direction", "%s (%d occurrences)" % (wind_mode if wind_mode != "" else "None", wind_mode_count)]
     ]
     
     return data2
@@ -311,7 +315,7 @@ def humi_info(data, units):
     humi_avg = calculations.mean(humi_data)
     humi_median = calculations.median(humi_data)
     humi_range = calculations.range(humi_data)
-    humi_mode = calculations.mode(humi_data)
+    humi_mode, humi_mode_count = calculations.mode(humi_data)
     
     # Create the data list.
     data2 = [
@@ -320,7 +324,7 @@ def humi_info(data, units):
         ["Average humidity", "%.2f%%" % humi_avg],
         ["Median humidity", "%.2f%%" % humi_median],
         ["Range of humidity", "%.2f%%" % humi_range],
-        ["Most common humidity", "%.2f%%" % humi_mode]
+        ["Most common humidity", "%.2f%% (%d occurrences)" % (humi_mode, humi_mode_count)]
     ]
     
     return data2
@@ -337,7 +341,7 @@ def airp_info(data, units):
     airp_avg = calculations.mean(airp_data1)
     airp_median = calculations.median(airp_data1)
     airp_range = calculations.range(airp_data1)
-    airp_mode = calculations.mode(airp_data1)
+    airp_mode, airp_mode_count = calculations.mode(airp_data1)
     airp_steady = 0
     airp_rising = 0
     airp_falling = 0
@@ -356,7 +360,7 @@ def airp_info(data, units):
         ["Average air pressure", "%.2f %s" % (airp_avg, units["airp"])],
         ["Median air pressure", "%.2f %s" % (airp_median, units["airp"])],
         ["Range of air pressures", "%.2f %s" % (airp_range, units["airp"])],
-        ["Most common air pressure", "%.2f %s" % (airp_mode, units["airp"])],
+        ["Most common air pressure", "%.2f %s (%d occurrences)" % (airp_mode, units["airp"], airp_mode_count)],
         ["Days with steady pressure", "%d day%s" % (airp_steady, "" if airp_steady == 1 else "s")],
         ["Days with rising pressure", "%d day%s" % (airp_rising, "" if airp_rising == 1 else "s")],
         ["Days with falling pressure", "%d day%s" % (airp_falling, "" if airp_falling == 1 else "s")]
@@ -375,7 +379,7 @@ def visi_info(data, units):
     visi_avg = calculations.mean(visi_data)
     visi_median = calculations.median(visi_data)
     visi_range = calculations.range(visi_data)
-    visi_mode = calculations.mode(visi_data)
+    visi_mode, visi_mode_count = calculations.mode(visi_data)
     
     # Create the data list.
     data2 = [
@@ -384,7 +388,7 @@ def visi_info(data, units):
         ["Average visibility", "%.2f %s" % (visi_avg, units["visi"])],
         ["Median visibility", "%.2f %s" % (visi_median, units["visi"])],
         ["Range of visibility", "%.2f %s" % (visi_range, units["visi"])],
-        ["Most common visibility", "%.2f %s" % (visi_mode, units["visi"])]
+        ["Most common visibility", "%.2f %s (%d occurrences)" % (visi_mode, units["visi"], visi_mode_count)]
     ]
     
     return data2

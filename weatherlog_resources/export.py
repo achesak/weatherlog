@@ -37,7 +37,7 @@ def html_cell(cell):
     return new_cell
 
 
-def html_generic(title_list, data_list, filename = "", units = []):
+def html_generic(title_list, data_list, filename = ""):
     """Converts the data to HTML and exports it.
     
     * filename is the file to write to.
@@ -63,13 +63,12 @@ def html_generic(title_list, data_list, filename = "", units = []):
             html += "<th>" + table_title + "</th>"
         html += "</tr>"
         
-        if len(units) > 0:
-            html = html % units
-        
         # Create the table rows.
         for j in range(1, rows):
             html += "<tr>"
-            for cell in rows[j]:
+            print(rows)
+            print(j)
+            for cell in data[j]:
                 html += "<td>" + html_cell(cell) + "</td>"
             html += "</tr>"
         

@@ -1390,17 +1390,18 @@ class WeatherLog(Gtk.Window):
         if (response == 98 or response == 99) and not filename:
             return
         
-        # Convert the data if needed.
-        if response == 99:
-            converted = export.html(data, units)
-        elif response == 98:
-            converted = export.csv(data, units)
-        
-        # Save the data.
+        # Export the data.
         if response == Gtk.ResponseType.OK:
             io.write_profile(filename = filename, data = data)
-        else:
-            io.write_standard_file(filename = filename, data = converted)
+        elif response == 98:
+            export.csv(data, units, filename)
+        elif response == 99:
+            title_list = ["WeatherLog Data - %s - %s to %s" % (last_profile, (data[0][0] if len(data) != 0 else "None"), (data[len(data)-1][0] if len(data) != 0 else "None"))]
+            subtitle_list = ["Date", "Temperature (%s)" % units["temp"], "Wind Chill (%s)" % units["temp"],
+                          "Precipitation (%s)" % units["prec"], "Wind (%s)" % units["wind"],
+                          "Humidity (%%)", "Air Pressure (%s)" % units["airp"], "Visibility (%s)" % units["visi"],
+                          "Cloud Cover", "Notes"]
+            export.html_generic(title_list, [subtitle_list, data], filename)
     
     
     def export_pastebin(self, mode):

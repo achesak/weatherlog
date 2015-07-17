@@ -44,4 +44,4 @@ def mode(numbers):
     """Finds the mode of a list of numbers."""
     
     collect = collections.Counter(numbers)
-    return collect.most_common(1)[0][0]
+    return collect.most_common(1)[0]
