@@ -4,6 +4,8 @@
 # This file defines the functions for getting the info.
 
 
+# Import future to make division work properly.
+from __future__ import division
 # Import datetime for date calculations.
 import datetime
 # Import collections.Counter for getting the mode of the data.
@@ -103,10 +105,10 @@ def general_info(data, units):
     
     # Create the data list.
     data2 = [
-        ["First day", "%s" % date_first],
-        ["Last day", "%s" % date_last],
-        ["Number of days", "%d" % day_num],
-        ["Range of days", "%d" % date_num],
+        ["First date", "%s" % date_first],
+        ["Last date", "%s" % date_last],
+        ["Number of days", "%d days" % day_num],
+        ["Range of days", "%d days" % date_num],
         ["Lowest temperature", "%.2f %s" % (temp_low, units["temp"])], 
         ["Highest temperature", "%.2f %s" % (temp_high, units["temp"])],
         ["Average temperature", "%.2f %s" % (temp_avg, units["temp"])],
@@ -189,6 +191,7 @@ def prec_info(data, units):
     """"Gets the precipitation info."""
     
     # Get the data.
+    num_days = len(data)
     prec_data1, prec_data2 = datasets.split_list(datasets.get_column(data, 3))
     prec_split = datasets.split_list2(datasets.get_column(data, 3))
     prec_data1 = datasets.none_to_zero(prec_data1)
@@ -233,6 +236,16 @@ def prec_info(data, units):
             prec_total_sleet += float(i[0])
             prec_sleet += 1
     prec_mode, prec_mode_count = calculations.mode(prec_data2)
+    if prec_total == 0:
+        prec_per_rain = "0%"
+        prec_per_snow = "0%"
+        prec_per_hail = "0%"
+        prec_per_sleet = "0%"
+    else:
+        prec_per_rain = "%.2f%%" % ((prec_total_rain / prec_total) * 100)
+        prec_per_snow = "%.2f%%" % ((prec_total_snow / prec_total) * 100)
+        prec_per_hail = "%.2f%%" % ((prec_total_hail / prec_total) * 100)
+        prec_per_sleet = "%.2f%%" % ((prec_total_sleet / prec_total) * 100)
     
     # Change any values, if needed.
     prec_low = "None" if prec_low == "None" else ("%.2f %s" % (prec_low, units["prec"]))
@@ -249,15 +262,15 @@ def prec_info(data, units):
         ["Median precipitation", prec_median],
         ["Range of precipitation", prec_range],
         ["Total precipitation", "%.2f %s" % (prec_total, units["prec"])],
-        ["Total rain", "%.2f %s" % (prec_total_rain, units["prec"])],
-        ["Total snow", "%.2f %s" % (prec_total_snow, units["prec"])],
-        ["Total hail", "%.2f %s" % (prec_total_hail, units["prec"])],
-        ["Total sleet", "%.2f %s" % (prec_total_sleet, units["prec"])],
-        ["Days with no precipitation", "%d day%s" % (prec_none, "" if prec_none == 1 else "s")],
-        ["Days with rain", "%d day%s" % (prec_rain, "" if prec_rain == 1 else "s")],
-        ["Days with snow", "%d day%s" % (prec_snow, "" if prec_snow == 1 else "s")],
-        ["Days with hail", "%d day%s" % (prec_hail, "" if prec_hail == 1 else "s")],
-        ["Days with sleet", "%d day%s" % (prec_sleet, "" if prec_sleet == 1 else "s")],
+        ["Total rain", "%.2f %s (%s)" % (prec_total_rain, units["prec"], prec_per_rain)],
+        ["Total snow", "%.2f %s (%s)" % (prec_total_snow, units["prec"], prec_per_snow)],
+        ["Total hail", "%.2f %s (%s)" % (prec_total_hail, units["prec"], prec_per_hail)],
+        ["Total sleet", "%.2f %s (%s)" % (prec_total_sleet, units["prec"], prec_per_sleet)],
+        ["Days with no precipitation", "%d day%s (%.2f%%)" % (prec_none, "" if prec_none == 1 else "s", (prec_none / num_days) * 100)],
+        ["Days with rain", "%d day%s (%.2f%%)" % (prec_rain, "" if prec_rain == 1 else "s", (prec_rain / num_days) * 100)],
+        ["Days with snow", "%d day%s (%.2f%%)" % (prec_snow, "" if prec_snow == 1 else "s", (prec_snow / num_days) * 100)],
+        ["Days with hail", "%d day%s (%.2f%%)" % (prec_hail, "" if prec_hail == 1 else "s", (prec_hail / num_days) * 100)],
+        ["Days with sleet", "%d day%s (%.2f%%)" % (prec_sleet, "" if prec_sleet == 1 else "s", (prec_sleet / num_days) * 100)],
         ["Most common precipitation type", "%s (%d occurrences)" % (prec_mode if prec_mode != "" else "None", prec_mode_count)]
     ]
     
