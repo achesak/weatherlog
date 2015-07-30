@@ -29,50 +29,48 @@ def html_cell(cell):
     new_cell = cell
     
     try:
-        new_cell = new_cell.encode("utf-8")
         new_cell = new_cell.replace("<", "&lt;").replace(">", "&gt;")
+        new_cell = new_cell.encode("utf-8")
     except:
         pass
     
     return new_cell
 
 
-def html_generic(title_list, data_list, filename = ""):
+def html_generic(data_list, filename = None):
     """Converts the data to HTML and exports it.
     
     * filename is the file to write to.
-    * title_list is a list of titles for the tables.
     * data_list is a list of data to populate the tables with. The first
-      index of this list should be another list containing the table headers.
-      The second index should be another list containing the data rows.
+      index of each list should be a string containing the table title,
+      and the remaining rows should contain the table data.
     """
     
     # Start the HTML.
     html = HTML_HEADER
     
-    # Loop through each title and start the table.
-    for i in range(0, len(title_list)):
-        html += HTML_START % title_list[i]
+    # Loop through each table in the data list.
+    for table in data_list:
+        html += HTML_START % table[0]
         
-        data = data_list[i]
-        rows = len(data[0])
+        table_data = table[1:]
+        num_columns = len(table_data[0])
         
         # Create the table header.
         html += "<tr>"
-        for table_title in data[0]:
-            html += "<th>" + table_title + "</th>"
+        for table_header in table_data[0]:
+            html += "<th>" + html_cell(table_header) + "</th>"
         html += "</tr>"
         
         # Create the table rows.
-        for j in range(1, rows):
+        table_data = table_data[1]
+        for table_row in table_data:
             html += "<tr>"
-            print(rows)
-            print(j)
-            for cell in data[j]:
+            for cell in table_row:
                 html += "<td>" + html_cell(cell) + "</td>"
             html += "</tr>"
         
-        # Add the table end.
+        # End the table.
         html += HTML_END
     
     # End the HTML and write to the file.
@@ -81,8 +79,8 @@ def html_generic(title_list, data_list, filename = ""):
         io.write_standard_file(filename, html)
     else:
         return html
-    
-    
+
+
 def csv(data2, units, filename = ""):
     """Converts the data to CSV."""
     

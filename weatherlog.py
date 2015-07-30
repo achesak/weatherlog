@@ -1396,12 +1396,13 @@ class WeatherLog(Gtk.Window):
         elif response == 98:
             export.csv(data, units, filename)
         elif response == 99:
-            title_list = ["WeatherLog Data - %s - %s to %s" % (last_profile, (data[0][0] if len(data) != 0 else "None"), (data[len(data)-1][0] if len(data) != 0 else "None"))]
-            subtitle_list = ["Date", "Temperature (%s)" % units["temp"], "Wind Chill (%s)" % units["temp"],
-                          "Precipitation (%s)" % units["prec"], "Wind (%s)" % units["wind"],
-                          "Humidity (%%)", "Air Pressure (%s)" % units["airp"], "Visibility (%s)" % units["visi"],
-                          "Cloud Cover", "Notes"]
-            export.html_generic(title_list, [subtitle_list, data], filename)
+            data_list = [["WeatherLog Data - %s - %s to %s" % (last_profile, (data[0][0] if len(data) != 0 else "None"), (data[len(data)-1][0] if len(data) != 0 else "None")),
+                           ["Date", "Temperature (%s)" % units["temp"], "Wind Chill (%s)" % units["temp"],
+                            "Precipitation (%s)" % units["prec"], "Wind (%s)" % units["wind"],
+                            "Humidity (%%)", "Air Pressure (%s)" % units["airp"], "Visibility (%s)" % units["visi"],
+                            "Cloud Cover", "Notes"],
+                            data]]
+            export.html_generic(data_list, filename)
     
     
     def export_pastebin(self, mode):
