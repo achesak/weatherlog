@@ -93,7 +93,7 @@ class SelectDataAdvancedDialog(Gtk.Window):
         
         # Create the buttons.
         sel_box = Gtk.Box()
-        self.ok_btn = Gtk.Button(label = "OK")
+        self.ok_btn = Gtk.Button(label = "View")
         self.ok_btn.connect("clicked", self.view_subset)
         sel_box.pack_end(self.ok_btn, True, True, 0)
         self.cancel_btn = Gtk.Button(label = "Cancel")
@@ -165,7 +165,7 @@ class SelectDataAdvancedDialog(Gtk.Window):
         
         # Validate the data, and add if it's acceptable.
         if not self.check_operator(field, condition) and not self.check_used(field) and not self.check_two(condition, value) and \
-            not self.check_one(condition, value):
+            not self.check_one(condition, value) and value.lstrip().rstrip() != "":
             self.liststore.append([field, condition, value])
             self.conditions.append([field, condition, value])
     
