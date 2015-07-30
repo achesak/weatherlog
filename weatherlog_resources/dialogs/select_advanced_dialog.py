@@ -249,11 +249,7 @@ class SelectDataAdvancedDialog(Gtk.Window):
         if response == 9:
             
             # Get the filename.
-            export_dlg = Gtk.FileChooserDialog("Export Data Subset - %s" % self.last_profile, self, Gtk.FileChooserAction.SAVE, (Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL, Gtk.STOCK_SAVE, Gtk.ResponseType.OK))
-            export_dlg.set_do_overwrite_confirmation(True)
-            response2 = export_dlg.run()
-            filename = export_dlg.get_filename()
-            export_dlg.close()
+            response2, filename = show_export_dialog(self, "Export Data Subset - %s" % self.last_profile)
             
             # Export the info.
             if response2 == Gtk.ResponseType.OK:

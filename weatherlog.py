@@ -138,7 +138,7 @@ from weatherlog_resources.dialogs.weather_dialog import CurrentWeatherDialog
 # Import the dialog for exporting to Pastebin.
 from weatherlog_resources.dialogs.export_pastebin_dialog import ExportPastebinDialog
 # Import the miscellaneous dialogs.
-from weatherlog_resources.dialogs.misc_dialogs import show_alert_dialog, show_error_dialog, show_question_dialog, show_file_dialog, show_save_dialog, show_no_data_dialog
+from weatherlog_resources.dialogs.misc_dialogs import show_alert_dialog, show_error_dialog, show_question_dialog, show_file_dialog, show_save_dialog, show_no_data_dialog, show_export_dialog
 # Import python-weather-api for getting the current weather.
 import weatherlog_resources.dialogs.pywapi.pywapi as pywapi
 
@@ -636,11 +636,7 @@ class WeatherLog(Gtk.Window):
         if response == 9:
             
             # Get the filename.
-            export_dlg = Gtk.FileChooserDialog("Export Weather For %s" % result["location"]["city"], self, Gtk.FileChooserAction.SAVE, (Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL, Gtk.STOCK_SAVE, Gtk.ResponseType.OK))
-            export_dlg.set_do_overwrite_confirmation(True)
-            response2 = export_dlg.run()
-            filename = export_dlg.get_filename()
-            export_dlg.close()
+            response2, filename = show_export_dialog(self, "Export Weather For %s" % result["location"]["city"])
             
             # Export the info.
             if response2 == Gtk.ResponseType.OK:
@@ -806,11 +802,7 @@ class WeatherLog(Gtk.Window):
         if response == 9:
             
             # Get the filename.
-            export_dlg = Gtk.FileChooserDialog("Export Info - %s" % last_profile, self, Gtk.FileChooserAction.SAVE, (Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL, Gtk.STOCK_SAVE, Gtk.ResponseType.OK))
-            export_dlg.set_do_overwrite_confirmation(True)
-            response2 = export_dlg.run()
-            filename = export_dlg.get_filename()
-            export_dlg.close()
+            response2, filename = show_export_dialog(self, "Export Info - %s" % last_profile)
             
             # Export the info.
             if response2 == Gtk.ResponseType.OK:
@@ -968,11 +960,7 @@ class WeatherLog(Gtk.Window):
         if response == 9:
             
             # Get the filename.
-            export_dlg = Gtk.FileChooserDialog("Export Charts - %s" % last_profile, self, Gtk.FileChooserAction.SAVE, (Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL, Gtk.STOCK_SAVE, Gtk.ResponseType.OK))
-            export_dlg.set_do_overwrite_confirmation(True)
-            response2 = export_dlg.run()
-            filename = export_dlg.get_filename()
-            export_dlg.close()
+            response2, filename = show_export_dialog(self, "Export Charts - %s" % last_profile)
             
             # Export the info.
             if response2 == Gtk.ResponseType.OK:

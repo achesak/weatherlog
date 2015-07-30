@@ -47,6 +47,20 @@ def show_file_dialog(self, title):
     filename = import_dlg.get_filename()
     import_dlg.destroy()
     return [response, filename]
+
+
+def show_export_dialog(self, title):
+    """Shows the file chooser (open) dialog."""
+    
+    # Create the dialog.
+    export_dlg = Gtk.FileChooserDialog(title, self, Gtk.FileChooserAction.SAVE, (Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL, "Export", Gtk.ResponseType.OK))
+    export_dlg.set_do_overwrite_confirmation(True)
+    
+    # Get the response and filename then close the dialog.
+    response = export_dlg.run()
+    filename = export_dlg.get_filename()
+    export_dlg.destroy()
+    return [response, filename]
     
 
 def show_save_dialog(self, title):
