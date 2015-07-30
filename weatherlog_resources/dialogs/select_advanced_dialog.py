@@ -11,7 +11,7 @@ import weatherlog_resources.datasets as datasets
 # Import the functions for filtering data.
 import weatherlog_resources.filter_data as filter_data
 # Import the functions for exporting info.
-import weatherlog_resources.export_info as export_info
+import weatherlog_resources.export as export
 # Import the subset display dialog.
 from weatherlog_resources.dialogs.data_subset_dialog import DataSubsetDialog
 # Import generic dialogs.
@@ -257,4 +257,10 @@ class SelectDataAdvancedDialog(Gtk.Window):
             
             # Export the info.
             if response2 == Gtk.ResponseType.OK:
-                export_info.export_subset(filtered, self.units, filename)
+                data_list = [["WeatherLog Subset Data - %s - %s to %s" % (self.last_profile, (filtered[0][0] if len(filtered) != 0 else "None"), (filtered[len(filtered)-1][0] if len(filtered) != 0 else "None")),
+                               ["Date", "Temperature (%s)" % self.units["temp"], "Wind Chill (%s)" % self.units["temp"],
+                                "Precipitation (%s)" % self.units["prec"], "Wind (%s)" % self.units["wind"],
+                                "Humidity (%%)", "Air Pressure (%s)" % self.units["airp"], "Visibility (%s)" % self.units["visi"],
+                                "Cloud Cover", "Notes"],
+                                filtered]]
+                export.html_generic(data_list, filename)

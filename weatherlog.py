@@ -97,8 +97,6 @@ import weatherlog_resources.degrees as degrees
 import weatherlog_resources.io as io
 # Import the functions for exporting the data.
 import weatherlog_resources.export as export
-# Import the function for exporting the info.
-import weatherlog_resources.export_info as export_info
 # Import the functions for getting the info.
 import weatherlog_resources.info as info
 # Import the functions for getting the chart data.
@@ -646,7 +644,9 @@ class WeatherLog(Gtk.Window):
             
             # Export the info.
             if response2 == Gtk.ResponseType.OK:
-                export_info.export_weather(data, filename)
+                export.html_generic([["Weather", ["Field", "Value"], data1],
+                                     ["Location", ["Field", "Value"], data2],
+                                     ["Forecast", ["Field", "Value"], data3]], filename)
         
         # If the user clicked Add:
         elif response == 10:
@@ -814,7 +814,16 @@ class WeatherLog(Gtk.Window):
             
             # Export the info.
             if response2 == Gtk.ResponseType.OK:
-                export_info.export_info(data2, filename)
+                export.html_generic([["General Info", ["Field", "Value"], data2[0]],
+                                     ["Temperature Info", ["Field", "Value"], data2[1]],
+                                     ["Wind Chill Info", ["Field", "Value"], data2[2]],
+                                     ["Precipitation Info", ["Field", "Value"], data2[3]],
+                                     ["Wind Info", ["Field", "Value"], data2[4]],
+                                     ["Humidity Info", ["Field", "Value"], data2[5]],
+                                     ["Air Pressure Info", ["Field", "Value"], data2[6]],
+                                     ["Visibility Info", ["Field", "Value"], data2[7]],
+                                     ["Cloud Cover Info", ["Field", "Value"], data2[8]],
+                                     ["Notes Info", ["Field", "Value"], data2[9]]], filename)
         
         # Close the dialog.
         info_dlg.destroy()
@@ -967,7 +976,14 @@ class WeatherLog(Gtk.Window):
             
             # Export the info.
             if response2 == Gtk.ResponseType.OK:
-                export_info.export_chart(data2, filename)
+                chart_columns = ["Day", "Value", "Average Difference", "Low Difference", "High Difference", "Median Difference"]
+                export.html_generic([["Temperature Chart", chart_columns, data2[0]],
+                                     ["Wind Chill Chart", chart_columns, data2[1]],
+                                     ["Precipitation Chart", chart_columns, data2[2]],
+                                     ["Wind Chart", chart_columns, data2[3]],
+                                     ["Humidity Chart", chart_columns, data2[4]],
+                                     ["Air Pressure Chart", chart_columns, data2[5]],
+                                     ["Visibility Chart", chart_columns, data2[6]]], filename)
         
         # Close the dialog.
         chart_dlg.destroy()
