@@ -177,6 +177,12 @@ class SelectDataAdvancedDialog(Gtk.Window):
             not self.check_one(condition, value) and value.lstrip().rstrip() != "":
             self.liststore.append([field, condition, value])
             self.conditions.append([field, condition, value])
+            
+            # Clear the fields.
+            self.field_com.set_active(0)
+            self.cond_com.set_active(0)
+            self.value_ent.set_text("")
+            
     
     
     def remove_condition(self, widget):
