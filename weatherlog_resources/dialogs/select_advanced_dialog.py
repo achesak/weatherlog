@@ -5,7 +5,7 @@
 
 
 # Import GTK for the dialog.
-from gi.repository import Gtk
+from gi.repository import Gtk, Gdk
 # Import the dataset functions.
 import weatherlog_resources.datasets as datasets
 # Import the functions for filtering data.
@@ -91,6 +91,7 @@ class SelectDataAdvancedDialog(Gtk.Window):
         self.treeview.set_vexpand(True)
         self.treeview.get_selection().set_mode(Gtk.SelectionMode.MULTIPLE)
         sel_grid.attach_next_to(self.treeview, add_grid, Gtk.PositionType.BOTTOM, 1, 1)
+        self.treeview.connect("key-press-event", self.treeview_keypress)
         
         # Create the buttons.
         sel_box = Gtk.Box()
@@ -110,6 +111,14 @@ class SelectDataAdvancedDialog(Gtk.Window):
         
         # Show the window.
         self.show_all()
+    
+    
+    def treeview_keypress(self, widget, event):
+        """Checks the treeview for keypress events."""
+        
+        # On 'Delete', remove selected row(s).
+        if event.keyval == Gdk.KEY_Delete:
+            self.remove_condition(True)
     
     
     def check_operator(self, field, operator):
@@ -174,7 +183,7 @@ class SelectDataAdvancedDialog(Gtk.Window):
         
         # Validate the data, and add if it's acceptable.
         if not self.check_operator(field, condition) and not self.check_used(field) and not self.check_two(condition, value) and \
-            not self.check_one(condition, value) and value.lstrip().rstrip() != "":
+           not self.check_one(condition, value) and value.lstrip().rstrip() != "":
             self.liststore.append([field, condition, value])
             self.conditions.append([field, condition, value])
             
@@ -183,7 +192,6 @@ class SelectDataAdvancedDialog(Gtk.Window):
             self.cond_com.set_active(0)
             self.value_ent.set_text("")
             
-    
     
     def remove_condition(self, widget):
         """Removes the selected condition."""
