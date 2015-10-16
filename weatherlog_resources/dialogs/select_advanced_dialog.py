@@ -53,7 +53,7 @@ class SelectDataAdvancedDialog(Gtk.Window):
         field_lbl.set_alignment(0, 0.5)
         add_grid.attach_next_to(field_lbl, mode_lbl, Gtk.PositionType.BOTTOM, 1, 1)
         self.field_com = Gtk.ComboBoxText()
-        for i in ["Temperature", "Wind Chill", "Precipitation Amount", "Precipition Type", "Wind Speed", "Wind Direction",
+        for i in ["Temperature", "Wind Chill", "Precipitation Amount", "Precipitation Type", "Wind Speed", "Wind Direction",
                   "Humidity", "Air Pressure Change", "Visibility", "Cloud Cover", "Cloud Type", "Notes"]:
             self.field_com.append_text(i)
         self.field_com.set_active(0)
