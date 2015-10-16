@@ -196,12 +196,6 @@ class SelectDataAdvancedDialog(Gtk.Window):
         
         # Don't continue if nothing was selected.
         if len(conds) == 0:
-            show_error_dialog(self, "Remove Condition", "No conditions selected.")
-            return
-        
-        # Confirm that the user wants to remove the selected conditions.
-        response = show_question_dialog(self, "Remove Condition", "Are you sure you want to remove the selected condition%s?" % ("s" if len(conds) > 1 else ""))
-        if response != Gtk.ResponseType.OK:
             return
         
         # Remove the conditions and update the UI.
