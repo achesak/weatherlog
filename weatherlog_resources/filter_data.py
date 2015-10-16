@@ -177,6 +177,16 @@ def filter_compare(item, operator, value, string_compare):
         if not item.endswith(value[0]):
             matches = True
     
+    # Compare the item: contains
+    if operator == "contains":
+        if value[0] in item:
+            matches = True
+    
+    # Compare the item: does not contain
+    if operator == "does not contain":
+        if value[0] not in item:
+            matches = True
+    
     return matches
 
 

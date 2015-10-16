@@ -64,7 +64,7 @@ class DataSubsetSelectionDialog(Gtk.Window):
         self.cond_com = Gtk.ComboBoxText()
         for i in ["Equal To", "Not Equal To", "Greater Than", "Less Than", "Greater Than or Equal To", "Less Than or Equal To",
                   "Between", "Between (Inclusive)", "Outside", "Outside (Inclusive)", "Starts With", "Does Not Start With",
-                  "Ends With", "Does Not End With"]:
+                  "Ends With", "Does Not End With", "Contains", "Does Not Contain"]:
             self.cond_com.append_text(i)
         self.cond_com.set_active(0)
         add_grid.attach_next_to(self.cond_com, cond_lbl, Gtk.PositionType.RIGHT, 1, 1)
@@ -129,14 +129,15 @@ class DataSubsetSelectionDialog(Gtk.Window):
         if field == "Precipitation Type" or field == "Wind Direction" or field == "Air Pressure Change" or \
            field == "Cloud Cover" or field == "Cloud Type" or field == "Notes":
             if operator != "Equal To" and operator != "Not Equal To" and operator != "Starts With" and \
-               operator != "Does Not Start With" and operator != "Ends With" and operator != "Does Not End With":
+               operator != "Does Not Start With" and operator != "Ends With" and operator != "Does Not End With" and \
+               operator != "Contains" and operator != "Does Not Contain":
                 show_error_dialog(self, "Add Condition", "Invalid comparison: %s cannot use the \"%s\" operator." % (field, operator))
                 return True
         # If the column that is being compared is a numerical field and the comparison is stricly non-numerical,
         # don't continue.
         else:
             if operator == "Starts With" or operator == "Does Not Start With" or operator == "Ends With" or \
-               operator == "Does Not End With":
+               operator == "Does Not End With" or operator == "Contains" or operator == "Does Not Contain":
                 show_error_dialog(self, "Add Condition", "Invalid comparison: %s cannot use the \"%s\" operator." % (field, operator))
                 return True
         return False
