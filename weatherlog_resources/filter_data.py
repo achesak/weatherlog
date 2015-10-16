@@ -68,6 +68,9 @@ def filter_data(data, condition):
     elif field == "cloud type":
         string_compare = True
         col = datasets.strip_items(datasets.split_list3(datasets.get_column(data, 8))[1], ["(", ")"])
+    elif field == "notes":
+        string_compare = True
+        col = datasets.get_column(data, 9)
     
     # Loop through the data, and add it to the filtered list if it matches the condition.
     for i in range(0, len(data)):
@@ -152,6 +155,26 @@ def filter_compare(item, operator, value, string_compare):
     # Compare the item: outside (inclusive).
     if operator == "outside (inclusive)":
         if item <= value[0] or item >= value[1]:
+            matches = True
+    
+    # Compare the item: starts with
+    if operator == "starts with":
+        if item.startswith(value[0]):
+            matches = True
+    
+    # Compare the item: does not start with
+    if operator == "does not start with":
+        if not item.startswith(value[0]):
+            matches = True
+    
+    # Compare the item: ends with
+    if operator == "ends with":
+        if item.endswith(value[0]):
+            matches = True
+    
+    # Compare the item: does not end with
+    if operator == "does not end with":
+        if not item.endswith(value[0]):
             matches = True
     
     return matches
