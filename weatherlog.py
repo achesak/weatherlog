@@ -308,7 +308,7 @@ class WeatherLog(Gtk.Window):
         # Show the dialog telling the user the dataset couldn't be found, if neccessary:
         if not profile_exists:
             show_alert_dialog(self, "WeatherLog", "The dataset \"%s\" could not be found and was not loaded." % original_profile)
-            self.save(show_dialog = False)
+            self.save()
     
     
     def delete_event(self, widget, event):
@@ -420,7 +420,7 @@ class WeatherLog(Gtk.Window):
         
         # Update the title and save the data.
         self.update_title()
-        self.save(show_dialog = False)
+        self.save()
     
     
     def edit(self, event):
@@ -498,7 +498,7 @@ class WeatherLog(Gtk.Window):
             self.liststore.append(i)
         
         # Save the data.
-        self.save(show_dialog = False)
+        self.save()
     
     
     def remove(self, event):
@@ -548,7 +548,7 @@ class WeatherLog(Gtk.Window):
         
         # Update the title and save the data.
         self.update_title()
-        self.save(show_dialog = False)
+        self.save()
     
     
     def get_weather(self, here):
@@ -1189,7 +1189,7 @@ class WeatherLog(Gtk.Window):
         
         # Update the title and save the data.
         self.update_title()
-        self.save(show_dialog = False)
+        self.save()
     
     
     def import_merge(self, event):
@@ -1272,7 +1272,7 @@ class WeatherLog(Gtk.Window):
         
         # Update the title and save the data.
         self.update_title()
-        self.save(show_dialog = False)      
+        self.save()      
     
     
     def import_new_profile(self, event):
@@ -1369,7 +1369,7 @@ class WeatherLog(Gtk.Window):
         
         # Update the title and save the data.
         self.update_title()
-        self.save(show_dialog = False)
+        self.save()
     
     
     def export_file(self, event):
@@ -1476,7 +1476,7 @@ class WeatherLog(Gtk.Window):
         
         # Update the title and save the data.
         self.update_title()
-        self.save(show_dialog = False)
+        self.save()
         
     
     def clear_all(self, event):
@@ -1529,7 +1529,7 @@ class WeatherLog(Gtk.Window):
         
         # Update the title and save the data.
         self.update_title()
-        self.save(show_dialog = False, from_options = True)
+        self.save(from_options = True)
     
     
     def switch_profile(self, event):
@@ -1569,7 +1569,7 @@ class WeatherLog(Gtk.Window):
         
         # Update the title and save the data.
         self.update_title()
-        self.save(show_dialog = False)
+        self.save()
     
     
     def add_profile(self, event):
@@ -1751,7 +1751,7 @@ class WeatherLog(Gtk.Window):
         
         # Update the title and save the data.
         self.update_title()
-        self.save(show_dialog = False)
+        self.save()
         
         # Delete the directory of the profile that was merged in.
         shutil.rmtree("%s/profiles/%s" % (main_dir, name))
@@ -2056,12 +2056,13 @@ class WeatherLog(Gtk.Window):
             
         # Update the title and save the data.
         self.update_title()
-        self.save(show_dialog = False, from_options = True)
+        self.save(from_options = True)
     
     
-    def save(self, show_dialog = True, automatic = True, from_options = False):
+    def save(self, from_options = False):
         """Saves the data."""
         
+        # If saving the options, don't write all the profile data.
         if not from_options:
             
             # Save the current profile.
@@ -2078,10 +2079,6 @@ class WeatherLog(Gtk.Window):
         
         # Save the configuration.
         io.write_config(conf_dir, config)
-        
-        # Show the dialog, if specified.
-        if show_dialog:
-            show_alert_dialog(self, "Save Data - %s" % last_profile, "Data has been saved.")
     
     
     def update_title(self):
@@ -2107,7 +2104,7 @@ class WeatherLog(Gtk.Window):
         pixbuf = loader.get_pixbuf()
         
         # Create the dialog.
-        about_dlg = Gtk.AboutDialog()
+        about_dlg = Gtk.AboutDialog(self)
         
         # Set the details.
         about_dlg.set_title("About WeatherLog")
@@ -2138,7 +2135,7 @@ class WeatherLog(Gtk.Window):
         """Closes the application."""
         
         # Save the data.
-        self.save(show_dialog = False)
+        self.save()
         
         # Show the confirmation dialog, if the user wants that.
         if config["confirm_exit"]:
@@ -2148,7 +2145,7 @@ class WeatherLog(Gtk.Window):
         if config["confirm_exit"] and response == Gtk.ResponseType.OK:
         
             # Save the data.
-            self.save(show_dialog = False, from_options = True)
+            self.save(from_options = True)
             
             # Close the application.
             Gtk.main_quit()
@@ -2162,7 +2159,7 @@ class WeatherLog(Gtk.Window):
         if not config["confirm_exit"]:
             
             # Save the data.
-            self.save(show_dialog = False, from_options = True)
+            self.save(from_options = True)
             
             # Close the  application.
             Gtk.main_quit()
