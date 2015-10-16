@@ -1432,7 +1432,7 @@ class WeatherLog(Gtk.Window):
             new_data = export.html(data, units)
         elif mode == "csv":
             new_data = export.csv(data, units)
-        elif mode == "raw":
+        elif mode == "json":
             new_data = json.dumps(data)
         
         # Build the api string.
