@@ -2119,8 +2119,8 @@ class WeatherLog(Gtk.Window):
         about_dlg.set_copyright("Copyright (c) 2013-2015 Adam Chesak")
         about_dlg.set_authors(["Adam Chesak <achesak@yahoo.com>"])
         about_dlg.set_license(license_text)
-        about_dlg.set_website("http://poultryandprogramming.wordpress.com/")
-        about_dlg.set_website_label("http://poultryandprogramming.wordpress.com/")
+        about_dlg.set_website("http://achesak.github.io/weatherlog")
+        about_dlg.set_website_label("http://achesak.github.io/weatherlog")
         
         # Show the dialog.
         about_dlg.show_all()
