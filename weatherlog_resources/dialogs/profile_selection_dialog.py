@@ -59,6 +59,11 @@ class ProfileSelectionDialog(Gtk.Dialog):
         scrolled_win.add(self.treeview)
         sel_grid.attach_next_to(scrolled_win, sel_lbl, Gtk.PositionType.BOTTOM, 1, 1)
         
+        # Connect 'Enter' key to the OK button.
+        ok_btn = self.get_widget_for_response(response_id=Gtk.ResponseType.OK)
+        ok_btn.set_can_default(True)
+        ok_btn.grab_default()
+        
         # Show the dialog. The response gets handled by the function
         # in the main class.
         self.show_all()

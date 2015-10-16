@@ -255,6 +255,11 @@ class EditDialog(Gtk.Dialog):
                 break
         self.note_ent.set_text(data[9])
         
+        # Connect 'Enter' key to the OK button.
+        ok_btn = self.get_widget_for_response(response_id=Gtk.ResponseType.OK)
+        ok_btn.set_can_default(True)
+        ok_btn.grab_default()
+        
         # Show the dialog. The response gets handled by the function
         # in the main class.
         self.show_all()

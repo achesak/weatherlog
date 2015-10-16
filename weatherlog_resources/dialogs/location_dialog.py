@@ -33,6 +33,12 @@ class LocationDialog(Gtk.Dialog):
         self.loc_ent = Gtk.Entry()
         loc_grid.attach_next_to(self.loc_ent, loc_lbl, Gtk.PositionType.RIGHT, 1, 1)
         
+        # Connect 'Enter' key to the OK button.
+        self.loc_ent.set_activates_default(True)
+        ok_btn = self.get_widget_for_response(response_id=Gtk.ResponseType.OK)
+        ok_btn.set_can_default(True)
+        ok_btn.grab_default()
+        
         # Show the dialog. The response gets handled by the function
         # in the main class.
         self.show_all()

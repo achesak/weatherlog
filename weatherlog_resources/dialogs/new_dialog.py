@@ -240,6 +240,11 @@ class AddNewDialog(Gtk.Dialog):
         elif prefill and user_location and len(user_location) == 5:
             station = self.prefill(user_location, units, profile)
         
+        # Connect 'Enter' key to the OK button.
+        ok_btn = self.get_widget_for_response(response_id=Gtk.ResponseType.OK)
+        ok_btn.set_can_default(True)
+        ok_btn.grab_default()
+        
         # Show the dialog. The response gets handled by the function
         # in the main class.
         self.show_all()

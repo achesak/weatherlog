@@ -39,5 +39,10 @@ class CalendarDialog(Gtk.Dialog):
         self.info_cal.select_month(month, year)
         self.info_cal.select_day(day)
         
+        # Connect 'Enter' key to the OK button.
+        ok_btn = self.get_widget_for_response(response_id=Gtk.ResponseType.OK)
+        ok_btn.set_can_default(True)
+        ok_btn.grab_default()
+        
         # Show the dialog.
         self.show_all()
