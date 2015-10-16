@@ -2137,32 +2137,15 @@ class WeatherLog(Gtk.Window):
         # Save the data.
         self.save()
         
-        # Show the confirmation dialog, if the user wants that.
+        # Confirm that the user wants to exit, if needed.
         if config["confirm_exit"]:
+            
             response = show_question_dialog(self, "Quit", "Are you sure you want to close WeatherLog?")
+            if response != Gtk.ResponseType.OK:
+                return
         
-        # If the user wants to continue:
-        if config["confirm_exit"] and response == Gtk.ResponseType.OK:
-        
-            # Save the data.
-            self.save(from_options = True)
-            
-            # Close the application.
-            Gtk.main_quit()
-            return False
-        
-        # If the user pressed cancel:
-        elif config["confirm_exit"] and response == Gtk.ResponseType.CANCEL:
-            return True
-        
-        # If the user doesn't want a confirmation dialog, quit immediately.
-        if not config["confirm_exit"]:
-            
-            # Save the data.
-            self.save(from_options = True)
-            
-            # Close the  application.
-            Gtk.main_quit()
+        # Close the  application.
+        Gtk.main_quit()
 
 
 # Show the window and start the application.
