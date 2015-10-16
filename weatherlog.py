@@ -2134,9 +2134,6 @@ class WeatherLog(Gtk.Window):
     def exit(self, x = False, y = False):
         """Closes the application."""
         
-        # Save the data.
-        self.save()
-        
         # Confirm that the user wants to exit, if needed.
         if config["confirm_exit"]:
             
