@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 
-# This file defines the advanced dialog for selecting data.
+# This file defines the data subset selection dialog.
 
 
 # Import GTK for the dialog.
@@ -18,8 +18,8 @@ from weatherlog_resources.dialogs.data_subset_dialog import DataSubsetDialog
 from weatherlog_resources.dialogs.misc_dialogs import *
 
 
-class SelectDataAdvancedDialog(Gtk.Window):
-    """Shows the advanced data selection dialog."""
+class DataSubsetSelectionDialog(Gtk.Window):
+    """Shows the data subset selection dialog."""
     def __init__(self, parent, profile, data, config, units):
         """Create the dialog."""
         
@@ -98,7 +98,7 @@ class SelectDataAdvancedDialog(Gtk.Window):
         self.ok_btn = Gtk.Button(label = "View")
         self.ok_btn.connect("clicked", self.view_subset)
         sel_box.pack_end(self.ok_btn, True, True, 0)
-        self.cancel_btn = Gtk.Button(label = "Cancel")
+        self.cancel_btn = Gtk.Button(label = "Close")
         self.cancel_btn.connect("clicked", lambda x: self.destroy())
         sel_box.pack_end(self.cancel_btn, True, True, 0)
         self.remove_btn = Gtk.Button(label = "Remove")

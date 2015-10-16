@@ -126,7 +126,7 @@ from weatherlog_resources.dialogs.chart_dialog import GenericChartDialog
 # Import the dialog for displaying the graphs.
 from weatherlog_resources.dialogs.graph_dialog import GenericGraphDialog
 # Import the dialog for selecting data subsets.
-from weatherlog_resources.dialogs.select_advanced_dialog import SelectDataAdvancedDialog
+from weatherlog_resources.dialogs.data_subset_selection_dialog import DataSubsetSelectionDialog
 # Import the dialog for displaying data subsets.
 from weatherlog_resources.dialogs.data_subset_dialog import DataSubsetDialog
 # Import the dialog for selecting dates to import.
@@ -244,7 +244,7 @@ class WeatherLog(Gtk.Window):
             ("graphs", None, "_Graphs...", "<Control>g", None, lambda x: self.show_graph_generic(data = data)),
             ("graphs_range", None, "Gra_phs in Range...", "<Control><Shift>g", None, lambda x: self.graph_range()),
             ("graphs_selected", None, "Grap_hs for Selected Dates...", None, None, lambda x: self.graph_selected()),
-            ("view_subset", None, "View _Data Subset...", "<Control>d", None, self.select_data_advanced),
+            ("view_subset", None, "View _Data Subset...", "<Control>d", None, self.select_data_subset),
         ])
         action_group.add_actions([
             ("profiles_menu", None, "_Datasets"),
@@ -1106,11 +1106,11 @@ class WeatherLog(Gtk.Window):
         graph_dlg.destroy()
     
     
-    def select_data_advanced(self, event):
+    def select_data_subset(self, event):
         """Shows the advanced data selection dialog."""
         
         # Show the condition selection dialog.
-        sel_dlg = SelectDataAdvancedDialog(self, last_profile, data, config, units)
+        sel_dlg = DataSubsetSelectionDialog(self, last_profile, data, config, units)
     
     
     def import_file(self, event):
