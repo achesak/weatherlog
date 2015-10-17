@@ -125,7 +125,7 @@ def check_files_exist(main_dir, conf_dir):
         # Create the metadata file.
         create_metadata(main_dir, "Main Dataset")
     
-    # Check to see if the data directory exists, and create it if it doesn't.
+    # Check to see if the configuration directory exists, and create it if it doesn't.
     if not os.path.exists(conf_dir) or not os.path.isdir(conf_dir):
         
         # Create the directory.

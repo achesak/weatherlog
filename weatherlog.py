@@ -346,8 +346,7 @@ class WeatherLog(Gtk.Window):
         # Get the data to add.
         new_dlg = AddNewDialog(self, last_profile, config["location"], config["pre-fill"], config["show_pre-fill"], units, prefill_data)
         response = new_dlg.run()
-        year, month, day = new_dlg.date_cal.get_date()
-        date = "%d/%d/%d" % (day, month + 1, year)
+        date = new_dlg.date_ent.get_text()
         temp = new_dlg.temp_sbtn.get_value()
         chil = new_dlg.chil_sbtn.get_value()
         prec = new_dlg.prec_sbtn.get_value()

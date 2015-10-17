@@ -4,14 +4,18 @@
 # This file defines the Add New dialog.
 
 
+# Import time for getting the current date.
+import time
 # Import GTK for the dialog.
 from gi.repository import Gtk
 # Import the dialogs.
 from weatherlog_resources.dialogs.misc_dialogs import *
+# Import the date selecter dialog.
+from weatherlog_resources.dialogs.calendar_dialog import CalendarDialog
 # Import pywapi to pre-fill the fields.
 import weatherlog_resources.dialogs.pywapi.pywapi as pywapi
 # Import function to convert degrees to a wind direction.
-from .. import degrees
+import weatherlog_resources.degrees as degrees
 
 
 class AddNewDialog(Gtk.Dialog):
@@ -24,13 +28,12 @@ class AddNewDialog(Gtk.Dialog):
         if units["prec"] == "in":
             unit = 1
         
-        # This window should be modal.
+        # Get the current date.
+        date = time.strftime("%d/%m/%Y")
+        
+        # Create the dialog.
         Gtk.Dialog.__init__(self, "Add New Data - %s" % profile, parent, Gtk.DialogFlags.MODAL)
         self.set_resizable(False)
-        
-        # Create the tab notebook.
-        notebook = Gtk.Notebook()
-        notebook.set_tab_pos(Gtk.PositionType.LEFT)
         
         # Add the buttons.
         self.add_button("Cancel", Gtk.ResponseType.CANCEL)
@@ -38,24 +41,25 @@ class AddNewDialog(Gtk.Dialog):
         
         # Create the grids.
         new_box = self.get_content_area()
-        new_grid1 = Gtk.Grid()
-        new_grid2 = Gtk.Grid()
-        new_grid3 = Gtk.Grid()
-        new_grid1_lbl = Gtk.Label("Date")
-        new_grid2_lbl = Gtk.Label("Data 1")
-        new_grid3_lbl = Gtk.Label("Data 2")
+        new_grid = Gtk.Grid()
+        new_box.add(new_grid)
         
         # Date entry
         date_lbl = Gtk.Label("Date: ")
         date_lbl.set_alignment(0, 0.5)
-        new_grid1.add(date_lbl)
-        self.date_cal = Gtk.Calendar()
-        new_grid1.attach_next_to(self.date_cal, date_lbl, Gtk.PositionType.RIGHT, 1, 1)
+        new_grid.add(date_lbl)
+        self.date_ent = Gtk.Entry()
+        self.date_ent.set_text(date)
+        self.date_ent.set_editable(False)
+        new_grid.attach_next_to(self.date_ent, date_lbl, Gtk.PositionType.RIGHT, 1, 1)
+        date_btn = Gtk.Button("Select Date")
+        date_btn.connect("clicked", self.select_date)
+        new_grid.attach_next_to(date_btn, self.date_ent, Gtk.PositionType.RIGHT, 1, 1)
         
         # Temperature entry
         temp_lbl = Gtk.Label("Temperature: ")
         temp_lbl.set_alignment(0, 0.5)
-        new_grid2.add(temp_lbl)
+        new_grid.attach_next_to(temp_lbl, date_lbl, Gtk.PositionType.BOTTOM, 1, 1)
         if units["temp"] == "°C":
             temp_adj = Gtk.Adjustment(lower = -100, upper = 100, step_increment = 1)
         else:
@@ -63,17 +67,17 @@ class AddNewDialog(Gtk.Dialog):
         self.temp_sbtn = Gtk.SpinButton(digits = 2, adjustment = temp_adj)
         self.temp_sbtn.set_numeric(False)
         self.temp_sbtn.set_value(0)
-        new_grid2.attach_next_to(self.temp_sbtn, temp_lbl, Gtk.PositionType.RIGHT, 1, 1)
+        new_grid.attach_next_to(self.temp_sbtn, temp_lbl, Gtk.PositionType.RIGHT, 1, 1)
         self.temp_unit = Gtk.ComboBoxText()
         for i in ["°C", "°F"]:
             self.temp_unit.append_text(i)
         self.temp_unit.set_active(unit)
-        new_grid2.attach_next_to(self.temp_unit, self.temp_sbtn, Gtk.PositionType.RIGHT, 1, 1)
+        new_grid.attach_next_to(self.temp_unit, self.temp_sbtn, Gtk.PositionType.RIGHT, 1, 1)
         
         # Wind Chill entry
         chil_lbl = Gtk.Label("Wind Chill: ")
         chil_lbl.set_alignment(0, 0.5)
-        new_grid2.attach_next_to(chil_lbl, temp_lbl, Gtk.PositionType.BOTTOM, 1, 1)
+        new_grid.attach_next_to(chil_lbl, temp_lbl, Gtk.PositionType.BOTTOM, 1, 1)
         if units["temp"] == "°C":
             chil_adj = Gtk.Adjustment(lower = -100, upper = 100, step_increment = 1)
         else:
@@ -81,148 +85,140 @@ class AddNewDialog(Gtk.Dialog):
         self.chil_sbtn = Gtk.SpinButton(digits = 2, adjustment = chil_adj)
         self.chil_sbtn.set_numeric(False)
         self.chil_sbtn.set_value(0)
-        new_grid2.attach_next_to(self.chil_sbtn, chil_lbl, Gtk.PositionType.RIGHT, 1, 1)
+        new_grid.attach_next_to(self.chil_sbtn, chil_lbl, Gtk.PositionType.RIGHT, 1, 1)
         self.chil_unit = Gtk.ComboBoxText()
         for i in ["°C", "°F"]:
             self.chil_unit.append_text(i)
         self.chil_unit.set_active(unit)
-        new_grid2.attach_next_to(self.chil_unit, self.chil_sbtn, Gtk.PositionType.RIGHT, 1, 1)
+        new_grid.attach_next_to(self.chil_unit, self.chil_sbtn, Gtk.PositionType.RIGHT, 1, 1)
         
         # Precipitation entry
         prec_lbl = Gtk.Label("Precipitation: ")
         prec_lbl.set_alignment(0, 0.5)
-        new_grid2.attach_next_to(prec_lbl, chil_lbl, Gtk.PositionType.BOTTOM, 1, 1)
+        new_grid.attach_next_to(prec_lbl, chil_lbl, Gtk.PositionType.BOTTOM, 1, 1)
         prec_adj = Gtk.Adjustment(lower = 0, upper = 100, step_increment = 1)
         self.prec_sbtn = Gtk.SpinButton(digits = 2, adjustment = prec_adj)
         self.prec_sbtn.set_numeric(False)
         self.prec_sbtn.set_value(0)
-        new_grid2.attach_next_to(self.prec_sbtn, prec_lbl, Gtk.PositionType.RIGHT, 1, 1)
+        new_grid.attach_next_to(self.prec_sbtn, prec_lbl, Gtk.PositionType.RIGHT, 1, 1)
         self.prec_unit = Gtk.ComboBoxText()
         for i in ["cm", "in"]:
             self.prec_unit.append_text(i)
         self.prec_unit.set_active(unit)
-        new_grid2.attach_next_to(self.prec_unit, self.prec_sbtn, Gtk.PositionType.RIGHT, 1, 1)
+        new_grid.attach_next_to(self.prec_unit, self.prec_sbtn, Gtk.PositionType.RIGHT, 1, 1)
         
         # Precipitation Type entry
         prec_lbl2 = Gtk.Label("Precipitation Type: ")
         prec_lbl2.set_alignment(0, 0.5)
-        new_grid2.attach_next_to(prec_lbl2, prec_lbl, Gtk.PositionType.BOTTOM, 1, 1)
+        new_grid.attach_next_to(prec_lbl2, prec_lbl, Gtk.PositionType.BOTTOM, 1, 1)
         self.prec_com = Gtk.ComboBoxText()
         for i in ["None", "Rain", "Snow", "Hail", "Sleet"]:
             self.prec_com.append_text(i)
         self.prec_com.set_active(0)
-        new_grid2.attach_next_to(self.prec_com, prec_lbl2, Gtk.PositionType.RIGHT, 2, 1)
+        new_grid.attach_next_to(self.prec_com, prec_lbl2, Gtk.PositionType.RIGHT, 2, 1)
         
         # Wind Speed entry
         wind_lbl = Gtk.Label("Wind Speed: ")
         wind_lbl.set_alignment(0, 0.5)
-        new_grid2.attach_next_to(wind_lbl, prec_lbl2, Gtk.PositionType.BOTTOM, 1, 1)
+        new_grid.attach_next_to(wind_lbl, prec_lbl2, Gtk.PositionType.BOTTOM, 1, 1)
         wind_adj = Gtk.Adjustment(lower = 0, upper = 500, step_increment = 1)
         self.wind_sbtn = Gtk.SpinButton(digits = 2, adjustment = wind_adj)
         self.wind_sbtn.set_numeric(False)
         self.wind_sbtn.set_value(0)
-        new_grid2.attach_next_to(self.wind_sbtn, wind_lbl, Gtk.PositionType.RIGHT, 1, 1)
+        new_grid.attach_next_to(self.wind_sbtn, wind_lbl, Gtk.PositionType.RIGHT, 1, 1)
         self.wind_unit = Gtk.ComboBoxText()
         for i in ["kph", "mph"]:
             self.wind_unit.append_text(i)
         self.wind_unit.set_active(unit)
-        new_grid2.attach_next_to(self.wind_unit, self.wind_sbtn, Gtk.PositionType.RIGHT, 1, 1)
+        new_grid.attach_next_to(self.wind_unit, self.wind_sbtn, Gtk.PositionType.RIGHT, 1, 1)
         
         # Wind Direction entry
         wind_lbl2 = Gtk.Label("Wind Direction: ")
         wind_lbl2.set_alignment(0, 0.5)
-        new_grid2.attach_next_to(wind_lbl2, wind_lbl, Gtk.PositionType.BOTTOM, 1, 1)
+        new_grid.attach_next_to(wind_lbl2, wind_lbl, Gtk.PositionType.BOTTOM, 1, 1)
         self.wind_com = Gtk.ComboBoxText()
         for i in ["None", "N", "NNE", "NE", "ENE", "E", "ESE", "SE", "SSE", "S", "SSW", "SW", "WSW", "W", "WNW", "NW", "NNW"]:
             self.wind_com.append_text(i)
         self.wind_com.set_active(0)
-        new_grid2.attach_next_to(self.wind_com, wind_lbl2, Gtk.PositionType.RIGHT, 2, 1)
+        new_grid.attach_next_to(self.wind_com, wind_lbl2, Gtk.PositionType.RIGHT, 2, 1)
         
         # Humidity entry
         humi_lbl = Gtk.Label("Humidity %: ")
         humi_lbl.set_alignment(0, 0.5)
-        new_grid3.add(humi_lbl)
+        new_grid.attach_next_to(humi_lbl, wind_lbl2, Gtk.PositionType.BOTTOM, 1, 1)
         humi_adj = Gtk.Adjustment(lower = 0, upper = 100, step_increment = 1)
         self.humi_sbtn = Gtk.SpinButton(digits = 2, adjustment = humi_adj)
         self.humi_sbtn.set_numeric(False)
         self.humi_sbtn.set_value(0)
-        new_grid3.attach_next_to(self.humi_sbtn, humi_lbl, Gtk.PositionType.RIGHT, 2, 1)
+        new_grid.attach_next_to(self.humi_sbtn, humi_lbl, Gtk.PositionType.RIGHT, 2, 1)
         
         # Air Pressure entry
         airp_lbl = Gtk.Label("Air Pressure: ")
         airp_lbl.set_alignment(0, 0.5)
-        new_grid3.attach_next_to(airp_lbl, humi_lbl, Gtk.PositionType.BOTTOM, 1, 1)
+        new_grid.attach_next_to(airp_lbl, humi_lbl, Gtk.PositionType.BOTTOM, 1, 1)
         airp_adj = Gtk.Adjustment(lower = 0, upper = 2000, step_increment = 1)
         self.airp_sbtn = Gtk.SpinButton(digits = 2, adjustment = airp_adj)
         self.airp_sbtn.set_numeric(False)
         self.airp_sbtn.set_value(0)
-        new_grid3.attach_next_to(self.airp_sbtn, airp_lbl, Gtk.PositionType.RIGHT, 1, 1)
+        new_grid.attach_next_to(self.airp_sbtn, airp_lbl, Gtk.PositionType.RIGHT, 1, 1)
         self.airp_unit = Gtk.ComboBoxText()
         for i in ["hPa", "mbar"]:
             self.airp_unit.append_text(i)
         self.airp_unit.set_active(unit)
-        new_grid3.attach_next_to(self.airp_unit, self.airp_sbtn, Gtk.PositionType.RIGHT, 1, 1)
+        new_grid.attach_next_to(self.airp_unit, self.airp_sbtn, Gtk.PositionType.RIGHT, 1, 1)
         
         # Air Pressure Change entry
         airp_lbl2 = Gtk.Label("Air Pressure Change: ")
         airp_lbl2.set_alignment(0, 0.5)
-        new_grid3.attach_next_to(airp_lbl2, airp_lbl, Gtk.PositionType.BOTTOM, 1, 1)
+        new_grid.attach_next_to(airp_lbl2, airp_lbl, Gtk.PositionType.BOTTOM, 1, 1)
         self.airp_com = Gtk.ComboBoxText()
         for i in ["Steady", "Rising", "Falling"]:
             self.airp_com.append_text(i)
         self.airp_com.set_active(0)
-        new_grid3.attach_next_to(self.airp_com, airp_lbl2, Gtk.PositionType.RIGHT, 2, 1)
+        new_grid.attach_next_to(self.airp_com, airp_lbl2, Gtk.PositionType.RIGHT, 2, 1)
         
         # Visibility entry
         visi_lbl = Gtk.Label("Visibility: ")
         visi_lbl.set_alignment(0, 0.5)
-        new_grid3.attach_next_to(visi_lbl, airp_lbl2, Gtk.PositionType.BOTTOM, 1, 1)
+        new_grid.attach_next_to(visi_lbl, airp_lbl2, Gtk.PositionType.BOTTOM, 1, 1)
         visi_adj = Gtk.Adjustment(lower = 0, upper = 1000, step_increment = 1)
         self.visi_sbtn = Gtk.SpinButton(digits = 2, adjustment = visi_adj)
         self.visi_sbtn.set_numeric(False)
         self.visi_sbtn.set_value(0)
-        new_grid3.attach_next_to(self.visi_sbtn, visi_lbl, Gtk.PositionType.RIGHT, 1, 1)
+        new_grid.attach_next_to(self.visi_sbtn, visi_lbl, Gtk.PositionType.RIGHT, 1, 1)
         self.visi_unit = Gtk.ComboBoxText()
         for i in ["km", "mi"]:
             self.visi_unit.append_text(i)
         self.visi_unit.set_active(unit)
-        new_grid3.attach_next_to(self.visi_unit, self.visi_sbtn, Gtk.PositionType.RIGHT, 1, 1)
+        new_grid.attach_next_to(self.visi_unit, self.visi_sbtn, Gtk.PositionType.RIGHT, 1, 1)
         
         # Cloud Cover entry
         clou_lbl = Gtk.Label("Cloud Cover: ")
         clou_lbl.set_alignment(0, 0.5)
-        new_grid3.attach_next_to(clou_lbl, visi_lbl, Gtk.PositionType.BOTTOM, 1, 1)
+        new_grid.attach_next_to(clou_lbl, visi_lbl, Gtk.PositionType.BOTTOM, 1, 1)
         self.clou_com = Gtk.ComboBoxText()
         for i in ["Sunny", "Mostly Sunny", "Partly Cloudy", "Mostly Cloudy", "Cloudy"]:
             self.clou_com.append_text(i)
         self.clou_com.set_active(0)
-        new_grid3.attach_next_to(self.clou_com, clou_lbl, Gtk.PositionType.RIGHT, 2, 1)
+        new_grid.attach_next_to(self.clou_com, clou_lbl, Gtk.PositionType.RIGHT, 2, 1)
         
         # Cloud Type entry
         clou_lbl2 = Gtk.Label("Cloud Type: ")
         clou_lbl2.set_alignment(0, 0.5)
-        new_grid3.attach_next_to(clou_lbl2, clou_lbl, Gtk.PositionType.BOTTOM, 1, 1)
+        new_grid.attach_next_to(clou_lbl2, clou_lbl, Gtk.PositionType.BOTTOM, 1, 1)
         self.clou_com2 = Gtk.ComboBoxText()
         for i in ["None", "Unknown", "Cirrus", "Cirrocumulus", "Cirrostratus", "Cumulonimbus", "Altocumulus", "Altostratus",
                   "Stratus", "Cumulus", "Stratocumulus"]:
             self.clou_com2.append_text(i)
         self.clou_com2.set_active(0)
-        new_grid3.attach_next_to(self.clou_com2, clou_lbl2, Gtk.PositionType.RIGHT, 2, 1)
+        new_grid.attach_next_to(self.clou_com2, clou_lbl2, Gtk.PositionType.RIGHT, 2, 1)
         
         # Notes entry
         note_lbl = Gtk.Label("Notes: ")
         note_lbl.set_alignment(0, 0.5)
-        new_grid3.attach_next_to(note_lbl, clou_lbl2, Gtk.PositionType.BOTTOM, 1, 1)
+        new_grid.attach_next_to(note_lbl, clou_lbl2, Gtk.PositionType.BOTTOM, 1, 1)
         self.note_ent = Gtk.Entry()
-        new_grid3.attach_next_to(self.note_ent, note_lbl, Gtk.PositionType.RIGHT, 2, 1)
-        
-        # Add the notebook.
-        self.get_content_area().add(notebook)
-        
-        # Add the tabs to the notebook.
-        notebook.append_page(new_grid1, new_grid1_lbl)
-        notebook.append_page(new_grid2, new_grid2_lbl)
-        notebook.append_page(new_grid3, new_grid3_lbl)
+        new_grid.attach_next_to(self.note_ent, note_lbl, Gtk.PositionType.RIGHT, 2, 1)
         
         # Pre-fill from given values, if there are any.
         if len(prefill_data) > 0:
@@ -298,3 +294,17 @@ class AddNewDialog(Gtk.Dialog):
         
         # Return the location.
         return "%s, %s" % (data["location"]["city"], data["location"]["country"])
+    
+    
+    def select_date(self, event):
+        """Shows the date selection dialog."""
+        
+        # Show the dialog and get the date.
+        date_dlg = CalendarDialog(self, "Add New Data", "Select date: ")
+        response = date_dlg.run()
+        year, month, day = date_dlg.info_cal.get_date()
+        date = "%d/%d/%d" % (day, month + 1, year)
+        date_dlg.close()
+        
+        # Insert the date.
+        self.date_ent.set_text(date)

@@ -10,7 +10,7 @@ from gi.repository import Gtk
 
 class CalendarDialog(Gtk.Dialog):
     """Shows the calendar dialog."""
-    def __init__(self, parent, title, label, day, month, year):
+    def __init__(self, parent, title, label, day = None, month = None, year = None):
         """Create the dialog."""
         
         # This window should be modal.
@@ -36,8 +36,9 @@ class CalendarDialog(Gtk.Dialog):
         info_grid.attach_next_to(self.info_cal, info_lbl, Gtk.PositionType.BOTTOM, 1, 1)
         
         # Set the default date.
-        self.info_cal.select_month(month, year)
-        self.info_cal.select_day(day)
+        if day != None:
+            self.info_cal.select_month(month, year)
+            self.info_cal.select_day(day)
         
         # Connect 'Enter' key to the OK button.
         ok_btn = self.get_widget_for_response(response_id=Gtk.ResponseType.OK)
