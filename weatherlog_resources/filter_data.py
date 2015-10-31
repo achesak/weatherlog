@@ -89,7 +89,7 @@ def filter_compare(item, operator, value, string_compare):
     value = [value]
     # If there are multiple values specified, split them.
     if "," in value[0]:
-        value = value[0].split(",")
+        value = [x.strip() for x in value[0].split(',')]
     
     # If this is not a string comparison, convert the value(s) to floats.
     if not string_compare:
