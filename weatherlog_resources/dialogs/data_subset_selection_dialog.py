@@ -27,7 +27,7 @@ class DataSubsetSelectionDialog(Gtk.Window):
         Gtk.Window.__init__(self)
         self.set_title("View Data Subset - %s" % profile)
         self.set_resizable(True)
-        self.set_default_size(400, 300)
+        self.set_default_size(600, 300)
         self.conditions = []
         self.last_profile = profile
         self.data = data
@@ -36,48 +36,76 @@ class DataSubsetSelectionDialog(Gtk.Window):
         
         # Create the box
         sel_grid = Gtk.Grid()
+        sel_grid.set_column_spacing(10)
+        input_grid = Gtk.Grid()
+        input_grid.set_row_spacing(10)
+        view_frame = Gtk.Frame()
+        view_frame.set_label("All Conditions")
+        view_grid = Gtk.Grid()
+        view_frame.add(view_grid)
+        sel_grid.add(input_grid)
+        sel_grid.attach_next_to(view_frame, input_grid, Gtk.PositionType.RIGHT, 1, 1)
         self.add(sel_grid)
         
-        # Create the labels and input widgets.
-        add_grid = Gtk.Grid()
-        mode_lbl = Gtk.Label("Mode:  ")
-        mode_lbl.set_alignment(0, 0.5)
-        add_grid.add(mode_lbl)
-        self.mode_com = Gtk.ComboBoxText()
-        for i in ["Match All", "Match At Least One", "Match None"]:
-            self.mode_com.append_text(i)
-        self.mode_com.set_active(0)
-        self.mode_com.set_hexpand(True)
-        add_grid.attach_next_to(self.mode_com, mode_lbl, Gtk.PositionType.RIGHT, 1, 1)
+        # Create the mode widgets.
+        mode_frame = Gtk.Frame()
+        mode_frame.set_label("Selection Mode")
+        mode_grid = Gtk.Grid()
+        mode_grid.set_row_spacing(5)
+        self.mode_btn_all = Gtk.RadioButton.new_with_label_from_widget(None, "Match All")
+        self.mode_btn_one = Gtk.RadioButton.new_with_label_from_widget(self.mode_btn_all, "Match At Least One")
+        self.mode_btn_none = Gtk.RadioButton.new_with_label_from_widget(self.mode_btn_all, "Match None")
+        mode_grid.add(self.mode_btn_all)
+        mode_grid.attach_next_to(self.mode_btn_one, self.mode_btn_all, Gtk.PositionType.BOTTOM, 1, 1)
+        mode_grid.attach_next_to(self.mode_btn_none, self.mode_btn_one, Gtk.PositionType.BOTTOM, 1, 1)
+        mode_frame.add(mode_grid)
+        input_grid.add(mode_frame)
+        
+        # Create the new condition widgets.
+        cond_frame = Gtk.Frame()
+        cond_frame.set_label("New Condition")
+        cond_grid = Gtk.Grid()
+        cond_grid.set_row_spacing(5)
         field_lbl = Gtk.Label("Field: ")
         field_lbl.set_alignment(0, 0.5)
-        add_grid.attach_next_to(field_lbl, mode_lbl, Gtk.PositionType.BOTTOM, 1, 1)
-        self.field_com = Gtk.ComboBoxText()
+        cond_grid.add(field_lbl)
+        self.field_com = Gtk.ComboBoxText() 
         for i in ["Temperature", "Wind Chill", "Precipitation Amount", "Precipitation Type", "Wind Speed", "Wind Direction",
                   "Humidity", "Air Pressure Change", "Visibility", "Cloud Cover", "Cloud Type", "Notes"]:
             self.field_com.append_text(i)
         self.field_com.set_active(0)
-        add_grid.attach_next_to(self.field_com, field_lbl, Gtk.PositionType.RIGHT, 1, 1)
+        cond_grid.attach_next_to(self.field_com, field_lbl, Gtk.PositionType.RIGHT, 1, 1)
         cond_lbl = Gtk.Label("Condition: ")
         cond_lbl.set_alignment(0, 0.5)
-        add_grid.attach_next_to(cond_lbl, field_lbl, Gtk.PositionType.BOTTOM, 1, 1)
+        cond_grid.attach_next_to(cond_lbl, field_lbl, Gtk.PositionType.BOTTOM, 1, 1)
         self.cond_com = Gtk.ComboBoxText()
         for i in ["Equal To", "Not Equal To", "Greater Than", "Less Than", "Greater Than or Equal To", "Less Than or Equal To",
                   "Between", "Between (Inclusive)", "Outside", "Outside (Inclusive)", "Starts With", "Does Not Start With",
                   "Ends With", "Does Not End With", "Contains", "Does Not Contain"]:
             self.cond_com.append_text(i)
         self.cond_com.set_active(0)
-        add_grid.attach_next_to(self.cond_com, cond_lbl, Gtk.PositionType.RIGHT, 1, 1)
+        cond_grid.attach_next_to(self.cond_com, cond_lbl, Gtk.PositionType.RIGHT, 1, 1)
         value_lbl = Gtk.Label("Value: ")
         value_lbl.set_alignment(0, 0.5)
-        add_grid.attach_next_to(value_lbl, cond_lbl, Gtk.PositionType.BOTTOM, 1, 1)
+        cond_grid.attach_next_to(value_lbl, cond_lbl, Gtk.PositionType.BOTTOM, 1, 1)
         self.value_ent = Gtk.Entry()
-        add_grid.attach_next_to(self.value_ent, value_lbl, Gtk.PositionType.RIGHT, 1, 1)
-        sel_grid.add(add_grid)
+        cond_grid.attach_next_to(self.value_ent, value_lbl, Gtk.PositionType.RIGHT, 1, 1)
+        
+        cond_btn_box = Gtk.Box()
+        cond_grid.attach_next_to(cond_btn_box, value_lbl, Gtk.PositionType.BOTTOM, 2, 1)
+        self.clear_btn = Gtk.Button(label = "Clear")
+        cond_btn_box.pack_end(self.clear_btn, True, True, 0)
+        self.add_btn = Gtk.Button(label = "Add")
+        self.add_btn.connect("clicked", self.add_condition)
+        cond_btn_box.pack_end(self.add_btn, True, True, 0)
+        
+        cond_frame.add(cond_grid)
+        input_grid.attach_next_to(cond_frame, mode_frame, Gtk.PositionType.BOTTOM, 1, 1)
         
         # Create the data conditions listbox.
         self.liststore = Gtk.ListStore(str, str, str)
         self.treeview = Gtk.TreeView(model = self.liststore)
+        self.treeview.set_size_request(400, 300)
         field_text = Gtk.CellRendererText()
         self.field_col = Gtk.TreeViewColumn("Field", field_text, text = 0)
         self.treeview.append_column(self.field_col)
@@ -90,7 +118,7 @@ class DataSubsetSelectionDialog(Gtk.Window):
         self.treeview.set_hexpand(True)
         self.treeview.set_vexpand(True)
         self.treeview.get_selection().set_mode(Gtk.SelectionMode.MULTIPLE)
-        sel_grid.attach_next_to(self.treeview, add_grid, Gtk.PositionType.BOTTOM, 1, 1)
+        view_grid.add(self.treeview)
         self.treeview.connect("key-press-event", self.treeview_keypress)
         
         # Create the buttons.
@@ -101,13 +129,12 @@ class DataSubsetSelectionDialog(Gtk.Window):
         self.cancel_btn = Gtk.Button(label = "Close")
         self.cancel_btn.connect("clicked", lambda x: self.destroy())
         sel_box.pack_end(self.cancel_btn, True, True, 0)
+        self.clear_cond_btn = Gtk.Button(label = "Clear All")
+        sel_box.pack_end(self.clear_cond_btn, True, True, 0)
         self.remove_btn = Gtk.Button(label = "Remove")
         self.remove_btn.connect("clicked", self.remove_condition)
         sel_box.pack_end(self.remove_btn, True, True, 0)
-        self.add_btn = Gtk.Button(label = "Add")
-        self.add_btn.connect("clicked", self.add_condition)
-        sel_box.pack_end(self.add_btn, True, True, 0)
-        sel_grid.attach_next_to(sel_box, self.treeview, Gtk.PositionType.BOTTOM, 1, 1)
+        view_grid.attach_next_to(sel_box, self.treeview, Gtk.PositionType.BOTTOM, 1, 1)
         
         # Show the window.
         self.show_all()
@@ -220,7 +247,13 @@ class DataSubsetSelectionDialog(Gtk.Window):
         """Filters the data and displays the subset."""
         
         # Get the selection mode and conditions.
-        sel_mode = self.mode_com.get_active_text().lower()
+        if self.mode_btn_all.get_active():
+            sel_mode = "Match All"
+        elif self.mode_btn_one.get_active():
+            sel_mode = "Match At Least One"
+        elif self.mode_btn_none.get_active():
+            sel_mode = "Match None"
+        sel_mode = sel_mode.lower()
         conditions = []
         for i in self.liststore:
             if i[2].lstrip().rstrip() == "":
