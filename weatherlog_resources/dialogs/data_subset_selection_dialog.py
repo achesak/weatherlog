@@ -6,6 +6,8 @@
 
 # Import GTK for the dialog.
 from gi.repository import Gtk, Gdk
+# Import constants.
+from weatherlog_resources.constants import *
 # Import the dataset functions.
 import weatherlog_resources.datasets as datasets
 # Import the functions for filtering data.
@@ -204,6 +206,7 @@ class DataSubsetSelectionDialog(Gtk.Window):
     def clear_condition(self, widget):
         """Clears the input fields."""
         
+        # Clear the fields.
         self.field_com.set_active(0)
         self.cond_com.set_active(0)
         self.value_ent.set_text("")
@@ -216,7 +219,7 @@ class DataSubsetSelectionDialog(Gtk.Window):
         if show_question_dialog(self, "Reset", "Are you sure you want to reset all fields and conditions?") != Gtk.ResponseType.OK:
             return
         
-        # Clear the interface.
+        # Clear the fields.
         self.mode_btn_all.set_active(1)
         self.mode_btn_one.set_active(0)
         self.mode_btn_none.set_active(0)
@@ -271,17 +274,17 @@ class DataSubsetSelectionDialog(Gtk.Window):
         for i in self.conditions:
             self.liststore.append(i)
     
+    
     def view_subset(self, widget):
         """Filters the data and displays the subset."""
         
         # Get the selection mode and conditions.
         if self.mode_btn_all.get_active():
-            sel_mode = "Match All"
+            sel_mode = SelectionMode.ALL
         elif self.mode_btn_one.get_active():
-            sel_mode = "Match At Least One"
+            sel_mode = SelectionMode.ONE
         elif self.mode_btn_none.get_active():
-            sel_mode = "Match None"
-        sel_mode = sel_mode.lower()
+            sel_mode = SelectionMode.NONE
         conditions = []
         for i in self.liststore:
             if i[2].lstrip().rstrip() == "":
@@ -303,16 +306,16 @@ class DataSubsetSelectionDialog(Gtk.Window):
             
             # Otherwise, make sure it is combined correctly.
             # AND combination mode:
-            elif sel_mode == "match all":
+            elif sel_mode == SelectionMode.ALL:
                 filtered = filter_data.filter_and(filtered, subset)
             
             # OR combination mode or NOT combination mode:
-            elif sel_mode == "match at least one" or sel_mode == "match none":
+            elif sel_mode == SelectionMode.ONE or SelectionMode.NONE:
                 filtered = filter_data.filter_or(filtered, subset)
         
         # If the NOT combination mode is used, apply that filter as well.
-        if sel_mode == "match none":
-            filtered = filter_data.filter_not(filtered, data)
+        if sel_mode == SelectionMode.NONE:
+            filtered = filter_data.filter_not(filtered, self.data)
         
         # If there are no items that match the condition, don't show the main dialog.
         if len(filtered) == 0:
@@ -327,10 +330,8 @@ class DataSubsetSelectionDialog(Gtk.Window):
         # If the user clicked Export:
         if response == 9:
             
-            # Get the filename.
+            # Get the filename and export the info.
             response2, filename = show_export_dialog(self, "Export Data Subset - %s" % self.last_profile)
-            
-            # Export the info.
             if response2 == Gtk.ResponseType.OK:
                 data_list = [["WeatherLog Subset Data - %s - %s to %s" % (self.last_profile, (filtered[0][0] if len(filtered) != 0 else "None"), (filtered[len(filtered)-1][0] if len(filtered) != 0 else "None")),
                                ["Date", "Temperature (%s)" % self.units["temp"], "Wind Chill (%s)" % self.units["temp"],
