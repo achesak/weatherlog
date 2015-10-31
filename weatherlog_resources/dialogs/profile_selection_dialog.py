@@ -15,7 +15,7 @@ class ProfileSelectionDialog(Gtk.Dialog):
         
         # This window should be modal.
         Gtk.Dialog.__init__(self, title, parent, Gtk.DialogFlags.MODAL)
-        self.set_default_size(400, 300)
+        self.set_default_size(500, 300)
         
         # Add the buttons.
         self.add_button("Cancel", Gtk.ResponseType.CANCEL)
