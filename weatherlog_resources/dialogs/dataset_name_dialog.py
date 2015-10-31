@@ -1,15 +1,15 @@
 # -*- coding: utf-8 -*-
 
 
-# This file defines the generic dialog for entering a profile name.
+# This file defines the generic dialog for entering a dataset name.
 
 
 # Import GTK for the dialog.
 from gi.repository import Gtk
 
 
-class ProfileNameDialog(Gtk.Dialog):
-    """Shows the "Add Profile" dialog."""
+class DatasetNameDialog(Gtk.Dialog):
+    """Shows the dialog for adding a dataset."""
     def __init__(self, parent, title):
         """Create the dialog."""
         

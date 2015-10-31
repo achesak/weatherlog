@@ -16,7 +16,7 @@
     <menu action="file_menu">
       <menuitem action="import" />
       <menuitem action="import_merge" />
-      <menuitem action="import_profile" />
+      <menuitem action="import_dataset" />
       <separator />
       <menuitem action="export" />
       <menuitem action="export_pastebin" />
@@ -36,13 +36,13 @@
       <separator />
       <menuitem action="view_subset" />
     </menu>
-    <menu action="profiles_menu">
-      <menuitem action="switch_profile" />
+    <menu action="datasets_menu">
+      <menuitem action="switch_dataset" />
       <separator />
-      <menuitem action="add_profile" />
-      <menuitem action="remove_profile" />
-      <menuitem action="rename_profile" />
-      <menuitem action="merge_profiles" />
+      <menuitem action="add_dataset" />
+      <menuitem action="remove_dataset" />
+      <menuitem action="rename_dataset" />
+      <menuitem action="merge_datasets" />
       <separator />
       <menuitem action="copy_new" />
       <menuitem action="copy_existing" />
@@ -76,8 +76,8 @@
     <menuitem action="charts" />
     <menuitem action="graphs" />
     <separator />
-    <menuitem action="switch_profile" />
-    <menuitem action="add_profile" />
-    <menuitem action="remove_profile" />
+    <menuitem action="switch_dataset" />
+    <menuitem action="add_dataset" />
+    <menuitem action="remove_dataset" />
   </popup>
 </ui>

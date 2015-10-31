@@ -93,7 +93,7 @@ import weatherlog_resources.validate as validate
 import weatherlog_resources.convert as convert
 # Import the functions for converting degrees to a compass direction.
 import weatherlog_resources.degrees as degrees
-# Import the functions for reading and writing profiles.
+# Import the functions for reading and writing datasets.
 import weatherlog_resources.io as io
 # Import the functions for exporting the data.
 import weatherlog_resources.export as export
@@ -111,10 +111,10 @@ from weatherlog_resources.dialogs.new_dialog import AddNewDialog
 from weatherlog_resources.dialogs.edit_dialog import EditDialog
 # Import the dialog for displaying information.
 from weatherlog_resources.dialogs.info_dialog import GenericInfoDialog
-# Import the dialog for entering a profile name.
-from weatherlog_resources.dialogs.profile_name_dialog import ProfileNameDialog
-# Import the dialog for selecting a profile from a list.
-from weatherlog_resources.dialogs.profile_selection_dialog import ProfileSelectionDialog
+# Import the dialog for entering a dataset name.
+from weatherlog_resources.dialogs.dataset_name_dialog import DatasetNameDialog
+# Import the dialog for selecting a dataset from a list.
+from weatherlog_resources.dialogs.dataset_selection_dialog import DatasetSelectionDialog
 # Import the dialog for selecting a date from a calendar.
 from weatherlog_resources.dialogs.calendar_dialog import CalendarDialog
 # Import the dialog for selecting a date from a list.
@@ -150,7 +150,7 @@ VERSION, TITLE, MENU_DATA = launch.get_ui_info()
 main_dir, conf_dir = launch.get_main_dir()
 # Check if the directory and base files exist, and create them if they don't.
 launch.check_files_exist(main_dir, conf_dir)
-# Get the last profile.
+# Get the last dataset.
 last_profile, original_profile, profile_exists = launch.get_last_profile(main_dir, conf_dir)
 # Get the configuration.
 config = launch.get_config(conf_dir)
@@ -158,7 +158,7 @@ config = launch.get_config(conf_dir)
 last_width, last_height = launch.get_window_size(conf_dir, config)
 # Get the units.
 units = launch.get_units(config)
-# Get the profile data.
+# Get the dataset data.
 data = launch.get_data(main_dir, last_profile)
 # Get the weather codes.
 weather_codes = launch.codes
@@ -229,7 +229,7 @@ class WeatherLog(Gtk.Window):
             ("file_menu", None, "_File"),
             ("import", Gtk.STOCK_OPEN, "_Import...", None, "Import data from a file", self.import_file),
             ("import_merge", None, "Imp_ort and Merge...", "<Control><Shift>o", None, self.import_merge),
-            ("import_profile", None, "Import as New _Dataset...", None, None, self.import_new_profile),
+            ("import_dataset", None, "Import as New _Dataset...", None, None, self.import_new_dataset),
             ("export", Gtk.STOCK_SAVE, "_Export...", None, "Export data to a file", self.export_file),
             ("export_pastebin", None, "Export to _Pastebin...", None, None, self.export_pastebin)
         ])
@@ -247,14 +247,14 @@ class WeatherLog(Gtk.Window):
             ("view_subset", None, "View _Data Subset...", "<Control>d", None, self.select_data_subset),
         ])
         action_group.add_actions([
-            ("profiles_menu", None, "_Datasets"),
-            ("switch_profile", None, "_Switch Dataset...", "<Control><Shift>s", None, self.switch_profile),
-            ("add_profile", None, "_Add Dataset...", "<Control><Shift>n", None, self.add_profile),
-            ("remove_profile", None, "_Remove Datasets...", None, None, self.remove_profile),
-            ("rename_profile", None, "Re_name Current Dataset...", None, None, self.rename_profile),
-            ("merge_profiles", None, "_Merge Datasets...", None, None, self.merge_profiles),
-            ("copy_new", None, "Copy _Data to New Dataset...", None, None, self.data_profile_new),
-            ("copy_existing", None, "Copy Data to _Existing Dataset...", None, None, self.data_profile_existing)
+            ("datasets_menu", None, "_Datasets"),
+            ("switch_dataset", None, "_Switch Dataset...", "<Control><Shift>s", None, self.switch_dataset),
+            ("add_dataset", None, "_Add Dataset...", "<Control><Shift>n", None, self.add_dataset),
+            ("remove_dataset", None, "_Remove Datasets...", None, None, self.remove_dataset),
+            ("rename_dataset", None, "Re_name Current Dataset...", None, None, self.rename_dataset),
+            ("merge_datasets", None, "_Merge Datasets...", None, None, self.merge_datasets),
+            ("copy_new", None, "Copy _Data to New Dataset...", None, None, self.data_dataset_new),
+            ("copy_existing", None, "Copy Data to _Existing Dataset...", None, None, self.data_dataset_existing)
         ])
         action_group.add_actions([
             ("options_menu", None, "_Options"),
@@ -1274,7 +1274,7 @@ class WeatherLog(Gtk.Window):
         self.save()      
     
     
-    def import_new_profile(self, event):
+    def import_new_dataset(self, event):
         """Imports data from a file and inserts it in a new profile."""
         
         validate_desc = {1: "No error, this should never display.",
@@ -1287,7 +1287,7 @@ class WeatherLog(Gtk.Window):
         global data
         
         # Get the new profile name.
-        new_dlg = ProfileNameDialog(self, "Import as New Dataset")
+        new_dlg = DatasetNameDialog(self, "Import as New Dataset")
         response = new_dlg.run()
         name = new_dlg.nam_ent.get_text().lstrip().rstrip()
         new_dlg.destroy()
@@ -1531,7 +1531,7 @@ class WeatherLog(Gtk.Window):
         self.save(from_options = True)
     
     
-    def switch_profile(self, event):
+    def switch_dataset(self, event):
         """Switches profiles."""
         
         global last_profile
@@ -1546,7 +1546,7 @@ class WeatherLog(Gtk.Window):
             return
         
         # Get the profile to switch to.
-        swi_dlg = ProfileSelectionDialog(self, "Switch Dataset", profiles)
+        swi_dlg = DatasetSelectionDialog(self, "Switch Dataset", profiles)
         response = swi_dlg.run()
         model, treeiter = swi_dlg.treeview.get_selection().get_selected()
         swi_dlg.destroy()
@@ -1571,14 +1571,14 @@ class WeatherLog(Gtk.Window):
         self.save()
     
     
-    def add_profile(self, event):
-        """Adds a new profile."""
+    def add_dataset(self, event):
+        """Adds a new dataset."""
         
         global last_profile
         global data
         
         # Get the name for the new profile.
-        new_dlg = ProfileNameDialog(self, "Add Dataset")
+        new_dlg = DatasetNameDialog(self, "Add Dataset")
         response = new_dlg.run()
         name = new_dlg.nam_ent.get_text().lstrip().rstrip()
         new_dlg.destroy()
@@ -1613,8 +1613,8 @@ class WeatherLog(Gtk.Window):
         self.update_title()
     
     
-    def remove_profile(self, event):
-        """Removes a profile."""
+    def remove_dataset(self, event):
+        """Removes a dataset."""
         
         global last_profile
         
@@ -1627,7 +1627,7 @@ class WeatherLog(Gtk.Window):
             return
         
         # Get the profiles to remove.
-        rem_dlg = ProfileSelectionDialog(self, "Remove Datasets", profiles, select_mode = "multiple")
+        rem_dlg = DatasetSelectionDialog(self, "Remove Datasets", profiles, select_mode = "multiple")
         response = rem_dlg.run()
         model, treeiter = rem_dlg.treeview.get_selection().get_selected_rows()
         rem_dlg.destroy()
@@ -1652,14 +1652,14 @@ class WeatherLog(Gtk.Window):
             shutil.rmtree("%s/profiles/%s" % (main_dir, name))
     
     
-    def rename_profile(self, event):
-        """Renames the current profile."""
+    def rename_dataset(self, event):
+        """Renames the current dataset."""
         
         global last_profile
         global data
         
         # Get the new profile name.
-        ren_dlg = ProfileNameDialog(self, "Rename Current Dataset")
+        ren_dlg = DatasetNameDialog(self, "Rename Current Dataset")
         response = ren_dlg.run()
         name = ren_dlg.nam_ent.get_text().lstrip().rstrip()
         ren_dlg.destroy()
@@ -1704,8 +1704,8 @@ class WeatherLog(Gtk.Window):
         self.update_title()
     
     
-    def merge_profiles(self, event):
-        """Merges two profiles."""
+    def merge_datasets(self, event):
+        """Merges two datasets."""
         
         global last_profile
         global data
@@ -1719,7 +1719,7 @@ class WeatherLog(Gtk.Window):
             return
         
         # Get the profile to merge.
-        mer_dlg = ProfileSelectionDialog(self, "Merge Datasets", profiles)
+        mer_dlg = DatasetSelectionDialog(self, "Merge Datasets", profiles)
         response = mer_dlg.run()
         model, treeiter = mer_dlg.treeview.get_selection().get_selected()
         mer_dlg.destroy()
@@ -1756,8 +1756,8 @@ class WeatherLog(Gtk.Window):
         shutil.rmtree("%s/profiles/%s" % (main_dir, name))
         
     
-    def data_profile_new(self, event):
-        """Copies or moves data to a new profile."""
+    def data_dataset_new(self, event):
+        """Copies or moves data to a new dataset."""
         
         global data
         
@@ -1774,7 +1774,7 @@ class WeatherLog(Gtk.Window):
             dates2.append(i[0])
         
         # Get the profile name.
-        new_dlg = ProfileNameDialog(self, "Copy Data to New Dataset")
+        new_dlg = DatasetNameDialog(self, "Copy Data to New Dataset")
         response = new_dlg.run()
         name = new_dlg.nam_ent.get_text().lstrip().rstrip()
         new_dlg.destroy()
@@ -1835,8 +1835,8 @@ class WeatherLog(Gtk.Window):
         io.write_profile(main_dir = main_dir, name = name, data = ndata)
     
     
-    def data_profile_existing(self, event):
-        """Copies or moves data to an existing profile."""
+    def data_dataset_existing(self, event):
+        """Copies or moves data to an existing dataset."""
         
         global data
         
@@ -1861,7 +1861,7 @@ class WeatherLog(Gtk.Window):
             return
         
         # Get the profile.
-        exi_dlg = ProfileSelectionDialog(self, "Copy Data to Existing Dataset", profiles)
+        exi_dlg = DatasetSelectionDialog(self, "Copy Data to Existing Dataset", profiles)
         response = exi_dlg.run()
         model, treeiter = exi_dlg.treeview.get_selection().get_selected()
         exi_dlg.destroy()

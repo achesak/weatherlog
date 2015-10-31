@@ -1,16 +1,16 @@
 # -*- coding: utf-8 -*-
 
 
-# This file defines the generic dialog for selecting a profile.
+# This file defines the generic dialog for selecting a dataset.
 
 
 # Import GTK for the dialog.
 from gi.repository import Gtk
 
 
-class ProfileSelectionDialog(Gtk.Dialog):
-    """Shows the profile selection dialog."""
-    def __init__(self, parent, title, profiles, select_mode = "single"):
+class DatasetSelectionDialog(Gtk.Dialog):
+    """Shows the dataset selection dialog."""
+    def __init__(self, parent, title, datasets, select_mode = "single"):
         """Create the dialog."""
         
         # This window should be modal.
@@ -49,7 +49,7 @@ class ProfileSelectionDialog(Gtk.Dialog):
             self.treeview.get_selection().set_mode(Gtk.SelectionMode.MULTIPLE)
         
         # Add the profiles.
-        for i in profiles:
+        for i in datasets:
             self.liststore.append(i)
         
         # Display the UI.
