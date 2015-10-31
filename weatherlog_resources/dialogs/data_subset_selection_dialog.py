@@ -90,15 +90,14 @@ class DataSubsetSelectionDialog(Gtk.Window):
         cond_grid.attach_next_to(value_lbl, cond_lbl, Gtk.PositionType.BOTTOM, 1, 1)
         self.value_ent = Gtk.Entry()
         cond_grid.attach_next_to(self.value_ent, value_lbl, Gtk.PositionType.RIGHT, 1, 1)
-        
         cond_btn_box = Gtk.Box()
         cond_grid.attach_next_to(cond_btn_box, value_lbl, Gtk.PositionType.BOTTOM, 2, 1)
         self.clear_btn = Gtk.Button(label = "Clear")
+        self.clear_btn.connect("clicked", self.clear_condition)
         cond_btn_box.pack_end(self.clear_btn, True, True, 0)
         self.add_btn = Gtk.Button(label = "Add")
         self.add_btn.connect("clicked", self.add_condition)
         cond_btn_box.pack_end(self.add_btn, True, True, 0)
-        
         cond_frame.add(cond_grid)
         input_grid.attach_next_to(cond_frame, mode_frame, Gtk.PositionType.BOTTOM, 1, 1)
         
@@ -129,8 +128,9 @@ class DataSubsetSelectionDialog(Gtk.Window):
         self.cancel_btn = Gtk.Button(label = "Close")
         self.cancel_btn.connect("clicked", lambda x: self.destroy())
         sel_box.pack_end(self.cancel_btn, True, True, 0)
-        self.clear_cond_btn = Gtk.Button(label = "Clear All")
-        sel_box.pack_end(self.clear_cond_btn, True, True, 0)
+        self.reset_btn = Gtk.Button(label = "Reset")
+        self.reset_btn.connect("clicked", self.reset_conditions)
+        sel_box.pack_end(self.reset_btn, True, True, 0)
         self.remove_btn = Gtk.Button(label = "Remove")
         self.remove_btn.connect("clicked", self.remove_condition)
         sel_box.pack_end(self.remove_btn, True, True, 0)
@@ -199,6 +199,34 @@ class DataSubsetSelectionDialog(Gtk.Window):
                 show_error_dialog(self, "Add Condition", "The \"%s\" operator requires two values to be specified, separated with a comma." % operator)
                 return True
         return False
+    
+    
+    def clear_condition(self, widget):
+        """Clears the input fields."""
+        
+        self.field_com.set_active(0)
+        self.cond_com.set_active(0)
+        self.value_ent.set_text("")
+    
+    
+    def reset_conditions(self, widget):
+        """Resets all fields and clears all conditions."""
+        
+        # Ask the user to confirm.
+        if show_question_dialog(self, "Reset", "Are you sure you want to reset all fields and conditions?") != Gtk.ResponseType.OK:
+            return
+        
+        # Clear the interface.
+        self.mode_btn_all.set_active(1)
+        self.mode_btn_one.set_active(0)
+        self.mode_btn_none.set_active(0)
+        self.field_com.set_active(0)
+        self.cond_com.set_active(0)
+        self.value_ent.set_text("")
+        self.liststore.clear()
+        
+        # Clear the data.
+        self.conditions = []
     
     
     def add_condition(self, widget):
