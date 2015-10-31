@@ -209,7 +209,14 @@ class DataSubsetSelectionDialog(Gtk.Window):
         # Temperature, wind chill, precipitation amount, wind speed, humidity, air pressure, visibility:
         # REQUIREMENT: only numerical
         if field in ["Temperature", "Wind Chill", "Precipitation Amount", "Wind Speed", "Humidity", "Air Pressure", "Visibility"]:
-            return False
+            value = [x.strip() for x in value.split(',')]
+            for i in value:
+                try:
+                    float(i)
+                except ValueError:
+                    show_error_dialog(self, "Add Condition", "%s cannot be compared to the value \"%s\"." % (field, i))
+                    return True
+        return False
     
     
     def clear_condition(self, widget):

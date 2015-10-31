@@ -10,6 +10,7 @@ class SelectionMode:
     ONE = 1
     NONE = 2
 
+
 # Dialog response values:
 class DialogResponse:
     EXPORT = 9
@@ -20,4 +21,3 @@ class DialogResponse:
     ADD_DATA = 10
     IMPORT = 21
     IMPORT_ALL = 20
-    
