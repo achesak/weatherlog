@@ -73,7 +73,7 @@ class DataSubsetSelectionDialog(Gtk.Window):
         cond_grid.add(field_lbl)
         self.field_com = Gtk.ComboBoxText() 
         for i in ["Temperature", "Wind Chill", "Precipitation Amount", "Precipitation Type", "Wind Speed", "Wind Direction",
-                  "Humidity", "Air Pressure Change", "Visibility", "Cloud Cover", "Cloud Type", "Notes"]:
+                  "Humidity", "Air Pressure", "Air Pressure Change", "Visibility", "Cloud Cover", "Cloud Type", "Notes"]:
             self.field_com.append_text(i)
         self.field_com.set_active(0)
         cond_grid.attach_next_to(self.field_com, field_lbl, Gtk.PositionType.RIGHT, 1, 1)
@@ -203,6 +203,15 @@ class DataSubsetSelectionDialog(Gtk.Window):
         return False
     
     
+    def check_values(self, field, operator, value):
+        """Checks that the values are in the correct format for the field."""
+        
+        # Temperature, wind chill, precipitation amount, wind speed, humidity, air pressure, visibility:
+        # REQUIREMENT: only numerical
+        if field in ["Temperature", "Wind Chill", "Precipitation Amount", "Wind Speed", "Humidity", "Air Pressure", "Visibility"]:
+            return False
+    
+    
     def clear_condition(self, widget):
         """Clears the input fields."""
         
@@ -242,7 +251,7 @@ class DataSubsetSelectionDialog(Gtk.Window):
         
         # Validate the data, and add if it's acceptable.
         if not self.check_operator(field, condition) and not self.check_used(field) and not self.check_two(condition, value) and \
-           not self.check_one(condition, value) and value.lstrip().rstrip() != "":
+           not self.check_one(condition, value) and value.lstrip().rstrip() != "" and not self.check_values(field, condition, value):
             self.liststore.append([field, condition, value])
             self.conditions.append([field, condition, value])
             
