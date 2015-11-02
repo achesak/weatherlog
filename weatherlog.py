@@ -38,19 +38,14 @@ THE SOFTWARE.
 
 # Import Gtk and Gdk for the interface.
 from gi.repository import Gtk, Gdk, GdkPixbuf
-# Import json for loading and saving the data.
+# Import json for saving export data.
 import json
 # Import webbrowser for opening the help in the user's browser.
 import webbrowser
-# Import datetime for getting the difference between two dates, and 
-# for sorting based on dates.
+# Import datetime for date operations.
 import datetime
-# Import shutil for removing a directory.
-import shutil
-# Import os for creating a directory.
-import os
-# Import os.path for seeing if a directory exists.
-import os.path
+# Import modules for working with directories.
+import shutil, os, os.path
 # Import sys for closing the application.
 import sys
 # Import pickle for loading and saving the data.
@@ -99,41 +94,25 @@ import weatherlog_resources.charts as charts
 import weatherlog_resources.graphs as graphs
 # Import the functions for filtering the data.
 import weatherlog_resources.filter_data as filter_data
-# Import the dialog for getting new data.
+
+# Import dialogs.
 from weatherlog_resources.dialogs.new_dialog import AddNewDialog
-# Import the dialog for editing a row of data.
 from weatherlog_resources.dialogs.edit_dialog import EditDialog
-# Import the dialog for displaying information.
 from weatherlog_resources.dialogs.info_dialog import GenericInfoDialog
-# Import the dialog for entering a dataset name.
 from weatherlog_resources.dialogs.dataset_name_dialog import DatasetNameDialog
-# Import the dialog for selecting a dataset from a list.
 from weatherlog_resources.dialogs.dataset_selection_dialog import DatasetSelectionDialog
-# Import the dialog for selecting a date from a calendar.
 from weatherlog_resources.dialogs.calendar_dialog import CalendarDialog
-# Import the dialog for selecting a date from a list.
 from weatherlog_resources.dialogs.date_selection_dialog import DateSelectionDialog
-# Import the dialog for changing the options.
 from weatherlog_resources.dialogs.options_dialog import OptionsDialog
-# Import the dialog for displaying the charts.
 from weatherlog_resources.dialogs.chart_dialog import GenericChartDialog
-# Import the dialog for displaying the graphs.
 from weatherlog_resources.dialogs.graph_dialog import GenericGraphDialog
-# Import the dialog for selecting data subsets.
 from weatherlog_resources.dialogs.data_subset_selection_dialog import DataSubsetSelectionDialog
-# Import the dialog for displaying data subsets.
 from weatherlog_resources.dialogs.data_subset_dialog import DataSubsetDialog
-# Import the dialog for selecting dates to import.
 from weatherlog_resources.dialogs.import_selection_dialog import ImportSelectionDialog
-# Import the dialog for specifying a location.
 from weatherlog_resources.dialogs.location_dialog import LocationDialog
-# Import the dialog for displaying the current weather.
 from weatherlog_resources.dialogs.weather_dialog import CurrentWeatherDialog
-# Import the dialog for exporting to Pastebin.
 from weatherlog_resources.dialogs.export_pastebin_dialog import ExportPastebinDialog
-# Import the miscellaneous dialogs.
-from weatherlog_resources.dialogs.misc_dialogs import show_alert_dialog, show_error_dialog, show_question_dialog, show_file_dialog, show_save_dialog, show_no_data_dialog, show_export_dialog
-# Import python-weather-api for getting the current weather.
+from weatherlog_resources.dialogs.misc_dialogs import *
 import weatherlog_resources.dialogs.pywapi.pywapi as pywapi
 
 

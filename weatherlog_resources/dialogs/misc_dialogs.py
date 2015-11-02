@@ -7,6 +7,9 @@
 # Import GTK for the dialog.
 from gi.repository import Gtk
 
+__all__ = ["show_alert_dialog", "show_error_dialog", "show_question_dialog", "show_file_dialog",
+           "show_export_dialog", "show_save_dialog", "show_no_data_dialog"]
+
 
 def show_alert_dialog(self, title, msg):
     """Shows the alert dialog."""
@@ -75,6 +78,7 @@ def show_save_dialog(self, title):
     filename = export_dlg.get_filename()
     export_dlg.destroy()
     return [response, filename]
+
 
 def show_no_data_dialog(master, title):
     """Show the dialog to tell the user there is no info."""
