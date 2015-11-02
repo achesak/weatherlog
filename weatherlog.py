@@ -66,21 +66,15 @@ except ImportError:
 try:
     from urllib.request import urlopen
     from urllib.parse import urlencode
-    py_version = 3
 except ImportError:
     from urllib import urlopen, urlencode
-    py_version = 2
-# Try importing matplotlib, just so we know if it's installed.
-try:
-    from matplotlib.figure import Figure
-    matplotlib_installed = True
-except ImportError:
-    matplotlib_installed = False
 
 # Tell Python not to create bytecode files, as they mess with the git repo.
 # This line can be removed be the user, if desired.
 sys.dont_write_bytecode = True
 
+# Import constants.
+from weatherlog_resources.constants import *
 # Import the functions for setting up the application.
 import weatherlog_resources.launch as launch
 # Import the functions for working with datasets.
@@ -162,6 +156,12 @@ units = launch.get_units(config)
 data = launch.get_data(main_dir, last_profile)
 # Get the weather codes.
 weather_codes = launch.codes
+# Try importing matplotlib, just so we know if it's installed.
+try:
+    from matplotlib.figure import Figure
+    matplotlib_installed = True
+except ImportError:
+    matplotlib_installed = False
 
 
 class WeatherLog(Gtk.Window):

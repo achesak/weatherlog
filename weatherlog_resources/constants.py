@@ -13,11 +13,20 @@ class SelectionMode:
 
 # Dialog response values:
 class DialogResponse:
+    RESET = 3
     EXPORT = 9
+    ADD_DATA = 10
+    IMPORT_ALL = 20
+    IMPORT = 21
+    MOVE_DATA = 34
     EXPORT_CSV = 98
     EXPORT_HTML = 99
-    MOVE_DATA = 34
-    RESET = 3
-    ADD_DATA = 10
-    IMPORT = 21
-    IMPORT_ALL = 20
+
+
+# Import validation values: TODO: hook this up for validate.validate_data()
+class ImportValidation:
+    VALID = 1
+    NOT_LIST = 0
+    NOT_SUBLIST = -1
+    INCORRECT_LENGTH = -2
+    NOT_STRING = -3
