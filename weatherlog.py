@@ -418,7 +418,7 @@ class WeatherLog(Gtk.Window):
             return
         
         # Get the index of the date.
-        index = datasets.get_column(data, 0).index(date)
+        index = datasets.get_column(self.data, 0).index(date)
         
         # Get the new data.
         edit_dlg = EditDialog(self, self.last_profile, self.data[index], date, self.units)
@@ -519,7 +519,7 @@ class WeatherLog(Gtk.Window):
         
         # Loop through the list of dates and delete them.
         for i in ndates:
-            index = datasets.get_column(data, 0).index(i)
+            index = datasets.get_column(self.data, 0).index(i)
             del self.data[index]
         
         # Update the UI.
@@ -1209,7 +1209,7 @@ class WeatherLog(Gtk.Window):
             return
         
         # Ask the user what dates they want to import.
-        if not config["import_all"]:
+        if not self.config["import_all"]:
             date_dlg = ImportSelectionDialog(self, "Import and Merge - %s" % self.last_profile, datasets.get_column(data2, 0))
             response = date_dlg.run()
             model, treeiter = date_dlg.treeview.get_selection().get_selected_rows()
@@ -1307,7 +1307,7 @@ class WeatherLog(Gtk.Window):
             return
         
         # Ask the user what dates they want to import.
-        if not config["import_all"]:
+        if not self.config["import_all"]:
             date_dlg = ImportSelectionDialog(self, "Import as New Profile - %s" % name, datasets.get_column(ndata, 0))
             response = date_dlg.run()
             model, treeiter = date_dlg.treeview.get_selection().get_selected_rows()
@@ -1612,7 +1612,7 @@ class WeatherLog(Gtk.Window):
             profiles.append(model[i][0])
         
         # Only show the confirmation dialog if the user wants that.
-        if config["confirm_del"]:
+        if self.config["confirm_del"]:
             response = show_question_dialog(self, "Remove Datasets", "Are you sure you want to remove the dataset%s?\n\nThis action cannot be undone." % ("" if len(profiles) == 1 else "s"))
             if response != Gtk.ResponseType.OK:
                 return
