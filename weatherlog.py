@@ -1904,6 +1904,7 @@ class WeatherLog(Gtk.Window):
         restore = opt_dlg.win_chk.get_active()
         location = opt_dlg.loc_ent.get_text()
         units_ = opt_dlg.unit_com.get_active_text().lower()
+        pastebin = "d2314ff616133e54f728918b8af1500e" # Placeholder.
         show_dates = opt_dlg.date_chk.get_active()
         show_units = opt_dlg.unit_chk.get_active()
         confirm_del = opt_dlg.del_chk.get_active()
@@ -1912,97 +1913,72 @@ class WeatherLog(Gtk.Window):
         import_all = opt_dlg.imp_chk.get_active()
         opt_dlg.destroy()
         
-        # If the user pressed OK, change the options.
-        if response == Gtk.ResponseType.OK:
-            
-            # Set the configuration.
-            self.config["pre-fill"] = prefill
-            self.config["restore" ] = restore
-            self.config["location"] = location
-            self.config["units"] = units_
-            self.config["show_dates"] = show_dates
-            self.config["show_units"] = show_units
-            self.config["confirm_del"] = confirm_del
-            self.config["show_pre-fill"] = show_prefill
-            self.config["confirm_exit"] = confirm_exit
-            self.config["import_all"] = import_all
-            
-            # Configure the units.
-            self.units = launch.get_units(self.config)
-            
-            # If the units changed, ask the user if they want to convert the data.
-            if current_units != units_:
-                response = show_question_dialog(opt_dlg, "Options", "The units have changed from %s to %s.\n\nWould you like to convert the current data to the new units?" % (current_units, self.config["units"]))
-                if response == Gtk.ResponseType.OK:
-                    
-                    # Convert the data.
-                    new_data = convert.convert(self.data, units_)
-                    
-                    # Update the list.
-                    self.data[:] = []
-                    self.data[:] = new_data[:]
-                    self.liststore.clear()
-                    for i in self.data:
-                        self.liststore.append(i)
-            
-            # Add/remove the units, if desired:
-            if not self.config["show_units"]:
-                self.temp_col.set_title("Temperature")
-                self.chil_col.set_title("Wind Chill")
-                self.prec_col.set_title("Precipitation")
-                self.wind_col.set_title("Wind")
-                self.humi_col.set_title("Humidity")
-                self.visi_col.set_title("Visibility")
-                self.airp_col.set_title("Air Pressure")
-            else:
-                self.temp_col.set_title("Temperature (%s)" % self.units["temp"])
-                self.chil_col.set_title("Wind Chill (%s)" % self.units["temp"])
-                self.prec_col.set_title("Precipitation (%s)" % self.units["prec"])
-                self.wind_col.set_title("Wind (%s)" % self.units["wind"])
-                self.humi_col.set_title("Humidity (%)")
-                self.visi_col.set_title("Visibility (%s)" % self.units["visi"])
-                self.airp_col.set_title("Air Pressure (%s)" % self.units["airp"])
+        # If the user did not press OK or Reset, don't continue.
+        if response != Gtk.ResponseType.OK and response != DialogResponse.RESET:
+            return
         
-        # If the user pressed Reset:
-        elif response == 3:
+        # If the user pressed Reset, get the default fields.
+        if response == DialogResponse.RESET:
             
-            # Confirm that the user wants to reset the options.
+            # Confirm that the user wants to reset.
             reset = show_question_dialog(opt_dlg, "Options", "Are you sure you want to reset the options to the default values?")
             if response == Gtk.ResponseType.CANCEL:
                 return
             
-            # Set the config variables.
-            self.config = {"pre-fill": False,
-                      "restore": True,
-                      "location": "",
-                      "units": "metric",
-                      "pastebin": "d2314ff616133e54f728918b8af1500e",
-                      "show_units": True,
-                      "show_dates": True,
-                      "confirm_del": True,
-                      "show_pre-fill": True,
-                      "confirm_exit": False,
-                      "import_all": False}
-            
-            # Configure the units.
-            self.units = launch.get_units(self.config)
-            
-            # If the units changed, ask the user if they want to convert the data.
-            if current_units != self.config["units"]:
-                response = show_question_dialog(opt_dlg, "Options", "The units have changed from %s to %s.\n\nWould you like to convert the current data to the new units?" % (current_units, self.config["units"]))
-                if response == Gtk.ResponseType.OK:
-                    
-                    # Convert the data.
-                    new_data = convert.convert(data, self.config["units"])
-                    
-                    # Update the list.
-                    self.data[:] = []
-                    self.data[:] = new_data[:]
-                    self.liststore.clear()
-                    for i in self.data:
-                        self.liststore.append(i)
-            
-            # Reset the main window.
+            # Get the default options.
+            prefill = False
+            restore = True
+            location = ""
+            units_ = "metric"
+            pastebin = "d2314ff616133e54f728918b8af1500e"
+            show_dates = True
+            show_units = True
+            confirm_del = True
+            show_prefill = True
+            confirm_exit = False
+            import_all = False
+        
+        # Set the configuration.
+        self.config["pre-fill"] = prefill
+        self.config["restore" ] = restore
+        self.config["location"] = location
+        self.config["units"] = units_
+        self.config["pastebin"] = pastebin
+        self.config["show_dates"] = show_dates
+        self.config["show_units"] = show_units
+        self.config["confirm_del"] = confirm_del
+        self.config["show_pre-fill"] = show_prefill
+        self.config["confirm_exit"] = confirm_exit
+        self.config["import_all"] = import_all
+        
+        # Configure the units.
+        self.units = launch.get_units(self.config)
+        
+        # If the units changed, ask the user if they want to convert the data.
+        if current_units != self.config["units"]:
+            response = show_question_dialog(opt_dlg, "Options", "The units have changed from %s to %s.\n\nWould you like to convert the current data to the new units?" % (current_units, self.config["units"]))
+            if response == Gtk.ResponseType.OK:
+                
+                # Convert the data.
+                new_data = convert.convert(self.data, units_)
+                
+                # Update the list.
+                self.data[:] = []
+                self.data[:] = new_data[:]
+                self.liststore.clear()
+                for i in self.data:
+                    self.liststore.append(i)
+        
+        # Add/remove the units from the column titles.
+        if not self.config["show_units"]:
+            self.temp_col.set_title("Temperature")
+            self.chil_col.set_title("Wind Chill")
+            self.prec_col.set_title("Precipitation")
+            self.wind_col.set_title("Wind")
+            self.humi_col.set_title("Humidity")
+            self.visi_col.set_title("Visibility")
+            self.airp_col.set_title("Air Pressure")
+        else:
             self.temp_col.set_title("Temperature (%s)" % self.units["temp"])
             self.chil_col.set_title("Wind Chill (%s)" % self.units["temp"])
             self.prec_col.set_title("Precipitation (%s)" % self.units["prec"])
@@ -2010,7 +1986,7 @@ class WeatherLog(Gtk.Window):
             self.humi_col.set_title("Humidity (%)")
             self.visi_col.set_title("Visibility (%s)" % self.units["visi"])
             self.airp_col.set_title("Air Pressure (%s)" % self.units["airp"])
-            
+        
         # Update the title and save the data.
         self.update_title()
         self.save(from_options = True)
