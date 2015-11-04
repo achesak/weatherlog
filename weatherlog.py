@@ -144,9 +144,29 @@ except ImportError:
 
 
 class WeatherLog(Gtk.Window):
-    """Shows the main application."""
+    """Creates the WeatherLog application."""
+    
     def __init__(self):
-        """Create the application."""
+        """Initialize the application."""
+        
+        # Create the user interface.
+        self.create_interface()
+        
+        # If the dataset could not be found, tell the user and save as the default dataset.
+        if not profile_exists:
+            show_alert_dialog(self, "WeatherLog", "The dataset \"%s\" could not be found and was not loaded." % original_profile)
+            self.save()
+        
+        # Add the data.
+        for i in data:
+            self.liststore.append(i)
+        
+        # Set the new title.
+        self.update_title()
+    
+    
+    def create_interface(self):
+        """Creates the user interface."""
         
         # Create the window.
         Gtk.Window.__init__(self, title = TITLE)
@@ -186,10 +206,6 @@ class WeatherLog(Gtk.Window):
         note_text = Gtk.CellRendererText()
         self.note_col = Gtk.TreeViewColumn("Notes", note_text, text = 9)
         self.treeview.append_column(self.note_col)
-        
-        # Add the data.
-        for i in data:
-            self.liststore.append(i)
         
         # Create the menus.
         action_group = Gtk.ActionGroup("actions")
@@ -267,9 +283,6 @@ class WeatherLog(Gtk.Window):
         self.add(grid)
         self.show_all()
         
-        # Set the new title.
-        self.update_title()
-        
         # Bind the events.
         self.connect("delete-event", self.delete_event)
         self.treeview.connect("button-press-event", self.context_event)
@@ -283,11 +296,6 @@ class WeatherLog(Gtk.Window):
             self.humi_col.set_title("Humidity")
             self.visi_col.set_title("Visibility")
             self.airp_col.set_title("Air Pressure")
-        
-        # Show the dialog telling the user the dataset couldn't be found, if neccessary:
-        if not profile_exists:
-            show_alert_dialog(self, "WeatherLog", "The dataset \"%s\" could not be found and was not loaded." % original_profile)
-            self.save()
     
     
     def delete_event(self, widget, event):
