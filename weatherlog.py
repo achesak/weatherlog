@@ -123,7 +123,7 @@ class WeatherLog(Gtk.Window):
         """Initialize the application."""
         
         # Get the application's UI data.
-        self.VERSION, self.TITLE, self.MENU_DATA = launch.get_ui_info()
+        self.VERSION, self.TITLE, self.MENU_DATA, self.ICON_SMALL, self.ICON_MEDIUM = launch.get_ui_info()
         # Get the data and configuration directories.
         self.main_dir, self.conf_dir = launch.get_main_dir()
         # Check if the directory and base files exist, and create them if they don't.
@@ -169,7 +169,7 @@ class WeatherLog(Gtk.Window):
         # Create the window.
         Gtk.Window.__init__(self, title = self.TITLE)
         self.set_default_size(self.last_width, self.last_height)
-        self.set_icon_from_file("weatherlog_resources/images/icon_small.png")
+        self.set_icon_from_file(self.ICON_SMALL)
         
         # Create the main UI.
         self.liststore = Gtk.ListStore(str, str, str, str, str, str, str, str, str, str)
@@ -2029,7 +2029,7 @@ class WeatherLog(Gtk.Window):
         """Shows the About dialog."""
         
         # Load the icon.
-        img_file = open("weatherlog_resources/images/icon_med.png", "rb")
+        img_file = open(self.ICON_MEDIUM, "rb")
         img_bin = img_file.read()
         img_file.close()
         loader = GdkPixbuf.PixbufLoader.new_with_type("png")

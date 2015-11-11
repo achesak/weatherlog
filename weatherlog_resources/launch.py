@@ -104,7 +104,9 @@ def get_ui_info():
     menu_file = open("weatherlog_resources/menu.xml", "r")
     menu_data = menu_file.read()
     menu_file.close()
-    return version, title, menu_data
+    icon_small = "weatherlog_resources/images/icon_small.png"
+    icon_medium = "weatherlog_resources/images/icon_med.png"
+    return version, title, menu_data, icon_small, icon_medium
 
 
 def check_files_exist(main_dir, conf_dir):
