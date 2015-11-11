@@ -39,7 +39,7 @@ class AddNewDialog(Gtk.Dialog):
         self.add_button("Cancel", Gtk.ResponseType.CANCEL)
         self.add_button("OK", Gtk.ResponseType.OK)
         
-        # Create the grids.
+        # Create the grid.
         new_box = self.get_content_area()
         new_grid = Gtk.Grid()
         new_box.add(new_grid)
