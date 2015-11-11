@@ -1575,13 +1575,14 @@ class WeatherLog(Gtk.Window):
             shutil.rmtree("%s/profiles/%s" % (self.main_dir, name))
         
         # Create the new profile and clear the old data.
-        io.write_blank_profile(mself.ain_dir, name)
+        io.write_blank_profile(self.main_dir, name)
         launch.create_metadata(self.main_dir, name)
         self.last_profile = name
         self.data[:] = []
         self.liststore.clear()
         
         # Update the title.
+        self.save()
         self.update_title()
     
     
