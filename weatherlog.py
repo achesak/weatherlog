@@ -606,7 +606,7 @@ class WeatherLog(Gtk.Window):
         info_dlg.destroy()
         
         # If the user clicked Export:
-        if response == 9:
+        if response == DialogResponse.EXPORT:
             
             # Get the filename.
             response2, filename = show_export_dialog(self, "Export Weather For %s" % result["location"]["city"])
@@ -618,7 +618,7 @@ class WeatherLog(Gtk.Window):
                                      ["Forecast", ["Field", "Value"], data3]], filename)
         
         # If the user clicked Add:
-        elif response == 10:
+        elif response == DialogResponse.ADD_DATA:
             
             # Get the data and pass it to the Add dialog.
             prefill_data = [
@@ -775,7 +775,7 @@ class WeatherLog(Gtk.Window):
         response = info_dlg.run()
         
         # If the user clicked Export:
-        if response == 9:
+        if response == DialogResponse.EXPORT:
             
             # Get the filename.
             response2, filename = show_export_dialog(self, "Export Info - %s" % self.last_profile)
@@ -936,7 +936,7 @@ class WeatherLog(Gtk.Window):
         response = chart_dlg.run()
         
         # If the user clicked Export:
-        if response == 9:
+        if response == DialogResponse.EXPORT:
             
             # Get the filename.
             response2, filename = show_export_dialog(self, "Export Charts - %s" % self.last_profile)
@@ -1137,10 +1137,10 @@ class WeatherLog(Gtk.Window):
             date_dlg.destroy()
         
         else:
-            response = 20
+            response = DialogResponse.IMPORT_ALL
         
         # If the user did not press OK or nothing was selected, don't continue:
-        if (response != 20 and response != 21) or treeiter == None:
+        if (response != DialogResponse.IMPORT_ALL and response != DialogResponse.IMPORT) or treeiter == None:
             return
         
         # Clear the data.
@@ -1148,7 +1148,7 @@ class WeatherLog(Gtk.Window):
         self.liststore.clear()
         
         # If the user selected certain dates, only import those.
-        if response == 21:
+        if response == DialogResponse.IMPORT:
             
             # Get the dates.
             dates = []
@@ -1161,7 +1161,7 @@ class WeatherLog(Gtk.Window):
                     self.data.append(i)
         
         # If the user pressed Import All, import all of the data.
-        if response == 20:
+        if response == DialogResponse.IMPORT_ALLA:
             self.data = ndata[:]
         
         # Add the data.
@@ -1209,14 +1209,14 @@ class WeatherLog(Gtk.Window):
             date_dlg.destroy()
         
         else:
-            response = 20
+            response = DialogResponse.IMPORT_ALL
         
         # If the user did not press OK or nothing was selected, don't continue:
-        if (response != 20 and response != 21) or treeiter == None:
+        if (response != DialogResponse.IMPORT_ALL and response != DialogResponse.IMPORT) or treeiter == None:
             return
         
         # If the user selected certain dates, only import those.
-        if response == 21:
+        if response == DialogResponse.IMPORT:
             
             # Get the dates.
             dates = []
@@ -1230,7 +1230,7 @@ class WeatherLog(Gtk.Window):
                     data3.append(i)
         
         # If the user pressed Import All, import all of the data.
-        if response == 20:
+        if response == DialogResponse.IMPORT_ALL:
             data3 = data2[:]
         
         # Filter the new data to make sure there are no duplicates.
@@ -1307,10 +1307,10 @@ class WeatherLog(Gtk.Window):
             date_dlg.destroy()
         
         else:
-            response = 20
+            response = DialogResponse.IMPORT_ALL
         
         # If the user did not press OK or nothing was selected, don't continue:
-        if (response != 20 and response != 21) or treeiter == None:
+        if (response != DialogResponse.IMPORT_ALL and response != DialogResponse.IMPORT) or treeiter == None:
             return
             
         # Create the dataset directory and file.
@@ -1323,7 +1323,7 @@ class WeatherLog(Gtk.Window):
         self.liststore.clear()
         
         # If the user selected certain dates, only import those.
-        if response == 21:
+        if response == DialogResponse.IMPORT:
             
             # Get the dates.
             dates = []
@@ -1336,7 +1336,7 @@ class WeatherLog(Gtk.Window):
                     self.data.append(i)
         
         # If the user pressed Import All, import all of the data.
-        if response == 20:
+        if response == DialogResponse.IMPORT_ALL:
             self.data = ndata[:]
         
         # Add the data.
@@ -1360,21 +1360,21 @@ class WeatherLog(Gtk.Window):
         response, filename = show_save_dialog(self, "Export - %s" % self.last_profile)
         
         # If the user did not press OK, don't continue.
-        if response != Gtk.ResponseType.OK and response != 98 and response != 99:
+        if response != Gtk.ResponseType.OK and response != DialogResponse.EXPORT_CSV and response != DialogResponse.EXPORT_HTML:
             return
         
         # Error checking for when the HTML and CSV options are chosen. GTK will allow these
         # to be clicked when no filename has been entered, causing an error. Check to make sure
         # there was a filename to work around this.
-        if (response == 98 or response == 99) and not filename:
+        if (response == DialogResponse.EXPORT_CSV or response == DialogResponse.EXPORT_HTML) and not filename:
             return
         
         # Export the data.
         if response == Gtk.ResponseType.OK:
             io.write_profile(filename = filename, data = self.data)
-        elif response == 98:
+        elif response == DialogResponse.EXPORT_CSV:
             export.csv(self.data, self.units, filename)
-        elif response == 99:
+        elif response == DialogResponse.EXPORT_HTML:
             data_list = [["WeatherLog Data - %s - %s to %s" % (self.last_profile, (self.data[0][0] if len(self.data) != 0 else "None"), (self.data[len(self.data)-1][0] if len(self.data) != 0 else "None")),
                            ["Date", "Temperature (%s)" % self.units["temp"], "Wind Chill (%s)" % self.units["temp"],
                             "Precipitation (%s)" % self.units["prec"], "Wind (%s)" % self.units["wind"],
@@ -1775,7 +1775,7 @@ class WeatherLog(Gtk.Window):
                 ndata.append(self.data[i])
         
         # If the user wants to move the data, delete the items in the current profile.
-        if response == 34:
+        if response == DialogResponse.MOVE_DATA:
             
             self.data = [x for x in data if x[0] not in ndates]
         
@@ -1850,7 +1850,7 @@ class WeatherLog(Gtk.Window):
                 ndata.append(self.data[i])
 
         # If the user wants to move the data, delete the items in the current profile.
-        if response == 34:
+        if response == DialogResponse.MOVE_DATA:
             
             self.data = [x for x in data if x[0] not in ndates]
         

@@ -3,7 +3,8 @@
 
 # This file defines functions for validating user-entered data.
 
-
+# Import constants.
+from weatherlog_resources.constants import *
 # Import re for pattern matching.
 import re
 # Import os.path for checking if a directory exists.
@@ -39,18 +40,18 @@ def validate_data(data):
     
     # Test 1: must be a list.
     if not isinstance(data, list):
-        return 0
+        return ImportValidation.NOT_LIST
     
     # Test 2: each item must be a list.
     # Test 3: each item must have the correct length (10).
     # Test 4: each item of this list must be a string.
     for i in data:
         if not isinstance(i, list):
-            return -1
+            return ImportValidation.NOT_SUBLIST
         if len(i) != 10:
-            return -2
+            return ImportValidation.INCORRECT_LENGTH
         for j in i:
             if not isinstance(j, str):
-                return -3
+                return ImportValidation.NOT_STRING
     
-    return 1
+    return ImportValidation.VALID

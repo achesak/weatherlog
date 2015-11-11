@@ -23,7 +23,7 @@ class DialogResponse:
     EXPORT_HTML = 99
 
 
-# Import validation values: TODO: hook this up for validate.validate_data()
+# Import validation values:
 class ImportValidation:
     VALID = 1
     NOT_LIST = 0
