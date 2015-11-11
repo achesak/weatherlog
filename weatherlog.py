@@ -301,17 +301,10 @@ class WeatherLog(Gtk.Window):
         
         # Get the current window size.
         height, width = self.get_size()
+        size = "%d\n%d" % (height, width)
         
         # Save the window size.
-        try:
-            wins_file = open("%s/window_size" % self.conf_dir, "w")
-            wins_file.write("%d\n%d" % (height, width))
-            wins_file.close()
-        
-        except IOError:
-            # Show the error message if something happened, but continue.
-            # This one is shown if there was an error writing to the file.
-            print("Error saving window size file (IOError).")
+        io.write_standard_file("%s/window_size" % self.conf_dir, size)
     
     
     def context_event(self, widget, event):
