@@ -1264,8 +1264,7 @@ class WeatherLog(Gtk.Window):
             
         # Create the dataset directory and file.
         self.last_profile = name
-        os.makedirs("%s/profiles/%s" % (self.main_dir, name))
-        open("%s/profiles/%s/weather" % (self.main_dir, name), "w").close()
+        io.write_blank_profile(self.main_dir, name)
         
         # Clear the data.
         self.data[:] = []
@@ -1706,10 +1705,7 @@ class WeatherLog(Gtk.Window):
             return
         
         # Create the directory and file.
-        os.makedirs("%s/profiles/%s" % (self.main_dir, name))
-        new_prof_file = open("%s/profiles/%s/weather" % (self.main_dir, name), "w")
-        pickle.dump([], new_prof_file)
-        new_prof_file.close()
+        io.write_blank_profile(self.main_dir, name)
         launch.create_metadata(self.main_dir, name)
         
         # Get the dates.
