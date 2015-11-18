@@ -1140,7 +1140,9 @@ class WeatherLog(Gtk.Window):
             response = DialogResponse.IMPORT_ALL
         
         # If the user did not press OK or nothing was selected, don't continue:
-        if (response != DialogResponse.IMPORT_ALL and response != DialogResponse.IMPORT) or treeiter == None:
+        if response != DialogResponse.IMPORT_ALL and response != DialogResponse.IMPORT:
+            return
+        if response == DialogResponse.IMPORT and treeiter == None:
             return
         
         # Clear the data.
@@ -1161,7 +1163,7 @@ class WeatherLog(Gtk.Window):
                     self.data.append(i)
         
         # If the user pressed Import All, import all of the data.
-        if response == DialogResponse.IMPORT_ALLA:
+        if response == DialogResponse.IMPORT_ALL:
             self.data = ndata[:]
         
         # Add the data.
@@ -1212,7 +1214,9 @@ class WeatherLog(Gtk.Window):
             response = DialogResponse.IMPORT_ALL
         
         # If the user did not press OK or nothing was selected, don't continue:
-        if (response != DialogResponse.IMPORT_ALL and response != DialogResponse.IMPORT) or treeiter == None:
+        if response != DialogResponse.IMPORT_ALL and response != DialogResponse.IMPORT:
+            return
+        if response == DialogResponse.IMPORT and treeiter == None:
             return
         
         # If the user selected certain dates, only import those.
@@ -1310,7 +1314,9 @@ class WeatherLog(Gtk.Window):
             response = DialogResponse.IMPORT_ALL
         
         # If the user did not press OK or nothing was selected, don't continue:
-        if (response != DialogResponse.IMPORT_ALL and response != DialogResponse.IMPORT) or treeiter == None:
+        if response != DialogResponse.IMPORT_ALL and response != DialogResponse.IMPORT:
+            return
+        if response == DialogResponse.IMPORT and treeiter == None:
             return
             
         # Create the dataset directory and file.
