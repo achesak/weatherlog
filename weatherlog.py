@@ -80,8 +80,6 @@ import weatherlog_resources.dates as dates
 import weatherlog_resources.validate as validate
 # Import the functions for converting between units.
 import weatherlog_resources.convert as convert
-# Import the functions for converting degrees to a compass direction.
-import weatherlog_resources.degrees as degrees
 # Import the functions for reading and writing datasets.
 import weatherlog_resources.io as io
 # Import the functions for exporting the data.
@@ -94,6 +92,8 @@ import weatherlog_resources.charts as charts
 import weatherlog_resources.graphs as graphs
 # Import the functions for filtering the data.
 import weatherlog_resources.filter_data as filter_data
+# Import the functions for getting the current weather.
+import weatherlog_resources.get_weather as get_weather
 
 # Import dialogs.
 from weatherlog_resources.dialogs.new_dialog import AddNewDialog
@@ -113,7 +113,6 @@ from weatherlog_resources.dialogs.location_dialog import LocationDialog
 from weatherlog_resources.dialogs.weather_dialog import CurrentWeatherDialog
 from weatherlog_resources.dialogs.export_pastebin_dialog import ExportPastebinDialog
 from weatherlog_resources.dialogs.misc_dialogs import *
-import weatherlog_resources.dialogs.pywapi.pywapi as pywapi
 
 
 class WeatherLog(Gtk.Window):
@@ -529,9 +528,6 @@ class WeatherLog(Gtk.Window):
         """Gets the current weather."""
         
         location = ""
-        message = "Enter location: "
-        days = {"Sun": "Sunday", "Mon": "Monday", "Tue": "Tuesday", "Wed": "Wednesday",
-                "Thu": "Thursday", "Fri": "Friday", "Sat": "Saturday"}
         
         # If getting the weather for the current location, make sure this
         # location has been specified.
@@ -541,7 +537,7 @@ class WeatherLog(Gtk.Window):
         if not here or not location:
             
             # Get the location.
-            loc_dlg = LocationDialog(self, message)
+            loc_dlg = LocationDialog(self, "Enter location: ")
             response = loc_dlg.run()
             location = loc_dlg.loc_ent.get_text().lstrip().rstrip()
             loc_dlg.destroy()
@@ -554,52 +550,11 @@ class WeatherLog(Gtk.Window):
             show_error_dialog(self, "Get Current Weather", "The specified location is not valid. Only 5-digit US zipcodes are currently supported.")
             return
         
-        # Get the current weather and organise it.
-        result = pywapi.get_weather_from_yahoo(location, self.config["units"])
-        if units["airp"] == "mbar":
-            result["atmosphere"]["pressure"] = str(float(result["atmosphere"]["pressure"]) * 33.86389)
-        data = []
-        
-        # Note: the conversion from int back to str for the temperature is necessary due
-        # to encoding issues.
-        data1 = [
-            ["Condition", self.weather_codes[result["condition"]["code"]]],
-            ["Temperature", "%d %s" % (int(result["condition"]["temp"]), self.units["temp"])],
-            ["Wind speed", "%s %s" % (result["wind"]["speed"], self.units["wind"])],
-            ["Wind direction", degrees.degree_to_direction(int(result["wind"]["direction"]))],
-            ["Wind chill", "%d %s" % (int(result["wind"]["chill"]), self.units["temp"])],
-            ["Humidity", "%s%%" % result["atmosphere"]["humidity"]],
-            ["Air pressure", "%s %s" % (result["atmosphere"]["pressure"], self.units["airp"])],
-            ["Air pressure change", ["Steady", "Rising", "Falling"][int(result["atmosphere"]["rising"])]],
-            ["Visibility", "%s %s" % (result["atmosphere"]["visibility"], self.result["units"]["distance"])],
-            ["Sunrise", result["astronomy"]["sunrise"]],
-            ["Sunset", result["astronomy"]["sunset"]]
-        ]
-        data2 = [
-            ["City", result["location"]["city"]],
-            ["Region", result["location"]["region"]],
-            ["Country", result["location"]["country"]],
-            ["Latitude", result["geo"]["lat"]],
-            ["Longitude", result["geo"]["long"]]
-        ]
-        data3 = [
-        ]
-        for j in range(0, len(result["forecasts"])):
-            i = result["forecasts"][j]
-            data3.append(["Date", i["date"]])
-            data3.append(["Day", days[i["day"]]])
-            data3.append(["Condition", self.weather_codes[i["code"]]])
-            data3.append(["Low", "%d %s" % (int(i["low"]), self.units["temp"])])
-            data3.append(["High", "%d %s" % (int(i["high"]), self.units["temp"])])
-            if j != len(result["forecasts"]) - 1:
-                data3.append(["", ""])
-        
-        data.append(data1)
-        data.append(data2)
-        data.append(data3)
+        # Get the weather data.
+        city, data, prefill_data = get_weather.get_weather(location, self.config, self.units, self.weather_codes)
         
         # Show the current weather.
-        info_dlg = CurrentWeatherDialog(self, "Current Weather For %s" % result["location"]["city"], data)
+        info_dlg = CurrentWeatherDialog(self, "Current Weather For %s" % city, data)
         response = info_dlg.run()
         
         # Close the dialog.
@@ -609,28 +564,16 @@ class WeatherLog(Gtk.Window):
         if response == DialogResponse.EXPORT:
             
             # Get the filename.
-            response2, filename = show_export_dialog(self, "Export Weather For %s" % result["location"]["city"])
+            response2, filename = show_export_dialog(self, "Export Weather For %s" % city)
             
             # Export the info.
             if response2 == Gtk.ResponseType.OK:
-                export.html_generic([["Weather", ["Field", "Value"], data1],
-                                     ["Location", ["Field", "Value"], data2],
-                                     ["Forecast", ["Field", "Value"], data3]], filename)
+                export.html_generic([["Weather", ["Field", "Value"], data[0]],
+                                     ["Location", ["Field", "Value"], data[1]],
+                                     ["Forecast", ["Field", "Value"], data[2]]], filename)
         
         # If the user clicked Add:
         elif response == DialogResponse.ADD_DATA:
-            
-            # Get the data and pass it to the Add dialog.
-            prefill_data = [
-                float(result["condition"]["temp"]),
-                float(result["wind"]["chill"]),
-                float(result["wind"]["speed"]),
-                degrees.degree_to_direction(int(result["wind"]["direction"])),
-                float(result["atmosphere"]["humidity"]),
-                float(result["atmosphere"]["pressure"]),
-                ["Steady", "Rising", "Falling"][int(result["atmosphere"]["rising"])],
-                float(result["atmosphere"]["visibility"])
-            ]
             
             self.add_new(False, prefill_data)
             
