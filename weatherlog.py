@@ -283,6 +283,7 @@ class WeatherLog(Gtk.Window):
         # Bind the events.
         self.connect("delete-event", self.delete_event)
         self.treeview.connect("button-press-event", self.context_event)
+        self.treeview.connect("row-activated", self.activated_event)
         
         # Change the titles, if the user doesn't want units to be displayed.
         if not self.config["show_units"]:
@@ -312,6 +313,16 @@ class WeatherLog(Gtk.Window):
         if event.type == Gdk.EventType.BUTTON_PRESS and event.button == 3:
             self.context_menu.popup(None, None, None, None, event.button, event.time)
             return True
+    
+    
+    def activated_event(self, widget, treepath, column):
+		"""Opens the edit dialog on double click."""
+		
+		# Get the selected date and pass it to the edit function.
+		tree_sel = self.treeview.get_selection()
+		tm, ti = tree_sel.get_selected()
+		date = tm.get_value(ti, 0)
+		self.edit(None, date)
     
     
     def add_new(self, event, prefill_data = []):
@@ -396,18 +407,22 @@ class WeatherLog(Gtk.Window):
         self.save()
     
     
-    def edit(self, event):
+    def edit(self, event, edit_date = None):
         """Edits a row of data."""
         
         # Get the selected date.
-        try:
-            tree_sel = self.treeview.get_selection()
-            tm, ti = tree_sel.get_selected()
-            date = tm.get_value(ti, 0)
+        if edit_date != None:
+            date = edit_date
         
-        except:
-            show_error_dialog(self, "Edit Data - %s" % last_profile, "No date selected.")
-            return
+        else:
+	        try:
+	            tree_sel = self.treeview.get_selection()
+	            tm, ti = tree_sel.get_selected()
+	            date = tm.get_value(ti, 0)
+	        
+	        except:
+	            show_error_dialog(self, "Edit Data - %s" % last_profile, "No date selected.")
+	            return
         
         # Get the index of the date.
         index = datasets.get_column(self.data, 0).index(date)

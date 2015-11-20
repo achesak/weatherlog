@@ -29,6 +29,8 @@ class OptionsDialog(Gtk.Dialog):
         # Create the first grid.
         opt_box = self.get_content_area()
         opt_grid1 = Gtk.Grid()
+        opt_grid1.set_column_spacing(10)
+        opt_grid1.set_row_spacing(5)
         opt_grid1_lbl = Gtk.Label("General")
         
         # Create the pre-fill data checkbox.
@@ -73,6 +75,8 @@ class OptionsDialog(Gtk.Dialog):
         
         # Create the third grid.
         opt_grid3 = Gtk.Grid()
+        opt_grid3.set_column_spacing(10)
+        opt_grid3.set_row_spacing(5)
         opt_grid3_lbl = Gtk.Label("Interface")
         
         # Create the Restore window size checkbox.
