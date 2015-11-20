@@ -101,7 +101,7 @@ from weatherlog_resources.dialogs.edit_dialog import EditDialog
 from weatherlog_resources.dialogs.info_dialog import GenericInfoDialog
 from weatherlog_resources.dialogs.dataset_name_dialog import DatasetNameDialog
 from weatherlog_resources.dialogs.dataset_selection_dialog import DatasetSelectionDialog
-from weatherlog_resources.dialogs.calendar_dialog import CalendarDialog
+from weatherlog_resources.dialogs.calendar_dialog import CalendarRangeDialog
 from weatherlog_resources.dialogs.date_selection_dialog import DateSelectionDialog
 from weatherlog_resources.dialogs.options_dialog import OptionsDialog
 from weatherlog_resources.dialogs.chart_dialog import GenericChartDialog
@@ -602,54 +602,38 @@ class WeatherLog(Gtk.Window):
             return
         
         # Get the first and last entered dates.
-        days, months, years = dates.split_date(self.data[0][0])
-        daye, monthe, yeare = dates.split_date(self.data[len(self.data) - 1][0])
+        day_start = dates.split_date(self.data[0][0])
+        day_end = dates.split_date(self.data[len(self.data) - 1][0])
         
         # Get a list of datetimes from the dates.
         datelist = dates.date_list_datetime(datasets.get_column(self.data, 0))
         
-        # Get the starting date.
-        start_dlg = CalendarDialog(self, "Info in Range - %s" % self.last_profile, "Select the starting date:", days, months, years)
-        response1 = start_dlg.run()
-        year1, month1, day1 = start_dlg.info_cal.get_date()
+        # Get the starting and ending dates.
+        cal_dlg = CalendarRangeDialog(self, "Info in Range - %s" % self.last_profile, day_start, day_end)
+        response = cal_dlg.run()
+        year1, month1, day1 = cal_dlg.start_cal.get_date()
+        year2, month2, day2 = cal_dlg.end_cal.get_date()
         date1 = "%d/%d/%d" % (day1, month1 + 1, year1)
-        start_dlg.destroy()
+        date2 = "%d/%d/%d" % (day2, month2 + 1, year2)
+        cal_dlg.destroy()
         
         # If the user did not click OK, don't continue.
-        if response1 != Gtk.ResponseType.OK:
+        if response != Gtk.ResponseType.OK:
             return
         
-        # Get the starting index.
+        # Get the indices.
         dt_start = datetime.datetime(year1, month1 + 1, day1)
         start_index = dates.date_above(dt_start, datelist)
-        
-        # Check to make sure this date is valid, and cancel the action if not.
-        if start_index == -1:
-            show_error_dialog(self, "Info in Range - %s" % self.last_profile, "%s is not a valid date.\n\nThis date is not present and is not before any other dates." % date1)
-            return
-        
-        # Get the ending date.
-        end_dlg = CalendarDialog(self, "Info in Range - %s" % self.last_profile, "Select the ending date:", daye, monthe, yeare)
-        response2 = end_dlg.run()
-        year2, month2, day2 = end_dlg.info_cal.get_date()
-        date2 = "%d/%d/%d" % (day2, month2 + 1, year2)
-        end_dlg.destroy()
-        
-        # If the user did not click OK, don't continue.
-        if response2 != Gtk.ResponseType.OK:
-            return
-        
-        # Get the ending index.
         dt_end = datetime.datetime(year2, month2 + 1, day2)
         end_index = dates.date_below(dt_end, datelist)
         
-        # Check to make sure this date is valid, and cancel the action if not.
+        # Check to make sure these dates are valid, and cancel the action if not.
+        if start_index == -1:
+            show_error_dialog(self, "Info in Range - %s" % self.last_profile, "%s is not a valid date.\n\nThis date is not present and is not before any other dates." % date1)
+            return
         if end_index == -1:
             show_error_dialog(self, "Info in Range - %s" % self.last_profile, "%s is not a valid date.\n\nThis date is not present and is not after any other dates." % date2)
             return
-        
-        # Check to make sure this date is later than the starting date, 
-        # and cancel the action if not.
         if end_index < start_index:
             show_error_dialog(self, "Info in Range - %s" % self.last_profile, "The ending date must be after the starting date.")
             return
@@ -766,54 +750,38 @@ class WeatherLog(Gtk.Window):
             return
         
         # Get the first and last entered dates.
-        days, months, years = dates.split_date(self.data[0][0])
-        daye, monthe, yeare = dates.split_date(self.data[len(self.data) - 1][0])
+        day_start = dates.split_date(self.data[0][0])
+        day_end = dates.split_date(self.data[len(self.data) - 1][0])
         
         # Get a list of datetimes from the dates.
         datelist = dates.date_list_datetime(datasets.get_column(self.data, 0))
         
-        # Get the starting date.
-        start_dlg = CalendarDialog(self, "Charts in Range - %s" % self.last_profile, "Select the starting date:", days, months, years)
-        response1 = start_dlg.run()
-        year1, month1, day1 = start_dlg.info_cal.get_date()
+        # Get the starting and ending dates.
+        cal_dlg = CalendarRangeDialog(self, "Charts in Range - %s" % self.last_profile, day_start, day_end)
+        response = cal_dlg.run()
+        year1, month1, day1 = cal_dlg.start_cal.get_date()
+        year2, month2, day2 = cal_dlg.end_cal.get_date()
         date1 = "%d/%d/%d" % (day1, month1 + 1, year1)
-        start_dlg.destroy()
-        
-        # If the user did not click OK, cancel the action.
-        if response1 != Gtk.ResponseType.OK:
-            return
-            
-        # Get the starting index.
-        dt_start = datetime.datetime(year1, month1 + 1, day1)
-        start_index = dates.date_above(dt_start, datelist)
-        
-        # Check to make sure this date is valid, and cancel the action if not.
-        if start_index == -1:
-            show_error_dialog(self, "Charts in Range - %s" % self.last_profile, "%s is not a valid date.\n\nThis date is not present and is not before any other dates." % date1)
-            return
-        
-        # Get the ending date.
-        end_dlg = CalendarDialog(self, "Charts in Range - %s" % self.last_profile, "Select the ending date:", daye, monthe, yeare)
-        response2 = end_dlg.run()
-        year2, month2, day2 = end_dlg.info_cal.get_date()
         date2 = "%d/%d/%d" % (day2, month2 + 1, year2)
-        end_dlg.destroy()
+        cal_dlg.destroy()
         
         # If the user did not click OK, don't continue.
-        if response2 != Gtk.ResponseType.OK:
+        if response != Gtk.ResponseType.OK:
             return
         
-        # Get the ending index.
+        # Get the indices.
+        dt_start = datetime.datetime(year1, month1 + 1, day1)
+        start_index = dates.date_above(dt_start, datelist)
         dt_end = datetime.datetime(year2, month2 + 1, day2)
         end_index = dates.date_below(dt_end, datelist)
         
-        # Check to make sure this date is valid, and cancel the action if not.
+        # Check to make sure these dates are valid, and cancel the action if not.
+        if start_index == -1:
+            show_error_dialog(self, "Charts in Range - %s" % self.last_profile, "%s is not a valid date.\n\nThis date is not present and is not before any other dates." % date1)
+            return
         if end_index == -1:
             show_error_dialog(self, "Charts in Range - %s" % self.last_profile, "%s is not a valid date.\n\nThis date is not present and is not after any other dates." % date2)
             return
-        
-        # Check to make sure this date is later than the starting date, 
-        # and cancel the action if not.
         if end_index < start_index:
             show_error_dialog(self, "Charts in Range - %s" % self.last_profile, "The ending date must be after the starting date.")
             return
@@ -925,54 +893,38 @@ class WeatherLog(Gtk.Window):
             return
         
         # Get the first and last entered dates.
-        days, months, years = dates.split_date(self.data[0][0])
-        daye, monthe, yeare = dates.split_date(self.data[len(self.data) - 1][0])
+        day_start = dates.split_date(self.data[0][0])
+        day_end = dates.split_date(self.data[len(self.data) - 1][0])
         
         # Get a list of datetimes from the dates.
         datelist = dates.date_list_datetime(datasets.get_column(self.data, 0))
         
-        # Get the starting date.
-        start_dlg = CalendarDialog(self, "Graphs in Range - %s" % self.last_profile, "Select the starting date:", days, months, years)
-        response1 = start_dlg.run()
-        year1, month1, day1 = start_dlg.info_cal.get_date()
+        # Get the starting and ending dates.
+        cal_dlg = CalendarRangeDialog(self, "Graphs in Range - %s" % self.last_profile, day_start, day_end)
+        response = cal_dlg.run()
+        year1, month1, day1 = cal_dlg.start_cal.get_date()
+        year2, month2, day2 = cal_dlg.end_cal.get_date()
         date1 = "%d/%d/%d" % (day1, month1 + 1, year1)
-        start_dlg.destroy()
-        
-        # If the user did not click OK, cancel the action.
-        if response1 != Gtk.ResponseType.OK:
-            return
-            
-        # Get the starting index.
-        dt_start = datetime.datetime(year1, month1 + 1, day1)
-        start_index = dates.date_above(dt_start, datelist)
-        
-        # Check to make sure this date is valid, and cancel the action if not.
-        if start_index == -1:
-            show_error_dialog(self, "Graphs in Range - %s" % self.last_profile, "%s is not a valid date.\n\nThis date is not present and is not before any other dates." % date1)
-            return
-        
-        # Get the ending date.
-        end_dlg = CalendarDialog(self, "Graphs in Range - %s" % self.last_profile, "Select the ending date:", daye, monthe, yeare)
-        response2 = end_dlg.run()
-        year2, month2, day2 = end_dlg.info_cal.get_date()
         date2 = "%d/%d/%d" % (day2, month2 + 1, year2)
-        end_dlg.destroy()
+        cal_dlg.destroy()
         
         # If the user did not click OK, don't continue.
-        if response2 != Gtk.ResponseType.OK:
+        if response != Gtk.ResponseType.OK:
             return
         
-        # Get the ending index.
+        # Get the indices.
+        dt_start = datetime.datetime(year1, month1 + 1, day1)
+        start_index = dates.date_above(dt_start, datelist)
         dt_end = datetime.datetime(year2, month2 + 1, day2)
         end_index = dates.date_below(dt_end, datelist)
         
-        # Check to make sure this date is valid, and cancel the action if not.
+        # Check to make sure these dates are valid, and cancel the action if not.
+        if start_index == -1:
+            show_error_dialog(self, "Graphs in Range - %s" % self.last_profile, "%s is not a valid date.\n\nThis date is not present and is not before any other dates." % date1)
+            return
         if end_index == -1:
             show_error_dialog(self, "Graphs in Range - %s" % self.last_profile, "%s is not a valid date.\n\nThis date is not present and is not after any other dates." % date2)
             return
-        
-        # Check to make sure this date is later than the starting date, 
-        # and cancel the action if not.
         if end_index < start_index:
             show_error_dialog(self, "Graphs in Range - %s" % self.last_profile, "The ending date must be after the starting date.")
             return

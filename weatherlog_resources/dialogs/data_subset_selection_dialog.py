@@ -42,7 +42,7 @@ class DataSubsetSelectionDialog(Gtk.Window):
         input_grid = Gtk.Grid()
         input_grid.set_row_spacing(10)
         view_frame = Gtk.Frame()
-        view_frame.set_label("All Conditions")
+        view_frame.set_label("All conditions")
         view_grid = Gtk.Grid()
         view_frame.add(view_grid)
         sel_grid.add(input_grid)
@@ -51,7 +51,7 @@ class DataSubsetSelectionDialog(Gtk.Window):
         
         # Create the mode widgets.
         mode_frame = Gtk.Frame()
-        mode_frame.set_label("Selection Mode")
+        mode_frame.set_label("Selection mode")
         mode_grid = Gtk.Grid()
         mode_grid.set_row_spacing(5)
         self.mode_btn_all = Gtk.RadioButton.new_with_label_from_widget(None, "Match All")
@@ -65,7 +65,7 @@ class DataSubsetSelectionDialog(Gtk.Window):
         
         # Create the new condition widgets.
         cond_frame = Gtk.Frame()
-        cond_frame.set_label("New Condition")
+        cond_frame.set_label("New condition")
         cond_grid = Gtk.Grid()
         cond_grid.set_row_spacing(5)
         field_lbl = Gtk.Label("Field: ")
