@@ -1299,7 +1299,7 @@ class WeatherLog(Gtk.Window):
             export.html_generic(data_list, filename)
     
     
-    def export_pastebin(self):
+    def export_pastebin(self, event):
         """Exports the data to Pastebin."""
         
         # If there is no data, tell the user and cancel the action.
