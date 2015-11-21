@@ -10,21 +10,20 @@ from gi.repository import Gtk
 
 class OptionsDialog(Gtk.Dialog):
     """Shows the "Options" dialog."""
+    
     def __init__(self, parent, config):
         """Create the dialog."""
         
-        # This window should be modal.
+        # Create the dialog.
         Gtk.Dialog.__init__(self, "Options", parent, Gtk.DialogFlags.MODAL)
         self.set_resizable(False)
+        self.add_button("Reset", 3)
+        self.add_button("Cancel", Gtk.ResponseType.CANCEL)
+        self.add_button("OK", Gtk.ResponseType.OK)
         
         # Create the tab notebook.
         notebook = Gtk.Notebook()
         notebook.set_tab_pos(Gtk.PositionType.TOP)
-        
-        # Add the buttons.
-        self.add_button("Reset", 3)
-        self.add_button("Cancel", Gtk.ResponseType.CANCEL)
-        self.add_button("OK", Gtk.ResponseType.OK)
         
         # Create the first grid.
         opt_box = self.get_content_area()
@@ -117,18 +116,16 @@ class OptionsDialog(Gtk.Dialog):
         notebook.append_page(opt_grid3, opt_grid3_lbl)
         
         # Connect 'Enter' key to the OK button.
-        ok_btn = self.get_widget_for_response(response_id=Gtk.ResponseType.OK)
+        ok_btn = self.get_widget_for_response(response_id = Gtk.ResponseType.OK)
         ok_btn.set_can_default(True)
         ok_btn.grab_default()
         
-        # Show the dialog. The response gets handled by the function
-        # in the main class.
+        # Show the dialog.
         self.show_all()
     
     
     def filter_numbers(self, event):
         """Filters non-numbers out of the entry."""
         
-        # Only allow numbers. Filter out any other characters.
         text = self.loc_ent.get_text()
         self.loc_ent.set_text("".join([i for i in text if i in "0123456789"]))

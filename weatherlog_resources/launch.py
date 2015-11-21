@@ -19,15 +19,13 @@ import glob
 # Import datetime for getting the current time.
 import datetime
 # Import pickle for loading and saving the data.
-# Try importing cPickle (for most Python 2 implementations), then
-# fall back to pickle (for Python 2 implementations lacking this module
-# and Python 3) if needed.
 try:
     import cPickle as pickle
 except ImportError:
     import pickle
 
 
+# Yahoo! Weather condition codes.
 codes = {"0":    "Tornado",
          "1":    "Tropical storm",
          "2":    "Hurricane",
@@ -85,10 +83,6 @@ def get_main_dir():
     # The main directory is C:\.weatherlog on Windows,
     # and /home/[username]/.share/local/weatherlog for data files,
     # and /home/[username]/.config/weatherlog/ for configuration files on Linux.
-    #
-    # NOTE: this has not been tested on Windows after the change to follow
-    # the XDG Base Directory Specification.
-    # TODO: make sure this still works!
     if platform.system().lower() == "windows":
         return "C:\\.weatherlog", "C:\\.weatherlog"
     else:
@@ -115,25 +109,19 @@ def check_files_exist(main_dir, conf_dir):
     # Check to see if the data directory exists, and create it if it doesn't.
     if not os.path.exists(main_dir) or not os.path.isdir(main_dir):
         
-        # Create the directory.
+        # Create the default data directory and files.
         os.makedirs(main_dir)
-        
-        # Create the Main Dataset directory and data file.
         os.makedirs("%s/profiles/Main Dataset" % main_dir)
         last_prof_data = open("%s/profiles/Main Dataset/weather" % main_dir, "w")
         pickle.dump([], last_prof_data)
         last_prof_data.close()
-        
-        # Create the metadata file.
         create_metadata(main_dir, "Main Dataset")
     
     # Check to see if the configuration directory exists, and create it if it doesn't.
     if not os.path.exists(conf_dir) or not os.path.isdir(conf_dir):
         
-        # Create the directory.
+        # Create the default configuration directory and files.
         os.makedirs(conf_dir)
-    
-        # Create the last profile file.
         last_prof = open("%s/lastprofile" % conf_dir, "w")
         last_prof.write("Main Dataset")
         last_prof.close()
@@ -142,7 +130,6 @@ def check_files_exist(main_dir, conf_dir):
 def get_last_profile(main_dir, conf_dir):
     """Returns the last profile, the original profile to be loaded, and whether the profile exists. Creates the profile if it doesn't exist."""
     
-    # Get the last profile.
     try:
         # Load the last profile file.
         prof_file = open("%s/lastprofile" % conf_dir, "r")
@@ -169,8 +156,6 @@ def get_last_profile(main_dir, conf_dir):
             original_profile = last_profile
     
     except IOError:
-        # Show the error message, and close the application.
-        # This one shows if there was a problem reading the file.
         print("Error reading dataset file (IOError).")
         sys.exit()
     
@@ -206,7 +191,7 @@ def get_config(conf_dir):
         config_file.close()
     
     except IOError:
-        # Continue.
+        # If there was an error, use the defaults instead.
         config = {"pre-fill": False,
                   "restore": True,
                   "location": "",
@@ -225,22 +210,24 @@ def get_config(conf_dir):
 def get_window_size(conf_dir, config):
     """Gets the last window size."""
     
-    # Get the previous window size.
-    try:
-        wins_file = open("%s/window_size" % conf_dir, "r")
-        last_width = int(wins_file.readline())
-        last_height = int(wins_file.readline())
-        wins_file.close()
-    
-    except IOError:
-        # Continue.
-        last_width = 900
-        last_height = 500
-    
     # If the user doesn't want to restore the window size, set the size to the defaults.
     if not config["restore"]:
         last_width = 900
         last_height = 500
+    
+    # Otherwise, get the previous window size.
+    else:
+        
+        try:
+            wins_file = open("%s/window_size" % conf_dir, "r")
+            last_width = int(wins_file.readline())
+            last_height = int(wins_file.readline())
+            wins_file.close()
+        
+        except IOError:
+            # If there was an error, use the default size instead.
+            last_width = 900
+            last_height = 500
     
     return last_width, last_height
 
@@ -281,22 +268,17 @@ def get_units(config):
 def get_data(main_dir, last_profile):
     """Gets the data."""
     
-    # Load the data.   
     try:
-        # This should be ~/.local/share/weatherlog/[profile name]/weather on Linux.
+        # Load the data.
         data_file = open("%s/profiles/%s/weather" % (main_dir, last_profile), "r")
         data = pickle.load(data_file)
         data_file.close()
         
     except IOError:
-        # Show the error message, and close the application.
-        # This one shows if there was a problem reading the file.
         print("Error importing data (IOError).")
         sys.exit()
         
     except (TypeError, ValueError):
-        # Show the error message, and close the application.
-        # This one shows if there was a problem with the data type.
         print("Error importing data (TypeError or ValueError).")
         sys.exit()
     
@@ -310,13 +292,11 @@ def create_metadata(main_dir, last_profile):
     now = datetime.datetime.now()
     modified = "%d/%d/%d" % (now.day, now.month, now.year)
     
-    # Writes the metadata to the file.
+    # Write the metadata to the file.
     try:
         meta_file = open("%s/profiles/%s/metadata" % (main_dir, last_profile), "w")
         meta_file.write("%s\n%s" % (modified, modified))
         meta_file.close()
     
     except IOError:
-        # Show the error message.
-        # This only shows if the error occurred when writing to the file.
         print("Error saving metadata file (IOError).")

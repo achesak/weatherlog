@@ -10,14 +10,13 @@ from gi.repository import Gtk
 
 class DatasetSelectionDialog(Gtk.Dialog):
     """Shows the dataset selection dialog."""
+    
     def __init__(self, parent, title, datasets, select_mode = "single"):
         """Create the dialog."""
         
-        # This window should be modal.
+        # Create the dialog.
         Gtk.Dialog.__init__(self, title, parent, Gtk.DialogFlags.MODAL)
         self.set_default_size(500, 300)
-        
-        # Add the buttons.
         self.add_button("Cancel", Gtk.ResponseType.CANCEL)
         self.add_button("OK", Gtk.ResponseType.OK)
         
@@ -60,10 +59,9 @@ class DatasetSelectionDialog(Gtk.Dialog):
         sel_grid.attach_next_to(scrolled_win, sel_lbl, Gtk.PositionType.BOTTOM, 1, 1)
         
         # Connect 'Enter' key to the OK button.
-        ok_btn = self.get_widget_for_response(response_id=Gtk.ResponseType.OK)
+        ok_btn = self.get_widget_for_response(response_id = Gtk.ResponseType.OK)
         ok_btn.set_can_default(True)
         ok_btn.grab_default()
         
-        # Show the dialog. The response gets handled by the function
-        # in the main class.
+        # Show the dialog.
         self.show_all()

@@ -6,21 +6,22 @@
 
 # Import GTK for the dialog.
 from gi.repository import Gtk
+# Import the application constants.
+from weatherlog_resources.constants import *
 
 
 class ImportSelectionDialog(Gtk.Dialog):
     """Shows the import selection dialog."""
+    
     def __init__(self, parent, title, dates):
         """Create the dialog."""
         
-        # This window should be modal.
+        # Create the dialog.
         Gtk.Dialog.__init__(self, title, parent, Gtk.DialogFlags.MODAL)
         self.set_default_size(300, 300)
-        
-        # Add the buttons.
         self.add_button("Cancel", Gtk.ResponseType.CANCEL)
-        self.add_button("Import All", 20)
-        self.add_button("Import", 21)
+        self.add_button("Import All", DialogResponse.IMPORT_ALL)
+        self.add_button("Import", DialogResponse.IMPORT)
         
         # Create the grid.
         sel_box = self.get_content_area()
@@ -52,10 +53,9 @@ class ImportSelectionDialog(Gtk.Dialog):
             self.liststore.append([i])
         
         # Connect 'Enter' key to the OK button.
-        ok_btn = self.get_widget_for_response(response_id=21)
+        ok_btn = self.get_widget_for_response(response_id = DialogResponse.IMPORT)
         ok_btn.set_can_default(True)
         ok_btn.grab_default()
         
-        # Show the dialog. The response gets handled by the function
-        # in the main class.
+        # Show the dialog.
         self.show_all()

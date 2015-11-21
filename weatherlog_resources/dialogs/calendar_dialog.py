@@ -14,7 +14,7 @@ class CalendarDialog(Gtk.Dialog):
     def __init__(self, parent, title, label, day = None, month = None, year = None):
         """Create the dialog."""
         
-        # Create the window.
+        # Create the dialog.
         Gtk.Dialog.__init__(self, title, parent, Gtk.DialogFlags.MODAL)
         self.set_resizable(False)
         self.add_button("Cancel", Gtk.ResponseType.CANCEL)
@@ -50,7 +50,7 @@ class CalendarRangeDialog(Gtk.Dialog):
     def __init__(self, parent, title, day_start = [], day_end = []):
         """Create the dialog."""
         
-        # Create the window.
+        # Create the dialog.
         Gtk.Dialog.__init__(self, title, parent, Gtk.DialogFlags.MODAL)
         self.set_resizable(False)
         self.add_button("Cancel", Gtk.ResponseType.CANCEL)

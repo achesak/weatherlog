@@ -19,6 +19,7 @@ except:
 
 class GenericGraphDialog(Gtk.Dialog):
     """Shows the graph dialog."""
+    
     def __init__(self, parent, title, data, last_profile, units):
         """Create the dialog."""
         
@@ -27,17 +28,15 @@ class GenericGraphDialog(Gtk.Dialog):
         prec_days_labels = ["None", "Rain", "Snow", "Sleet", "Hail"]
         prec_days_colors = ["green", "orangered", "royalblue", "plum", "white"]
         
-        # This window should be modal.
+        # Create the dialog.
         Gtk.Dialog.__init__(self, title, parent, Gtk.DialogFlags.MODAL)
         self.set_default_size(1000, 600)
+        self.add_button("Close", Gtk.ResponseType.CLOSE)
         
         # Create the tab notebook.
         notebook = Gtk.Notebook()
         notebook.set_tab_pos(Gtk.PositionType.LEFT)
         info_box = self.get_content_area()
-        
-        # Add the buttons.
-        self.add_button("Close", Gtk.ResponseType.CLOSE)
         
         # Tab 1: Temperature graph.
         info_box1 = Gtk.Box()
@@ -267,5 +266,5 @@ class GenericGraphDialog(Gtk.Dialog):
         notebook.append_page(scrolled_win10, info_box10_lbl)
         info_box.add(notebook)
         
-        # Show the dialog. There's no need to get the response.
+        # Show the dialog.
         self.show_all()

@@ -10,21 +10,20 @@ from gi.repository import Gtk
 
 class GenericInfoDialog(Gtk.Dialog):
     """Shows the info dialog."""
+    
     def __init__(self, parent, title, data):
         """Create the dialog."""
         
-        # This window should be modal.
+        # Create the dialog.
         Gtk.Dialog.__init__(self, title, parent, Gtk.DialogFlags.MODAL)
         self.set_default_size(700, 400)
+        self.add_button("Export", 9)
+        self.add_button("Close", Gtk.ResponseType.CLOSE)
         
         # Create the tab notebook.
         notebook = Gtk.Notebook()
         notebook.set_tab_pos(Gtk.PositionType.LEFT)
         info_box = self.get_content_area()
-        
-        # Add the buttons.
-        self.add_button("Export", 9)
-        self.add_button("Close", Gtk.ResponseType.CLOSE)
         
         # Tab 1: General info.
         info_box1 = Gtk.Box()
@@ -231,5 +230,5 @@ class GenericInfoDialog(Gtk.Dialog):
         for i in data[9]:
             self.liststore8.append(i)
         
-        # Show the dialog. There's no need to get the response.
+        # Show the dialog.
         self.show_all()

@@ -20,6 +20,7 @@ import weatherlog_resources.degrees as degrees
 
 class AddNewDialog(Gtk.Dialog):
     """Shows the "Add New" dialog."""
+    
     def __init__(self, parent, profile, user_location, prefill, show_prefill_dlg, units, prefill_data = []):
         """Create the dialog."""
         
@@ -34,8 +35,6 @@ class AddNewDialog(Gtk.Dialog):
         # Create the dialog.
         Gtk.Dialog.__init__(self, "Add New Data - %s" % profile, parent, Gtk.DialogFlags.MODAL)
         self.set_resizable(False)
-        
-        # Add the buttons.
         self.add_button("Cancel", Gtk.ResponseType.CANCEL)
         self.add_button("OK", Gtk.ResponseType.OK)
         
@@ -237,18 +236,15 @@ class AddNewDialog(Gtk.Dialog):
             station = self.prefill(user_location, units, profile)
         
         # Connect 'Enter' key to the OK button.
-        ok_btn = self.get_widget_for_response(response_id=Gtk.ResponseType.OK)
+        ok_btn = self.get_widget_for_response(response_id = Gtk.ResponseType.OK)
         ok_btn.set_can_default(True)
         ok_btn.grab_default()
         
-        # Show the dialog. The response gets handled by the function
-        # in the main class.
+        # Show the dialog.
         self.show_all()
         
         # Show the dialog saying data has been prefilled.
         if show_prefill_dlg and prefill and user_location and len(user_location) == 5 and station:
-            
-            # Show the dialog.
             show_alert_dialog(self, "Add New Data - %s" % profile, "Some fields have been automatically filled using data from Yahoo! Weather.\n\nLocation is set to %s, at %s." % (user_location, station))
     
     
@@ -257,8 +253,6 @@ class AddNewDialog(Gtk.Dialog):
         
         # Get the data.
         data = pywapi.get_weather_from_yahoo(user_location, units = ("metric" if units["prec"] == "cm" else "imperial"))
-        
-        # If there was an error, tell the user and cancel the action.
         if "error" in data:
             show_error_dialog(self, "Add New Data- %s" % profile, "Error:\n\n%s" % data["error"])
             return False

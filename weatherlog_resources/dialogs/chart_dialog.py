@@ -10,21 +10,20 @@ from gi.repository import Gtk
 
 class GenericChartDialog(Gtk.Dialog):
     """Shows the chart dialog."""
+    
     def __init__(self, parent, title, data):
         """Create the dialog."""
         
-        # This window should be modal.
+        # Create the dialog.
         Gtk.Dialog.__init__(self, title, parent, Gtk.DialogFlags.MODAL)
         self.set_default_size(900, 400)
+        self.add_button("Export", 9)
+        self.add_button("Close", Gtk.ResponseType.CLOSE)
         
         # Create the tab notebook.
         notebook = Gtk.Notebook()
         notebook.set_tab_pos(Gtk.PositionType.LEFT)
         chart_box = self.get_content_area()
-        
-        # Add the buttons.
-        self.add_button("Export", 9)
-        self.add_button("Close", Gtk.ResponseType.CLOSE)
         
         # Tab 1: Temperature chart.
         chart_box1 = Gtk.Box()
@@ -233,5 +232,5 @@ class GenericChartDialog(Gtk.Dialog):
         for i in data[6]:
             self.liststore7.append(i)
         
-        # Show the dialog. There's no need to get the response.
+        # Show the dialog.
         self.show_all()

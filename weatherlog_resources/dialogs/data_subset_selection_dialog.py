@@ -22,10 +22,11 @@ from weatherlog_resources.dialogs.misc_dialogs import *
 
 class DataSubsetSelectionDialog(Gtk.Window):
     """Shows the data subset selection dialog."""
+    
     def __init__(self, parent, profile, data, config, units):
         """Create the dialog."""
         
-        # Create the window
+        # Create the dialog.
         Gtk.Window.__init__(self)
         self.set_title("View Data Subset - %s" % profile)
         self.set_resizable(True)
@@ -36,7 +37,7 @@ class DataSubsetSelectionDialog(Gtk.Window):
         self.config = config
         self.units = units
         
-        # Create the box
+        # Create the box.
         sel_grid = Gtk.Grid()
         sel_grid.set_column_spacing(10)
         input_grid = Gtk.Grid()

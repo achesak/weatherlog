@@ -14,6 +14,7 @@ from weatherlog_resources.dialogs.misc_dialogs import *
 
 class EditDialog(Gtk.Dialog):
     """Shows the "Edit" dialog."""
+    
     def __init__(self, parent, profile, data, date, units):
         """Create the dialog."""
         
@@ -25,8 +26,6 @@ class EditDialog(Gtk.Dialog):
         # Create the dialog
         Gtk.Dialog.__init__(self, "Edit %s - %s" % (date, profile), parent, Gtk.DialogFlags.MODAL)
         self.set_resizable(False)
-        
-        # Add the buttons.
         self.add_button("Cancel", Gtk.ResponseType.CANCEL)
         self.add_button("OK", Gtk.ResponseType.OK)
         
@@ -243,10 +242,9 @@ class EditDialog(Gtk.Dialog):
         self.note_ent.set_text(data[9])
         
         # Connect 'Enter' key to the OK button.
-        ok_btn = self.get_widget_for_response(response_id=Gtk.ResponseType.OK)
+        ok_btn = self.get_widget_for_response(response_id = Gtk.ResponseType.OK)
         ok_btn.set_can_default(True)
         ok_btn.grab_default()
         
-        # Show the dialog. The response gets handled by the function
-        # in the main class.
+        # Show the dialog.
         self.show_all()

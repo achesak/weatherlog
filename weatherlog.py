@@ -49,15 +49,11 @@ import shutil, os, os.path
 # Import sys for closing the application.
 import sys
 # Import pickle for loading and saving the data.
-# Try importing cPickle (for most Python 2 implementations), then
-# fall back to pickle (for Python 2 implementations lacking this module
-# and Python 3) if needed.
 try:
     import cPickle as pickle
 except ImportError:
     import pickle
 # Import urlopen and urlencode for opening a file from a URL.
-# Try importing Python 3 module, then fall back to Python 2 if needed.
 try:
     from urllib.request import urlopen
     from urllib.parse import urlencode

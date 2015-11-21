@@ -3,6 +3,7 @@
 
 # This file defines functions for validating user-entered data.
 
+
 # Import constants.
 from weatherlog_resources.constants import *
 # Import re for pattern matching.
@@ -29,14 +30,7 @@ def validate_profile(main_dir, name):
 
 
 def validate_data(data):
-    """Validates imported data.
-       Return codes:
-       1 - No error, data validated
-       0 - Data is not a list
-       -1 - Sub-data are not lists
-       -2 - Sub-lists must have the correct length
-       -3 - Each item in the sub-lists must be a string
-    """
+    """Validates imported data."""
     
     # Test 1: must be a list.
     if not isinstance(data, list):

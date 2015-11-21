@@ -10,14 +10,13 @@ from gi.repository import Gtk
 
 class DataSubsetDialog(Gtk.Dialog):
     """Shows the data subset dialog."""
+    
     def __init__(self, parent, title, data, show_units, units):
         """Create the dialog."""
         
-        # This window should be modal.
+        # Create the dialog.
         Gtk.Dialog.__init__(self, title, parent, Gtk.DialogFlags.MODAL)
         self.set_default_size(1200, 500)
-        
-        # Add the buttons.
         self.add_button("Export", 9)
         self.add_button("Close", Gtk.ResponseType.CLOSE)
         
@@ -74,5 +73,5 @@ class DataSubsetDialog(Gtk.Dialog):
         for i in data:
             self.liststore.append(i)
         
-        # Show the dialog. There's no need to get the response.
+        # Show the dialog.
         self.show_all()

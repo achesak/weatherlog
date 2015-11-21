@@ -10,22 +10,21 @@ from gi.repository import Gtk
 
 class CurrentWeatherDialog(Gtk.Dialog):
     """Shows the current weather dialog."""
+    
     def __init__(self, parent, title, data):
         """Create the dialog."""
         
-        # This window should be modal.
+        # Create the dialog.
         Gtk.Dialog.__init__(self, title, parent, Gtk.DialogFlags.MODAL)
         self.set_default_size(400, 350)
+        self.add_button("Add", 10)
+        self.add_button("Export", 9)
+        self.add_button("Close", Gtk.ResponseType.CLOSE)
         
         # Create the tab notebook.
         notebook = Gtk.Notebook()
         notebook.set_tab_pos(Gtk.PositionType.LEFT)
         info_box = self.get_content_area()
-        
-        # Add the buttons.
-        self.add_button("Add", 10)
-        self.add_button("Export", 9)
-        self.add_button("Close", Gtk.ResponseType.CLOSE)
         
         # Tab 1: Weather info.
         info_box1 = Gtk.Box()
@@ -78,7 +77,6 @@ class CurrentWeatherDialog(Gtk.Dialog):
         scrolled_win3.set_vexpand(True)
         scrolled_win3.add(info_box3)
         
-        
         # Add the tabs to the notebook.
         notebook.append_page(scrolled_win1, info_box1_lbl)
         notebook.append_page(scrolled_win2, info_box2_lbl)
@@ -93,5 +91,5 @@ class CurrentWeatherDialog(Gtk.Dialog):
         for i in data[2]:
             self.liststore3.append(i)
         
-        # Show the dialog. There's no need to get the response.
+        # Show the dialog.
         self.show_all()
