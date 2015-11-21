@@ -340,7 +340,7 @@ class WeatherLog(Gtk.Window):
         clou = new_dlg.clou_com.get_active_text()
         ctyp = new_dlg.clou_com2.get_active_text()
         visi = new_dlg.visi_sbtn.get_value()
-        note = new_dlg.note_ent.get_text().strip()
+        note = new_dlg.note_buffer.get_text(new_dlg.note_buffer.get_start_iter(), new_dlg.note_buffer.get_end_iter(), True).strip()
         
         temp_unit = new_dlg.temp_unit.get_active_text()
         chil_unit = new_dlg.chil_unit.get_active_text()
@@ -438,7 +438,7 @@ class WeatherLog(Gtk.Window):
         clou = edit_dlg.clou_com.get_active_text()
         ctyp = edit_dlg.clou_com2.get_active_text()
         visi = edit_dlg.visi_sbtn.get_value()
-        note = edit_dlg.note_ent.get_text().strip()
+        note = edit_dlg.note_buffer.get_text(edit_dlg.note_buffer.get_start_iter(), edit_dlg.note_buffer.get_end_iter(), True).strip()
         
         temp_unit = edit_dlg.temp_unit.get_active_text()
         chil_unit = edit_dlg.chil_unit.get_active_text()

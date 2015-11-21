@@ -41,6 +41,8 @@ class AddNewDialog(Gtk.Dialog):
         # Create the grid.
         new_box = self.get_content_area()
         new_grid = Gtk.Grid()
+        new_grid.set_column_spacing(3)
+        new_grid.set_row_spacing(3)
         new_box.add(new_grid)
         
         # Date entry
@@ -213,11 +215,18 @@ class AddNewDialog(Gtk.Dialog):
         new_grid.attach_next_to(self.clou_com2, clou_lbl2, Gtk.PositionType.RIGHT, 2, 1)
         
         # Notes entry
-        note_lbl = Gtk.Label("Notes: ")
+        note_lbl = Gtk.Label("Notes: ", valign = Gtk.Align.START)
         note_lbl.set_alignment(0, 0.5)
         new_grid.attach_next_to(note_lbl, clou_lbl2, Gtk.PositionType.BOTTOM, 1, 1)
-        self.note_ent = Gtk.Entry()
-        new_grid.attach_next_to(self.note_ent, note_lbl, Gtk.PositionType.RIGHT, 2, 1)
+        self.note_view = Gtk.TextView()
+        self.note_view.set_wrap_mode(Gtk.WrapMode.WORD)
+        self.note_buffer = self.note_view.get_buffer()
+        note_win = Gtk.ScrolledWindow()
+        note_win.set_hexpand(True)
+        note_win.set_vexpand(True)
+        note_win.set_size_request(100,100)
+        note_win.add(self.note_view)
+        new_grid.attach_next_to(note_win, note_lbl, Gtk.PositionType.RIGHT, 2, 1)
         
         # Pre-fill from given values, if there are any.
         if len(prefill_data) > 0:

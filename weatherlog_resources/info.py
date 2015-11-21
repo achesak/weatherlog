@@ -11,9 +11,8 @@ import datetime
 # Import collections.Counter for getting the mode of the data.
 from collections import Counter
 
-# Import the dataset functions.
+# Import the dataset and calculation functions.
 import weatherlog_resources.datasets as datasets
-# Import the calculation functions.
 import weatherlog_resources.calculations as calculations
 
 
