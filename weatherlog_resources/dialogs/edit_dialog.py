@@ -25,6 +25,7 @@ class EditDialog(Gtk.Dialog):
         
         # Create the dialog
         Gtk.Dialog.__init__(self, "Edit %s - %s" % (date, profile), parent, Gtk.DialogFlags.MODAL)
+        self.set_size_request(500, 600)
         self.set_resizable(False)
         self.add_button("Cancel", Gtk.ResponseType.CANCEL)
         self.add_button("OK", Gtk.ResponseType.OK)
@@ -203,7 +204,7 @@ class EditDialog(Gtk.Dialog):
         note_win = Gtk.ScrolledWindow()
         note_win.set_hexpand(True)
         note_win.set_vexpand(True)
-        note_win.set_size_request(100,100)
+        note_win.set_size_request(100, 100)
         note_win.add(self.note_view)
         new_grid.attach_next_to(note_win, note_lbl, Gtk.PositionType.RIGHT, 2, 1)
         

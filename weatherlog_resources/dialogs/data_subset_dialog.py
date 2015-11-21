@@ -6,6 +6,8 @@
 
 # Import GTK for the dialog.
 from gi.repository import Gtk
+# Import copy for deep copying lsits.
+import copy
 
 
 class DataSubsetDialog(Gtk.Dialog):
@@ -69,9 +71,24 @@ class DataSubsetDialog(Gtk.Dialog):
             self.humi_col.set_title("Humidity")
             self.airp_col.set_title("Air Pressure")
         
-        # Add the data.
-        for i in data:
+        # Add the data. Truncate the note fields before the data is added to the interface.
+        new_data = copy.deepcopy(data)
+        for row in new_data:
+			note = row[9]
+			newline_split = False
+			if "\n" in note:
+			    note = note.splitlines()[0]
+			    newline_split = True
+			if len(note) > 46:
+			    note = note[0:40] + " [...]"
+			elif newline_split:
+				note = note + " [...]"
+			row[9] = note
+        
+        self.liststore.clear()
+        for i in new_data:
             self.liststore.append(i)
+        
         
         # Show the dialog.
         self.show_all()

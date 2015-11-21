@@ -48,6 +48,8 @@ import datetime
 import shutil, os, os.path
 # Import sys for closing the application.
 import sys
+# Import copy for deep copying lists.
+import copy
 # Import pickle for loading and saving the data.
 try:
     import cPickle as pickle
@@ -151,8 +153,7 @@ class WeatherLog(Gtk.Window):
             self.save()
         
         # Add the data.
-        for i in self.data:
-            self.liststore.append(i)
+        self.update_list()
         
         # Set the new title.
         self.update_title()
@@ -394,9 +395,7 @@ class WeatherLog(Gtk.Window):
         self.data = sorted(self.data, key = lambda x: datetime.datetime.strptime(x[0], "%d/%m/%Y"))
         
         # Update the UI.
-        self.liststore.clear()
-        for i in self.data:
-            self.liststore.append(i)
+        self.update_list()
         
         # Update the title and save the data.
         self.update_title()
@@ -477,9 +476,7 @@ class WeatherLog(Gtk.Window):
         self.data[index] = new_data
         
         # Update the UI.
-        self.liststore.clear()
-        for i in self.data:
-            self.liststore.append(i)
+        self.update_list()
         
         # Save the data.
         self.save()
@@ -526,9 +523,7 @@ class WeatherLog(Gtk.Window):
             del self.data[index]
         
         # Update the UI.
-        self.liststore.clear()
-        for i in self.data:
-            self.liststore.append(i)
+        self.update_list()
         
         # Update the title and save the data.
         self.update_title()
@@ -1073,8 +1068,7 @@ class WeatherLog(Gtk.Window):
             self.data = ndata[:]
         
         # Add the data.
-        for i in self.data:
-            self.liststore.append(i)
+        self.update_list()
         
         # Update the title and save the data.
         self.update_title()
@@ -1155,9 +1149,7 @@ class WeatherLog(Gtk.Window):
         # Append, sort, and add the data.
         self.data += new_data
         self.data = sorted(self.data, key = lambda x: datetime.datetime.strptime(x[0], "%d/%m/%Y"))
-        self.liststore.clear()
-        for i in self.data:
-            self.liststore.append(i)
+        self.update_list()
         
         # Update the title and save the data.
         self.update_title()
@@ -1251,8 +1243,7 @@ class WeatherLog(Gtk.Window):
             self.data = ndata[:]
         
         # Add the data.
-        for i in self.data:
-            self.liststore.append(i)
+        self.update_list()
         
         # Update the title and save the data.
         self.update_title()
@@ -1613,9 +1604,7 @@ class WeatherLog(Gtk.Window):
         # Append, sort, and update the data.
         self.data += new_data
         self.data = sorted(self.data, key = lambda x: datetime.datetime.strptime(x[0], "%d/%m/%Y"))
-        self.liststore.clear()
-        for i in self.data:
-            self.liststore.append(i)
+        self.update_list()
         
         # Update the title and save the data.
         self.update_title()
@@ -1867,9 +1856,7 @@ class WeatherLog(Gtk.Window):
                 # Update the list.
                 self.data[:] = []
                 self.data[:] = new_data[:]
-                self.liststore.clear()
-                for i in self.data:
-                    self.liststore.append(i)
+                self.update_list()
         
         # Add/remove the units from the column titles.
         if not self.config["show_units"]:
@@ -1916,10 +1903,31 @@ class WeatherLog(Gtk.Window):
         io.write_config(self.conf_dir, self.config)
     
     
+    def update_list(self):
+        """Updates the list of weather data."""
+        
+        # Truncate the note fields before the data is added to the interface.
+        new_data = copy.deepcopy(self.data)
+        for row in new_data:
+			note = row[9]
+			newline_split = False
+			if "\n" in note:
+			    note = note.splitlines()[0]
+			    newline_split = True
+			if len(note) > 46:
+			    note = note[0:40] + " [...]"
+			elif newline_split:
+				note = note + " [...]"
+			row[9] = note
+        
+        self.liststore.clear()
+        for i in new_data:
+            self.liststore.append(i)
+        
+    
     def update_title(self):
         """Updates the window title."""
         
-        # Update the title.
         if self.config["show_dates"]:
             self.set_title("WeatherLog - %s - %s to %s" % (self.last_profile, (self.data[0][0] if len(self.data) != 0 else "None"), (self.data[len(self.data)-1][0] if len(self.data) != 0 else "None")))
         else:
