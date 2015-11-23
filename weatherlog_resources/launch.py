@@ -203,7 +203,7 @@ def get_config(conf_dir):
                   "show_pre-fill": True,
                   "confirm_exit": False,
                   "import_all": False,
-                  "graph_color": "#00FF00"}
+                  "graph_color": "#0000FF"}
     
     return config
 

@@ -1829,7 +1829,7 @@ class WeatherLog(Gtk.Window):
             show_prefill = True
             confirm_exit = False
             import_all = False
-            graph_color = "#00FF00"
+            graph_color = "#0000FF"
         
         # Set the configuration.
         self.config["pre-fill"] = prefill

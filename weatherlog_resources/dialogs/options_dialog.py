@@ -5,7 +5,9 @@
 
 
 # Import GTK for the dialog.
-from gi.repository import Gtk
+from gi.repository import Gtk, Gdk
+# Import convert for converting between color systems.
+import weatherlog_resources.convert as convert
 
 
 class OptionsDialog(Gtk.Dialog):
@@ -114,7 +116,10 @@ class OptionsDialog(Gtk.Dialog):
         graph_color_lbl.set_tooltip_text("Select the color used for the graphs.")
         opt_grid3.attach(graph_color_lbl, 0, 5, 1, 1)
         self.graph_color_btn = Gtk.ColorButton()
-        opt_grid3.attach(self.graph_color_btn, 1, 5, 1, 1)
+        color_rgba = convert.hex_to_rgba(config["graph_color"])
+        default_color = Gdk.RGBA(red = color_rgba[0], green = color_rgba[1], blue = color_rgba[2])
+        self.graph_color_btn.set_rgba(default_color)
+        opt_grid3.attach(self.graph_color_btn, 1, 5, 1, 1) #112233
         
         # Add the notebook.
         opt_box.add(notebook)
