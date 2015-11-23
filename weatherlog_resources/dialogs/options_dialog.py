@@ -108,6 +108,14 @@ class OptionsDialog(Gtk.Dialog):
         self.cex_chk.set_active(config["confirm_exit"])
         opt_grid3.attach(self.cex_chk, 0, 4, 2, 1)
         
+        # Create the graph color selector.
+        graph_color_lbl = Gtk.Label("Graph color: ")
+        graph_color_lbl.set_alignment(0, 0.5)
+        graph_color_lbl.set_tooltip_text("Select the color used for the graphs.")
+        opt_grid3.attach(graph_color_lbl, 0, 5, 1, 1)
+        self.graph_color_btn = Gtk.ColorButton()
+        opt_grid3.attach(self.graph_color_btn, 1, 5, 1, 1)
+        
         # Add the notebook.
         opt_box.add(notebook)
         

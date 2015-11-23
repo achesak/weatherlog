@@ -128,3 +128,12 @@ def new_convert(units_main, data2, units):
             data[4] == float(data[4]) * 0.62137
     
     return data
+
+
+def rgba_to_hex(rgba_color):
+    """Converts RGBA as given by a GdkRGBA instance into hex."""
+    
+    red = int(rgba_color.red * 255)
+    green = int(rgba_color.green * 255)
+    blue = int(rgba_color.blue * 255)
+    return "#{r:02x}{g:02x}{b:02x}".format(r = red,g = green,b = blue)

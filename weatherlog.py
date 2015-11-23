@@ -984,7 +984,7 @@ class WeatherLog(Gtk.Window):
         data2 = graphs.get_data(data)
         
         # Show the graph.
-        graph_dlg = GenericGraphDialog(self, "Graphs - %s" % self.last_profile, data2, self.last_profile, self.units)
+        graph_dlg = GenericGraphDialog(self, "Graphs - %s" % self.last_profile, data2, self.last_profile, self.units, self.config)
         response = graph_dlg.run()
         graph_dlg.destroy()
     
@@ -1802,6 +1802,7 @@ class WeatherLog(Gtk.Window):
         show_prefill = opt_dlg.pdl_chk.get_active()
         confirm_exit = opt_dlg.cex_chk.get_active()
         import_all = opt_dlg.imp_chk.get_active()
+        graph_color = convert.rgba_to_hex(opt_dlg.graph_color_btn.get_rgba())
         opt_dlg.destroy()
         
         # If the user did not press OK or Reset, don't continue.
@@ -1828,6 +1829,7 @@ class WeatherLog(Gtk.Window):
             show_prefill = True
             confirm_exit = False
             import_all = False
+            graph_color = "#00FF00"
         
         # Set the configuration.
         self.config["pre-fill"] = prefill
@@ -1841,6 +1843,7 @@ class WeatherLog(Gtk.Window):
         self.config["show_pre-fill"] = show_prefill
         self.config["confirm_exit"] = confirm_exit
         self.config["import_all"] = import_all
+        self.config["graph_color"] = graph_color
         
         # Configure the units.
         self.units = launch.get_units(self.config)

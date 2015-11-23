@@ -20,13 +20,8 @@ except:
 class GenericGraphDialog(Gtk.Dialog):
     """Shows the graph dialog."""
     
-    def __init__(self, parent, title, data, last_profile, units):
+    def __init__(self, parent, title, data, last_profile, units, config):
         """Create the dialog."""
-        
-        prec_amount_labels = ["Rain", "Snow", "Sleet", "Hail"]
-        prec_amount_colors = ["green", "orangered", "royalblue", "plum"]
-        prec_days_labels = ["None", "Rain", "Snow", "Sleet", "Hail"]
-        prec_days_colors = ["green", "orangered", "royalblue", "plum", "white"]
         
         # Create the dialog.
         Gtk.Dialog.__init__(self, title, parent, Gtk.DialogFlags.MODAL)
@@ -44,7 +39,7 @@ class GenericGraphDialog(Gtk.Dialog):
         f1 = Figure(figsize = (12, 6))
         f1.subplots_adjust(bottom = 0.2)
         a1 = f1.add_subplot(1,1,1)
-        a1.plot(data[1], data[2])
+        a1.plot(data[1], data[2], color = config["graph_color"])
         a1.set_title("Temperature - %s" % last_profile)
         a1.set_xlabel("Date")
         a1.set_ylabel("Temperature")
@@ -62,7 +57,7 @@ class GenericGraphDialog(Gtk.Dialog):
         f11 = Figure(figsize = (12, 6))
         f11.subplots_adjust(bottom = 0.2)
         a11 = f11.add_subplot(1,1,1)
-        a11.plot(data[1], data[12])
+        a11.plot(data[1], data[12], color = config["graph_color"])
         a11.set_title("Wind Chill - %s" % last_profile)
         a11.set_xlabel("Date")
         a11.set_ylabel("Wind Chill")
@@ -80,7 +75,7 @@ class GenericGraphDialog(Gtk.Dialog):
         f2 = Figure(figsize = (12, 6))
         f2.subplots_adjust(bottom = 0.2)
         a2 = f2.add_subplot(1,1,1)
-        a2.plot(data[1], data[3])
+        a2.plot(data[1], data[3], color = config["graph_color"])
         a2.set_title("Precipitation - %s" % last_profile)
         a2.set_xlabel("Date")
         a2.set_ylabel("Precipitation")
@@ -97,7 +92,7 @@ class GenericGraphDialog(Gtk.Dialog):
         info_box6_lbl = Gtk.Label("Precipitation (Amount)")
         f6 = Figure(figsize = (12, 6))
         a6 = f6.add_subplot(1,1,1)
-        a6.bar([0, 1, 2, 3], data[7], width = 0.5)
+        a6.bar([0, 1, 2, 3], data[7], width = 0.5, color = config["graph_color"])
         a6.set_xlabel("Precipitation Type")
         a6.set_ylabel("Total Amount")
         a6.set_title("Precipitation (Amount) - %s" % last_profile)
@@ -114,7 +109,7 @@ class GenericGraphDialog(Gtk.Dialog):
         info_box7_lbl = Gtk.Label("Precipitation (Days)")
         f7 = Figure(figsize = (12, 6))
         a7 = f7.add_subplot(1,1,1)
-        a7.bar([0, 1, 2, 3, 4], data[8], width = 0.5)
+        a7.bar([0, 1, 2, 3, 4], data[8], width = 0.5, color = config["graph_color"])
         a7.set_xlabel("Precipitation Type")
         a7.set_ylabel("Number of Days")
         a7.set_title("Precipitation (Days) - %s" % last_profile)
@@ -132,7 +127,7 @@ class GenericGraphDialog(Gtk.Dialog):
         f3 = Figure(figsize = (12, 6))
         f3.subplots_adjust(bottom = 0.2)
         a3 = f3.add_subplot(1,1,1)
-        a3.plot(data[1], data[4])
+        a3.plot(data[1], data[4], color = config["graph_color"])
         a3.set_title("Wind Speed - %s" % last_profile)
         a3.set_xlabel("Date")
         a3.set_ylabel("Wind Speed")
@@ -150,7 +145,7 @@ class GenericGraphDialog(Gtk.Dialog):
         f4 = Figure(figsize = (12, 6))
         f4.subplots_adjust(bottom = 0.2)
         a4 = f4.add_subplot(1,1,1)
-        a4.plot(data[1], data[5])
+        a4.plot(data[1], data[5], color = config["graph_color"])
         a4.set_title("Humidity - %s" % last_profile)
         a4.set_xlabel("Date")
         a4.set_ylabel("Humidity")
@@ -168,7 +163,7 @@ class GenericGraphDialog(Gtk.Dialog):
         f5 = Figure(figsize = (12, 6))
         f5.subplots_adjust(bottom = 0.2)
         a5 = f5.add_subplot(1,1,1)
-        a5.plot(data[1], data[6])
+        a5.plot(data[1], data[6], color = config["graph_color"])
         a5.set_title("Air Pressure - %s" % last_profile)
         a5.set_xlabel("Date")
         a5.set_ylabel("Air Pressure")
@@ -185,7 +180,7 @@ class GenericGraphDialog(Gtk.Dialog):
         info_box8_lbl = Gtk.Label("Air Pressure (Change)")
         f8 = Figure(figsize = (12, 6))
         a8 = f8.add_subplot(1,1,1)
-        a8.bar([0, 1, 2], data[9], width = 0.5)
+        a8.bar([0, 1, 2], data[9], width = 0.5, color = config["graph_color"])
         a8.set_xlabel("Air Pressure Change")
         a8.set_ylabel("Number of Days")
         a8.set_title("Air Pressure (Change) - %s" % last_profile)
@@ -203,7 +198,7 @@ class GenericGraphDialog(Gtk.Dialog):
         f12 = Figure(figsize = (12, 6))
         f12.subplots_adjust(bottom = 0.2)
         a12 = f12.add_subplot(1,1,1)
-        a12.plot(data[1], data[13])
+        a12.plot(data[1], data[13], color = config["graph_color"])
         a12.set_title("Visibility - %s" % last_profile)
         a12.set_xlabel("Date")
         a12.set_ylabel("Visibility")
@@ -220,7 +215,7 @@ class GenericGraphDialog(Gtk.Dialog):
         info_box9_lbl = Gtk.Label("Cloud Cover")
         f9 = Figure(figsize = (12, 6))
         a9 = f9.add_subplot(1,1,1)
-        a9.bar([0, 1, 2, 3, 4], data[10], width = 0.5)
+        a9.bar([0, 1, 2, 3, 4], data[10], width = 0.5, color = config["graph_color"])
         a9.set_xlabel("Cloud Cover")
         a9.set_ylabel("Number of Days")
         a9.set_title("Cloud Cover - %s" % last_profile)
@@ -238,7 +233,7 @@ class GenericGraphDialog(Gtk.Dialog):
         f10 = Figure(figsize = (12, 6))
         f10.subplots_adjust(bottom = 0.25)
         a10 = f10.add_subplot(1,1,1)
-        a10.bar([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10], data[11], width = 0.5)
+        a10.bar([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10], data[11], width = 0.5, color = config["graph_color"])
         a10.set_xlabel("Cloud Type")
         a10.set_ylabel("Number of Days")
         a10.set_title("Cloud Type - %s" % last_profile)
