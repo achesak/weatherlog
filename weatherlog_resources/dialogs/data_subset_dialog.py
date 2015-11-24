@@ -13,7 +13,7 @@ import copy
 class DataSubsetDialog(Gtk.Dialog):
     """Shows the data subset dialog."""
     
-    def __init__(self, parent, title, data, show_units, units):
+    def __init__(self, parent, title, data, units, config):
         """Create the dialog."""
         
         # Create the dialog.
@@ -64,7 +64,7 @@ class DataSubsetDialog(Gtk.Dialog):
         self.get_content_area().add(scrolled_win)
         
         # Change the titles, if the user doesn't want units to be displayed.
-        if not show_units:
+        if not config["show_units"]:
             self.temp_col.set_title("Temperature")
             self.prec_col.set_title("Precipitation")
             self.wind_col.set_title("Wind")
@@ -73,17 +73,18 @@ class DataSubsetDialog(Gtk.Dialog):
         
         # Add the data. Truncate the note fields before the data is added to the interface.
         new_data = copy.deepcopy(data)
-        for row in new_data:
-			note = row[9]
-			newline_split = False
-			if "\n" in note:
-			    note = note.splitlines()[0]
-			    newline_split = True
-			if len(note) > 46:
-			    note = note[0:40] + " [...]"
-			elif newline_split:
-				note = note + " [...]"
-			row[9] = note
+        if config["truncate_notes"]:
+            for row in new_data:
+                note = row[9]
+                newline_split = False
+                if "\n" in note:
+                    note = note.splitlines()[0]
+                    newline_split = True
+                if len(note) > 46:
+                    note = note[0:40] + " [...]"
+                elif newline_split:
+                    note = note + " [...]"
+                row[9] = note
         
         self.liststore.clear()
         for i in new_data:

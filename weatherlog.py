@@ -105,7 +105,6 @@ from weatherlog_resources.dialogs.options_dialog import OptionsDialog
 from weatherlog_resources.dialogs.chart_dialog import GenericChartDialog
 from weatherlog_resources.dialogs.graph_dialog import GenericGraphDialog
 from weatherlog_resources.dialogs.data_subset_selection_dialog import DataSubsetSelectionDialog
-from weatherlog_resources.dialogs.data_subset_dialog import DataSubsetDialog
 from weatherlog_resources.dialogs.import_selection_dialog import ImportSelectionDialog
 from weatherlog_resources.dialogs.location_dialog import LocationDialog
 from weatherlog_resources.dialogs.weather_dialog import CurrentWeatherDialog
@@ -1433,8 +1432,7 @@ class WeatherLog(Gtk.Window):
         # Read the data and switch to the other profile.
         self.data = io.read_profile(main_dir = self.main_dir, name = name)
         self.last_profile = name
-        for i in self.data:
-            self.liststore.append(i)
+        self.update_list()
         
         # Update the title and save the data.
         self.update_title()
@@ -1560,8 +1558,7 @@ class WeatherLog(Gtk.Window):
         # Read the data and switch to the new profile.
         self.data = io.read_profile(main_dir = self.main_dir, name = name)
         self.last_profile = name
-        for i in self.data:
-            self.liststore.append(i)
+        self.update_list()
         
         # Update the title.
         self.update_title()
@@ -1677,9 +1674,7 @@ class WeatherLog(Gtk.Window):
             self.data = [x for x in data if x[0] not in ndates]
         
             # Reset the list.
-            self.liststore.clear()
-            for i in self.data:
-                self.liststore.append(i)
+            self.update_list()
         
             # Update the title.
             self.update_title()
@@ -1752,9 +1747,7 @@ class WeatherLog(Gtk.Window):
             self.data = [x for x in data if x[0] not in ndates]
         
             # Reset the list.
-            self.liststore.clear()
-            for i in self.data:
-                self.liststore.append(i)
+            self.update_list()
         
             # Set the new title.
             self.update_title()
@@ -1802,6 +1795,7 @@ class WeatherLog(Gtk.Window):
         show_prefill = opt_dlg.pdl_chk.get_active()
         confirm_exit = opt_dlg.cex_chk.get_active()
         import_all = opt_dlg.imp_chk.get_active()
+        truncate_notes = opt_dlg.trun_chk.get_active()
         graph_color = convert.rgba_to_hex(opt_dlg.graph_color_btn.get_rgba())
         opt_dlg.destroy()
         
@@ -1829,6 +1823,7 @@ class WeatherLog(Gtk.Window):
             show_prefill = True
             confirm_exit = False
             import_all = False
+            truncate_notes = True
             graph_color = "#0000FF"
         
         # Set the configuration.
@@ -1843,6 +1838,7 @@ class WeatherLog(Gtk.Window):
         self.config["show_pre-fill"] = show_prefill
         self.config["confirm_exit"] = confirm_exit
         self.config["import_all"] = import_all
+        self.config["truncate_notes"] = truncate_notes
         self.config["graph_color"] = graph_color
         
         # Configure the units.
@@ -1881,6 +1877,7 @@ class WeatherLog(Gtk.Window):
         
         # Update the title and save the data.
         self.update_title()
+        self.update_list()
         self.save(from_options = True)
     
     
@@ -1911,18 +1908,19 @@ class WeatherLog(Gtk.Window):
         
         # Truncate the note fields before the data is added to the interface.
         new_data = copy.deepcopy(self.data)
-        for row in new_data:
-			note = row[9]
-			newline_split = False
-			if "\n" in note:
-			    note = note.splitlines()[0]
-			    newline_split = True
-			if len(note) > 46:
-			    note = note[0:40] + " [...]"
-			elif newline_split:
-				note = note + " [...]"
-			row[9] = note
-        
+        if self.config["truncate_notes"]:
+            for row in new_data:
+                note = row[9]
+                newline_split = False
+                if "\n" in note:
+                    note = note.splitlines()[0]
+                    newline_split = True
+                if len(note) > 46:
+                    note = note[0:40] + " [...]"
+                elif newline_split:
+                    note = note + " [...]"
+                row[9] = note
+            
         self.liststore.clear()
         for i in new_data:
             self.liststore.append(i)

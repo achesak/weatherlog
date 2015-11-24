@@ -110,16 +110,22 @@ class OptionsDialog(Gtk.Dialog):
         self.cex_chk.set_active(config["confirm_exit"])
         opt_grid3.attach(self.cex_chk, 0, 4, 2, 1)
         
+        # Create the truncate notes checkbox.
+        self.trun_chk = Gtk.CheckButton("Truncate notes")
+        self.trun_chk.set_tooltip_text("Display the Notes field in a truncated form for long entries.")
+        self.trun_chk.set_active(config["truncate_notes"])
+        opt_grid3.attach(self.trun_chk, 0, 5, 2, 1)
+        
         # Create the graph color selector.
         graph_color_lbl = Gtk.Label("Graph color: ")
         graph_color_lbl.set_alignment(0, 0.5)
         graph_color_lbl.set_tooltip_text("Select the color used for the graphs.")
-        opt_grid3.attach(graph_color_lbl, 0, 5, 1, 1)
+        opt_grid3.attach(graph_color_lbl, 0, 6, 1, 1)
         self.graph_color_btn = Gtk.ColorButton()
         color_rgba = convert.hex_to_rgba(config["graph_color"])
         default_color = Gdk.RGBA(red = color_rgba[0], green = color_rgba[1], blue = color_rgba[2])
         self.graph_color_btn.set_rgba(default_color)
-        opt_grid3.attach(self.graph_color_btn, 1, 5, 1, 1) #112233
+        opt_grid3.attach(self.graph_color_btn, 1, 6, 1, 1)
         
         # Add the notebook.
         opt_box.add(notebook)

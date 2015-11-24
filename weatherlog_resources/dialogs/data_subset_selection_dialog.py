@@ -340,12 +340,12 @@ class DataSubsetSelectionDialog(Gtk.Window):
             return
         
         # Show the subset.
-        sub_dlg = DataSubsetDialog(self, "Data Subset - %s" % self.last_profile, filtered, self.config["show_units"], self.units)
+        sub_dlg = DataSubsetDialog(self, "Data Subset - %s" % self.last_profile, filtered, self.units, self.config)
         response = sub_dlg.run()
         sub_dlg.destroy()
         
         # If the user clicked Export:
-        if response == 9:
+        if response == DialogResponse.EXPORT:
             
             # Get the filename and export the info.
             response2, filename = show_export_dialog(self, "Export Data Subset - %s" % self.last_profile)
