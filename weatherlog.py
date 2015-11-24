@@ -1788,7 +1788,7 @@ class WeatherLog(Gtk.Window):
         restore = opt_dlg.win_chk.get_active()
         location = opt_dlg.loc_ent.get_text()
         units_ = opt_dlg.unit_com.get_active_text().lower()
-        pastebin = "d2314ff616133e54f728918b8af1500e" # Placeholder.
+        pastebin = opt_dlg.paste_ent.get_text()
         show_dates = opt_dlg.date_chk.get_active()
         show_units = opt_dlg.unit_chk.get_active()
         confirm_del = opt_dlg.del_chk.get_active()
