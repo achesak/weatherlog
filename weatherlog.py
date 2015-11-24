@@ -116,7 +116,7 @@ class WeatherLog(Gtk.Window):
     """Creates the WeatherLog application."""
     
     def __init__(self):
-        """Initialize the application."""
+        """Initializes the application."""
         
         # Get the application's UI data.
         self.VERSION, self.TITLE, self.MENU_DATA, self.ICON_SMALL, self.ICON_MEDIUM = launch.get_ui_info()
