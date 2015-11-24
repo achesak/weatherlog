@@ -1293,6 +1293,11 @@ class WeatherLog(Gtk.Window):
             show_alert_dialog(self, "Export to Pastebin - %s" % self.last_profile, "There is no data to export.")
             return
         
+        # If the API key is blank, tell the user and cancel the action.
+        if len(self.config["pastebin"].lstrip().rstrip()) == 0:
+            show_error_dialog(self, "Export to Pastebin - %s" % self.last_profile, "No API key. Please check the key entered in the Options window.")
+            return
+        
         # Show the dialog and get the user's response.
         pas_dlg = ExportPastebinDialog(self, "Export to Pastebin - %s" % self.last_profile)
         response = pas_dlg.run()
@@ -1329,8 +1334,11 @@ class WeatherLog(Gtk.Window):
             result = pastebin.read()
             pastebin.close()
             
-            # Tell the user the URL.
-            show_alert_dialog(self, "Export to Pastebin - %s" % self.last_profile, "The data has been uploaded to Pastebin, and can be accessed at the following URL:\n\n%s" % result)
+            # Check for an error message, or show the user the URL.
+            if "invalid api_dev_key" in result:
+                show_error_dialog(self, "Export to Pastebin - %s" % self.last_profile, "Invalid API key. Please check the key entered in the Options window.")
+            else:
+                show_alert_dialog(self, "Export to Pastebin - %s" % self.last_profile, "The data has been uploaded to Pastebin, and can be accessed at the following URL:\n\n%s" % result)
             
         except:
             show_error_dialog(self, "Export to Pastebin - %s" % self.last_profile, "The data could not be uploaded to Pastebin.")
