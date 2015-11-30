@@ -205,10 +205,12 @@ class OptionsDialog(Gtk.Dialog):
         hatch_lbl = Gtk.Label("Bar chart style: ")
         hatch_lbl.set_tooltip_text("Select the style used for bar charts.")
         hatch_lbl.set_margin_left(5)
+        hatch_lbl.set_margin_bottom(5)
         hatch_lbl.set_alignment(0, 0.5)
         graph_grid.attach_next_to(hatch_lbl, line_lbl, Gtk.PositionType.BOTTOM, 1, 1)
         self.hatch_com = Gtk.ComboBoxText()
         self.hatch_com.set_margin_right(5)
+        self.hatch_com.set_margin_bottom(5)
         for i in hatch_styles:
             self.hatch_com.append_text(i)
         self.hatch_com.set_active(hatch_styles.index(config["hatch_style"]))
