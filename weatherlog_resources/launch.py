@@ -204,7 +204,10 @@ def get_config(conf_dir):
                   "confirm_exit": False,
                   "import_all": False,
                   "truncate_notes": True,
-                  "graph_color": "#0000FF"}
+                  "graph_color": "#0000FF",
+                  "line_width": 1,
+                  "line_style": "Solid",
+                  "hatch_style": "Solid"}
     
     return config
 

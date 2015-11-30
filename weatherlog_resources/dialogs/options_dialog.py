@@ -159,15 +159,60 @@ class OptionsDialog(Gtk.Dialog):
         
         # Create the graph color selector.
         graph_color_lbl = Gtk.Label("Graph color: ")
-        graph_color_lbl.set_alignment(0, 0.5)
         graph_color_lbl.set_tooltip_text("Select the color used for the graphs.")
+        graph_color_lbl.set_margin_left(5)
+        graph_color_lbl.set_margin_top(5)
+        graph_color_lbl.set_alignment(0, 0.5)
         graph_grid.add(graph_color_lbl)
         self.graph_color_btn = Gtk.ColorButton()
         self.graph_color_btn.set_hexpand(True)
+        self.graph_color_btn.set_margin_right(5)
+        self.graph_color_btn.set_margin_top(5)
         color_rgba = convert.hex_to_rgba(config["graph_color"])
         default_color = Gdk.RGBA(red = color_rgba[0], green = color_rgba[1], blue = color_rgba[2])
         self.graph_color_btn.set_rgba(default_color)
         graph_grid.attach_next_to(self.graph_color_btn, graph_color_lbl, Gtk.PositionType.RIGHT, 1, 1)
+        
+        # Create the line width selector.
+        width_lbl = Gtk.Label("Line width: ")
+        width_lbl.set_tooltip_text("Select the line width.")
+        width_lbl.set_margin_left(5)
+        width_lbl.set_alignment(0, 0.5)
+        graph_grid.attach_next_to(width_lbl, graph_color_lbl, Gtk.PositionType.BOTTOM, 1, 1)
+        width_adj = Gtk.Adjustment(lower = 1, upper = 10, step_increment = 1)
+        self.width_sbtn = Gtk.SpinButton(digits = 0, adjustment = width_adj)
+        self.width_sbtn.set_numeric(False)
+        self.width_sbtn.set_margin_right(5)
+        self.width_sbtn.set_value(config["line_width"])
+        graph_grid.attach_next_to(self.width_sbtn, width_lbl, Gtk.PositionType.RIGHT, 1, 1)
+        
+        # Create the line style selector.
+        line_lbl = Gtk.Label("Line style: ")
+        line_lbl.set_tooltip_text("Select the style used for graph lines.")
+        line_lbl.set_margin_left(5)
+        line_lbl.set_alignment(0, 0.5)
+        graph_grid.attach_next_to(line_lbl, width_lbl, Gtk.PositionType.BOTTOM, 1, 1)
+        self.line_com = Gtk.ComboBoxText()
+        self.line_com.set_margin_right(5)
+        for i in ["Solid", "Dashes", "Dots", "Dashes and dots"]:
+            self.line_com.append_text(i)
+        self.line_com.set_active(["Solid", "Dashes", "Dots", "Dashes and dots"].index(config["line_style"])) 
+        graph_grid.attach_next_to(self.line_com, line_lbl, Gtk.PositionType.RIGHT, 1, 1)
+        
+        # Create the bar chart style selector.
+        hatch_styles = ["Solid", "Large upward stripes", "Small upward stripes", "Large downward stripes", "Small downward stripes", \
+                        "Horizontal stripes", "Crosshatch", "Diagonal crosshatch", "Stars", "Dots", "Small circles", "Large circles"]
+        hatch_lbl = Gtk.Label("Bar chart style: ")
+        hatch_lbl.set_tooltip_text("Select the style used for bar charts.")
+        hatch_lbl.set_margin_left(5)
+        hatch_lbl.set_alignment(0, 0.5)
+        graph_grid.attach_next_to(hatch_lbl, line_lbl, Gtk.PositionType.BOTTOM, 1, 1)
+        self.hatch_com = Gtk.ComboBoxText()
+        self.hatch_com.set_margin_right(5)
+        for i in hatch_styles:
+            self.hatch_com.append_text(i)
+        self.hatch_com.set_active(hatch_styles.index(config["hatch_style"]))
+        graph_grid.attach_next_to(self.hatch_com, hatch_lbl, Gtk.PositionType.RIGHT, 1, 1)
         
         # Create the Technical tab.
         tech_grid = Gtk.Grid()

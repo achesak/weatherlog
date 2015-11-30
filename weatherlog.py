@@ -1804,7 +1804,10 @@ class WeatherLog(Gtk.Window):
         confirm_exit = opt_dlg.cex_chk.get_active()
         import_all = opt_dlg.imp_chk.get_active()
         truncate_notes = opt_dlg.trun_chk.get_active()
-        graph_color = convert.rgba_to_hex(opt_dlg.graph_color_btn.get_rgba())
+        graph_color = convert.rgba_to_hex(opt_dlg.graph_color_btn.get_rgba())[0:7]
+        line_width = opt_dlg.width_sbtn.get_value()
+        line_style = opt_dlg.line_com.get_active_text()
+        hatch_style = opt_dlg.hatch_com.get_active_text()
         opt_dlg.destroy()
         
         # If the user did not press OK or Reset, don't continue.
@@ -1833,6 +1836,9 @@ class WeatherLog(Gtk.Window):
             import_all = False
             truncate_notes = True
             graph_color = "#0000FF"
+            line_width = 1
+            line_style = "Solid"
+            hatch_style = "Solid"
         
         # Set the configuration.
         self.config["pre-fill"] = prefill
@@ -1848,6 +1854,9 @@ class WeatherLog(Gtk.Window):
         self.config["import_all"] = import_all
         self.config["truncate_notes"] = truncate_notes
         self.config["graph_color"] = graph_color
+        self.config["line_width"] = line_width
+        self.config["line_style"] = line_style
+        self.config["hatch_style"] = hatch_style
         
         # Configure the units.
         self.units = launch.get_units(self.config)
