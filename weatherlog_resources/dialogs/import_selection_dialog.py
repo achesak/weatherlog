@@ -23,17 +23,12 @@ class ImportSelectionDialog(Gtk.Dialog):
         self.add_button("Import All", DialogResponse.IMPORT_ALL)
         self.add_button("Import", DialogResponse.IMPORT)
         
-        # Create the grid.
-        sel_box = self.get_content_area()
-        sel_grid = Gtk.Grid()
-        sel_box.add(sel_grid)
+        # Create the frame.
+        sel_frame = Gtk.Frame()
+        sel_frame.set_label("Select dates to import: ")
+        self.get_content_area().add(sel_frame)
         
-        # Create the label.
-        sel_lbl = Gtk.Label("Choose dates to import:")
-        sel_lbl.set_alignment(0, 0.5)
-        sel_grid.add(sel_lbl)
-        
-        # Create the Profile column.
+        # Create the Date selection.
         self.liststore = Gtk.ListStore(str)
         self.treeview = Gtk.TreeView(model = self.liststore)
         self.treeview.get_selection().set_mode(Gtk.SelectionMode.MULTIPLE)
@@ -46,7 +41,7 @@ class ImportSelectionDialog(Gtk.Dialog):
         scrolled_win.set_vexpand(True)
         scrolled_win.set_hexpand(True)
         scrolled_win.add(self.treeview)
-        sel_grid.attach_next_to(scrolled_win, sel_lbl, Gtk.PositionType.BOTTOM, 1, 1)
+        sel_frame.add(scrolled_win)
         
         # Add the dates.
         for i in dates:

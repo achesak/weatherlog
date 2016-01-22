@@ -1528,7 +1528,7 @@ class WeatherLog(Gtk.Window):
         """Renames the current dataset."""
         
         # Get the new profile name.
-        ren_dlg = DatasetNameDialog(self, "Rename Current Dataset")
+        ren_dlg = DatasetNameDialog(self, "Rename Current Dataset", message = "Enter new dataset name:")
         response = ren_dlg.run()
         name = ren_dlg.nam_ent.get_text().lstrip().rstrip()
         ren_dlg.destroy()

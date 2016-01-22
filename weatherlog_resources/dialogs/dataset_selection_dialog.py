@@ -20,15 +20,10 @@ class DatasetSelectionDialog(Gtk.Dialog):
         self.add_button("Cancel", Gtk.ResponseType.CANCEL)
         self.add_button("OK", Gtk.ResponseType.OK)
         
-        # Create the grid.
-        sel_box = self.get_content_area()
-        sel_grid = Gtk.Grid()
-        sel_box.add(sel_grid)
-        
-        # Create the label.
-        sel_lbl = Gtk.Label("Choose dataset:")
-        sel_lbl.set_alignment(0, 0.5)
-        sel_grid.add(sel_lbl)
+        # Create the frame.
+        sel_frame = Gtk.Frame()
+        sel_frame.set_label("Select dataset:")
+        self.get_content_area().add(sel_frame)
         
         # Create the Profile, Creation Date, and Last Modified Date columns.
         self.liststore = Gtk.ListStore(str, str, str)
@@ -56,7 +51,7 @@ class DatasetSelectionDialog(Gtk.Dialog):
         scrolled_win.set_vexpand(True)
         scrolled_win.set_hexpand(True)
         scrolled_win.add(self.treeview)
-        sel_grid.attach_next_to(scrolled_win, sel_lbl, Gtk.PositionType.BOTTOM, 1, 1)
+        sel_frame.add(scrolled_win)
         
         # Connect 'Enter' key to the OK button.
         ok_btn = self.get_widget_for_response(response_id = Gtk.ResponseType.OK)

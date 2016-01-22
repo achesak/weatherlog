@@ -20,17 +20,12 @@ class DateSelectionDialog(Gtk.Dialog):
         for i in buttons:
             self.add_button(i[0], i[1])
         
-        # Create the grid.
-        info_box = self.get_content_area()
-        info_grid = Gtk.Grid()
-        info_box.add(info_grid)
+        # Create the frame.
+        sel_frame = Gtk.Frame()
+        sel_frame.set_label("Select dates:")
+        self.get_content_area().add(sel_frame)
         
-        # Create the label.
-        info_lbl = Gtk.Label("Choose dates:")
-        info_lbl.set_alignment(0, 0.5)
-        info_grid.add(info_lbl)
-        
-        # Create the Date column.
+        # Create the Date selection.
         self.liststore = Gtk.ListStore(str)
         self.treeview = Gtk.TreeView(model = self.liststore)
         self.treeview.get_selection().set_mode(Gtk.SelectionMode.MULTIPLE)
@@ -43,7 +38,7 @@ class DateSelectionDialog(Gtk.Dialog):
         scrolled_win.set_vexpand(True)
         scrolled_win.set_hexpand(True)
         scrolled_win.add(self.treeview)
-        info_grid.attach_next_to(scrolled_win, info_lbl, Gtk.PositionType.BOTTOM, 1, 1)
+        sel_frame.add(scrolled_win)
         
         # Add the dates.
         for i in dates:

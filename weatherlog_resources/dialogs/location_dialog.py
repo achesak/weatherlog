@@ -20,17 +20,14 @@ class LocationDialog(Gtk.Dialog):
         self.add_button("Cancel", Gtk.ResponseType.CANCEL)
         self.add_button("OK", Gtk.ResponseType.OK)
         
-        # Create the grid.
-        loc_box = self.get_content_area()
-        loc_grid = Gtk.Grid()
-        loc_box.add(loc_grid)
+        # Create the frame.
+        loc_frame = Gtk.Frame()
+        loc_frame.set_label(message)
+        self.get_content_area().add(loc_frame)
         
-        # Create the label and entry.
-        loc_lbl = Gtk.Label(message)
-        loc_lbl.set_alignment(0, 0.5)
-        loc_grid.add(loc_lbl)
+        # Create the entry.
         self.loc_ent = Gtk.Entry()
-        loc_grid.attach_next_to(self.loc_ent, loc_lbl, Gtk.PositionType.RIGHT, 1, 1)
+        loc_frame.add(self.loc_ent)
         
         # Connect 'Enter' key to the OK button.
         self.loc_ent.set_activates_default(True)
