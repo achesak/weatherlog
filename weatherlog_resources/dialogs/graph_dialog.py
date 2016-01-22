@@ -24,11 +24,11 @@ class GenericGraphDialog(Gtk.Dialog):
         """Create the dialog."""
         
         # Dicts for getting the style from config:
-        lines = {"Solid": "", "Dashes": "--", "Dots": ":", "Dashes and dots": "-."}
+        lines = {"Solid": "-", "Dashes": "--", "Dots": ":", "Dashes and dots": "-."}
         hatches = {"Solid": "", "Large upward stripes": "/", "Small upward stripes": "//", "Large downward stripes": "\\", \
                    "Small downward stripes": "\\\\", "Horizontal stripes": "-", "Crosshatch": "+", "Diagonal crosshatch": "x", \
                    "Stars": "*", "Dots": ".", "Small circles": "o", "Large circles": "O"}
-        
+        print(data[2])
         # Create the dialog.
         Gtk.Dialog.__init__(self, title, parent, Gtk.DialogFlags.MODAL)
         self.set_default_size(1000, 600)
