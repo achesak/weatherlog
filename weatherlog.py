@@ -1695,7 +1695,7 @@ class WeatherLog(Gtk.Window):
         """Copies or moves data to an existing dataset."""
         
         # If there is no data, tell the user and don't continue.
-        if len(data) == 0:
+        if len(self.data) == 0:
             show_no_data_dialog(self, "Copy Data to Existing Dataset")
             return
         
