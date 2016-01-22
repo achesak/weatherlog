@@ -12,7 +12,7 @@
 
 # Released under the MIT open source license:
 license_text = """
-Copyright (c) 2013-2015 Adam Chesak
+Copyright (c) 2013-2016 Adam Chesak
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
