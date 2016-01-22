@@ -23,7 +23,7 @@ platform.
 
 # License
 
-WeatherLog is released under the [MIT open source license](http://opensource.org/licenses/mit-license.php). See the `LICENSE` file for more information.
+WeatherLog is released under the [MIT open source license](http://opensource.org/licenses/mit-license.php). See the `LICENSE.md` file for more information.
 
 WeatherLog uses [python-weather-api](https://launchpad.net/python-weather-api) to get data from weather APIs. See the `README` and `LICENSE` files in
 `weatherlog_resources/dialogs/pywapi` for more information.
