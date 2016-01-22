@@ -13,7 +13,9 @@ HTML_HEADER = """<!DOCTYPE html>
     <html lang="en">
     <head>
     <title>Data exported from WeatherLog</title>
-    <meta charset="utf-8">
+    <meta charset="utf-8" />
+    <link rel="stylesheet" type="text/css" href="http://achesak.github.io/weatherlog/minimal.css" />
+    <!-- Replace above link with your own stylesheet. -->
     </head>
     <body>"""
 HTML_FOOTER = """</body>

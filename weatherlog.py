@@ -1281,7 +1281,7 @@ class WeatherLog(Gtk.Window):
                             "Precipitation (%s)" % self.units["prec"], "Wind (%s)" % self.units["wind"],
                             "Humidity (%%)", "Air Pressure (%s)" % self.units["airp"], "Visibility (%s)" % self.units["visi"],
                             "Cloud Cover", "Notes"],
-                            data]]
+                            self.data]]
             export.html_generic(data_list, filename)
     
     
