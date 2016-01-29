@@ -5,7 +5,7 @@
 ################################################################################
 
 # WeatherLog
-# Version 3.4
+# Version 4.0
 
 # WeatherLog is an application for keeping track of the weather and
 # getting information about past trends.
@@ -1973,7 +1973,7 @@ class WeatherLog(Gtk.Window):
         about_dlg.set_logo(pixbuf)
         about_dlg.set_version(self.VERSION)
         about_dlg.set_comments("WeatherLog is an application for keeping track of the weather\nand getting information about past trends.")
-        about_dlg.set_copyright("Copyright (c) 2013-2015 Adam Chesak")
+        about_dlg.set_copyright("Copyright (c) 2013-2016 Adam Chesak")
         about_dlg.set_authors(["Adam Chesak <achesak@yahoo.com>"])
         about_dlg.set_license(license_text)
         about_dlg.set_website("http://achesak.github.io/weatherlog")
