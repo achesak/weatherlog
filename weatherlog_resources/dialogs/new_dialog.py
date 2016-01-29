@@ -294,7 +294,10 @@ class AddNewDialog(Gtk.Dialog):
         self.airp_com.set_active(int(data["atmosphere"]["rising"]))
         
         # Set the visibility field.
-        self.visi_sbtn.set_value(float(data["atmosphere"]["visibility"]))
+        if data["atmosphere"]["visibility"].lstrip().rstrip() == "":
+           self.visi_sbtn.set_value(0.0)
+        else:
+            self.visi_sbtn.set_value(float(data["atmosphere"]["visibility"]))
         
         # Return the location.
         return "%s, %s" % (data["location"]["city"], data["location"]["country"])
