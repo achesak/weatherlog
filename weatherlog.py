@@ -1989,7 +1989,7 @@ class WeatherLog(Gtk.Window):
         """Shows the help in a web browser."""
         
         # Open the help file.
-        webbrowser.open_new("weatherlog_resources/help/help.html")    
+        webbrowser.open_new("weatherlog_resources/help/WeatherLog_help.pdf")    
     
 
     def exit(self, x = False, y = False):
