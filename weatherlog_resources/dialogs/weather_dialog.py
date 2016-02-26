@@ -6,6 +6,8 @@
 
 # Import GTK for the dialog.
 from gi.repository import Gtk
+# Import constants.
+from weatherlog_resources.constants import *
 
 
 class CurrentWeatherDialog(Gtk.Dialog):
@@ -17,8 +19,8 @@ class CurrentWeatherDialog(Gtk.Dialog):
         # Create the dialog.
         Gtk.Dialog.__init__(self, title, parent, Gtk.DialogFlags.MODAL)
         self.set_default_size(400, 350)
-        self.add_button("Add", 10)
-        self.add_button("Export", 9)
+        self.add_button("Add", DialogResponse.ADD_DATA)
+        self.add_button("Export", DialogResponse.EXPORT)
         self.add_button("Close", Gtk.ResponseType.CLOSE)
         
         # Create the tab notebook.
