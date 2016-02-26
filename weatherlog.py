@@ -1241,6 +1241,7 @@ class WeatherLog(Gtk.Window):
         # to be clicked when no filename has been entered, causing an error. Check to make sure
         # there was a filename to work around this.
         if (response == DialogResponse.EXPORT_CSV or response == DialogResponse.EXPORT_HTML) and not filename:
+            show_error_dialog(self, "Export - %s" % self.last_profile, "No filename entered.")
             return
         
         # Export the data.
