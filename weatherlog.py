@@ -618,10 +618,10 @@ class WeatherLog(Gtk.Window):
         end_index = dates.date_below(dt_end, datelist)
         
         # Check to make sure these dates are valid, and cancel the action if not.
-        if start_index == -1:
+        if start_index == DateValidation.INVALID:
             show_error_dialog(self, "Info in Range - %s" % self.last_profile, "%s is not a valid date.\n\nThis date is not present and is not before any other dates." % date1)
             return
-        if end_index == -1:
+        if end_index == DateValidation.INVALID:
             show_error_dialog(self, "Info in Range - %s" % self.last_profile, "%s is not a valid date.\n\nThis date is not present and is not after any other dates." % date2)
             return
         if end_index < start_index:
@@ -766,10 +766,10 @@ class WeatherLog(Gtk.Window):
         end_index = dates.date_below(dt_end, datelist)
         
         # Check to make sure these dates are valid, and cancel the action if not.
-        if start_index == -1:
+        if start_index == DateValidation.INVALID:
             show_error_dialog(self, "Charts in Range - %s" % self.last_profile, "%s is not a valid date.\n\nThis date is not present and is not before any other dates." % date1)
             return
-        if end_index == -1:
+        if end_index == DateValidation.INVALID:
             show_error_dialog(self, "Charts in Range - %s" % self.last_profile, "%s is not a valid date.\n\nThis date is not present and is not after any other dates." % date2)
             return
         if end_index < start_index:
@@ -909,10 +909,10 @@ class WeatherLog(Gtk.Window):
         end_index = dates.date_below(dt_end, datelist)
         
         # Check to make sure these dates are valid, and cancel the action if not.
-        if start_index == -1:
+        if start_index == DateValidation.INVALID:
             show_error_dialog(self, "Graphs in Range - %s" % self.last_profile, "%s is not a valid date.\n\nThis date is not present and is not before any other dates." % date1)
             return
-        if end_index == -1:
+        if end_index == DateValidation.INVALID:
             show_error_dialog(self, "Graphs in Range - %s" % self.last_profile, "%s is not a valid date.\n\nThis date is not present and is not after any other dates." % date2)
             return
         if end_index < start_index:
