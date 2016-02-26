@@ -6,10 +6,21 @@
 
 # Import constants.
 from weatherlog_resources.constants import *
+# Import io for reading files.
+import weatherlog_resources.io as io
 # Import re for pattern matching.
 import re
 # Import os.path for checking if a directory exists.
 import os.path
+
+
+validate_dataset_strings = {ImportValidation.VALID: "No error, this should never display.",
+                            ImportValidation.NOT_LIST: "Data is not a list.",
+                            ImportValidation.NOT_SUBLIST: "One or more items in the data are not lists.",
+                            ImportValidation.INCORRECT_LENGTH: "One or more lists do not have the correct length.",
+                            ImportValidation.NOT_STRING: "One or more data fields are not strings.",
+                            ImportValidation.CANNOT_UNPICKLE: "The file is not in the correct format.",
+                            ImportValidation.NO_DATA: "The file contains no data."}
 
 
 def validate_profile(main_dir, name):
@@ -29,16 +40,22 @@ def validate_profile(main_dir, name):
         return ""
 
 
-def validate_data(data):
+def validate_data(filename):
     """Validates imported data."""
     
-    # Test 1: must be a list.
+    # Test 1: must be readable.
+    try:
+		data = io.read_profile(filename = filename)
+    except:
+        return ImportValidation.CANNOT_UNPICKLE
+    
+    # Test 2: must be a list.
     if not isinstance(data, list):
         return ImportValidation.NOT_LIST
     
-    # Test 2: each item must be a list.
-    # Test 3: each item must have the correct length (10).
-    # Test 4: each item of this list must be a string.
+    # Test 3: each item must be a list.
+    # Test 4: each item must have the correct length (10).
+    # Test 5: each item of this list must be a string.
     for i in data:
         if not isinstance(i, list):
             return ImportValidation.NOT_SUBLIST

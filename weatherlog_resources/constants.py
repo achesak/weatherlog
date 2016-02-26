@@ -4,6 +4,9 @@
 # This file defines constants used by other parts of the application.
 
 
+__all__ = ["SelectionMode", "DialogResponse", "ImportValidation"]
+
+
 # Data subset selection mode:
 class SelectionMode:
     ALL = 0
@@ -30,3 +33,5 @@ class ImportValidation:
     NOT_SUBLIST = -1
     INCORRECT_LENGTH = -2
     NOT_STRING = -3
+    CANNOT_UNPICKLE = -4
+    NO_DATA = -5
