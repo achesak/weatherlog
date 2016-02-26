@@ -109,6 +109,7 @@ from weatherlog_resources.dialogs.import_selection_dialog import ImportSelection
 from weatherlog_resources.dialogs.location_dialog import LocationDialog
 from weatherlog_resources.dialogs.weather_dialog import CurrentWeatherDialog
 from weatherlog_resources.dialogs.export_pastebin_dialog import ExportPastebinDialog
+from weatherlog_resources.dialogs.about_dialog import WeatherLogAboutDialog
 from weatherlog_resources.dialogs.misc_dialogs import *
 
 
@@ -1928,23 +1929,8 @@ class WeatherLog(Gtk.Window):
         loader.close()
         pixbuf = loader.get_pixbuf()
         
-        # Create the dialog.
-        about_dlg = Gtk.AboutDialog(self)
-        
-        # Set the details.
-        about_dlg.set_title("About WeatherLog")
-        about_dlg.set_program_name(self.TITLE)
-        about_dlg.set_logo(pixbuf)
-        about_dlg.set_version(self.VERSION)
-        about_dlg.set_comments("WeatherLog is an application for keeping track of the weather\nand getting information about past trends.")
-        about_dlg.set_copyright("Copyright (c) 2013-2016 Adam Chesak")
-        about_dlg.set_authors(["Adam Chesak <achesak@yahoo.com>"])
-        about_dlg.set_license(license_text)
-        about_dlg.set_website("http://achesak.github.io/weatherlog")
-        about_dlg.set_website_label("http://achesak.github.io/weatherlog")
-        
         # Show the dialog.
-        about_dlg.show_all()
+        about_dlg = WeatherLogAboutDialog(self, self.TITLE, self.VERSION, pixbuf, license_text)
         about_dlg.run()
         about_dlg.destroy()
 

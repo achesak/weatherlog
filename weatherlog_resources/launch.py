@@ -100,6 +100,7 @@ def get_ui_info():
     menu_file.close()
     icon_small = "weatherlog_resources/images/icon_small.png"
     icon_medium = "weatherlog_resources/images/icon_med.png"
+    icon_medium_about = "../images/icon_med.png"
     return version, title, menu_data, icon_small, icon_medium
 
 
