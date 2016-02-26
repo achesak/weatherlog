@@ -1356,17 +1356,7 @@ class WeatherLog(Gtk.Window):
         launch.check_files_exist(self.main_dir, self.conf_dir)
         
         # Set the default config.
-        self.config = {"pre-fill": False,
-                  "restore": True,
-                  "location": "",
-                  "units": "metric",
-                  "pastebin": "d2314ff616133e54f728918b8af1500e",
-                  "show_units": True,
-                  "show_dates": True,
-                  "confirm_del": True,
-                  "show_pre-fill": True,
-                  "confirm_exit": False,
-                  "import_all": False}
+        self.config = launch.get_config(self.conf_dir)
         
         # Configure the units.
         self.units = launch.get_units(config)
