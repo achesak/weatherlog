@@ -13,10 +13,7 @@ import collections
 def mean(numbers):
     """Finds the mean of a list of numbers."""
     
-    total = 0
-    for i in numbers:
-        total += i
-    return total / len(numbers)
+    return sum(numbers) / len(numbers)
 
 
 def median(numbers2):
