@@ -4,35 +4,16 @@
 # This file defines functions working with datasets.
 
 
-def extract_numbers(data):
-    """Extracts the numbers from the list items."""
-    
-    # Loop through the list, getting the numbers and converting them to floats.
-    numbers = data[:]
-    for i in range(0, len(numbers)):
-        numbers[i] = float(numbers[i].split()[0])
-    return numbers
-
-
 def convert_float(data):
     """Converts the list items to floats."""
     
-    # Loop through the list, converting the items to floats.
-    numbers = []
-    for i in range(0, len(data)):
-        if data[i] != "None":
-            numbers.append(float(data[i]))
-    return numbers
+    return [float(x) for x in data if x != "None"]
 
 
 def get_column(data, col):
     """Gets a column of the data."""
     
-    # Loop through the list, getting the specified value and appending it to the new list.
-    column = []
-    for i in data:
-        column.append(i[col])
-    return column
+    return [x[col] for x in data]
  
 
 def split_list(data):
@@ -98,14 +79,7 @@ def split_list3(data):
 def none_to_zero(data):
     """Changes any "None" values to "0" (zero)."""
     
-    # Loop through the list, and change values as needed.
-    n_list = []
-    for i in data:
-        if i == "None":
-            n_list.append("0")
-        else:
-            n_list.append(i)
-    return n_list
+    return [x if x != "None" else "0" for x in data]
 
 
 def strip_items(data, chars):
