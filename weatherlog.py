@@ -55,12 +55,6 @@ try:
     import cPickle as pickle
 except ImportError:
     import pickle
-# Import urlopen and urlencode for opening a file from a URL.
-try:
-    from urllib.request import urlopen
-    from urllib.parse import urlencode
-except ImportError:
-    from urllib import urlopen, urlencode
 
 # Tell Python not to create bytecode files, as they mess with the git repo.
 # This line can be removed be the user, if desired.
@@ -92,6 +86,8 @@ import weatherlog_resources.graphs as graphs
 import weatherlog_resources.filter_data as filter_data
 # Import the functions for getting the current weather.
 import weatherlog_resources.get_weather as get_weather
+# Import the functions for uploading to pastebin.com.
+import weatherlog_resources.pastebin as pastebin
 
 # Import dialogs.
 from weatherlog_resources.dialogs.new_dialog import AddNewDialog
@@ -1284,39 +1280,16 @@ class WeatherLog(Gtk.Window):
         if response != Gtk.ResponseType.OK:
             return
         
-        # Convert the data.
-        if mode == "html":
-            new_data = export.html(self.data, self.units)
-        elif mode == "csv":
-            new_data = export.csv(self.data, self.units)
-        elif mode == "json":
-            new_data = json.dumps(self.data)
+        # Upload the data.
+        pastebin_response, result = pastebin.upload_pastebin(self.data, name, mode, self.units, self.config)
         
-        # Build the api string.
-        api = {"api_option": "paste",
-               "api_dev_key": self.config["pastebin"],
-               "api_paste_code": new_data}
-        if mode == "html":
-            api["api_paste_format"] = "html5"
-        elif mode == "raw":
-            api["api_paste_format"] = "javascript"
-        if name.lstrip().rstrip() != "":
-            api["api_paste_name"] = name.lstrip().rstrip()
-        
-        # Upload the text.
-        try:
-            pastebin = urlopen("http://pastebin.com/api/api_post.php", urlencode(api))
-            result = pastebin.read()
-            pastebin.close()
-            
-            # Check for an error message, or show the user the URL.
-            if "invalid api_dev_key" in result:
-                show_error_dialog(self, "Export to Pastebin - %s" % self.last_profile, "Invalid API key. Please check the key entered in the Options window.")
-            else:
-                show_alert_dialog(self, "Export to Pastebin - %s" % self.last_profile, "The data has been uploaded to Pastebin, and can be accessed at the following URL:\n\n%s" % result)
-            
-        except:
+        # Check the return response.
+        if pastebin_response == PastebinExport.INVALID_KEY:
+            show_error_dialog(self, "Export to Pastebin - %s" % self.last_profile, "Invalid API key. Please check the key entered in the Options window.")
+        elif pastebin_response == PastebinExport.ERROR:
             show_error_dialog(self, "Export to Pastebin - %s" % self.last_profile, "The data could not be uploaded to Pastebin.")
+        elif pastebin_response == PastebinExport.SUCCESS:
+            show_alert_dialog(self, "Export to Pastebin - %s" % self.last_profile, "The data has been uploaded to Pastebin, and can be accessed at the following URL:\n\n%s" % result)
     
     
     def clear(self, event):
