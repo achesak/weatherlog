@@ -16,7 +16,7 @@ class GenericChartDialog(Gtk.Dialog):
         
         # Create the dialog.
         Gtk.Dialog.__init__(self, title, parent, Gtk.DialogFlags.MODAL)
-        self.set_default_size(900, 400)
+        self.set_default_size(1000, 500)
         self.add_button("Export", 9)
         self.add_button("Close", Gtk.ResponseType.CLOSE)
         
