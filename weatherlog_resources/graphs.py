@@ -133,7 +133,19 @@ def get_data(data):
         elif i == "Stratocumulus":
             clou_types[10] += 1
     
-    data = [date_data, new_dates, temp_data, prec_data, wind_data, humi_data, airp_data, prec_amount,
-            prec_days, airp_change, clou_days, clou_types, chil_data, visi_data]
+    data = {"date_labels": date_data,
+            "date_ticks": new_dates,
+            "temp_data": temp_data,
+            "prec_data": prec_data,
+            "wind_data": wind_data,
+            "humi_data": humi_data, 
+            "airp_data": airp_data,
+            "prec_amount": prec_amount,
+            "prec_days": prec_days,
+            "airp_change": airp_change,
+            "clou_days": clou_days,
+            "clou_types": clou_types,
+            "chil_data": chil_data,
+            "visi_data": visi_data}
     
     return data
