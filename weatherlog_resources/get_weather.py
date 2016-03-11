@@ -17,13 +17,13 @@ days = {"Sun": "Sunday", "Mon": "Monday", "Tue": "Tuesday", "Wed": "Wednesday",
 
 def get_weather(location, config, units, weather_codes):
     """Gets the current weather for the specified location."""
-    
-    # Get the current weather and organise it.
+
+    # Get the current weather and organize it.
     result = pywapi.get_weather_from_yahoo(location, config["units"])
     if units["airp"] == "mbar":
         result["atmosphere"]["pressure"] = str(float(result["atmosphere"]["pressure"]) * 33.86389)
     data = []
-    
+
     # Note: the conversion from int back to str for the temperature is necessary due
     # to encoding issues.
     data1 = [
@@ -57,11 +57,11 @@ def get_weather(location, config, units, weather_codes):
         data3.append(["High", "%d %s" % (int(i["high"]), units["temp"])])
         if j != len(result["forecasts"]) - 1:
             data3.append(["", ""])
-    
+
     data.append(data1)
     data.append(data2)
     data.append(data3)
-    
+
     # Get the prefill data.
     prefill_data = [
         float(result["condition"]["temp"]),
@@ -73,5 +73,5 @@ def get_weather(location, config, units, weather_codes):
         ["Steady", "Rising", "Falling"][int(result["atmosphere"]["rising"])],
         float(result["atmosphere"]["visibility"])
     ]
-    
+
     return result["location"]["city"], data, prefill_data
