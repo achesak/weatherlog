@@ -16,6 +16,8 @@ from weatherlog_resources.dialogs.calendar_dialog import CalendarDialog
 import weatherlog_resources.dialogs.pywapi.pywapi as pywapi
 # Import function to convert degrees to a wind direction.
 import weatherlog_resources.degrees as degrees
+# Import functions for getting the weather.
+import weatherlog_resources.get_weather as get_weather
 
 
 class AddNewDialog(Gtk.Dialog):
@@ -243,7 +245,19 @@ class AddNewDialog(Gtk.Dialog):
         
         # Pre-fill the fields, if the user wants that.
         elif prefill and user_location and len(user_location) == 5:
-            station = self.prefill(user_location, units, profile)
+            station, data = get_weather.get_prefill_data(user_location, units)
+            
+            if not station:
+                show_error_dialog(self, "Add New Data- %s" % profile, "Error:\n\n%s" % data["error"])
+            else:
+                self.temp_sbtn.set_value(data["temp"])
+                self.chil_sbtn.set_value(data["chil"])
+                self.wind_com.set_active(["None", "N", "NNE", "NE", "ENE", "E", "ESE", "SE", "SSE", "S", "SSW", "SW", "WSW", "W", "WNW", "NW", "NNW"].index(degrees.degree_to_direction(data["wind_dir"])))
+                self.wind_sbtn.set_value(data["wind"])
+                self.humi_sbtn.set_value(data["humi"])
+                self.airp_sbtn.set_value(data["airp"])
+                self.airp_com.set_active(data["airp_change"])
+                self.visi_sbtn.set_value(data["visi"])
         
         # Connect 'Enter' key to the OK button.
         ok_btn = self.get_widget_for_response(response_id = Gtk.ResponseType.OK)
@@ -256,51 +270,6 @@ class AddNewDialog(Gtk.Dialog):
         # Show the dialog saying data has been prefilled.
         if show_prefill_dlg and prefill and user_location and len(user_location) == 5 and station:
             show_alert_dialog(self, "Add New Data - %s" % profile, "Some fields have been automatically filled using data from Yahoo! Weather.\n\nLocation is set to %s, at %s." % (user_location, station))
-    
-    
-    def prefill(self, user_location, units, profile):
-        """Pre-fill the fields."""
-        
-        # Get the data.
-        data = pywapi.get_weather_from_yahoo(user_location, units = ("metric" if units["prec"] == "cm" else "imperial"))
-        if "error" in data:
-            show_error_dialog(self, "Add New Data- %s" % profile, "Error:\n\n%s" % data["error"])
-            return False
-        
-        # Set the temperature field.
-        self.temp_sbtn.set_value(float(data["condition"]["temp"]))
-        
-        # Set the wind chill field.
-        self.chil_sbtn.set_value(float(data["wind"]["chill"]))
-        
-        # Set the wind fields.
-        try:
-            self.wind_com.set_active(["None", "N", "NNE", "NE", "ENE", "E", "ESE", "SE", "SSE", "S", "SSW", "SW", "WSW", "W", "WNW", "NW", "NNW"].index(degrees.degree_to_direction(float(data["wind"]["direction"]))))
-        except:
-            self.wind_com.set_active(0)
-        try:
-            self.wind_sbtn.set_value(float(data["wind"]["speed"]))
-        except:
-            self.wind_sbtn.set_value(0.0)
-        
-        # Set the humidity field.
-        self.humi_sbtn.set_value(float(data["atmosphere"]["humidity"]))
-        
-        # Set the air pressure fields.
-        self.airp_sbtn.set_value(float(data["atmosphere"]["pressure"]))
-        if units["airp"] == "mbar":
-            new_pressure = float(data["atmosphere"]["pressure"]) * 33.86389
-            self.airp_sbtn.set_value(new_pressure)
-        self.airp_com.set_active(int(data["atmosphere"]["rising"]))
-        
-        # Set the visibility field.
-        if data["atmosphere"]["visibility"].lstrip().rstrip() == "":
-           self.visi_sbtn.set_value(0.0)
-        else:
-            self.visi_sbtn.set_value(float(data["atmosphere"]["visibility"]))
-        
-        # Return the location.
-        return "%s, %s" % (data["location"]["city"], data["location"]["country"])
     
     
     def select_date(self, event):

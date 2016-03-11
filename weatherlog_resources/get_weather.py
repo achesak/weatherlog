@@ -75,3 +75,34 @@ def get_weather(location, config, units, weather_codes):
     ]
 
     return result["location"]["city"], data, prefill_data
+
+
+def get_prefill_data(user_location, units):
+    """Gets the data used to automatically fill Add New dialog."""
+    
+    # Get the data.
+    data = pywapi.get_weather_from_yahoo(user_location, units = ("metric" if units["prec"] == "cm" else "imperial"))
+    if "error" in data:
+        return False, data["error"]
+    
+    pre = {
+        "temp": float(data["condition"]["temp"]),
+        "chil": float(data["wind"]["chill"]),
+        "wind": float(data["wind"]["speed"]),
+        "wind_dir": float(data["wind"]["direction"]),
+        "humi": float(data["atmosphere"]["humidity"]),
+        "airp": float(data["atmosphere"]["pressure"]),
+        "airp_change": int(data["atmosphere"]["rising"])
+    }
+    
+    if units["airp"] == "mbar":
+        pre["airp"] *= 33.86389
+    
+    if data["atmosphere"]["visibility"].lstrip().rstrip() == "":
+        pre["visi"] = 0.0
+    else:
+        pre["visi"] = float(data["atmosphere"]["visibility"])
+    
+    location = "%s, %s" % (data["location"]["city"], data["location"]["country"])
+    
+    return location, pre
