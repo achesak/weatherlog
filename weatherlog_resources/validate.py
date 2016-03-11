@@ -24,7 +24,7 @@ validate_dataset_strings = {ImportValidation.VALID: "No error, this should never
 
 
 def validate_profile(main_dir, name):
-    """Validates a profile name."""
+    """Validates a dataset name."""
     
     if not name:
         return "The dataset name \"%s\" is not valid. Dataset names may not be blank."
