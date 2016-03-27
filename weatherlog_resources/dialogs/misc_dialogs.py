@@ -83,10 +83,10 @@ def show_save_dialog(self, title):
     return [response, filename]
 
 
-def show_no_data_dialog(master, title):
+def show_no_data_dialog(master, title, message = "There is no data to display."):
     """Show the dialog to tell the user there is no info."""
     
     err_miss_dlg = Gtk.MessageDialog(master, 0, Gtk.MessageType.INFO, Gtk.ButtonsType.OK, title)
-    err_miss_dlg.format_secondary_text("There is no data to display.")
+    err_miss_dlg.format_secondary_text(message)
     err_miss_dlg.run()
     err_miss_dlg.destroy()

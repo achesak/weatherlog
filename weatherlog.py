@@ -1589,7 +1589,7 @@ class WeatherLog(Gtk.Window):
         
         # If there is no data, tell the user and don't continue.
         if len(self.data) == 0:
-            show_no_data_dialog(self, "Copy Data to New Dataset")
+            show_no_data_dialog(self, "Copy Data to New Dataset", message = "There is no data to copy.")
             return
         
         # Get the dates.
@@ -1661,7 +1661,7 @@ class WeatherLog(Gtk.Window):
         
         # If there is no data, tell the user and don't continue.
         if len(self.data) == 0:
-            show_no_data_dialog(self, "Copy Data to Existing Dataset")
+            show_no_data_dialog(self, "Copy Data to Existing Dataset", message = "There is no data to copy.")
             return
         
         # Get the dates.
