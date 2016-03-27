@@ -1002,7 +1002,7 @@ class WeatherLog(Gtk.Window):
         if response != Gtk.ResponseType.OK:
             return
             
-        # Confirm that the user wants to overwrite the data, if the current profile isn't blank.
+        # Confirm that the user wants to overwrite the data, if the current dataset isn't blank.
         if len(self.data) > 0:
             response2 = show_question_dialog(self, "Import - %s" % self.last_profile, "Are you sure you want to import the data?\n\nAll current data will be overwritten.")
             if response2 != Gtk.ResponseType.OK:
@@ -1135,9 +1135,9 @@ class WeatherLog(Gtk.Window):
     
     
     def import_new_dataset(self, event):
-        """Imports data from a file and inserts it in a new profile."""
+        """Imports data from a file and inserts it in a new dataset."""
         
-        # Get the new profile name.
+        # Get the new dataset name.
         new_dlg = DatasetNameDialog(self, "Import as New Dataset")
         response = new_dlg.run()
         name = new_dlg.nam_ent.get_text().lstrip().rstrip()
@@ -1319,7 +1319,7 @@ class WeatherLog(Gtk.Window):
             if response != Gtk.ResponseType.OK:
                 return
 
-        # Clear the old data and reset the profile name.
+        # Clear the old data and reset the dataset name.
         self.data[:] = []
         self.liststore.clear()
         self.last_profile = "Main Dataset"
@@ -1350,17 +1350,17 @@ class WeatherLog(Gtk.Window):
     
     
     def switch_dataset(self, event):
-        """Switches profiles."""
+        """Switches datasets."""
         
-        # Get the list of profiles
+        # Get the list of datasets.
         profiles = io.get_profile_list(self.main_dir, self.last_profile)
         
-        # If there are no other profiles, cancel the action.
+        # If there are no other datasets, cancel the action.
         if len(profiles) == 0:
             show_alert_dialog(self, "Switch Dataset", "There are no other datasets.")
             return
         
-        # Get the profile to switch to.
+        # Get the dataset to switch to.
         swi_dlg = DatasetSelectionDialog(self, "Switch Dataset", profiles)
         response = swi_dlg.run()
         model, treeiter = swi_dlg.treeview.get_selection().get_selected()
@@ -1370,12 +1370,12 @@ class WeatherLog(Gtk.Window):
         if response != Gtk.ResponseType.OK or treeiter == None:
             return
         
-        # Get the profile name and clear the old data.
+        # Get the dataset name and clear the old data.
         name = model[treeiter][0]
         self.data[:] = []
         self.liststore.clear()
         
-        # Read the data and switch to the other profile.
+        # Read the data and switch to the other dataset.
         self.data = io.read_profile(main_dir = self.main_dir, name = name)
         self.last_profile = name
         self.update_list()
@@ -1388,7 +1388,7 @@ class WeatherLog(Gtk.Window):
     def add_dataset(self, event):
         """Adds a new dataset."""
         
-        # Get the name for the new profile.
+        # Get the name for the new dataset.
         new_dlg = DatasetNameDialog(self, "Add Dataset")
         response = new_dlg.run()
         name = new_dlg.nam_ent.get_text().lstrip().rstrip()
@@ -1404,16 +1404,16 @@ class WeatherLog(Gtk.Window):
             show_error_dialog(self, "Add Dataset", valid)
             return
         
-        # If the name is already in use, ask the user is they want to delete the old profile.
+        # If the name is already in use, ask the user is they want to delete the old dataset.
         elif valid.endswith("already in use."):
             del_old = show_question_dialog(self, "Add Dataset", "%s\n\nWould you like to delete the existing dataset?" % valid)
             if del_old != Gtk.ResponseType.OK:
                 return
             
-            # Delete the existing profile.
+            # Delete the existing dataset.
             shutil.rmtree("%s/profiles/%s" % (self.main_dir, name))
         
-        # Create the new profile and clear the old data.
+        # Create the new dataset and clear the old data.
         io.write_blank_profile(self.main_dir, name)
         launch.create_metadata(self.main_dir, name)
         self.last_profile = name
@@ -1428,15 +1428,15 @@ class WeatherLog(Gtk.Window):
     def remove_dataset(self, event):
         """Removes a dataset."""
         
-        # Get the list of profiles.
+        # Get the list of datasets.
         profiles = io.get_profile_list(self.main_dir, self.last_profile)
         
-        # If there are no other profiles, cancel the action.
+        # If there are no other datasets, cancel the action.
         if len(profiles) == 0:
             show_alert_dialog(self, "Remove Datasets", "There are no other datasets.")
             return
         
-        # Get the profiles to remove.
+        # Get the datasets to remove.
         rem_dlg = DatasetSelectionDialog(self, "Remove Datasets", profiles, select_mode = DatasetSelectionMode.MULTIPLE)
         response = rem_dlg.run()
         model, treeiter = rem_dlg.treeview.get_selection().get_selected_rows()
@@ -1446,7 +1446,7 @@ class WeatherLog(Gtk.Window):
         if response != Gtk.ResponseType.OK or treeiter == None:
             return
         
-        # Get the profiles.
+        # Get the datasets.
         profiles = []
         for i in treeiter:
             profiles.append(model[i][0])
@@ -1457,7 +1457,7 @@ class WeatherLog(Gtk.Window):
             if response != Gtk.ResponseType.OK:
                 return
         
-        # Delete the selected profiles.
+        # Delete the selected datasets.
         for name in profiles:
             shutil.rmtree("%s/profiles/%s" % (self.main_dir, name))
     
@@ -1465,7 +1465,7 @@ class WeatherLog(Gtk.Window):
     def rename_dataset(self, event):
         """Renames the current dataset."""
         
-        # Get the new profile name.
+        # Get the new dataset name.
         ren_dlg = DatasetNameDialog(self, "Rename Current Dataset", message = "Enter new dataset name:")
         response = ren_dlg.run()
         name = ren_dlg.nam_ent.get_text().lstrip().rstrip()
@@ -1481,13 +1481,13 @@ class WeatherLog(Gtk.Window):
             show_error_dialog(self, "Rename Current Dataset", valid)
             return
         
-        # If the name is already in use, ask the user is they want to delete the old profile.
+        # If the name is already in use, ask the user is they want to delete the old dataset.
         elif valid.endswith("already in use."):
             del_old = show_question_dialog(self, "Rename Current Dataset", "%s\n\nWould you like to delete the existing dataset?" % valid)
             if del_old != Gtk.ResponseType.OK:
                 return
             
-            # Delete the existing profile.
+            # Delete the existing dataset.
             shutil.rmtree("%s/profiles/%s" % (self.main_dir, name))
             
         # Rename the directory.
@@ -1501,7 +1501,7 @@ class WeatherLog(Gtk.Window):
         self.data[:] = []
         self.liststore.clear()
         
-        # Read the data and switch to the new profile.
+        # Read the data and switch to the new dataset.
         self.data = io.read_profile(main_dir = self.main_dir, name = name)
         self.last_profile = name
         self.update_list()
@@ -1552,13 +1552,13 @@ class WeatherLog(Gtk.Window):
             show_error_dialog(self, "Merge Datasets", valid)
             return
         
-        # If the name is already in use, ask the user is they want to delete the old profile.
+        # If the name is already in use, ask the user is they want to delete the old dataset.
         elif valid.endswith("already in use."):
             del_old = show_question_dialog(self, "Merge Datasets", "%s\n\nWould you like to delete the existing dataset?" % valid)
             if del_old != Gtk.ResponseType.OK:
                 return
             
-            # Delete the existing profile.
+            # Delete the existing dataset.
             shutil.rmtree("%s/profiles/%s" % (self.main_dir, merge_name))
         
         # Build the new data list.
@@ -1606,7 +1606,7 @@ class WeatherLog(Gtk.Window):
             dates.append([i[0]])
             dates2.append(i[0])
         
-        # Get the profile name.
+        # Get the dataset name.
         new_dlg = DatasetNameDialog(self, "Copy Data to New Dataset")
         response = new_dlg.run()
         name = new_dlg.nam_ent.get_text().lstrip().rstrip()
@@ -1648,7 +1648,7 @@ class WeatherLog(Gtk.Window):
             if self.data[i][0] in ndates:
                 ndata.append(self.data[i])
         
-        # If the user wants to move the data, delete the items in the current profile.
+        # If the user wants to move the data, delete the items in the current dataset.
         if response == DialogResponse.MOVE_DATA:
             
             self.data = [x for x in data if x[0] not in ndates]
@@ -1659,7 +1659,7 @@ class WeatherLog(Gtk.Window):
             # Update the title.
             self.update_title()
         
-        # Put the data in the new profile.
+        # Put the data in the new dataset.
         io.write_profile(main_dir = self.main_dir, name = name, data = ndata)
     
     
@@ -1678,15 +1678,15 @@ class WeatherLog(Gtk.Window):
             dates.append([i[0]])
             dates2.append(i[0])
         
-        # Get the profile list.
+        # Get the dataset list.
         profiles = io.get_profile_list(self.main_dir, self.last_profile)
         
-        # If there are no other profiles, don't continue.
+        # If there are no other datasets, don't continue.
         if len(profiles) == 0:
             show_alert_dialog(self, "Copy Data to Existing Dataset", "There are no other datasets.")
             return
         
-        # Get the profile.
+        # Get the dataset.
         exi_dlg = DatasetSelectionDialog(self, "Copy Data to Existing Dataset", profiles)
         response = exi_dlg.run()
         model, treeiter = exi_dlg.treeview.get_selection().get_selected()
@@ -1696,7 +1696,7 @@ class WeatherLog(Gtk.Window):
         if response != Gtk.ResponseType.OK or treeiter == None:
             return
             
-        # Get the profile name.
+        # Get the dataset name.
         name = model[treeiter][0]
         
         # Get the dates to move or copy.
@@ -1721,7 +1721,7 @@ class WeatherLog(Gtk.Window):
             if self.data[i][0] in ndates:
                 ndata.append(self.data[i])
 
-        # If the user wants to move the data, delete the items in the current profile.
+        # If the user wants to move the data, delete the items in the current dataset.
         if response == DialogResponse.MOVE_DATA:
             
             self.data = [x for x in data if x[0] not in ndates]
@@ -1873,10 +1873,10 @@ class WeatherLog(Gtk.Window):
     def save(self, from_options = False):
         """Saves the data."""
         
-        # If saving the options, don't write all the profile data.
+        # If saving the options, don't write all the dataset data.
         if not from_options:
             
-            # Save the current profile.
+            # Save the current dataset.
             io.write_profile(self.main_dir, self.last_profile, data = self.data)
             
             # Save the creation and last modified dates.
@@ -1885,7 +1885,7 @@ class WeatherLog(Gtk.Window):
             creation, modified2 = io.get_metadata(self.main_dir, self.last_profile)
             io.write_metadata(self.main_dir, self.last_profile, creation, modified)
             
-            # Save the last profile.
+            # Save the last dataset.
             io.write_last_profile(self.conf_dir, self.last_profile)
         
         # Save the configuration.
