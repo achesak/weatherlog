@@ -83,7 +83,7 @@ def write_standard_file(filename, data):
         print("Error saving data file (IOError).")
 
 
-def get_profile_list(main_dir, last_profile):
+def get_profile_list(main_dir, last_profile, exclude_current = True):
     """Gets the list of profiles."""
 
     # Remember the correct directory and switch to where the profiles are stored.
@@ -92,7 +92,8 @@ def get_profile_list(main_dir, last_profile):
 
     # Get the list of profiles, remove the current profile, and sort the list.
     profiles = glob.glob("*")
-    profiles = list(set(profiles) - set([last_profile]))
+    if exclude_current:
+        profiles = list(set(profiles) - set([last_profile]))
     profiles.sort()
 
     # Get the creation and last modified dates.

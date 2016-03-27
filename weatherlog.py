@@ -1437,7 +1437,7 @@ class WeatherLog(Gtk.Window):
             return
         
         # Get the profiles to remove.
-        rem_dlg = DatasetSelectionDialog(self, "Remove Datasets", profiles, select_mode = "multiple")
+        rem_dlg = DatasetSelectionDialog(self, "Remove Datasets", profiles, select_mode = DatasetSelectionMode.MULTIPLE)
         response = rem_dlg.run()
         model, treeiter = rem_dlg.treeview.get_selection().get_selected_rows()
         rem_dlg.destroy()
@@ -1514,15 +1514,15 @@ class WeatherLog(Gtk.Window):
         """Merges two datasets."""
         
         # Get the list of profiles.
-        profiles = io.get_profile_list(self.main_dir, self.last_profile)
+        profiles = io.get_profile_list(self.main_dir, self.last_profile, exclude_current = False)
         
         # If there are no other profiles, tell the user and cancel the action.
-        if len(profiles) == 0:
+        if len(profiles) == 0 or len(profiles) == 1:
             show_alert_dialog(self, "Merge Datasets", "There are no other datasets.")
             return
         
         # Get the profile to merge.
-        mer_dlg = DatasetSelectionDialog(self, "Merge Datasets", profiles)
+        mer_dlg = DatasetSelectionDialog(self, "Merge Datasets", profiles, select_mode = DatasetSelectionMode.MULTIPLE)
         response = mer_dlg.run()
         model, treeiter = mer_dlg.treeview.get_selection().get_selected()
         mer_dlg.destroy()

@@ -6,12 +6,14 @@
 
 # Import GTK for the dialog.
 from gi.repository import Gtk
+# Import the application constants.
+from weatherlog_resources.constants import *
 
 
 class DatasetSelectionDialog(Gtk.Dialog):
     """Shows the dataset selection dialog."""
     
-    def __init__(self, parent, title, datasets, select_mode = "single"):
+    def __init__(self, parent, title, datasets, select_mode = DatasetSelectionMode.SINGLE):
         """Create the dialog."""
         
         # Create the dialog.
@@ -39,7 +41,7 @@ class DatasetSelectionDialog(Gtk.Dialog):
         self.treeview.append_column(self.mod_col)
         
         # Allow for multiple items to be selected, if appropriate.
-        if select_mode == "multiple":
+        if select_mode == DatasetSelectionMode.MULTIPLE:
             self.treeview.get_selection().set_mode(Gtk.SelectionMode.MULTIPLE)
         
         # Add the profiles.
