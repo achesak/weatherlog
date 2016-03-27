@@ -1001,18 +1001,18 @@ class WeatherLog(Gtk.Window):
         # If the user did not click OK, don't continue.
         if response != Gtk.ResponseType.OK:
             return
-            
-        # Confirm that the user wants to overwrite the data, if the current dataset isn't blank.
-        if len(self.data) > 0:
-            response2 = show_question_dialog(self, "Import - %s" % self.last_profile, "Are you sure you want to import the data?\n\nAll current data will be overwritten.")
-            if response2 != Gtk.ResponseType.OK:
-                return
         
         # If the imported data is invalid, don't continue.
         validate_error = validate.validate_data(filename)
         if validate_error != ImportValidation.VALID:
             show_error_dialog(self, "Import - %s" % self.last_profile, "The data in the selected file is not valid. %s" % validate.validate_dataset_strings[validate_error])
             return
+            
+        # Confirm that the user wants to overwrite the data, if the current dataset isn't blank.
+        if len(self.data) > 0:
+            response2 = show_question_dialog(self, "Import - %s" % self.last_profile, "Are you sure you want to import the data?\n\nAll current data will be overwritten.")
+            if response2 != Gtk.ResponseType.OK:
+                return
         
         # Read the data.
         ndata = io.read_profile(filename = filename)
@@ -1136,6 +1136,19 @@ class WeatherLog(Gtk.Window):
     
     def import_new_dataset(self, event):
         """Imports data from a file and inserts it in a new dataset."""
+
+        # Get the filename.
+        response, filename = show_file_dialog(self, "Import as New Dataset - %s" % name)
+        
+        # If the user did not press OK, don't continue.
+        if response != Gtk.ResponseType.OK:
+            return
+        
+        # If the imported data is invalid, don't continue.
+        validate_error = validate.validate_data(filename)
+        if validate_error != ImportValidation.VALID:
+            show_error_dialog(self, "Import as New Dataset - %s" % name, "The data in the selected file is not valid. %s" % validate.validate_dataset_strings[validate_error])
+            return
         
         # Get the new dataset name.
         new_dlg = DatasetNameDialog(self, "Import as New Dataset")
@@ -1152,19 +1165,6 @@ class WeatherLog(Gtk.Window):
         valid = validate.validate_profile(self.main_dir, name)
         if valid != "":
             show_error_dialog(self, "Import as New Dataset", valid)
-            return
-
-        # Get the filename.
-        response, filename = show_file_dialog(self, "Import as New Dataset - %s" % name)
-        
-        # If the user did not press OK, don't continue.
-        if response != Gtk.ResponseType.OK:
-            return
-        
-        # If the imported data is invalid, don't continue.
-        validate_error = validate.validate_data(filename)
-        if validate_error != ImportValidation.VALID:
-            show_error_dialog(self, "Import as New Dataset - %s" % name, "The data in the selected file is not valid. %s" % validate.validate_dataset_strings[validate_error])
             return
         
         # Read the data.
