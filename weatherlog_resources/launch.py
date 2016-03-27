@@ -93,7 +93,7 @@ def get_main_dir():
 def get_ui_info():
     """Get the application's UI info."""
 
-    version = "4.1"
+    version = "4.2"
     title = "WeatherLog"
     menu_file = open("weatherlog_resources/menu.xml", "r")
     menu_data = menu_file.read()
