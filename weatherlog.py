@@ -202,7 +202,7 @@ class WeatherLog(Gtk.Window):
         action_group.add_actions([
             ("weather_menu", None, "_Weather"),
             ("add_new", Gtk.STOCK_ADD, "Add _New Data...", "<Control>n", "Add a new day to the list", self.add_new),
-            ("edit", None, "_Edit Data...", "<Control>e", None, self.edit),
+            ("edit", Gtk.STOCK_EDIT, "_Edit Data...", "<Control>e", None, self.edit),
             ("remove", Gtk.STOCK_REMOVE, "Remo_ve Data...", "<Control>r", "Remove a day from the list", self.remove),
             ("clear_data", Gtk.STOCK_CLEAR, "Clear Current _Data...", None, "Clear the data", self.clear),
             ("clear_all", None, "Clear _All Data...", None, None, self.clear_all),

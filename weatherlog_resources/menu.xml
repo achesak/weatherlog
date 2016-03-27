@@ -58,6 +58,7 @@
   </menubar>
   <toolbar name="toolbar">
     <toolitem action="add_new" />
+    <toolitem action="edit" />
     <toolitem action="remove" />
     <separator />
     <toolitem action="info" />
