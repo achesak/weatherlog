@@ -30,7 +30,7 @@ class GenericGraphDialog(Gtk.Dialog):
                    "Stars": "*", "Dots": ".", "Small circles": "o", "Large circles": "O"}
         
         # Create the dialog.
-        Gtk.Dialog.__init__(self, title, parent, Gtk.DialogFlags.MODAL)
+        Gtk.Dialog.__init__(self, title, parent)
         self.set_default_size(1000, 600)
         self.add_button("Close", Gtk.ResponseType.CLOSE)
         
