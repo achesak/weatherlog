@@ -235,7 +235,7 @@ class WeatherLog(Gtk.Window):
             ("switch_dataset", None, "_Switch Dataset...", "<Control><Shift>s", None, self.switch_dataset),
             ("add_dataset", None, "_Add Dataset...", "<Control><Shift>n", None, self.add_dataset),
             ("remove_dataset", None, "_Remove Datasets...", None, None, self.remove_dataset),
-            ("rename_dataset", None, "Re_name Current Dataset...", None, None, self.rename_dataset),
+            ("rename_dataset", None, "Re_name Dataset...", None, None, self.rename_dataset),
             ("merge_datasets", None, "_Merge Datasets...", None, None, self.merge_datasets),
             ("copy_new", None, "Copy _Data to New Dataset...", None, None, self.data_dataset_new),
             ("copy_existing", None, "Copy Data to _Existing Dataset...", None, None, self.data_dataset_existing)
@@ -1402,48 +1402,77 @@ class WeatherLog(Gtk.Window):
     
     
     def rename_dataset(self, event):
-        """Renames the current dataset."""
+        """Renames a dataset."""
+        
+        # Get the list of datasets.
+        profiles = io.get_profile_list(self.main_dir, self.last_profile, exclude_current = False)
+        
+        # If there are no other datasets, tell the user and cancel the action.
+        if len(profiles) == 0:
+            show_alert_dialog(self, "Rename Dataset", "There are no other datasets.")
+            return
+        
+        # Get the dataset to rename.
+        rds_dlg = DatasetSelectionDialog(self, "Rename Dataset", profiles)
+        response = rds_dlg.run()
+        model, treeiter = rds_dlg.treeview.get_selection().get_selected()
+        rds_dlg.destroy()
+        
+        # If the user did not press OK or nothing was selected, don't continue:
+        if response != Gtk.ResponseType.OK or treeiter == None:
+            return
+        
+        # Get the dataset name.
+        old_name = model[treeiter][0]
         
         # Get the new dataset name.
-        ren_dlg = DatasetNameDialog(self, "Rename Current Dataset", message = "Enter new dataset name:")
+        ren_dlg = DatasetNameDialog(self, "Rename Dataset", message = "Enter new dataset name: ")
         response = ren_dlg.run()
-        name = ren_dlg.nam_ent.get_text().lstrip().rstrip()
+        new_name = ren_dlg.nam_ent.get_text().lstrip().rstrip()
         ren_dlg.destroy()
         
         # If the user did not press OK, don't continue:
         if response != Gtk.ResponseType.OK:
             return
         
+        # If the name is the old name, don't continue.
+        if new_name == old_name:
+            show_error_dialog(self, "Rename Dataset", "The new name is the same as the old name.")
+            return
+        
         # Validate the name. If the name isn't valid, don't continue.
-        valid = validate.validate_profile(self.main_dir, name)
+        valid = validate.validate_profile(self.main_dir, new_name)
         if valid.endswith("\".\")."):
-            show_error_dialog(self, "Rename Current Dataset", valid)
+            show_error_dialog(self, "Rename Dataset", valid)
             return
         
         # If the name is already in use, ask the user is they want to delete the old dataset.
         elif valid.endswith("already in use."):
-            del_old = show_question_dialog(self, "Rename Current Dataset", "%s\n\nWould you like to delete the existing dataset?" % valid)
+            del_old = show_question_dialog(self, "Rename Dataset", "%s\n\nWould you like to delete the existing dataset?" % valid)
             if del_old != Gtk.ResponseType.OK:
                 return
             
             # Delete the existing dataset.
-            shutil.rmtree("%s/profiles/%s" % (self.main_dir, name))
+            shutil.rmtree("%s/profiles/%s" % (self.main_dir, new_name))
             
         # Rename the directory.
-        os.rename("%s/profiles/%s" % (self.main_dir, self.last_profile), "%s/profiles/%s" % (self.main_dir, name))
+        os.rename("%s/profiles/%s" % (self.main_dir, old_name), "%s/profiles/%s" % (self.main_dir, new_name))
         now = datetime.datetime.now()
         modified = "%d/%d/%d" % (now.day, now.month, now.year)
-        creation, modified2 = io.get_metadata(main_dir, last_profile)
-        io.write_metadata(self.main_dir, self.last_profile, creation, modified)
+        creation, modified2 = io.get_metadata(self.main_dir, new_name)
+        io.write_metadata(self.main_dir, new_name, creation, modified)
         
-        # Clear the old data.
-        self.data[:] = []
-        self.liststore.clear()
-        
-        # Read the data and switch to the new dataset.
-        self.data = io.read_profile(main_dir = self.main_dir, name = name)
-        self.last_profile = name
-        self.update_list()
+        # If the renamed dataset is the open one, switch to the renamed dataset:
+        if old_name == self.last_profile:
+            
+            # Clear the old data.
+            self.data[:] = []
+            self.liststore.clear()
+            
+            # Read the data and switch to the new dataset.
+            self.data = io.read_profile(main_dir = self.main_dir, name = new_name)
+            self.last_profile = new_name
+            self.update_list()
         
         # Update the title.
         self.update_title()
