@@ -1368,15 +1368,15 @@ class WeatherLog(Gtk.Window):
         """Removes a dataset."""
         
         # Get the list of datasets.
-        profiles = io.get_profile_list(self.main_dir, self.last_profile)
+        starting_profiles = io.get_profile_list(self.main_dir, self.last_profile, exclude_current = False)
         
         # If there are no other datasets, cancel the action.
-        if len(profiles) == 0:
+        if len(starting_profiles) == 0:
             show_alert_dialog(self, "Remove Datasets", "There are no other datasets.")
             return
         
         # Get the datasets to remove.
-        rem_dlg = DatasetSelectionDialog(self, "Remove Datasets", profiles, select_mode = DatasetSelectionMode.MULTIPLE)
+        rem_dlg = DatasetSelectionDialog(self, "Remove Datasets", starting_profiles, select_mode = DatasetSelectionMode.MULTIPLE)
         response = rem_dlg.run()
         model, treeiter = rem_dlg.treeview.get_selection().get_selected_rows()
         rem_dlg.destroy()
@@ -1399,6 +1399,31 @@ class WeatherLog(Gtk.Window):
         # Delete the selected datasets.
         for name in profiles:
             shutil.rmtree("%s/profiles/%s" % (self.main_dir, name))
+        
+        # If the user deleted all the datasets, create a new one.
+        if len(profiles) == len(starting_profiles):
+            self.last_profile, a, b = launch.get_last_profile(self.main_dir, self.conf_dir)
+            self.data = io.read_profile(main_dir = self.main_dir, name = self.last_profile)
+            launch.create_metadata(self.main_dir, self.last_profile)
+        
+        # If the user did not delete all the datasets but deleted the current one, switch to the "first" of the rest:
+        elif self.last_profile in profiles:
+            
+            # Get the profile name.
+            profile_list = io.get_profile_list(self.main_dir, self.last_profile, exclude_current = False)
+            if "Main Dataset" in datasets.get_column(profile_list, 0):
+                new_profile = "Main Dataset"
+            else:
+                new_profile = profile_list[0][0]
+            
+            # Read the data and switch to the other dataset.
+            self.data = io.read_profile(main_dir = self.main_dir, name = new_profile)
+            self.last_profile = new_profile
+        
+        # Update the title and save the data.
+        self.update_list()
+        self.update_title()
+        self.save()
     
     
     def rename_dataset(self, event):
