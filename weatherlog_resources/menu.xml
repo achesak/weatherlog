@@ -14,8 +14,8 @@
       <menuitem action="exit" />
     </menu>
     <menu action="file_menu">
-      <menuitem action="import" />
       <menuitem action="import_merge" />
+      <menuitem action="import_overwrite" />
       <menuitem action="import_dataset" />
       <separator />
       <menuitem action="export" />
@@ -63,7 +63,7 @@
     <separator />
     <toolitem action="info" />
     <separator />
-    <toolitem action="import" />
+    <toolitem action="import_merge" />
     <toolitem action="export" />
   </toolbar>
   <popup name="context_menu">

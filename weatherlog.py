@@ -212,8 +212,8 @@ class WeatherLog(Gtk.Window):
         ])
         action_group.add_actions([
             ("file_menu", None, "_File"),
-            ("import", Gtk.STOCK_OPEN, "_Import...", None, "Import data from a file", self.import_file),
-            ("import_merge", None, "Imp_ort and Merge...", "<Control><Shift>o", None, self.import_merge),
+            ("import_merge", Gtk.STOCK_OPEN, "_Import...", None, "Import data from a file", self.import_merge),
+            ("import_overwrite", None, "Import and _Overwrite...", "<Control><Shift>o", None, self.import_overwrite),
             ("import_dataset", None, "Import as New _Dataset...", None, None, self.import_new_dataset),
             ("export", Gtk.STOCK_SAVE, "_Export...", None, "Export data to a file", self.export_file),
             ("export_pastebin", None, "Export to _Pastebin...", None, None, self.export_pastebin)
@@ -992,8 +992,8 @@ class WeatherLog(Gtk.Window):
         sel_dlg = DataSubsetSelectionDialog(self, self.last_profile, self.data, self.config, self.units)
     
     
-    def import_file(self, event):
-        """Imports data from a file."""
+    def import_merge(self, event):
+        """Imports data and merges it into the current list."""
         
         # Get the filename.
         response, filename = show_file_dialog(self, "Import - %s" % self.last_profile)
@@ -1007,83 +1007,13 @@ class WeatherLog(Gtk.Window):
         if validate_error != ImportValidation.VALID:
             show_error_dialog(self, "Import - %s" % self.last_profile, "The data in the selected file is not valid. %s" % validate.validate_dataset_strings[validate_error])
             return
-            
-        # Confirm that the user wants to overwrite the data, if the current dataset isn't blank.
-        if len(self.data) > 0:
-            response2 = show_question_dialog(self, "Import - %s" % self.last_profile, "Are you sure you want to import the data?\n\nAll current data will be overwritten.")
-            if response2 != Gtk.ResponseType.OK:
-                return
-        
-        # Read the data.
-        ndata = io.read_profile(filename = filename)
-        
-        # Ask the user what dates they want to import.
-        if not self.config["import_all"]:
-            date_dlg = ImportSelectionDialog(self, "Import - %s" % self.last_profile, datasets.get_column(ndata, 0))
-            response = date_dlg.run()
-            model, treeiter = date_dlg.treeview.get_selection().get_selected_rows()
-            date_dlg.destroy()
-        
-        else:
-            response = DialogResponse.IMPORT_ALL
-        
-        # If the user did not press OK or nothing was selected, don't continue:
-        if response != DialogResponse.IMPORT_ALL and response != DialogResponse.IMPORT:
-            return
-        if response == DialogResponse.IMPORT and treeiter == None:
-            return
-        
-        # Clear the data.
-        self.data[:] = []
-        self.liststore.clear()
-        
-        # If the user selected certain dates, only import those.
-        if response == DialogResponse.IMPORT:
-            
-            # Get the dates.
-            dates = []
-            for i in treeiter:
-                dates.append(model[i][0])
-            
-            # Get the new data list.
-            for i in ndata:
-                if i[0] in dates:
-                    self.data.append(i)
-        
-        # If the user pressed Import All, import all of the data.
-        if response == DialogResponse.IMPORT_ALL:
-            self.data = ndata[:]
-        
-        # Add the data.
-        self.update_list()
-        
-        # Update the title and save the data.
-        self.update_title()
-        self.save()
-    
-    
-    def import_merge(self, event):
-        """Imports data and merges it into the current list."""
-        
-        # Get the filename.
-        response, filename = show_file_dialog(self, "Import and Merge - %s" % self.last_profile)
-        
-        # If the user did not click OK, don't continue.
-        if response != Gtk.ResponseType.OK:
-            return
-        
-        # If the imported data is invalid, don't continue.
-        validate_error = validate.validate_data(filename)
-        if validate_error != ImportValidation.VALID:
-            show_error_dialog(self, "Import and Merge - %s" % self.last_profile, "The data in the selected file is not valid. %s" % validate.validate_dataset_strings[validate_error])
-            return
         
         # Read the data.
         data2 = io.read_profile(filename = filename)
         
         # Ask the user what dates they want to import.
         if not self.config["import_all"]:
-            date_dlg = ImportSelectionDialog(self, "Import and Merge - %s" % self.last_profile, datasets.get_column(data2, 0))
+            date_dlg = ImportSelectionDialog(self, "Import - %s" % self.last_profile, datasets.get_column(data2, 0))
             response = date_dlg.run()
             model, treeiter = date_dlg.treeview.get_selection().get_selected_rows()
             date_dlg.destroy()
@@ -1131,7 +1061,77 @@ class WeatherLog(Gtk.Window):
         
         # Update the title and save the data.
         self.update_title()
-        self.save()      
+        self.save()
+    
+    
+    def import_overwrite(self, event):
+        """Imports data and overwrites the current dataset."""
+        
+        # Get the filename.
+        response, filename = show_file_dialog(self, "Import and Overwrite - %s" % self.last_profile)
+        
+        # If the user did not click OK, don't continue.
+        if response != Gtk.ResponseType.OK:
+            return
+        
+        # If the imported data is invalid, don't continue.
+        validate_error = validate.validate_data(filename)
+        if validate_error != ImportValidation.VALID:
+            show_error_dialog(self, "Import and Overwrite - %s" % self.last_profile, "The data in the selected file is not valid. %s" % validate.validate_dataset_strings[validate_error])
+            return
+            
+        # Confirm that the user wants to overwrite the data, if the current dataset isn't blank.
+        if len(self.data) > 0:
+            response2 = show_question_dialog(self, "Import and Overwrite - %s" % self.last_profile, "Are you sure you want to import the data?\n\nAll current data will be overwritten.")
+            if response2 != Gtk.ResponseType.OK:
+                return
+        
+        # Read the data.
+        ndata = io.read_profile(filename = filename)
+        
+        # Ask the user what dates they want to import.
+        if not self.config["import_all"]:
+            date_dlg = ImportSelectionDialog(self, "Import and Overwrite - %s" % self.last_profile, datasets.get_column(ndata, 0))
+            response = date_dlg.run()
+            model, treeiter = date_dlg.treeview.get_selection().get_selected_rows()
+            date_dlg.destroy()
+        
+        else:
+            response = DialogResponse.IMPORT_ALL
+        
+        # If the user did not press OK or nothing was selected, don't continue:
+        if response != DialogResponse.IMPORT_ALL and response != DialogResponse.IMPORT:
+            return
+        if response == DialogResponse.IMPORT and treeiter == None:
+            return
+        
+        # Clear the data.
+        self.data[:] = []
+        self.liststore.clear()
+        
+        # If the user selected certain dates, only import those.
+        if response == DialogResponse.IMPORT:
+            
+            # Get the dates.
+            dates = []
+            for i in treeiter:
+                dates.append(model[i][0])
+            
+            # Get the new data list.
+            for i in ndata:
+                if i[0] in dates:
+                    self.data.append(i)
+        
+        # If the user pressed Import All, import all of the data.
+        if response == DialogResponse.IMPORT_ALL:
+            self.data = ndata[:]
+        
+        # Add the data.
+        self.update_list()
+        
+        # Update the title and save the data.
+        self.update_title()
+        self.save()
     
     
     def import_new_dataset(self, event):
