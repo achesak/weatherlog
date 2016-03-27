@@ -11,7 +11,7 @@ from gi.repository import Gtk
 class DatasetNameDialog(Gtk.Dialog):
     """Shows the dialog for adding a dataset."""
     
-    def __init__(self, parent, title, message = "Enter dataset name:"):
+    def __init__(self, parent, title, message = "Enter dataset name:", default_text = ""):
         """Create the dialog."""
         
         # Create the dialog.
@@ -27,6 +27,7 @@ class DatasetNameDialog(Gtk.Dialog):
         
         # Create the label and entry.
         self.nam_ent = Gtk.Entry()
+        self.nam_ent.set_text(default_text)
         nam_frame.add(self.nam_ent)
         
         # Connect 'Enter' key to the OK button.

@@ -1513,48 +1513,73 @@ class WeatherLog(Gtk.Window):
     def merge_datasets(self, event):
         """Merges two datasets."""
         
-        # Get the list of profiles.
+        # Get the list of datasets.
         profiles = io.get_profile_list(self.main_dir, self.last_profile, exclude_current = False)
         
-        # If there are no other profiles, tell the user and cancel the action.
+        # If there are no other datasets, tell the user and cancel the action.
         if len(profiles) == 0 or len(profiles) == 1:
             show_alert_dialog(self, "Merge Datasets", "There are no other datasets.")
             return
         
-        # Get the profile to merge.
+        # Get the datasets to merge.
         mer_dlg = DatasetSelectionDialog(self, "Merge Datasets", profiles, select_mode = DatasetSelectionMode.MULTIPLE)
         response = mer_dlg.run()
-        model, treeiter = mer_dlg.treeview.get_selection().get_selected()
+        model, treeiter = mer_dlg.treeview.get_selection().get_selected_rows()
         mer_dlg.destroy()
         
         # If the user did not press OK or nothing was selected, don't continue:
         if response != Gtk.ResponseType.OK or treeiter == None:
             return
         
-        # Get the profile name and read the data.
-        name = model[treeiter][0]
-        data2 = io.read_profile(main_dir = self.main_dir, name = name)
+        # Get the datasets.
+        profiles = []
+        for i in treeiter:
+            profiles.append(model[i][0])
         
-        # Filter the new data to make sure there are no duplicates.
-        new_data = []
-        date_col = datasets.get_column(self.data, 0)
-        for i in data2:
+        # Get the name for the new dataset.
+        nam_dlg = DatasetNameDialog(self, "Merge Datasets", message = "Enter dataset name: ", default_text = profiles[0])
+        response = nam_dlg.run()
+        merge_name = nam_dlg.nam_ent.get_text()
+        nam_dlg.destroy()
+        
+        # If the user did not press OK, don't continue:
+        if response != Gtk.ResponseType.OK:
+            return
+        
+        # Validate the name. If the name isn't valid, don't continue.
+        valid = validate.validate_profile(self.main_dir, merge_name)
+        if valid.endswith("\".\").") and merge_name not in profiles:
+            show_error_dialog(self, "Merge Datasets", valid)
+            return
+        
+        # Build the new data list.
+        new_data = io.read_profile(main_dir = self.main_dir, name = profiles[0])
+        for i in range(1, len(profiles)):
+            date_col = datasets.get_column(new_data, 0)
             
-            # If the date already appears, don't include it.
-            if i[0] not in date_col:
-                new_data.append(i)
+            # Read the data and merge the dates in if they do not already appear.
+            merge_data = io.read_profile(main_dir = self.main_dir, name = profiles[i])
+            for row in merge_data:
+                if row[0] not in date_col:
+                    new_data.append(row)
         
-        # Append, sort, and update the data.
-        self.data += new_data
+        # Sort and update the data.
+        self.data = new_data[:]
         self.data = sorted(self.data, key = lambda x: datetime.datetime.strptime(x[0], "%d/%m/%Y"))
         self.update_list()
         
-        # Update the title and save the data.
-        self.update_title()
-        self.save()
+        # Delete the old dataset files.
+        for profile in profiles:
+            shutil.rmtree("%s/profiles/%s" % (self.main_dir, profile))
         
-        # Delete the directory of the profile that was merged in.
-        shutil.rmtree("%s/profiles/%s" % (self.main_dir, name))
+        # Create the new dataset directory and metadata.
+        io.write_blank_profile(self.main_dir, merge_name)
+        launch.create_metadata(self.main_dir, merge_name)
+        self.last_profile = merge_name
+        
+        # Update the title.
+        self.save()
+        self.update_title()
         
     
     def data_dataset_new(self, event):
