@@ -212,8 +212,7 @@ class WeatherLog(Gtk.Window):
         ])
         action_group.add_actions([
             ("file_menu", None, "_File"),
-            ("import_merge", Gtk.STOCK_OPEN, "_Import...", None, "Import data from a file", self.import_merge),
-            ("import_overwrite", None, "Import and _Overwrite...", "<Control><Shift>o", None, self.import_overwrite),
+            ("import", Gtk.STOCK_OPEN, "_Import...", None, "Import data from a file", self.import_data),
             ("import_dataset", None, "Import as New _Dataset...", None, None, self.import_new_dataset),
             ("export", Gtk.STOCK_SAVE, "_Export...", None, "Export data to a file", self.export_file),
             ("export_pastebin", None, "Export to _Pastebin...", None, None, self.export_pastebin)
@@ -558,8 +557,6 @@ class WeatherLog(Gtk.Window):
         # Show the current weather.
         info_dlg = CurrentWeatherDialog(self, "Current Weather For %s" % city, data)
         response = info_dlg.run()
-        
-        # Close the dialog.
         info_dlg.destroy()
         
         # If the user clicked Export:
@@ -992,14 +989,14 @@ class WeatherLog(Gtk.Window):
         sel_dlg = DataSubsetSelectionDialog(self, self.last_profile, self.data, self.config, self.units)
     
     
-    def import_merge(self, event):
+    def import_data(self, event):
         """Imports data and merges it into the current list."""
         
         # Get the filename.
-        response, filename = show_file_dialog(self, "Import - %s" % self.last_profile)
+        response, filename = show_import_dialog(self, "Import - %s" % self.last_profile)
         
         # If the user did not click OK, don't continue.
-        if response != Gtk.ResponseType.OK:
+        if response != Gtk.ResponseType.OK and response != DialogResponse.IMPORT_OVERWRITE:
             return
         
         # If the imported data is invalid, don't continue.
@@ -1008,27 +1005,33 @@ class WeatherLog(Gtk.Window):
             show_error_dialog(self, "Import - %s" % self.last_profile, "The data in the selected file is not valid. %s" % validate.validate_dataset_strings[validate_error])
             return
         
+        # Confirm that the user wants to overwrite the data, if the current dataset isn't blank.
+        if response == DialogResponse.IMPORT_OVERWRITE and len(self.data) > 0:
+            response2 = show_question_dialog(self, "Import - %s" % self.last_profile, "Are you sure you want to import the data?\n\nAll current data will be overwritten.")
+            if response2 != Gtk.ResponseType.OK:
+                return
+        
         # Read the data.
         data2 = io.read_profile(filename = filename)
         
         # Ask the user what dates they want to import.
         if not self.config["import_all"]:
             date_dlg = ImportSelectionDialog(self, "Import - %s" % self.last_profile, datasets.get_column(data2, 0))
-            response = date_dlg.run()
+            response3 = date_dlg.run()
             model, treeiter = date_dlg.treeview.get_selection().get_selected_rows()
             date_dlg.destroy()
         
         else:
-            response = DialogResponse.IMPORT_ALL
+            response3 = DialogResponse.IMPORT_ALL
         
         # If the user did not press OK or nothing was selected, don't continue:
-        if response != DialogResponse.IMPORT_ALL and response != DialogResponse.IMPORT:
+        if response3 != DialogResponse.IMPORT_ALL and response != DialogResponse.IMPORT:
             return
-        if response == DialogResponse.IMPORT and treeiter == None:
+        if response3 == DialogResponse.IMPORT and treeiter == None:
             return
         
         # If the user selected certain dates, only import those.
-        if response == DialogResponse.IMPORT:
+        if response3 == DialogResponse.IMPORT:
             
             # Get the dates.
             dates = []
@@ -1042,24 +1045,30 @@ class WeatherLog(Gtk.Window):
                     data3.append(i)
         
         # If the user pressed Import All, import all of the data.
-        if response == DialogResponse.IMPORT_ALL:
+        elif response3 == DialogResponse.IMPORT_ALL:
             data3 = data2[:]
         
-        # Filter the new data to make sure there are no duplicates.
-        new_data = []
-        date_col = datasets.get_column(self.data, 0)
-        for i in data3:
-            
-            # If the date already appears, don't include it.
-            if i[0] not in date_col:
-                new_data.append(i)
+        # Overwrite or merge the data:
+        if response == DialogResponse.IMPORT_OVERWRITE:
+            self.data = data3[:]
         
-        # Append, sort, and add the data.
-        self.data += new_data
+        else:
+        
+            # Filter the new data to make sure there are no duplicates.
+            new_data = []
+            date_col = datasets.get_column(self.data, 0)
+            for i in data3:
+                
+                # If the date already appears, don't include it.
+                if i[0] not in date_col:
+                    new_data.append(i)
+            
+            # Append the data. 
+            self.data += new_data
+        
+        # Update and save the data.
         self.data = sorted(self.data, key = lambda x: datetime.datetime.strptime(x[0], "%d/%m/%Y"))
         self.update_list()
-        
-        # Update the title and save the data.
         self.update_title()
         self.save()
     

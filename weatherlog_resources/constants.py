@@ -4,7 +4,8 @@
 # This file defines constants used by other parts of the application.
 
 
-__all__ = ["SelectionMode", "DialogResponse", "ImportValidation", "DateValidation", "PastebinExport", "DatasetSelectionMode"]
+__all__ = ["SelectionMode", "DialogResponse", "ImportValidation", "DateValidation", "PastebinExport", "DatasetSelectionMode",
+           "ImportType"]
 
 
 # Data subset selection mode:
@@ -21,6 +22,7 @@ class DialogResponse:
     ADD_DATA = 10
     IMPORT_ALL = 20
     IMPORT = 21
+    IMPORT_OVERWRITE = 22
     MOVE_DATA = 34
     EXPORT_CSV = 98
     EXPORT_HTML = 99
@@ -54,3 +56,9 @@ class PastebinExport:
 class DatasetSelectionMode:
     SINGLE = 0
     MULTIPLE = 1
+
+
+# Import type:
+class ImportType:
+    MERGE = 0
+    OVERWRITE = 0

@@ -10,7 +10,7 @@ from gi.repository import Gtk
 from weatherlog_resources.constants import *
 
 __all__ = ["show_alert_dialog", "show_error_dialog", "show_question_dialog", "show_file_dialog",
-           "show_export_dialog", "show_save_dialog", "show_no_data_dialog"]
+           "show_export_dialog", "show_save_dialog", "show_no_data_dialog", "show_import_dialog"]
 
 
 def show_alert_dialog(self, title, msg):
@@ -51,8 +51,18 @@ def show_file_dialog(self, title):
     return [response, filename]
 
 
-def show_export_dialog(self, title):
+def show_import_dialog(self, title):
     """Shows the file chooser (open) dialog."""
+    
+    import_dlg = Gtk.FileChooserDialog(title, self, Gtk.FileChooserAction.OPEN, (Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL, "Import and Overwrite", DialogResponse.IMPORT_OVERWRITE, "Import", Gtk.ResponseType.OK))
+    response = import_dlg.run()
+    filename = import_dlg.get_filename()
+    import_dlg.destroy()
+    return [response, filename]
+
+
+def show_export_dialog(self, title):
+    """Shows the file chooser (save) dialog."""
     
     export_dlg = Gtk.FileChooserDialog(title, self, Gtk.FileChooserAction.SAVE, (Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL, "Export", Gtk.ResponseType.OK))
     export_dlg.set_do_overwrite_confirmation(True)
@@ -65,8 +75,7 @@ def show_export_dialog(self, title):
 def show_save_dialog(self, title):
     """Shows the file chooser (save) dialog."""
     
-    export_dlg = Gtk.FileChooserDialog(title, self, Gtk.FileChooserAction.SAVE, (Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL, "Export to CSV", DialogResponse.EXPORT_CSV,
-                                       "Export to HTML", DialogResponse.EXPORT_HTML, "Export", Gtk.ResponseType.OK))
+    export_dlg = Gtk.FileChooserDialog(title, self, Gtk.FileChooserAction.SAVE, (Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL, "Export to CSV", DialogResponse.EXPORT_CSV, "Export to HTML", DialogResponse.EXPORT_HTML, "Export", Gtk.ResponseType.OK))
     export_dlg.set_do_overwrite_confirmation(True)
     response = export_dlg.run()
     filename = export_dlg.get_filename()
