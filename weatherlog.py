@@ -987,6 +987,11 @@ class WeatherLog(Gtk.Window):
     def select_data_subset(self, event):
         """Shows the data selection dialog."""
         
+        # If there is no data, tell the user and don't show the subset dialog.
+        if len(self.data) == 0:
+            show_no_data_dialog(self, "View Data Subset - %s" % self.last_profile)
+            return
+        
         # Show the condition selection dialog.
         sel_dlg = DataSubsetSelectionDialog(self, self.last_profile, self.data, self.config, self.units)
     
