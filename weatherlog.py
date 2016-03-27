@@ -234,7 +234,7 @@ class WeatherLog(Gtk.Window):
             ("datasets_menu", None, "_Datasets"),
             ("switch_dataset", None, "_Switch Dataset...", "<Control><Shift>s", None, self.switch_dataset),
             ("add_dataset", None, "_Add Dataset...", "<Control><Shift>n", None, self.add_dataset),
-            ("remove_dataset", None, "_Remove Datasets...", None, None, self.remove_dataset),
+            ("remove_dataset", None, "_Remove Datasets...", "<Control><Shift>r", None, self.remove_dataset),
             ("rename_dataset", None, "Re_name Dataset...", None, None, self.rename_dataset),
             ("merge_datasets", None, "_Merge Datasets...", None, None, self.merge_datasets),
             ("copy_new", None, "Copy _Data to New Dataset...", None, None, self.data_dataset_new),
