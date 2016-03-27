@@ -64,8 +64,6 @@
     <separator />
     <toolitem action="import" />
     <toolitem action="export" />
-    <separator />
-    <toolitem action="clear_data" />
   </toolbar>
   <popup name="context_menu">
     <menuitem action="add_new" />
