@@ -182,8 +182,25 @@ def get_last_profile(main_dir, conf_dir):
     return last_profile, original_profile, profile_exists
 
 
-def get_config(conf_dir):
+def get_config(conf_dir, get_default = False):
     """Loads the settings."""
+    
+    default_config  = {"pre-fill": False,
+                      "restore": True,
+                      "location": "",
+                      "units": "metric",
+                      "pastebin": "d2314ff616133e54f728918b8af1500e",
+                      "show_units": True,
+                      "show_dates": True,
+                      "confirm_del": True,
+                      "show_pre-fill": True,
+                      "confirm_exit": False,
+                      "import_all": False,
+                      "truncate_notes": True,
+                      "graph_color": "#0000FF",
+                      "line_width": 1,
+                      "line_style": "Solid",
+                      "hatch_style": "Solid"}
 
     # Get the configuration.
     try:
@@ -193,23 +210,11 @@ def get_config(conf_dir):
 
     except IOError:
         # If there was an error, use the defaults instead.
-        config = {"pre-fill": False,
-                  "restore": True,
-                  "location": "",
-                  "units": "metric",
-                  "pastebin": "d2314ff616133e54f728918b8af1500e",
-                  "show_units": True,
-                  "show_dates": True,
-                  "confirm_del": True,
-                  "show_pre-fill": True,
-                  "confirm_exit": False,
-                  "import_all": False,
-                  "truncate_notes": True,
-                  "graph_color": "#0000FF",
-                  "line_width": 1,
-                  "line_style": "Solid",
-                  "hatch_style": "Solid"}
-
+        config = default_config
+    
+    if get_default:
+        config = default_config
+    
     return config
 
 

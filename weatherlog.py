@@ -1795,40 +1795,27 @@ class WeatherLog(Gtk.Window):
                 return
             
             # Get the default options.
-            prefill = False
-            restore = True
-            location = ""
-            units_ = "metric"
-            pastebin = "d2314ff616133e54f728918b8af1500e"
-            show_dates = True
-            show_units = True
-            confirm_del = True
-            show_prefill = True
-            confirm_exit = False
-            import_all = False
-            truncate_notes = True
-            graph_color = "#0000FF"
-            line_width = 1
-            line_style = "Solid"
-            hatch_style = "Solid"
+            self.config = launch.get_config(self.conf_dir, get_default = True)
         
-        # Set the configuration.
-        self.config["pre-fill"] = prefill
-        self.config["restore" ] = restore
-        self.config["location"] = location
-        self.config["units"] = units_
-        self.config["pastebin"] = pastebin
-        self.config["show_dates"] = show_dates
-        self.config["show_units"] = show_units
-        self.config["confirm_del"] = confirm_del
-        self.config["show_pre-fill"] = show_prefill
-        self.config["confirm_exit"] = confirm_exit
-        self.config["import_all"] = import_all
-        self.config["truncate_notes"] = truncate_notes
-        self.config["graph_color"] = graph_color
-        self.config["line_width"] = line_width
-        self.config["line_style"] = line_style
-        self.config["hatch_style"] = hatch_style
+        else:
+        
+            # Set the configuration.
+            self.config["pre-fill"] = prefill
+            self.config["restore" ] = restore
+            self.config["location"] = location
+            self.config["units"] = units_
+            self.config["pastebin"] = pastebin
+            self.config["show_dates"] = show_dates
+            self.config["show_units"] = show_units
+            self.config["confirm_del"] = confirm_del
+            self.config["show_pre-fill"] = show_prefill
+            self.config["confirm_exit"] = confirm_exit
+            self.config["import_all"] = import_all
+            self.config["truncate_notes"] = truncate_notes
+            self.config["graph_color"] = graph_color
+            self.config["line_width"] = line_width
+            self.config["line_style"] = line_style
+            self.config["hatch_style"] = hatch_style
         
         # Configure the units.
         self.units = launch.get_units(self.config)
@@ -1839,7 +1826,7 @@ class WeatherLog(Gtk.Window):
             if response == Gtk.ResponseType.OK:
                 
                 # Convert the data.
-                new_data = convert.convert(self.data, units_)
+                new_data = convert.convert(self.data, self.config["units"])
                 
                 # Update the list.
                 self.data[:] = []
