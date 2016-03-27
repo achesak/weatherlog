@@ -1458,7 +1458,7 @@ class WeatherLog(Gtk.Window):
         old_name = model[treeiter][0]
         
         # Get the new dataset name.
-        ren_dlg = DatasetNameDialog(self, "Rename Dataset", message = "Enter new dataset name: ")
+        ren_dlg = DatasetNameDialog(self, "Rename Dataset", message = "Enter new name for \"%s\": " % old_name)
         response = ren_dlg.run()
         new_name = ren_dlg.nam_ent.get_text().lstrip().rstrip()
         ren_dlg.destroy()
@@ -1623,14 +1623,14 @@ class WeatherLog(Gtk.Window):
             return
             
         # Get the dates to move or copy.
-        buttons = [["Cancel", Gtk.ResponseType.CANCEL], ["Move Data", 34], ["Copy Data", 35]]
+        buttons = [["Cancel", Gtk.ResponseType.CANCEL], ["Move Data", DialogResponse.MOVE_DATA], ["Copy Data", DialogResponse.COPY_DATA]]
         date_dlg = DateSelectionDialog(self, "Copy Data to New Dataset", dates, buttons)
         response = date_dlg.run()
         model, treeiter = date_dlg.treeview.get_selection().get_selected_rows()
         date_dlg.destroy()
         
         # If the user did not click OK or nothing was selected, don't continue:
-        if (response != 34 and response != 35) or treeiter == None:
+        if (response != DialogResponse.MOVE_DATA and response != DialogResponse.COPY_DATA) or treeiter == None:
             return
         
         # Create the directory and file.
@@ -1700,14 +1700,14 @@ class WeatherLog(Gtk.Window):
         name = model[treeiter][0]
         
         # Get the dates to move or copy.
-        buttons = [["Cancel", Gtk.ResponseType.CANCEL], ["Move Data", 34], ["Copy Data", 35]]
+        buttons = [["Cancel", Gtk.ResponseType.CANCEL], ["Move Data", DialogResponse.MOVE_DATA], ["Copy Data", DialogResponse.COPY_DATA]]
         date_dlg = DateSelectionDialog(self, "Copy Data to Existing Dataset", dates, buttons)
         response = date_dlg.run()
         model, treeiter = date_dlg.treeview.get_selection().get_selected_rows()
         date_dlg.destroy()
         
         # If the user did not click OK or nothing was selected, don't continue:
-        if (response != 34 and response != 35) or treeiter == None:
+        if (response != DialogResponse.MOVE_DATA and response != DialogResponse.COPY_DATA) or treeiter == None:
             return
             
         # Get the dates.
