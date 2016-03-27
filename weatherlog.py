@@ -412,7 +412,7 @@ class WeatherLog(Gtk.Window):
 	            date = tm.get_value(ti, 0)
 	        
 	        except:
-	            show_error_dialog(self, "Edit Data - %s" % last_profile, "No date selected.")
+	            show_error_dialog(self, "Edit Data - %s" % self.last_profile, "No date selected.")
 	            return
         
         # Get the index of the date.
