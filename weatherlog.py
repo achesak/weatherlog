@@ -873,8 +873,6 @@ class WeatherLog(Gtk.Window):
         
         # If there is no data, tell the user and don't show the info dialog.
         if len(self.data) == 0:
-            
-            # Show the dialog.
             show_no_data_dialog(self, "Graphs - %s" % self.last_profile)
             return
         
@@ -969,6 +967,11 @@ class WeatherLog(Gtk.Window):
         
         if data == False:
             data = self.data
+        
+        # If there is no data, tell the user and don't show the info dialog.
+        if len(data) == 0:
+            show_no_data_dialog(self, "Graphs - %s" % self.last_profile)
+            return
         
         # If matplotlib isn't installed, don't continue.
         if not self.matplotlib_installed:
