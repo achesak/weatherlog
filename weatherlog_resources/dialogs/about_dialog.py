@@ -15,7 +15,7 @@ class WeatherLogAboutDialog(Gtk.AboutDialog):
         """Create the dialog."""
         
         # Create the dialog.
-        Gtk.AboutDialog.__init__(self)
+        Gtk.AboutDialog.__init__(self, parent)
         
         # Set the details.
         self.set_title("About WeatherLog")
@@ -26,8 +26,8 @@ class WeatherLogAboutDialog(Gtk.AboutDialog):
         self.set_copyright("Copyright (c) 2013-2016 Adam Chesak")
         self.set_authors(["Adam Chesak <achesak@yahoo.com>"])
         self.set_license(license_text)
-        self.set_website("http://achesak.github.io/weatherlog")
-        self.set_website_label("http://achesak.github.io/weatherlog")
+        self.set_website("https://github.com/achesak/weatherlog")
+        self.set_website_label("https://github.com/achesak/weatherlog")
         
         # Show the dialog.
         self.show_all()
