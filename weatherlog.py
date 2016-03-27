@@ -1552,6 +1552,15 @@ class WeatherLog(Gtk.Window):
             show_error_dialog(self, "Merge Datasets", valid)
             return
         
+        # If the name is already in use, ask the user is they want to delete the old profile.
+        elif valid.endswith("already in use."):
+            del_old = show_question_dialog(self, "Merge Datasets", "%s\n\nWould you like to delete the existing dataset?" % valid)
+            if del_old != Gtk.ResponseType.OK:
+                return
+            
+            # Delete the existing profile.
+            shutil.rmtree("%s/profiles/%s" % (self.main_dir, merge_name))
+        
         # Build the new data list.
         new_data = io.read_profile(main_dir = self.main_dir, name = profiles[0])
         for i in range(1, len(profiles)):
