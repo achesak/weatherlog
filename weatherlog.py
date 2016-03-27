@@ -480,6 +480,11 @@ class WeatherLog(Gtk.Window):
     def remove(self, event):
         """Removes a row of data from the list."""
         
+        # If there is no data, tell the user and don't show the date selection.
+        if len(self.data) == 0:
+            show_no_data_dialog(self, "Remove Data - %s" % self.last_profile, message = "There is no data to remove.")
+            return
+        
         # Get the dates.
         dates = []
         for i in self.data:
@@ -530,8 +535,7 @@ class WeatherLog(Gtk.Window):
         
         location = ""
         
-        # If getting the weather for the current location, make sure this
-        # location has been specified.
+        # If getting the weather for the current location, make sure this location has been specified.
         if here and len(self.config["location"]) == 5:
             location = self.config["location"]
         
@@ -728,8 +732,6 @@ class WeatherLog(Gtk.Window):
         
         # If there is no data, tell the user and don't show the info dialog.
         if len(self.data) == 0:
-            
-            # Show the dialog.
             show_no_data_dialog(self, "Charts - %s" % self.last_profile)
             return
         
