@@ -1123,6 +1123,7 @@ class WeatherLog(Gtk.Window):
         # Create the dataset directory and file.
         self.last_profile = name
         io.write_blank_profile(self.main_dir, name)
+        launch.create_metadata(self.main_dir, name)
         
         # Clear the data.
         self.data[:] = []
