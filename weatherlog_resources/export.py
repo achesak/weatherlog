@@ -69,10 +69,7 @@ def html_generic(data_list, filename = None):
         for table_row in table_data:
             html += "<tr>"
             for cell in table_row:
-                if cell == "":
-                    html += "<td>&nbsp;</td>"
-                else:
-                    html += "<td>" + html_cell(cell) + "</td>"
+                html += "<td>" + html_cell(cell) + "</td>"
             html += "</tr>"
         
         # End the table.

@@ -4,14 +4,15 @@
 # This file defines functions for validating user-entered data.
 
 
-# Import constants.
-from weatherlog_resources.constants import *
-# Import io for reading files.
-import weatherlog_resources.io as io
 # Import re for pattern matching.
 import re
 # Import os.path for checking if a directory exists.
 import os.path
+
+# Import constants.
+from weatherlog_resources.constants import *
+# Import io for reading files.
+import weatherlog_resources.io as io
 
 
 validate_dataset_strings = {ImportValidation.VALID: "No error, this should never display.",
@@ -45,7 +46,7 @@ def validate_data(filename):
     
     # Test 1: must be readable.
     try:
-		data = io.read_profile(filename = filename)
+        data = io.read_profile(filename = filename)
     except:
         return ImportValidation.CANNOT_UNPICKLE
     
