@@ -150,6 +150,7 @@ def get_last_profile(main_dir, conf_dir):
             last_prof_data = open("%s/profiles/Main Dataset/weather" % main_dir, "w")
             pickle.dump([], last_prof_data)
             last_prof_data.close()
+            create_metadata(main_dir, "Main Dataset")
 
             # Set the dataset name.
             last_profile = "Main Dataset"
