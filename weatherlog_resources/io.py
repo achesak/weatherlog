@@ -32,11 +32,11 @@ def write_profile(main_dir = "", name = "", filename = "", data = []):
         return True
 
     except IOError as e:
-        print("Error saving dataset file (IOError):\n%s" % e)
+        print("write_profile(): Error saving dataset file (IOError):\n%s" % e)
         return False
 
     except (TypeError, ValueError) as e:
-        print("Error saving dataset file (TypeError or ValueError):\n%s" % e)
+        print("write_profile(): Error saving dataset file (TypeError or ValueError):\n%s" % e)
         return False
 
 
@@ -52,11 +52,11 @@ def read_profile(main_dir = "", name = "", filename = ""):
         data_file.close()
 
     except IOError as e:
-        print("Error importing data (IOError):\n%s" % e)
+        print("read_profile(): Error importing data (IOError):\n%s" % e)
         data = []
 
     except (TypeError, ValueError) as e:
-        print("Error importing data (TypeError or ValueError):\n%s" % e)
+        print("read_profile(): Error importing data (TypeError or ValueError):\n%s" % e)
         data = []
 
     return data
@@ -65,10 +65,19 @@ def read_profile(main_dir = "", name = "", filename = ""):
 def write_blank_profile(main_dir, name):
     """Writes a blank profile file."""
 
-    os.makedirs("%s/profiles/%s" % (main_dir, name))
-    new_prof_file = open("%s/profiles/%s/weather" % (main_dir, name), "w")
-    pickle.dump([], new_prof_file)
-    new_prof_file.close()
+    try:
+        os.makedirs("%s/profiles/%s" % (main_dir, name))
+        new_prof_file = open("%s/profiles/%s/weather" % (main_dir, name), "w")
+        pickle.dump([], new_prof_file)
+        new_prof_file.close()
+    
+    except IOError as e:
+        print("write_blank_profile(): Error saving dataset file (IOError):\n%s" % e)
+        data = []
+
+    except (TypeError, ValueError) as e:
+        print("write_blank_profile(): Error saving dataset file (TypeError or ValueError):\n%s" % e)
+        data = []
 
 
 def write_standard_file(filename, data):
@@ -80,7 +89,7 @@ def write_standard_file(filename, data):
         data_file.close()
 
     except IOError as e:
-        print("Error saving data file (IOError):\n%s" % e)
+        print("write_standard_file(): Error saving data file (IOError):\n%s" % e)
 
 
 def get_profile_list(main_dir, last_profile, exclude_current = True):
@@ -119,7 +128,7 @@ def get_metadata(main_dir, last_profile):
         meta_file.close()
 
     except IOError as e:
-        print("Error reading metadata file (IOError):\n%s" % e)
+        print("get_metadata(): Error reading metadata file (IOError):\n%s" % e)
         creation = "Error"
         modified = "Error"
 
@@ -135,7 +144,7 @@ def write_metadata(main_dir, last_profile, creation, modified):
         meta_file.close()
 
     except IOError as e:
-        print("Error saving metadata file (IOError):\n%s" % e)
+        print("write_metadata(): Error saving metadata file (IOError):\n%s" % e)
 
 
 def write_config(conf_dir, config):
@@ -147,10 +156,10 @@ def write_config(conf_dir, config):
         config_file.close()
 
     except IOError as e:
-        print("Error saving configuration file (IOError):\n%s" % e)
+        print("write_config(): Error saving configuration file (IOError):\n%s" % e)
 
     except (TypeError, ValueError) as e:
-        print("Error saving configuration file (TypeError or ValueError):\n%s" % e)
+        print("write_config(): Error saving configuration file (TypeError or ValueError):\n%s" % e)
 
 
 def write_last_profile(conf_dir, last_profile):
@@ -162,4 +171,4 @@ def write_last_profile(conf_dir, last_profile):
         prof_file.close()
 
     except IOError as e:
-        print("Error saving dataset file (IOError):\n%s" % e)
+        print("write_last_profile(): Error saving dataset file (IOError):\n%s" % e)
