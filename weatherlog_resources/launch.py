@@ -10,8 +10,6 @@ import json
 import platform
 # Import os for creating a directory and other tasks.
 import os
-# Import os.path for seeing if a directory exists and other tasks.
-import os.path
 # Import sys for closing the application.
 import sys
 # Import glob for getting a list of directories.
