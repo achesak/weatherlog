@@ -148,26 +148,21 @@ def check_files_exist(main_dir, conf_dir):
 
 
 def get_last_profile(main_dir, conf_dir):
-    """Returns the last profile, the original profile to be loaded, and whether the profile exists. Creates the profile if it doesn't exist."""
+    """Returns the last dataset, the original dataset to be loaded, and whether the dataset exists. Creates the dataset if it doesn't exist."""
 
     try:
-        # Load the last profile file.
+        # Load the last dataset file.
         prof_file = open("%s/lastprofile" % conf_dir, "r")
         last_profile = prof_file.read().rstrip()
         prof_file.close()
 
-        # Check to make sure the profile exists:
-        # Remember the correct directory and switch to where the profiles are stored.
+        # Get the list of datasets.
         current_dir = os.getcwd()
         os.chdir("%s/profiles" % main_dir)
-
-        # Get the list of profiles.
         profiles_list = glob.glob("*")
-
-        # Switch back to the previous directory.
         os.chdir(current_dir)
 
-        # Check if the profile exists:
+        # Check if the dataset exists:
         if last_profile in profiles_list:
             profile_exists = True
             original_profile = ""
@@ -179,14 +174,14 @@ def get_last_profile(main_dir, conf_dir):
         print("get_last_profile(): Error reading dataset file (IOError):\n%s" % e)
         sys.exit()
 
-    # If the profile doesn't exist, switch or make one that does:
+    # If the dataset doesn't exist, switch or make one that does:
     if not profile_exists:
 
-        # If the default profile exists, switch to that.
+        # If the default dataset exists, switch to that.
         if "Main Dataset" in profiles_list:
             last_profile = "Main Dataset"
 
-        # Otherwise, create the profile:
+        # Otherwise, create the dataset:
         else:
 
             # Create the Main Dataset directory and data file.
@@ -195,7 +190,7 @@ def get_last_profile(main_dir, conf_dir):
             pickle.dump([], last_prof_data)
             last_prof_data.close()
 
-            # Set the profile name.
+            # Set the dataset name.
             last_profile = "Main Dataset"
 
     return last_profile, original_profile, profile_exists

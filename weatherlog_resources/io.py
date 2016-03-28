@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
 
 
-# This file defines the functions for reading and writing profiles.
+# This file defines the functions for reading and writing dataset, metadata, and configuration files.
 
 
 # Import os for creating directories.
 import os
-# Import glob for getting a list of the profiles.
+# Import glob for getting a list of the datasets.
 import glob
 # Import time for formatting times.
 import time
@@ -20,7 +20,7 @@ except ImportError:
 
 
 def write_profile(main_dir = "", name = "", filename = "", data = []):
-    """Writes the data to the profile file."""
+    """Writes the data to the dataset file."""
 
     # Get the filename.
     filename = filename if filename != "" else "%s/profiles/%s/weather" % (main_dir, name)
@@ -41,7 +41,7 @@ def write_profile(main_dir = "", name = "", filename = "", data = []):
 
 
 def read_profile(main_dir = "", name = "", filename = ""):
-    """Reads the data from the profile file."""
+    """Reads the data from the dataset file."""
 
     # Get the filename.
     filename = filename if filename != "" else "%s/profiles/%s/weather" % (main_dir, name)
@@ -63,7 +63,7 @@ def read_profile(main_dir = "", name = "", filename = ""):
 
 
 def write_blank_profile(main_dir, name):
-    """Writes a blank profile file."""
+    """Writes a blank dataset file."""
 
     try:
         os.makedirs("%s/profiles/%s" % (main_dir, name))
@@ -93,13 +93,13 @@ def write_standard_file(filename, data):
 
 
 def get_profile_list(main_dir, last_profile, exclude_current = True):
-    """Gets the list of profiles."""
+    """Gets the list of datasets."""
 
-    # Remember the correct directory and switch to where the profiles are stored.
+    # Remember the correct directory and switch to where the datasets are stored.
     current_dir = os.getcwd()
     os.chdir("%s/profiles" % main_dir)
 
-    # Get the list of profiles, remove the current profile, and sort the list.
+    # Get the list of datasets and sort the list.
     profiles = glob.glob("*")
     if exclude_current:
         profiles = list(set(profiles) - set([last_profile]))
@@ -163,7 +163,7 @@ def write_config(conf_dir, config):
 
 
 def write_last_profile(conf_dir, last_profile):
-    """Saves the last profile."""
+    """Saves the last dataset."""
 
     try:
         prof_file = open("%s/lastprofile" % conf_dir, "w")
