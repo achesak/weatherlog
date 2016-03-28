@@ -156,8 +156,8 @@ def get_last_profile(main_dir, conf_dir):
             profile_exists = False
             original_profile = last_profile
 
-    except IOError:
-        print("Error reading dataset file (IOError).")
+    except IOError as e:
+        print("get_last_profile(): Error reading dataset file (IOError):\n%s" % e)
         sys.exit()
 
     # If the profile doesn't exist, switch or make one that does:
@@ -208,8 +208,9 @@ def get_config(conf_dir, get_default = False):
         config = json.load(config_file)
         config_file.close()
 
-    except IOError:
+    except IOError as e:
         # If there was an error, use the defaults instead.
+        print("get_config(): Error reading config file (IOError):\n%s\nContinuing with default..." % e)
         config = default_config
     
     if get_default:
@@ -235,8 +236,9 @@ def get_window_size(conf_dir, config):
             last_height = int(wins_file.readline())
             wins_file.close()
 
-        except IOError:
+        except IOError as e:
             # If there was an error, use the default size instead.
+            print("get_window_size(): Error reading window size file (IOError):\n%s\nContinuing with default..." % e)
             last_width = 900
             last_height = 500
 
@@ -285,12 +287,12 @@ def get_data(main_dir, last_profile):
         data = pickle.load(data_file)
         data_file.close()
 
-    except IOError:
-        print("Error importing data (IOError).")
+    except IOError as e:
+        print("get_data(): Error importing data (IOError):\n%s" % e)
         sys.exit()
 
-    except (TypeError, ValueError):
-        print("Error importing data (TypeError or ValueError).")
+    except (TypeError, ValueError) as e:
+        print("get_data(): Error importing data (TypeError or ValueError):\n%s" % e)
         sys.exit()
 
     return data
@@ -309,5 +311,5 @@ def create_metadata(main_dir, last_profile):
         meta_file.write("%s\n%s" % (modified, modified))
         meta_file.close()
 
-    except IOError:
-        print("Error saving metadata file (IOError).")
+    except IOError as e:
+        print("create_metadata(): Error saving metadata file (IOError):\n%s" % e)
