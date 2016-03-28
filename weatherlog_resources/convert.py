@@ -4,7 +4,7 @@
 # This file defines the function for converting between units.
 
 
-# Import this so dividing works correctly.
+# Import this so dividing works correctly in Python 2.
 from __future__ import division
 
 

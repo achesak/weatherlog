@@ -119,7 +119,7 @@ class WeatherLog(Gtk.Window):
         # Get the dataset data.
         self.data = launch.get_data(self.main_dir, self.last_profile)
         # Get the weather codes.
-        self.weather_codes = launch.codes
+        self.weather_codes = launch.get_weather_codes()
         # Try importing matplotlib, just so we know if it's installed.
         try:
             from matplotlib.figure import Figure
