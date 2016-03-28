@@ -1020,7 +1020,7 @@ class WeatherLog(Gtk.Window):
             response3 = DialogResponse.IMPORT_ALL
         
         # If the user did not press OK or nothing was selected, don't continue:
-        if response3 != DialogResponse.IMPORT_ALL and response != DialogResponse.IMPORT:
+        if response3 != DialogResponse.IMPORT_ALL and response3 != DialogResponse.IMPORT:
             return
         if response3 == DialogResponse.IMPORT and treeiter == None:
             return
