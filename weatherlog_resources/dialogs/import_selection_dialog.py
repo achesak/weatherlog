@@ -13,7 +13,7 @@ from weatherlog_resources.constants import *
 class ImportSelectionDialog(Gtk.Dialog):
     """Shows the import selection dialog."""
     
-    def __init__(self, parent, title, dates):
+    def __init__(self, parent, title, dates, show_conflicts = False):
         """Create the dialog."""
         
         # Create the dialog.
@@ -29,12 +29,21 @@ class ImportSelectionDialog(Gtk.Dialog):
         self.get_content_area().add(sel_frame)
         
         # Create the Date selection.
-        self.liststore = Gtk.ListStore(str)
+        if show_conflicts:
+            self.liststore = Gtk.ListStore(str, str)
+        else:
+            self.liststore = Gtk.ListStore(str)
         self.treeview = Gtk.TreeView(model = self.liststore)
         self.treeview.get_selection().set_mode(Gtk.SelectionMode.MULTIPLE)
         pro_text = Gtk.CellRendererText()
-        self.pro_col = Gtk.TreeViewColumn("Dates", pro_text, text = 0)
+        self.pro_col = Gtk.TreeViewColumn("Date", pro_text, text = 0)
         self.treeview.append_column(self.pro_col)
+        
+        # Show the Conflict column, if required.
+        if show_conflicts:
+            conf_text = Gtk.CellRendererText()
+            self.conf_col = Gtk.TreeViewColumn("Conflict", conf_text, text = 1)
+            self.treeview.append_column(self.conf_col)
         
         # Display the UI.
         scrolled_win = Gtk.ScrolledWindow()
@@ -45,7 +54,10 @@ class ImportSelectionDialog(Gtk.Dialog):
         
         # Add the dates.
         for i in dates:
-            self.liststore.append([i])
+            if show_conflicts:
+                self.liststore.append(i)
+            else:
+                self.liststore.append([i])
         
         # Connect 'Enter' key to the OK button.
         ok_btn = self.get_widget_for_response(response_id = DialogResponse.IMPORT)

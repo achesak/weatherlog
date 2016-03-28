@@ -11,7 +11,7 @@ from gi.repository import Gtk
 class DateSelectionDialog(Gtk.Dialog):
     """Shows the date selection dialog."""
     
-    def __init__(self, parent, title, dates, buttons = [["Cancel", Gtk.ResponseType.CANCEL], ["OK", Gtk.ResponseType.OK]]):
+    def __init__(self, parent, title, dates, buttons = [["Cancel", Gtk.ResponseType.CANCEL], ["OK", Gtk.ResponseType.OK]], show_conflicts = False):
         """Create the dialog."""
         
         # Create the dialog.

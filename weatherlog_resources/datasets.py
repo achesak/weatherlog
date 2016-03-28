@@ -94,3 +94,9 @@ def strip_items(data, chars):
                 i = i[:-1]
         n_list.append(i)
     return n_list
+
+
+def conflict_exists(data1, data2):
+    """Checks if there are conflicts between data1 and data2 in the specified column."""
+    
+    return [[x, "Yes"] if x in data1 else [x, "No"] for x in data2]
