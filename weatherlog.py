@@ -60,33 +60,20 @@ except ImportError:
 # This line can be removed be the user, if desired.
 sys.dont_write_bytecode = True
 
-# Import constants.
+# Import application modules.
 from weatherlog_resources.constants import *
-# Import the functions for setting up the application.
 import weatherlog_resources.launch as launch
-# Import the functions for working with datasets.
 import weatherlog_resources.datasets as datasets
-# Import the functions for working with dates.
 import weatherlog_resources.dates as dates
-# Import the functions for validating user-entered data.
 import weatherlog_resources.validate as validate
-# Import the functions for converting between units.
 import weatherlog_resources.convert as convert
-# Import the functions for reading and writing datasets.
 import weatherlog_resources.io as io
-# Import the functions for exporting the data.
 import weatherlog_resources.export as export
-# Import the functions for getting the info.
 import weatherlog_resources.info as info
-# Import the functions for getting the chart data.
 import weatherlog_resources.charts as charts
-# Import the functions for getting the graph data.
 import weatherlog_resources.graphs as graphs
-# Import the functions for filtering the data.
 import weatherlog_resources.filter_data as filter_data
-# Import the functions for getting the current weather.
 import weatherlog_resources.get_weather as get_weather
-# Import the functions for uploading to pastebin.com.
 import weatherlog_resources.pastebin as pastebin
 
 # Import dialogs.
@@ -505,14 +492,12 @@ class WeatherLog(Gtk.Window):
         for i in treeiter:
             ndates.append(model[i][0])
         
-        # If there is no data, don't continue.
+        # If there were no dates selected, don't continue.
         if len(ndates) == 0:
             return
         
-        # Only show the confirmation dialog if the user wants that.
+        # COnfirm that the user wants to delete the row.
         if self.config["confirm_del"]:
-            
-            # Confirm that the user wants to delete the row.
             response = show_question_dialog(self, "Remove Data - %s" % self.last_profile, "Are you sure you want to delete the selected date%s?\n\nThis action cannot be undone." % ("s" if len(ndates) > 1 else ""))
             if response != Gtk.ResponseType.OK:
                 return
@@ -1173,7 +1158,7 @@ class WeatherLog(Gtk.Window):
         
         # If there is no data, tell the user and cancel the action.
         if len(self.data) == 0:
-            show_alert_dialog(self, "Export - %s" % self.last_profile, "There is no data to export.")
+            show_no_data_dialog(self, "Export - %s" % self.last_profile, message = "There is no data to export.")
             return
         
         # Get the filename.
@@ -1210,7 +1195,7 @@ class WeatherLog(Gtk.Window):
         
         # If there is no data, tell the user and cancel the action.
         if len(self.data) == 0:
-            show_alert_dialog(self, "Export to Pastebin - %s" % self.last_profile, "There is no data to export.")
+            show_no_data_dialog(self, "Export to Pastebin - %s" % self.last_profile, message = "There is no data to export.")
             return
         
         # If the API key is blank, tell the user and cancel the action.
