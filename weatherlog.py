@@ -1182,7 +1182,7 @@ class WeatherLog(Gtk.Window):
         elif response == DialogResponse.EXPORT_CSV:
             export.csv(self.data, self.units, filename)
         elif response == DialogResponse.EXPORT_HTML:
-            data_list = [["WeatherLog Data - %s - %s to %s" % (self.last_profile, (self.data[0][0] if len(self.data) != 0 else "None"), (self.data[len(self.data)-1][0] if len(self.data) != 0 else "None")),
+            data_list = [[self.update_title(),
                            ["Date", "Temperature (%s)" % self.units["temp"], "Wind Chill (%s)" % self.units["temp"],
                             "Precipitation (%s)" % self.units["prec"], "Wind (%s)" % self.units["wind"],
                             "Humidity (%%)", "Air Pressure (%s)" % self.units["airp"], "Visibility (%s)" % self.units["visi"],
@@ -1895,9 +1895,12 @@ class WeatherLog(Gtk.Window):
         """Updates the window title."""
         
         if self.config["show_dates"]:
-            self.set_title("WeatherLog - %s - %s to %s" % (self.last_profile, (self.data[0][0] if len(self.data) != 0 else "None"), (self.data[len(self.data)-1][0] if len(self.data) != 0 else "None")))
+            new_title = "WeatherLog - %s - %s to %s" % (self.last_profile, (self.data[0][0] if len(self.data) != 0 else "None"), (self.data[len(self.data)-1][0] if len(self.data) != 0 else "None"))
         else:
-            self.set_title("WeatherLog - %s" % self.last_profile)
+            new_title = "WeatherLog - %s" % self.last_profile
+        
+        self.set_title(new_title)
+        return new_title
     
     
     def show_about(self, event):
