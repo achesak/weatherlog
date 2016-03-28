@@ -31,12 +31,12 @@ def write_profile(main_dir = "", name = "", filename = "", data = []):
         data_file.close()
         return True
 
-    except IOError:
-        print("Error saving data file (IOError).")
+    except IOError as e:
+        print("Error saving dataset file (IOError):\n%s" % e)
         return False
 
-    except (TypeError, ValueError):
-        print("Error saving data file (TypeError or ValueError).")
+    except (TypeError, ValueError) as e:
+        print("Error saving dataset file (TypeError or ValueError):\n%s" % e)
         return False
 
 
@@ -51,12 +51,12 @@ def read_profile(main_dir = "", name = "", filename = ""):
         data = pickle.load(data_file)
         data_file.close()
 
-    except IOError:
-        print("Error importing data (IOError).")
+    except IOError as e:
+        print("Error importing data (IOError):\n%s" % e)
         data = []
 
-    except (TypeError, ValueError):
-        print("Error importing data (TypeError or ValueError).")
+    except (TypeError, ValueError) as e:
+        print("Error importing data (TypeError or ValueError):\n%s" % e)
         data = []
 
     return data
@@ -79,8 +79,8 @@ def write_standard_file(filename, data):
         data_file.write(data)
         data_file.close()
 
-    except IOError:
-        print("Error saving data file (IOError).")
+    except IOError as e:
+        print("Error saving data file (IOError):\n%s" % e)
 
 
 def get_profile_list(main_dir, last_profile, exclude_current = True):
@@ -118,8 +118,8 @@ def get_metadata(main_dir, last_profile):
         modified = meta_file.readline().strip()
         meta_file.close()
 
-    except IOError:
-        print("Error reading metadata file (IOError).")
+    except IOError as e:
+        print("Error reading metadata file (IOError):\n%s" % e)
         creation = "Error"
         modified = "Error"
 
@@ -134,8 +134,8 @@ def write_metadata(main_dir, last_profile, creation, modified):
         meta_file.write("%s\n%s" % (creation, modified))
         meta_file.close()
 
-    except IOError:
-        print("Error saving metadata file (IOError).")
+    except IOError as e:
+        print("Error saving metadata file (IOError):\n%s" % e)
 
 
 def write_config(conf_dir, config):
@@ -146,11 +146,11 @@ def write_config(conf_dir, config):
         json.dump(config, config_file)
         config_file.close()
 
-    except IOError:
-        print("Error saving configuration file (IOError).")
+    except IOError as e:
+        print("Error saving configuration file (IOError):\n%s" % e)
 
-    except (TypeError, ValueError):
-        print("Error saving configuration file (TypeError or ValueError).")
+    except (TypeError, ValueError) as e:
+        print("Error saving configuration file (TypeError or ValueError):\n%s" % e)
 
 
 def write_last_profile(conf_dir, last_profile):
@@ -161,5 +161,5 @@ def write_last_profile(conf_dir, last_profile):
         prof_file.write(last_profile)
         prof_file.close()
 
-    except IOError:
-        print("Error saving profile file (IOError).")
+    except IOError as e:
+        print("Error saving dataset file (IOError):\n%s" % e)

@@ -226,15 +226,11 @@ def filter_or(set1, set2):
     # Get the date column of the first set for the comparison.
     date_list = datasets.get_column(set1, 0)
     
-    # Set the filtered list to all of the items of the first set.
-    filtered = set1[:]
-    
     # Loop through the second list, and add the item if it isn't already in the first list.
+    filtered = set1[:]
     for i in set2:
         if i[0] not in date_list:
             filtered.append(i)
     
-    # Sort the filtered list.
     filtered = sorted(filtered, key = lambda x: datetime.datetime.strptime(x[0], "%d/%m/%Y"))
-    
     return filtered
