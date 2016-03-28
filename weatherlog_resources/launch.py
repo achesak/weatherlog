@@ -80,11 +80,14 @@ codes = {"0":    "Tornado",
 def get_main_dir():
     """Returns the main directory."""
 
-    # The main directory is C:\.weatherlog on Windows,
-    # and /home/[username]/.share/local/weatherlog for data files,
-    # and /home/[username]/.config/weatherlog/ for configuration files on Linux.
+    # Windows:
+    # * Data: C:\Users\[username]\AppData\Local\weatherlog
+    # * Config: C:\Users\[username]\AppData\Local\weatherlog
+    # Linux:
+    # * Data: /home/[username]/.share/local/weatherlog
+    # * Config: /home/[username]/.config/weatherlog/
     if platform.system().lower() == "windows":
-        return "C:\\.weatherlog", "C:\\.weatherlog"
+        return os.environ["LOCALAPPDATA"] + "\weatherlog", os.environ["LOCALAPPDATA"] + "\weatherlog"
     else:
         base = os.path.expanduser("~")
         return base + "/.local/share/weatherlog", base + "/.config/weatherlog"
@@ -248,7 +251,6 @@ def get_window_size(conf_dir, config):
 def get_units(config):
     """Gets the units."""
 
-    # Configure the units.
     # Metric:
     if config["units"] == "metric":
 
