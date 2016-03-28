@@ -86,6 +86,7 @@ def get_main_dir():
     # Linux:
     # * Data: /home/[username]/.share/local/weatherlog
     # * Config: /home/[username]/.config/weatherlog/
+    # OSX: probably the same as Linux?
     if platform.system().lower() == "windows":
         return os.environ["LOCALAPPDATA"] + "\weatherlog", os.environ["LOCALAPPDATA"] + "\weatherlog"
     else:
@@ -95,15 +96,30 @@ def get_main_dir():
 
 def get_ui_info():
     """Get the application's UI info."""
-
-    version = "4.2"
-    title = "WeatherLog"
-    menu_file = open("weatherlog_resources/menu.xml", "r")
-    menu_data = menu_file.read()
-    menu_file.close()
-    icon_small = "weatherlog_resources/images/icon_small.png"
-    icon_medium = "weatherlog_resources/images/icon_med.png"
-    icon_medium_about = "../images/icon_med.png"
+    
+    try:
+        ui_file = open("weatherlog_resources/ui.json", "r")
+        ui_data = json.load(ui_file)
+        ui_file.close()
+    
+    except IOError as e: 
+        print("get_ui_info(): Error reading UI file (IOError):\n%s" % e)
+        sys.exit()
+    
+    try:
+        menu_file = open("weatherlog_resources/menu.xml", "r")
+        menu_data = menu_file.read()
+        menu_file.close()
+    
+    except IOError as e:
+        print("get_ui_info(): Error reading menu file (IOError):\n%s" % e)
+        sys.exit()
+    
+    version = ui_data["version"]
+    title = ui_data["title"]
+    icon_small = ui_data["icon_small"]
+    icon_medium = ui_data["icon_medium"]
+    icon_medium_about = ui_data["icon_medium_about"]
     return version, title, menu_data, icon_small, icon_medium
 
 
