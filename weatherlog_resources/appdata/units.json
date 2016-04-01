@@ -1,0 +1,17 @@
+{
+    "metric": {
+        "temp": "°C",
+        "prec": "cm",
+        "wind": "kph",
+        "airp": "hPa",
+        "visi": "km"
+    },
+    
+    "imperial": {
+        "temp": "°F",
+        "prec": "in",
+        "wind": "mph",
+        "airp": "mbar",
+        "visi": "mi"
+    }
+}

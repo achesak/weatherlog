@@ -1,0 +1,18 @@
+{
+    "pre-fill": false,
+    "restore": true,
+    "location": "",
+    "units": "metric",
+    "pastebin": "d2314ff616133e54f728918b8af1500e",
+    "show_units": true,
+    "show_dates": true,
+    "confirm_del": true,
+    "show_pre-fill": true,
+    "confirm_exit": false,
+    "import_all": false,
+    "truncate_notes": true,
+    "graph_color": "#0000FF",
+    "line_width": 1,
+    "line_style": "Solid",
+    "hatch_style": "Solid"
+}

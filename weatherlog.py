@@ -103,7 +103,7 @@ class WeatherLog(Gtk.Window):
         """Initializes the application."""
         
         # Get the application's UI data.
-        self.VERSION, self.TITLE, self.MENU_DATA, self.ICON_SMALL, self.ICON_MEDIUM = launch.get_ui_info()
+        self.VERSION, self.TITLE, self.MENU_DATA, self.ICON_SMALL, self.ICON_MEDIUM, self.default_width, self.default_height = launch.get_ui_info()
         # Get the data and configuration directories.
         self.main_dir, self.conf_dir = launch.get_main_dir()
         # Check if the directory and base files exist, and create them if they don't.
@@ -113,7 +113,7 @@ class WeatherLog(Gtk.Window):
         # Get the configuration.
         self.config = launch.get_config(self.conf_dir)
         # Get the previous window size.
-        self.last_width, self.last_height = launch.get_window_size(self.conf_dir, self.config)
+        self.last_width, self.last_height = launch.get_window_size(self.conf_dir, self.config, self.default_width, self.default_height)
         # Get the units.
         self.units = launch.get_units(self.config)
         # Get the dataset data.

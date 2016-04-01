@@ -44,7 +44,7 @@ def get_ui_info():
     """Get the application's UI info."""
     
     try:
-        ui_file = open("weatherlog_resources/ui.json", "r")
+        ui_file = open("weatherlog_resources/appdata/ui.json", "r")
         ui_data = json.load(ui_file)
         ui_file.close()
     
@@ -53,7 +53,7 @@ def get_ui_info():
         sys.exit()
     
     try:
-        menu_file = open("weatherlog_resources/menu.xml", "r")
+        menu_file = open("weatherlog_resources/appdata/menu.xml", "r")
         menu_data = menu_file.read()
         menu_file.close()
     
@@ -66,14 +66,16 @@ def get_ui_info():
     icon_small = ui_data["icon_small"]
     icon_medium = ui_data["icon_medium"]
     icon_medium_about = ui_data["icon_medium_about"]
-    return version, title, menu_data, icon_small, icon_medium
+    default_width = ui_data["default_width"]
+    default_height = ui_data["default_height"]
+    return version, title, menu_data, icon_small, icon_medium, default_width, default_height
 
 
 def get_weather_codes():
     """Get the weather codes."""
     
     try:
-        codes_file = open("weatherlog_resources/weather_codes.json", "r")
+        codes_file = open("weatherlog_resources/appdata/weather_codes.json", "r")
         codes = json.load(codes_file)
         codes_file.close()
     
@@ -161,22 +163,15 @@ def get_last_profile(main_dir, conf_dir):
 def get_config(conf_dir, get_default = False):
     """Loads the settings."""
     
-    default_config  = {"pre-fill": False,
-                      "restore": True,
-                      "location": "",
-                      "units": "metric",
-                      "pastebin": "d2314ff616133e54f728918b8af1500e",
-                      "show_units": True,
-                      "show_dates": True,
-                      "confirm_del": True,
-                      "show_pre-fill": True,
-                      "confirm_exit": False,
-                      "import_all": False,
-                      "truncate_notes": True,
-                      "graph_color": "#0000FF",
-                      "line_width": 1,
-                      "line_style": "Solid",
-                      "hatch_style": "Solid"}
+    # Get the default configuration.
+    try:
+        default_config_file = open("weatherlog_resources/appdata/default_config.json", "r")
+        default_config = json.load(default_config_file)
+        default_config_file.close()
+    
+    except IOError as e:
+        print("get_config(): Error reading default config file (IOError):\n%s" % e)
+        sys.exit()
 
     # Get the configuration.
     try:
@@ -195,13 +190,12 @@ def get_config(conf_dir, get_default = False):
     return config
 
 
-def get_window_size(conf_dir, config):
+def get_window_size(conf_dir, config, default_width, default_height):
     """Gets the last window size."""
 
     # If the user doesn't want to restore the window size, set the size to the defaults.
     if not config["restore"]:
-        last_width = 900
-        last_height = 500
+        return default_width, default_height
 
     # Otherwise, get the previous window size.
     else:
@@ -215,42 +209,26 @@ def get_window_size(conf_dir, config):
         except IOError as e:
             # If there was an error, use the default size instead.
             print("get_window_size(): Error reading window size file (IOError):\n%s\nContinuing with default..." % e)
-            last_width = 900
-            last_height = 500
+            last_width = default_width
+            last_height = default_height
 
     return last_width, last_height
 
 
 def get_units(config):
     """Gets the units."""
-
-    # Metric:
-    if config["units"] == "metric":
-
-        # Temperature is Celsius.
-        # Precipitation is centimeters.
-        # Wind speed is kilometers per hour.
-        # Air pressure is hecto-pascals.
-        units = {"temp": "°C",
-                 "prec": "cm",
-                 "wind": "kph",
-                 "airp": "hPa",
-                 "visi": "km"}
-
-    # Imperial:
-    elif config["units"] == "imperial":
-
-        # Temperature is Fahrenheit.
-        # Precipitation is inches.
-        # Wind speed is miles per hour
-        # Air pressure is millibars.
-        units = {"temp": "°F",
-                 "prec": "in",
-                 "wind": "mph",
-                 "airp": "mbar",
-                 "visi": "mi"}
-
-    return units
+    
+    # Get the units.
+    try:
+        units_file = open("weatherlog_resources/appdata/units.json", "r")
+        units = json.load(units_file)
+        units_file.close()
+    
+    except IOError as e:
+        print("get_units(): Error reading units file (IOError):\n%s" % e)
+        sys.exit()
+    
+    return units[config["units"]]
 
 
 def get_data(main_dir, last_profile):
