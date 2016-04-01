@@ -14,5 +14,6 @@
     "graph_color": "#0000FF",
     "line_width": 1,
     "line_style": "Solid",
-    "hatch_style": "Solid"
+    "hatch_style": "Solid",
+    "debug_mode": false
 }

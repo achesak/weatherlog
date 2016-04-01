@@ -13,5 +13,13 @@
         "wind": "mph",
         "airp": "mbar",
         "visi": "mi"
+    },
+    
+    "default": {
+        "temp": "°C",
+        "prec": "cm",
+        "wind": "kph",
+        "airp": "hPa",
+        "visi": "km"
     }
 }

@@ -382,6 +382,7 @@ class WeatherLog(Gtk.Window):
         # Update the title and save the data.
         self.update_title()
         self.save()
+        self.debug("add_new", new_data)
     
     
     def edit(self, event, edit_date = None):
@@ -462,6 +463,7 @@ class WeatherLog(Gtk.Window):
         
         # Save the data.
         self.save()
+        self.debug("edit", new_data)
     
     
     def remove(self, event):
@@ -513,6 +515,7 @@ class WeatherLog(Gtk.Window):
         # Update the title and save the data.
         self.update_title()
         self.save()
+        self.debug("remove", index)
     
     
     def get_weather(self, here):
@@ -1901,6 +1904,15 @@ class WeatherLog(Gtk.Window):
         
         self.set_title(new_title)
         return new_title
+    
+    
+    def debug(self, caller, data):
+        """Debug mode function."""
+        
+        if self.config["debug_mode"]:
+            print("Dataset - main dir - conf dir: %s - %s - %s" % (self.last_profile, self.main_dir, self.conf_dir))
+            print("Caller function: %s" % caller)
+            print("Data: %s" % data)
     
     
     def show_about(self, event):

@@ -64,7 +64,7 @@ class AddNewDialog(Gtk.Dialog):
         temp_lbl = Gtk.Label("Temperature: ")
         temp_lbl.set_alignment(0, 0.5)
         new_grid.attach_next_to(temp_lbl, date_lbl, Gtk.PositionType.BOTTOM, 1, 1)
-        if units["temp"] == "°C":
+        if units["temp"].encode("utf-8") == "°C":
             temp_adj = Gtk.Adjustment(lower = -100, upper = 100, step_increment = 1)
         else:
             temp_adj = Gtk.Adjustment(lower = -150, upper = 150, step_increment = 1)
@@ -82,7 +82,7 @@ class AddNewDialog(Gtk.Dialog):
         chil_lbl = Gtk.Label("Wind Chill: ")
         chil_lbl.set_alignment(0, 0.5)
         new_grid.attach_next_to(chil_lbl, temp_lbl, Gtk.PositionType.BOTTOM, 1, 1)
-        if units["temp"] == "°C":
+        if units["temp"].encode("utf-8") == "°C":
             chil_adj = Gtk.Adjustment(lower = -100, upper = 100, step_increment = 1)
         else:
             chil_adj = Gtk.Adjustment(lower = -150, upper = 150, step_increment = 1)
