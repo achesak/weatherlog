@@ -1238,7 +1238,7 @@ class WeatherLog(Gtk.Window):
         
         # Only show the dialog if the user wants that.
         if self.config["confirm_del"]:
-            response = show_question_dialog(self, "Clear Current Data - %s" % self.last_profile, "Are you sure you want to clear the data?\n\nThis action cannot be undone.")
+            response = show_question_dialog(self, "Clear Current Data - %s" % self.last_profile, "Are you sure you want to clear the data? This action cannot be undone.")
             if response != Gtk.ResponseType.OK:
                 return
         
@@ -1256,7 +1256,7 @@ class WeatherLog(Gtk.Window):
         
         # Only show the confirmation dialog if the user wants that.
         if self.config["confirm_del"]:
-            response = show_question_dialog(self, "Clear All Data", "Are you sure you want to clear all the data?\n\nThis action cannot be undone.")
+            response = show_question_dialog(self, "Clear All Data", "Are you sure you want to clear all the data? This action cannot be undone.")
             if response != Gtk.ResponseType.OK:
                 return
 
@@ -1394,7 +1394,7 @@ class WeatherLog(Gtk.Window):
         
         # Only show the confirmation dialog if the user wants that.
         if self.config["confirm_del"]:
-            response = show_question_dialog(self, "Remove Datasets", "Are you sure you want to remove the dataset%s?\n\nThis action cannot be undone." % ("" if len(profiles) == 1 else "s"))
+            response = show_question_dialog(self, "Remove Datasets", "Are you sure you want to remove the dataset%s? This action cannot be undone." % ("" if len(profiles) == 1 else "s"))
             if response != Gtk.ResponseType.OK:
                 return
         
