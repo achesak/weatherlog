@@ -37,7 +37,7 @@ class DataSubsetSelectionDialog(Gtk.Window):
         self.config = config
         self.units = units
 
-        # Create the box.
+        # Create the grid.
         sel_grid = Gtk.Grid()
         sel_grid.set_column_spacing(10)
         input_grid = Gtk.Grid()

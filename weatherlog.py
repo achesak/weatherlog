@@ -500,7 +500,10 @@ class WeatherLog(Gtk.Window):
         
         # COnfirm that the user wants to delete the row.
         if self.config["confirm_del"]:
-            response = show_question_dialog(self, "Remove Data - %s" % self.last_profile, "Are you sure you want to delete the selected date%s?\n\nThis action cannot be undone." % ("s" if len(ndates) > 1 else ""))
+            dates = ""
+            for date in ndates:
+                dates += date + "\n"
+            response = show_question_dialog(self, "Remove Data - %s" % self.last_profile, "Are you sure you want to delete the selected date%s? This action cannot be undone.\n\nSelected dates:\n%s" % ("s" if len(ndates) > 1 else "", dates))
             if response != Gtk.ResponseType.OK:
                 return
         
