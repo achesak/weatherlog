@@ -103,7 +103,7 @@ class WeatherLog(Gtk.Window):
         """Initializes the application."""
         
         # Get the application's UI data.
-        self.VERSION, self.TITLE, self.MENU_DATA, self.ICON_SMALL, self.ICON_MEDIUM, self.default_width, self.default_height, self.help_link = launch.get_ui_info()
+        self.version, self.title, self.menu_data, self.icon_small, self.icon_medium, self.default_width, self.default_height, self.help_link = launch.get_ui_info()
         # Get the data and configuration directories.
         self.main_dir, self.conf_dir = launch.get_main_dir()
         # Check if the directory and base files exist, and create them if they don't.
@@ -146,9 +146,9 @@ class WeatherLog(Gtk.Window):
         """Creates the user interface."""
         
         # Create the window.
-        Gtk.Window.__init__(self, title = self.TITLE)
+        Gtk.Window.__init__(self, title = self.title)
         self.set_default_size(self.last_width, self.last_height)
-        self.set_icon_from_file(self.ICON_SMALL)
+        self.set_icon_from_file(self.icon_small)
         
         # Create the main UI.
         self.liststore = Gtk.ListStore(str, str, str, str, str, str, str, str, str, str)
@@ -239,7 +239,7 @@ class WeatherLog(Gtk.Window):
         
         # Set up the menus.
         ui_manager = Gtk.UIManager()
-        ui_manager.add_ui_from_string(self.MENU_DATA)
+        ui_manager.add_ui_from_string(self.menu_data)
         accel_group = ui_manager.get_accel_group()
         self.add_accel_group(accel_group)
         ui_manager.insert_action_group(action_group)
@@ -1922,7 +1922,7 @@ class WeatherLog(Gtk.Window):
         """Shows the About dialog."""
         
         # Load the icon.
-        img_file = open(self.ICON_MEDIUM, "rb")
+        img_file = open(self.icon_medium, "rb")
         img_bin = img_file.read()
         img_file.close()
         loader = GdkPixbuf.PixbufLoader.new_with_type("png")
@@ -1931,7 +1931,7 @@ class WeatherLog(Gtk.Window):
         pixbuf = loader.get_pixbuf()
         
         # Show the dialog.
-        about_dlg = WeatherLogAboutDialog(self, self.TITLE, self.VERSION, pixbuf, license_text)
+        about_dlg = WeatherLogAboutDialog(self, self.title, self.version, pixbuf, license_text)
         about_dlg.run()
         about_dlg.destroy()
 
