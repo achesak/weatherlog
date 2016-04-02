@@ -68,7 +68,8 @@ def get_ui_info():
     icon_medium_about = ui_data["icon_medium_about"]
     default_width = ui_data["default_width"]
     default_height = ui_data["default_height"]
-    return version, title, menu_data, icon_small, icon_medium, default_width, default_height
+    help_link = ui_data["help_link"]
+    return version, title, menu_data, icon_small, icon_medium, default_width, default_height, help_link
 
 
 def get_weather_codes():
