@@ -132,7 +132,7 @@ class WeatherLog(Gtk.Window):
         
         # If the dataset could not be found, tell the user and save as the default dataset.
         if not self.profile_exists:
-            show_alert_dialog(self, "WeatherLog", "The dataset \"%s\" could not be found and was not loaded." % self.original_profile)
+            show_alert_dialog(self, self.title, "The dataset \"%s\" could not be found and was not loaded." % self.original_profile)
             self.save()
         
         # Add the data.
@@ -1901,9 +1901,9 @@ class WeatherLog(Gtk.Window):
         """Updates the window title."""
         
         if self.config["show_dates"]:
-            new_title = "WeatherLog - %s - %s to %s" % (self.last_profile, (self.data[0][0] if len(self.data) != 0 else "None"), (self.data[len(self.data)-1][0] if len(self.data) != 0 else "None"))
+            new_title = "%s - %s - %s to %s" % (self.title, self.last_profile, (self.data[0][0] if len(self.data) != 0 else "None"), (self.data[len(self.data)-1][0] if len(self.data) != 0 else "None"))
         else:
-            new_title = "WeatherLog - %s" % self.last_profile
+            new_title = "%s - %s" % (self.title, self.last_profile)
         
         self.set_title(new_title)
         return new_title
