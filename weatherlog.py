@@ -1372,11 +1372,6 @@ class WeatherLog(Gtk.Window):
         # Get the list of datasets.
         starting_profiles = io.get_profile_list(self.main_dir, self.last_profile, exclude_current = False)
         
-        # If there are no other datasets, cancel the action.
-        if len(starting_profiles) == 0:
-            show_alert_dialog(self, "Remove Datasets", "There are no other datasets.")
-            return
-        
         # Get the datasets to remove.
         rem_dlg = DatasetSelectionDialog(self, "Remove Datasets", starting_profiles, select_mode = DatasetSelectionMode.MULTIPLE)
         response = rem_dlg.run()
@@ -1433,11 +1428,6 @@ class WeatherLog(Gtk.Window):
         
         # Get the list of datasets.
         profiles = io.get_profile_list(self.main_dir, self.last_profile, exclude_current = False)
-        
-        # If there are no other datasets, tell the user and cancel the action.
-        if len(profiles) == 0:
-            show_alert_dialog(self, "Rename Dataset", "There are no other datasets.")
-            return
         
         # Get the dataset to rename.
         rds_dlg = DatasetSelectionDialog(self, "Rename Dataset", profiles)
