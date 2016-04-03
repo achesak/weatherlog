@@ -3,7 +3,6 @@
     "restore": true,
     "location": "",
     "units": "metric",
-    "pastebin": "d2314ff616133e54f728918b8af1500e",
     "show_units": true,
     "show_dates": true,
     "confirm_del": true,
@@ -15,5 +14,9 @@
     "line_width": 1,
     "line_style": "Solid",
     "hatch_style": "Solid",
-    "debug_mode": false
+    "debug_mode": false,
+    "pastebin": "d2314ff616133e54f728918b8af1500e",
+    "pastebin_exposure": 0,
+    "pastebin_default_name": "WeatherLog exported data",
+    "pastebin_expires": "N"
 }

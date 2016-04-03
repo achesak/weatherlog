@@ -31,12 +31,18 @@ def upload_pastebin(data, name, mode, units, config):
     # Build the api string.
     api = {"api_option": "paste",
            "api_dev_key": config["pastebin"],
+           "api_paste_private": config["pastebin_exposure"],
+           "api_paste_expire_date": config["pastebin_expires"],
            "api_paste_code": new_data}
+           
     if mode == "html":
         api["api_paste_format"] = "html5"
     elif mode == "raw":
         api["api_paste_format"] = "javascript"
-    if name.lstrip().rstrip() != "":
+    
+    if name.lstrip().rstrip() == "":
+        api["api_paste_name"] = config["pastebin_default_name"]
+    else:
         api["api_paste_name"] = name.lstrip().rstrip()
     
     # Upload the text.
