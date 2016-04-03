@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 
-# This file defines the About dialog.
+# This file defines the about dialog.
 
 
 # Import Gtk for the dialog.

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 
-# This file defines the generic info dialog.
+# This file defines the current weather dialog.
 
 
 # Import GTK for the dialog.

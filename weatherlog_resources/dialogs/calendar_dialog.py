@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 
-# This file defines the generic calendar dialog.
+# This file defines the calendar dialog.
 
 
 # Import GTK for the dialog.

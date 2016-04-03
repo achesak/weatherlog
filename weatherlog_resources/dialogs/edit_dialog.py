@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 
-# This file defines the Edit dialog.
+# This file defines the edit dialog.
 
 
 # Import GTK for the dialog.

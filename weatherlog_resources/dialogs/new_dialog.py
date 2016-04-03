@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 
-# This file defines the Add New dialog.
+# This file defines the add new dialog.
 
 
 # Import time for getting the current date.

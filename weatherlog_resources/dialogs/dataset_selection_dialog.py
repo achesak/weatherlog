@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 
-# This file defines the generic dialog for selecting a dataset.
+# This file defines the dialog for selecting a dataset.
 
 
 # Import GTK for the dialog.

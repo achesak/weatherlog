@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 
-# This file defines the generic dialog for selecting dates.
+# This file defines the dialog for selecting dates.
 
 
 # Import GTK for the dialog.

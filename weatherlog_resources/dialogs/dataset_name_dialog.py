@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 
-# This file defines the generic dialog for entering a dataset name.
+# This file defines the dialog for entering a dataset name.
 
 
 # Import GTK for the dialog.
