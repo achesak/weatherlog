@@ -1230,7 +1230,9 @@ class WeatherLog(Gtk.Window):
         elif pastebin_response == PastebinExport.ERROR:
             show_error_dialog(self, "Export to Pastebin - %s" % self.last_profile, "The data could not be uploaded to Pastebin.")
         elif pastebin_response == PastebinExport.SUCCESS:
-            show_alert_dialog(self, "Export to Pastebin - %s" % self.last_profile, "The data has been uploaded to Pastebin, and can be accessed at the following URL:\n\n%s" % result)
+            response = show_alert_dialog(self, "Export to Pastebin - %s" % self.last_profile, "The data has been uploaded to Pastebin, and can be accessed at the following URL:\n\n%s\n\nPress \"OK\" to open the link in a web browser." % result, show_cancel = True)
+            if response == Gtk.ResponseType.OK:
+                webbrowser.open(result)
     
     
     def clear(self, event):

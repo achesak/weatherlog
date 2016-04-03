@@ -13,13 +13,16 @@ __all__ = ["show_alert_dialog", "show_error_dialog", "show_question_dialog", "sh
            "show_export_dialog", "show_save_dialog", "show_no_data_dialog", "show_import_dialog"]
 
 
-def show_alert_dialog(self, title, msg):
+def show_alert_dialog(self, title, msg, show_cancel = False):
     """Shows the alert dialog."""
     
-    alert_dlg = Gtk.MessageDialog(self, 0, Gtk.MessageType.INFO, Gtk.ButtonsType.OK, title)
+    buttons = Gtk.ButtonsType.OK_CANCEL if show_cancel else Gtk.ButtonsType.OK
+    alert_dlg = Gtk.MessageDialog(self, 0, Gtk.MessageType.INFO, buttons, title)
     alert_dlg.format_secondary_text(msg)
-    alert_dlg.run()
+    response = alert_dlg.run()
     alert_dlg.destroy()
+    
+    return response
 
 
 def show_error_dialog(self, title, msg):
