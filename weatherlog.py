@@ -108,10 +108,10 @@ class WeatherLog(Gtk.Window):
         self.main_dir, self.conf_dir = launch.get_main_dir()
         # Get the configuration.
         self.config = launch.get_config(self.conf_dir)
-        # Get the application restore data.
-        self.last_profile, self.original_profile, self.profile_exists, self.last_width, self.last_height = launch.get_restore_data(self.main_dir, self.conf_dir, self.config, self.default_width, self.default_height)
         # Check if the directory and base files exist, and create them if they don't.
         launch.check_files_exist(self.main_dir, self.conf_dir)
+        # Get the application restore data.
+        self.last_profile, self.original_profile, self.profile_exists, self.last_width, self.last_height = launch.get_restore_data(self.main_dir, self.conf_dir, self.config, self.default_width, self.default_height)
         # Get the units.
         self.units = launch.get_units(self.config)
         # Get the dataset data.
@@ -1957,3 +1957,12 @@ if __name__ == "__main__" and len(sys.argv) == 1:
     win.connect("delete-event", win.exit)
     win.show_all()
     Gtk.main()
+
+# "purge" command: deletes all program files
+elif __name__ == "__main__" and len(sys.argv) == 2 and sys.argv[1] == "purge":
+    
+    main_dir, conf_dir = launch.get_main_dir()
+    if os.path.exists(main_dir):
+        shutil.rmtree(main_dir)
+    if os.path.exists(conf_dir):
+        shutil.rmtree(conf_dir)
