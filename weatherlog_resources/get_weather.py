@@ -22,7 +22,7 @@ def get_weather(location, config, units, weather_codes):
     result = pywapi.get_weather_from_yahoo(location, config["units"])
     if isinstance(result, str):
         return result, False, False
-    if result["error"]:
+    elif "error" in result:
         return result["error"], False, False
     if units["airp"] == "mbar":
         result["atmosphere"]["pressure"] = str(float(result["atmosphere"]["pressure"]) * 33.86389)
@@ -78,7 +78,76 @@ def get_weather(location, config, units, weather_codes):
         float(result["atmosphere"]["visibility"])
     ]
 
-    return result["location"]["city"], data, prefill_data
+    return result["location"]["city"], data, prefill_data, int(result["condition"]["code"])
+
+
+def get_weather_image(code):
+    """Gets the path to the image to display for the given code. Uses Yahoo Weather codes."""
+    
+    base_url = "weatherlog_resources/images/weather_icons/"
+    img_url = "error.png"
+    
+    # Sunny:
+    if code in [32, 34]:
+        img_url = "sunny.png"
+    
+    # Cloudy:
+    if code in [26]:
+        img_url = "cloudy.png"
+    
+    # Clear (night):
+    if code in [31, 33]:
+        img_url = "clear_night.png"
+    
+    # Partly cloudy and similar:
+    if code in [27, 28, 29, 30, 44]:
+        img_url = "partly_cloudy.png"
+    
+    # Fog and similar:
+    if code in [19, 20, 21, 22]:
+        img_url = "fog.png"
+    
+    # Windy and similar:
+    if code in [23, 24, 0, 2, 15]:
+        img_url = "windy.png"
+    
+    # Light rain and similar:
+    if code in [8, 9]:
+        img_url = "rain_little.png"
+    
+    # Rain and similar:
+    if code in [10, 11, 12, 40]:
+        img_url = "rain.png"
+    
+    # Heavy rain and similar:
+    if code in [1, 6, 17, 18, 35]:
+        img_url = "rain_lots.png"
+    
+    # Thunderstorms and similar:
+    if code in [4, 37, 38, 39, 45, 47]:
+        img_url = "rain_thunder.png"
+    
+    # Heavy thunderstorms and similar:
+    if code in [3]:
+        img_url = "rain_thunder_lots.png"
+    
+    # Mixed snow - rain and similar:
+    if code in [5, 7]:
+        img_url = "rain_snow.png"
+    
+    # Light snow and similar:
+    if code in [13, 14]:
+        img_url = "snow_little.png"
+    
+    # Snow and similar:
+    if code in [16, 42, 46]:
+        img_url = "snow.png"
+    
+    # Heavy snow and similar:
+    if code in [41, 43]:
+        img_url = "snow_lots.png"
+    
+    return base_url + img_url
 
 
 def get_prefill_data(user_location, units):

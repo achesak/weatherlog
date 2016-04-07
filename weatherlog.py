@@ -544,7 +544,8 @@ class WeatherLog(Gtk.Window):
             return
         
         # Get the weather data.
-        city, data, prefill_data = get_weather.get_weather(location, self.config, self.units, self.weather_codes)
+        city, data, prefill_data, code = get_weather.get_weather(location, self.config, self.units, self.weather_codes)
+        image_url = get_weather.get_weather_image(code)
         
         # Check if there was an error. Usually this is because the user has no internet connection.
         if isinstance(city, str) and not data and not prefill_data:
@@ -552,7 +553,7 @@ class WeatherLog(Gtk.Window):
             return
         
         # Show the current weather.
-        info_dlg = CurrentWeatherDialog(self, "Current Weather For %s" % city, data)
+        info_dlg = CurrentWeatherDialog(self, "Current Weather For %s" % city, data, image_url)
         response = info_dlg.run()
         info_dlg.destroy()
         
