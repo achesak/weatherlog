@@ -28,4 +28,6 @@ WeatherLog is released under the [MIT open source license](http://opensource.org
 WeatherLog uses [python-weather-api](https://launchpad.net/python-weather-api) to get data from weather APIs. See the `README` and `LICENSE` files in
 `weatherlog_resources/dialogs/pywapi` for more information.
 
-The program icon is from an [icon set by Mr J](https://www.iconfinder.com/search/?q=iconset:weather-icons-8).
+Icons:
+* Weather icons from a set by [Mr J](https://www.iconfinder.com/iconsets/weather-icons-8).
+* Error icon from a [set](https://www.iconfinder.com/iconsets/freecns-cumulus) by [Yannik Lung](http://yanlu.de/).
