@@ -176,7 +176,7 @@ def get_config(conf_dir, get_default = False):
 
     # Get the configuration.
     try:
-        config_file = open("%s/config" % conf_dir, "r")
+        config_file = open("%s/config.json" % conf_dir, "r")
         config = json.load(config_file)
         config_file.close()
 

@@ -152,7 +152,7 @@ def write_config(conf_dir, config):
     """Saves the configuration."""
 
     try:
-        config_file = open("%s/config" % conf_dir, "w")
+        config_file = open("%s/config.json" % conf_dir, "w")
         json.dump(config, config_file)
         config_file.close()
 
