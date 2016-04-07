@@ -1945,6 +1945,9 @@ class WeatherLog(Gtk.Window):
             if response != Gtk.ResponseType.OK:
                 return
         
+        # Save the data.
+        self.save()
+        
         # Close the  application.
         Gtk.main_quit()
 
