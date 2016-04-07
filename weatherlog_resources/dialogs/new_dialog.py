@@ -248,7 +248,8 @@ class AddNewDialog(Gtk.Dialog):
             station, data = get_weather.get_prefill_data(user_location, units)
             
             if not station:
-                show_error_dialog(self, "Add New Data- %s" % profile, "Error:\n\n%s" % data["error"])
+                error_message = data if isinstance(data, str) else data["error"]
+                show_error_dialog(self, "Add New Data - %s" % profile, "Error:\n\n%s" % error_message)
             else:
                 self.temp_sbtn.set_value(data["temp"])
                 self.chil_sbtn.set_value(data["chil"])

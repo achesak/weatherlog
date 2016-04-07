@@ -20,6 +20,10 @@ def get_weather(location, config, units, weather_codes):
 
     # Get the current weather and organize it.
     result = pywapi.get_weather_from_yahoo(location, config["units"])
+    if isinstance(result, str):
+        return result, False, False
+    if result["error"]:
+        return result["error"], False, False
     if units["airp"] == "mbar":
         result["atmosphere"]["pressure"] = str(float(result["atmosphere"]["pressure"]) * 33.86389)
     data = []
