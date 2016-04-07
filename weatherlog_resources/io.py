@@ -163,13 +163,13 @@ def write_config(conf_dir, config):
         print("write_config(): Error saving configuration file (TypeError or ValueError):\n%s" % e)
 
 
-def write_last_profile(conf_dir, last_profile):
-    """Saves the last dataset."""
+def write_restore_data(conf_dir, last_dataset, window_height, window_width):
+    """Saves the last dataset and window size."""
 
     try:
-        prof_file = open("%s/lastprofile" % conf_dir, "w")
-        prof_file.write(last_profile)
-        prof_file.close()
+        rest_file = open("%s/application_restore.json" % conf_dir, "w")
+        json.dump({"last_dataset": last_dataset, "window_height": window_height, "window_width": window_width}, rest_file)
+        rest_file.close()
 
     except IOError as e:
-        print("write_last_profile(): Error saving dataset file (IOError):\n%s" % e)
+        print("write_last_profile(): Error saving application restore file (IOError):\n%s" % e)

@@ -111,56 +111,6 @@ def check_files_exist(main_dir, conf_dir):
         last_prof.close()
 
 
-def get_last_profile(main_dir, conf_dir):
-    """Returns the last dataset, the original dataset to be loaded, and whether the dataset exists. Creates the dataset if it doesn't exist."""
-
-    try:
-        # Load the last dataset file.
-        prof_file = open("%s/lastprofile" % conf_dir, "r")
-        last_profile = prof_file.read().rstrip()
-        prof_file.close()
-
-        # Get the list of datasets.
-        current_dir = os.getcwd()
-        os.chdir("%s/profiles" % main_dir)
-        profiles_list = glob.glob("*")
-        os.chdir(current_dir)
-
-        # Check if the dataset exists:
-        if last_profile in profiles_list:
-            profile_exists = True
-            original_profile = ""
-        else:
-            profile_exists = False
-            original_profile = last_profile
-
-    except IOError as e:
-        print("get_last_profile(): Error reading dataset file (IOError):\n%s" % e)
-        sys.exit()
-
-    # If the dataset doesn't exist, switch or make one that does:
-    if not profile_exists:
-
-        # If the default dataset exists, switch to that.
-        if "Main Dataset" in profiles_list:
-            last_profile = "Main Dataset"
-
-        # Otherwise, create the dataset:
-        else:
-
-            # Create the Main Dataset directory and data file.
-            os.makedirs("%s/profiles/Main Dataset" % main_dir)
-            last_prof_data = open("%s/profiles/Main Dataset/weather" % main_dir, "w")
-            pickle.dump([], last_prof_data)
-            last_prof_data.close()
-            create_metadata(main_dir, "Main Dataset")
-
-            # Set the dataset name.
-            last_profile = "Main Dataset"
-
-    return last_profile, original_profile, profile_exists
-
-
 def get_config(conf_dir, get_default = False):
     """Loads the settings."""
     
@@ -191,29 +141,64 @@ def get_config(conf_dir, get_default = False):
     return config
 
 
-def get_window_size(conf_dir, config, default_width, default_height):
+def get_restore_data(main_dir, conf_dir, config, default_width, default_height, default_profile = "Main Dataset"):
     """Gets the last window size."""
 
+    # Otherwise, get the previous window size.
+    try:
+        rest_file = open("%s/application_restore.json" % conf_dir, "r")
+        rest_data = json.load(rest_file)
+        rest_file.close()
+        last_width = rest_data["window_width"]
+        last_height = rest_data["window_height"]
+        last_profile = rest_data["last_dataset"]
+
+    except IOError as e:
+        # If there was an error, use the default data instead.
+        print("get_window_size(): Error reading application restore file (IOError):\n%s\nContinuing with default..." % e)
+        last_width = default_width
+        last_height = default_height
+        last_profile = default_profile
+    
+    # Get the list of datasets.
+    current_dir = os.getcwd()
+    os.chdir("%s/profiles" % main_dir)
+    profiles_list = glob.glob("*")
+    os.chdir(current_dir)
+
+    # Check if the dataset exists:
+    if last_profile in profiles_list:
+        profile_exists = True
+        original_profile = ""
+    else:
+        profile_exists = False
+        original_profile = last_profile
+    
+    # If the dataset doesn't exist, switch or make one that does:
+    if not profile_exists:
+
+        # If the default dataset exists, switch to that.
+        if "Main Dataset" in profiles_list:
+            last_profile = "Main Dataset"
+
+        # Otherwise, create the dataset:
+        else:
+
+            # Create the Main Dataset directory and data file.
+            os.makedirs("%s/profiles/Main Dataset" % main_dir)
+            last_prof_data = open("%s/profiles/Main Dataset/weather" % main_dir, "w")
+            pickle.dump([], last_prof_data)
+            last_prof_data.close()
+            create_metadata(main_dir, "Main Dataset")
+
+            # Set the dataset name.
+            last_profile = "Main Dataset"
+    
     # If the user doesn't want to restore the window size, set the size to the defaults.
     if not config["restore"]:
-        return default_width, default_height
+        return last_profile, original_profile, profile_exists, default_width, default_height
 
-    # Otherwise, get the previous window size.
-    else:
-
-        try:
-            wins_file = open("%s/window_size" % conf_dir, "r")
-            last_width = int(wins_file.readline())
-            last_height = int(wins_file.readline())
-            wins_file.close()
-
-        except IOError as e:
-            # If there was an error, use the default size instead.
-            print("get_window_size(): Error reading window size file (IOError):\n%s\nContinuing with default..." % e)
-            last_width = default_width
-            last_height = default_height
-
-    return last_width, last_height
+    return last_profile, original_profile, profile_exists, last_width, last_height
 
 
 def get_units(config):

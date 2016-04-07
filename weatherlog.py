@@ -106,14 +106,12 @@ class WeatherLog(Gtk.Window):
         self.version, self.title, self.menu_data, self.icon_small, self.icon_medium, self.default_width, self.default_height, self.help_link = launch.get_ui_info()
         # Get the data and configuration directories.
         self.main_dir, self.conf_dir = launch.get_main_dir()
-        # Check if the directory and base files exist, and create them if they don't.
-        launch.check_files_exist(self.main_dir, self.conf_dir)
-        # Get the last dataset.
-        self.last_profile, self.original_profile, self.profile_exists = launch.get_last_profile(self.main_dir, self.conf_dir)
         # Get the configuration.
         self.config = launch.get_config(self.conf_dir)
-        # Get the previous window size.
-        self.last_width, self.last_height = launch.get_window_size(self.conf_dir, self.config, self.default_width, self.default_height)
+        # Get the application restore data.
+        self.last_profile, self.original_profile, self.profile_exists, self.last_width, self.last_height = launch.get_restore_data(self.main_dir, self.conf_dir, self.config, self.default_width, self.default_height)
+        # Check if the directory and base files exist, and create them if they don't.
+        launch.check_files_exist(self.main_dir, self.conf_dir)
         # Get the units.
         self.units = launch.get_units(self.config)
         # Get the dataset data.
@@ -276,14 +274,13 @@ class WeatherLog(Gtk.Window):
     
     
     def delete_event(self, widget, event):
-        """Saves the window size."""
+        """Saves the last dataset and window size."""
         
         # Get the current window size.
-        height, width = self.get_size()
-        size = "%d\n%d" % (height, width)
+        width, height = self.get_size()
         
-        # Save the window size.
-        io.write_standard_file("%s/window_size" % self.conf_dir, size)
+        # Save the restore data.
+        io.write_restore_data(self.conf_dir, self.last_profile,  height, width)
     
     
     def context_event(self, widget, event):
@@ -1863,9 +1860,6 @@ class WeatherLog(Gtk.Window):
             modified = "%d/%d/%d" % (now.day, now.month, now.year)
             creation, modified2 = io.get_metadata(self.main_dir, self.last_profile)
             io.write_metadata(self.main_dir, self.last_profile, creation, modified)
-            
-            # Save the last dataset.
-            io.write_last_profile(self.conf_dir, self.last_profile)
         
         # Save the configuration.
         io.write_config(self.conf_dir, self.config)
