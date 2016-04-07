@@ -261,8 +261,8 @@ def create_metadata(main_dir, last_profile):
 
     # Write the metadata to the file.
     try:
-        meta_file = open("%s/profiles/%s/metadata" % (main_dir, last_profile), "w")
-        meta_file.write("%s\n%s" % (modified, modified))
+        meta_file = open("%s/profiles/%s/metadata.json" % (main_dir, last_profile), "w")
+        json.dump({"creation": modified, "modified": modified}, meta_file)
         meta_file.close()
 
     except IOError as e:

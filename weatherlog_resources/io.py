@@ -122,10 +122,11 @@ def get_metadata(main_dir, last_profile):
     """Gets the current metadata."""
 
     try:
-        meta_file = open("%s/profiles/%s/metadata" % (main_dir, last_profile), "r")
-        creation = meta_file.readline().strip()
-        modified = meta_file.readline().strip()
+        meta_file = open("%s/profiles/%s/metadata.json" % (main_dir, last_profile), "r")
+        meta_data = json.load(meta_file)
         meta_file.close()
+        creation = meta_data["creation"]
+        modified = meta_data["modified"]
 
     except IOError as e:
         print("get_metadata(): Error reading metadata file (IOError):\n%s" % e)
@@ -139,8 +140,8 @@ def write_metadata(main_dir, last_profile, creation, modified):
     """Writes the metadata file."""
 
     try:
-        meta_file = open("%s/profiles/%s/metadata" % (main_dir, last_profile), "w")
-        meta_file.write("%s\n%s" % (creation, modified))
+        meta_file = open("%s/profiles/%s/metadata.json" % (main_dir, last_profile), "w")
+        json.dump({"creation": creation, "modified": modified}, meta_file)
         meta_file.close()
 
     except IOError as e:
