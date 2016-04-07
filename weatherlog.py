@@ -1281,7 +1281,7 @@ class WeatherLog(Gtk.Window):
         self.config = launch.get_config(self.conf_dir)
         
         # Configure the units.
-        self.units = launch.get_units(config)
+        self.units = launch.get_units(self.config)
         
         # Update the main window.
         self.temp_col.set_title("Temperature (%s)" % self.units["temp"])
