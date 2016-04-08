@@ -48,8 +48,6 @@ import datetime
 import shutil, os, os.path
 # Import sys for closing the application.
 import sys
-# Import copy for deep copying lists.
-import copy
 # Import pickle for loading and saving the data.
 try:
     import cPickle as pickle
@@ -1870,19 +1868,10 @@ class WeatherLog(Gtk.Window):
         """Updates the list of weather data."""
         
         # Truncate the note fields before the data is added to the interface.
-        new_data = copy.deepcopy(self.data)
         if self.config["truncate_notes"]:
-            for row in new_data:
-                note = row[9]
-                newline_split = False
-                if "\n" in note:
-                    note = note.splitlines()[0]
-                    newline_split = True
-                if len(note) > 46:
-                    note = note[0:40] + " [...]"
-                elif newline_split:
-                    note = note + " [...]"
-                row[9] = note
+            new_data = datasets.truncate_column(self.data, 9, 46)
+        else:
+            new_data = copy.deepcopy(self.data)
             
         self.liststore.clear()
         for i in new_data:

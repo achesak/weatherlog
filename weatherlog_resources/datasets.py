@@ -4,6 +4,10 @@
 # This file defines functions working with datasets.
 
 
+# Import copy for copying lists.
+import copy
+
+
 def convert_float(data):
     """Converts the list items to floats."""
     
@@ -100,3 +104,23 @@ def conflict_exists(data1, data2):
     """Checks if there are conflicts between data1 and data2 in the specified column."""
     
     return [[x, "Yes"] if x in data1 else [x, "No"] for x in data2]
+
+
+def truncate_column(data, column, max_length):
+    """Truncates a column."""
+    
+    new_data = copy.deepcopy(data)
+    
+    for row in new_data:
+        col = row[column]
+        newline_split = False
+        if "\n" in col:
+            col = col.splitlines()[0]
+            newline_split = True
+        if len(col) > max_length:
+            col = col[0:max_length - 6] + " [...]"
+        elif newline_split:
+            col = col + " [...]"
+        row[column] = col
+    
+    return new_data
