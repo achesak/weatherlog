@@ -51,6 +51,7 @@ class PastebinExport:
     SUCCESS = 0
     INVALID_KEY = 1
     ERROR = 2
+    NO_CONSTANTS = 3
 
 
 # Dataset selection mode:

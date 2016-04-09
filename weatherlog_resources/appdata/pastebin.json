@@ -1,0 +1,18 @@
+{
+    "expires": {
+        "Never": "N",
+        "10 Minutes": "10M",
+        "1 Hour": "1H",
+        "1 Day": "1D",
+        "1 Week": "1W",
+        "2 Weeks": "2W",
+        "1 Month": "1M"
+    },
+    
+    "exposure": {
+        "Public": 0,
+        "Unlisted": 1,
+        "Private": 2
+    }
+}
+

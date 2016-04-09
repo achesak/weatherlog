@@ -11,7 +11,7 @@ from gi.repository import Gtk
 class ExportPastebinDialog(Gtk.Dialog):
     """Shows the "Export to Pastebin" dialog."""
     
-    def __init__(self, parent, title):
+    def __init__(self, parent, title, config):
         """Create the dialog."""
         
         # Create the dialog.
@@ -28,19 +28,38 @@ class ExportPastebinDialog(Gtk.Dialog):
         nam_box.add(nam_grid)
         
         # Create the labels and entries.
-        nam_lbl = Gtk.Label("Paste name: ")
+        nam_lbl = Gtk.Label("Name: ")
         nam_lbl.set_alignment(0, 0.5)
         nam_grid.add(nam_lbl)
         self.nam_ent = Gtk.Entry()
         nam_grid.attach_next_to(self.nam_ent, nam_lbl, Gtk.PositionType.RIGHT, 1, 1)
+        
         for_lbl = Gtk.Label("Format: ")
         for_lbl.set_alignment(0, 0.5)
         nam_grid.attach_next_to(for_lbl, nam_lbl, Gtk.PositionType.BOTTOM, 1, 1)
         self.for_com = Gtk.ComboBoxText()
         for i in ["JSON", "HTML", "CSV"]:
             self.for_com.append_text(i)
-        self.for_com.set_active(0)
+        self.for_com.set_active(["JSON", "HTML", "CSV"].index(config["pastebin_format"]))
         nam_grid.attach_next_to(self.for_com, for_lbl, Gtk.PositionType.RIGHT, 1, 1)
+        
+        exi_lbl = Gtk.Label("Expires: ")
+        exi_lbl.set_alignment(0, 0.5)
+        nam_grid.attach_next_to(exi_lbl, for_lbl, Gtk.PositionType.BOTTOM, 1, 1)
+        self.exi_com = Gtk.ComboBoxText()
+        for i in ["Never", "1 Hour", "1 Day", "1 Week", "2 Weeks", "1 Month"]:
+            self.exi_com.append_text(i)
+        self.exi_com.set_active(["N", "1H", "1D", "1W", "2W", "1M"].index(config["pastebin_expires"]))
+        nam_grid.attach_next_to(self.exi_com, exi_lbl, Gtk.PositionType.RIGHT, 1, 1)
+        
+        exo_lbl = Gtk.Label("Exposure: ")
+        exo_lbl.set_alignment(0, 0.5)
+        nam_grid.attach_next_to(exo_lbl, exi_lbl, Gtk.PositionType.BOTTOM, 1, 1)
+        self.exo_com = Gtk.ComboBoxText()
+        for i in ["Public", "Unlisted"]:
+            self.exo_com.append_text(i)
+        self.exo_com.set_active(config["pastebin_exposure"])
+        nam_grid.attach_next_to(self.exo_com, exo_lbl, Gtk.PositionType.RIGHT, 1, 1)
         
         # Connect 'Enter' key to the OK button.
         ok_btn = self.get_widget_for_response(response_id = Gtk.ResponseType.OK)

@@ -17,8 +17,20 @@ import weatherlog_resources.export as export
 from weatherlog_resources.constants import *
 
 
-def upload_pastebin(data, name, mode, units, config):
+def upload_pastebin(data, name, mode, expires, exposure, units, config):
     """Uploads the data to pastebin."""
+    
+    # Load the constants file.
+    try:
+        const_file = open("weatherlog_resources/appdata/pastebin.json", "r")
+        const_data = json.load(const_file)
+        expires_dict = const_data["expires"]
+        exposure_dict = const_data["exposure"]
+        const_file.close()
+    
+    except IOError as e: 
+        print("upload_pastebin(): Error reading pastebin constants file (IOError):\n%s" % e)
+        return PastebinExport.NO_CONSTANTS, False
     
     # Convert the data.
     if mode == "html":
@@ -31,8 +43,8 @@ def upload_pastebin(data, name, mode, units, config):
     # Build the api string.
     api = {"api_option": "paste",
            "api_dev_key": config["pastebin"],
-           "api_paste_private": config["pastebin_exposure"],
-           "api_paste_expire_date": config["pastebin_expires"],
+           "api_paste_private": exposure_dict[exposure],
+           "api_paste_expire_date": expires_dict[expires],
            "api_paste_code": new_data}
            
     if mode == "html":

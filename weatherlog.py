@@ -1212,10 +1212,12 @@ class WeatherLog(Gtk.Window):
             return
         
         # Show the dialog and get the user's response.
-        pas_dlg = ExportPastebinDialog(self, "Export to Pastebin - %s" % self.last_profile)
+        pas_dlg = ExportPastebinDialog(self, "Export to Pastebin - %s" % self.last_profile, self.config)
         response = pas_dlg.run()
         name = pas_dlg.nam_ent.get_text()
         mode = pas_dlg.for_com.get_active_text().lower()
+        expires = pas_dlg.exi_com.get_active_text()
+        exposure = pas_dlg.exo_com.get_active_text()
         pas_dlg.destroy()
         
         # If the user didn't click OK, don't continue.
@@ -1223,13 +1225,15 @@ class WeatherLog(Gtk.Window):
             return
         
         # Upload the data.
-        pastebin_response, result = pastebin.upload_pastebin(self.data, name, mode, self.units, self.config)
+        pastebin_response, result = pastebin.upload_pastebin(self.data, name, mode, expires, exposure, self.units, self.config)
         
         # Check the return response.
         if pastebin_response == PastebinExport.INVALID_KEY:
             show_error_dialog(self, "Export to Pastebin - %s" % self.last_profile, "Invalid API key. Please check the key entered in the Options window.")
         elif pastebin_response == PastebinExport.ERROR:
             show_error_dialog(self, "Export to Pastebin - %s" % self.last_profile, "The data could not be uploaded to Pastebin.")
+        elif pastebin_response == PastebinExport.NO_CONSTANTS:
+            show_error_dialog(self, "Export to Pastebin - %s" % self.last_profile, "Missing constants file. The data could not be uploaded to Pastebin.")
         elif pastebin_response == PastebinExport.SUCCESS:
             response = show_alert_dialog(self, "Export to Pastebin - %s" % self.last_profile, "The data has been uploaded to Pastebin, and can be accessed at the following URL:\n\n%s\n\nPress \"OK\" to open the link in a web browser." % result, show_cancel = True)
             if response == Gtk.ResponseType.OK:

@@ -16,7 +16,8 @@
     "hatch_style": "Solid",
     "debug_mode": false,
     "pastebin": "d2314ff616133e54f728918b8af1500e",
-    "pastebin_exposure": 0,
     "pastebin_default_name": "WeatherLog exported data",
-    "pastebin_expires": "N"
+    "pastebin_format": "JSON",
+    "pastebin_expires": "N",
+    "pastebin_exposure": 0
 }
