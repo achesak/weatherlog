@@ -61,7 +61,7 @@ def html_generic(data_list, filename = None):
         # Create the table header.
         html += "<tr>"
         for table_header in table_data[0]:
-            html += "<th>" + html_cell(table_header) + "</th>"
+            html += "<th>" + html_cell(table_header.replace(u"\xb0", "")) + "</th>"
         html += "</tr>"
         
         # Create the table rows.

@@ -66,7 +66,6 @@ def upload_pastebin(data, name, mode, expires, exposure, units, config, title):
     
     # Upload the text.
     try:
-        print(api)
         pastebin = urlopen("http://pastebin.com/api/api_post.php", urlencode(api))
         result = pastebin.read()
         pastebin.close()
