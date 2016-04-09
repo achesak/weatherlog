@@ -116,6 +116,9 @@ class WeatherLog(Gtk.Window):
         self.data = launch.get_data(self.main_dir, self.last_profile)
         # Get the weather codes.
         self.weather_codes = launch.get_weather_codes()
+        # Get the Pastebin constants.
+        self.pastebin_constants = launch.get_pastebin_constants()
+        
         # Try importing matplotlib, just so we know if it's installed.
         try:
             from matplotlib.figure import Figure
@@ -290,13 +293,13 @@ class WeatherLog(Gtk.Window):
     
     
     def activated_event(self, widget, treepath, column):
-		"""Opens the edit dialog on double click."""
-		
-		# Get the selected date and pass it to the edit function.
-		tree_sel = self.treeview.get_selection()
-		tm, ti = tree_sel.get_selected()
-		date = tm.get_value(ti, 0)
-		self.edit(None, date)
+        """Opens the edit dialog on double click."""
+        
+        # Get the selected date and pass it to the edit function.
+        tree_sel = self.treeview.get_selection()
+        tm, ti = tree_sel.get_selected()
+        date = tm.get_value(ti, 0)
+        self.edit(None, date)
     
     
     def add_new(self, event, prefill_data = []):
@@ -388,14 +391,14 @@ class WeatherLog(Gtk.Window):
             date = edit_date
         
         else:
-	        try:
-	            tree_sel = self.treeview.get_selection()
-	            tm, ti = tree_sel.get_selected()
-	            date = tm.get_value(ti, 0)
-	        
-	        except:
-	            show_error_dialog(self, "Edit Data - %s" % self.last_profile, "No date selected.")
-	            return
+            try:
+                tree_sel = self.treeview.get_selection()
+                tm, ti = tree_sel.get_selected()
+                date = tm.get_value(ti, 0)
+            
+            except:
+                show_error_dialog(self, "Edit Data - %s" % self.last_profile, "No date selected.")
+                return
         
         # Get the index of the date.
         index = datasets.get_column(self.data, 0).index(date)
@@ -1225,7 +1228,7 @@ class WeatherLog(Gtk.Window):
             return
         
         # Upload the data.
-        pastebin_response, result = pastebin.upload_pastebin(self.data, name, mode, expires, exposure, self.units, self.config)
+        pastebin_response, result = pastebin.upload_pastebin(self.data, name, mode, expires, exposure, self.units, self.config, self.update_title())
         
         # Check the return response.
         if pastebin_response == PastebinExport.INVALID_KEY:
@@ -1760,7 +1763,6 @@ class WeatherLog(Gtk.Window):
         restore = opt_dlg.win_chk.get_active()
         location = opt_dlg.loc_ent.get_text()
         units_ = opt_dlg.unit_com.get_active_text().lower()
-        pastebin = opt_dlg.paste_ent.get_text()
         show_dates = opt_dlg.date_chk.get_active()
         show_units = opt_dlg.unit_chk.get_active()
         confirm_del = opt_dlg.del_chk.get_active()
@@ -1772,6 +1774,10 @@ class WeatherLog(Gtk.Window):
         line_width = opt_dlg.width_sbtn.get_value()
         line_style = opt_dlg.line_com.get_active_text()
         hatch_style = opt_dlg.hatch_com.get_active_text()
+        pastebin = opt_dlg.pname_ent.get_text()
+        pastebin_format = opt_dlg.pform_com.get_active_text()
+        pastebin_expires = opt_dlg.pexpi_com.get_active_text()
+        pastebin_exposure = opt_dlg.pexpo_com.get_active_text()
         opt_dlg.destroy()
         
         # If the user did not press OK or Reset, don't continue.
@@ -1796,7 +1802,6 @@ class WeatherLog(Gtk.Window):
             self.config["restore" ] = restore
             self.config["location"] = location
             self.config["units"] = units_
-            self.config["pastebin"] = pastebin
             self.config["show_dates"] = show_dates
             self.config["show_units"] = show_units
             self.config["confirm_del"] = confirm_del
@@ -1808,6 +1813,10 @@ class WeatherLog(Gtk.Window):
             self.config["line_width"] = line_width
             self.config["line_style"] = line_style
             self.config["hatch_style"] = hatch_style
+            self.config["pastebin"] = pastebin
+            self.config["pastebin_format"] = pastebin_format
+            self.config["pastebin_expires"] = self.pastebin_constants["expires"][pastebin_expires]
+            self.config["pastebin_exposure"] = self.pastebin_constants["exposure"][pastebin_exposure]
         
         # Configure the units.
         self.units = launch.get_units(self.config)
