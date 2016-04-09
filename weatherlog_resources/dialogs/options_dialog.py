@@ -62,7 +62,7 @@ class OptionsDialog(Gtk.Dialog):
         self.imp_chk.set_active(config["import_all"])
         gen_grid.attach_next_to(self.imp_chk, self.del_chk, Gtk.PositionType.BOTTOM, 2, 1)
         
-        # Create the Location entry.
+        # Create the location entry.
         loc_lbl = Gtk.Label("Location: ")
         loc_lbl.set_tooltip_text("Location used for automatically filling in fields when adding new data. Note that this must be a 5-digit US zip code.")
         loc_lbl.set_margin_left(5)
@@ -76,7 +76,7 @@ class OptionsDialog(Gtk.Dialog):
         self.loc_ent.set_text(config["location"])
         gen_grid.attach_next_to(self.loc_ent, loc_lbl, Gtk.PositionType.RIGHT, 1, 1)
         
-        # Create the Units combobox.
+        # Create the units combobox.
         unit_lbl = Gtk.Label("Units: ")
         unit_lbl.set_tooltip_text("Measurement units used for display and conversion.")
         unit_lbl.set_margin_left(5)
@@ -216,29 +216,71 @@ class OptionsDialog(Gtk.Dialog):
         self.hatch_com.set_active(hatch_styles.index(config["hatch_style"]))
         graph_grid.attach_next_to(self.hatch_com, hatch_lbl, Gtk.PositionType.RIGHT, 1, 1)
         
-        # Create the Technical tab.
-        tech_grid = Gtk.Grid()
-        tech_grid.set_hexpand(True)
-        tech_grid.set_vexpand(True)
-        tech_grid.set_column_spacing(10)
-        tech_grid.set_row_spacing(5)
-        tech_grid_lbl = Gtk.Label("Technical")
+        # Create the Pastebin tab.
+        paste_grid = Gtk.Grid()
+        paste_grid.set_hexpand(True)
+        paste_grid.set_vexpand(True)
+        paste_grid.set_column_spacing(10)
+        paste_grid.set_row_spacing(5)
+        paste_grid_lbl = Gtk.Label("Pastebin")
         
         # Create the pastebin devkey entry.
-        paste_lbl = Gtk.Label("Pastebin API key: ")
-        paste_lbl.set_tooltip_text("API key used for uploading to Pastebin.com.\n\nPlease replace with your own if you use this feature frequently.")
-        paste_lbl.set_margin_left(5)
-        paste_lbl.set_margin_top(5)
-        paste_lbl.set_margin_bottom(5) 
-        paste_lbl.set_alignment(0, 0.5)
-        tech_grid.add(paste_lbl)
-        self.paste_ent = Gtk.Entry()
-        self.paste_ent.set_margin_right(5)
-        self.paste_ent.set_margin_top(5)
-        self.paste_ent.set_margin_bottom(5) 
-        self.paste_ent.set_hexpand(True)
-        self.paste_ent.set_text(config["pastebin"])
-        tech_grid.attach_next_to(self.paste_ent, paste_lbl, Gtk.PositionType.RIGHT, 1, 1)
+        pname_lbl = Gtk.Label("API key: ")
+        pname_lbl.set_tooltip_text("API key used for uploading to Pastebin.com.\n\nPlease replace with your own if you use this feature frequently.")
+        pname_lbl.set_margin_left(5)
+        pname_lbl.set_margin_top(5)
+        pname_lbl.set_alignment(0, 0.5)
+        paste_grid.add(pname_lbl)
+        self.pname_ent = Gtk.Entry()
+        self.pname_ent.set_margin_right(5)
+        self.pname_ent.set_margin_top(5)
+        self.pname_ent.set_hexpand(True)
+        self.pname_ent.set_text(config["pastebin"])
+        paste_grid.attach_next_to(self.pname_ent, pname_lbl, Gtk.PositionType.RIGHT, 1, 1)
+        
+        # Create the pastebin default format combobox.
+        pform_lbl = Gtk.Label("Default format: ")
+        pform_lbl.set_tooltip_text("Default format")
+        pform_lbl.set_margin_left(5)
+        pform_lbl.set_alignment(0, 0.5)
+        paste_grid.attach_next_to(pform_lbl, pname_lbl, Gtk.PositionType.BOTTOM, 1, 1)
+        self.pform_com = Gtk.ComboBoxText()
+        self.pform_com.set_margin_right(5)
+        self.pform_com.set_hexpand(True)
+        for i in ["JSON", "HTML", "CSV"]:
+            self.pform_com.append_text(i)
+        self.pform_com.set_active(["JSON", "HTML", "CSV"].index(config["pastebin_format"]))
+        paste_grid.attach_next_to(self.pform_com, pform_lbl, Gtk.PositionType.RIGHT, 1, 1)
+        
+        # Create the pastebin default expiration combobox.
+        pexpi_lbl = Gtk.Label("Default expiration: ")
+        pexpi_lbl.set_tooltip_text("Default expiration")
+        pexpi_lbl.set_margin_left(5)
+        pexpi_lbl.set_alignment(0, 0.5)
+        paste_grid.attach_next_to(pexpi_lbl, pform_lbl, Gtk.PositionType.BOTTOM, 1, 1)
+        self.pexpi_com = Gtk.ComboBoxText()
+        self.pexpi_com.set_margin_right(5)
+        self.pexpi_com.set_hexpand(True)
+        for i in ["Never", "1 Hour", "1 Day", "1 Week", "2 Weeks", "1 Month"]:
+            self.pexpi_com.append_text(i)
+        self.pexpi_com.set_active(["N", "1H", "1D", "1W", "2W", "1M"].index(config["pastebin_expires"]))
+        paste_grid.attach_next_to(self.pexpi_com, pexpi_lbl, Gtk.PositionType.RIGHT, 1, 1)
+        
+        # Create the pastebin default exposure combobox.
+        pexpo_lbl = Gtk.Label("Default exposure: ")
+        pexpo_lbl.set_tooltip_text("Default exposure")
+        pexpo_lbl.set_margin_left(5)
+        pexpo_lbl.set_margin_bottom(5)
+        pexpo_lbl.set_alignment(0, 0.5)
+        paste_grid.attach_next_to(pexpo_lbl, pexpi_lbl, Gtk.PositionType.BOTTOM, 1, 1)
+        self.pexpo_com = Gtk.ComboBoxText()
+        self.pexpo_com.set_margin_right(5)
+        self.pexpo_com.set_margin_bottom(5)
+        self.pexpo_com.set_hexpand(True)
+        for i in ["Public", "Unlisted"]:
+            self.pexpo_com.append_text(i)
+        self.pexpo_com.set_active(config["pastebin_exposure"])
+        paste_grid.attach_next_to(self.pexpo_com, pexpo_lbl, Gtk.PositionType.RIGHT, 1, 1)
         
         # Display the interface.
         opt_box = self.get_content_area()
@@ -246,7 +288,7 @@ class OptionsDialog(Gtk.Dialog):
         notebook.append_page(gen_grid, gen_grid_lbl)
         notebook.append_page(int_grid, int_grid_lbl)
         notebook.append_page(graph_grid, graph_grid_lbl)
-        notebook.append_page(tech_grid, tech_grid_lbl)
+        notebook.append_page(paste_grid, paste_grid_lbl)
         
         # Connect 'Enter' key to the OK button.
         ok_btn = self.get_widget_for_response(response_id = Gtk.ResponseType.OK)

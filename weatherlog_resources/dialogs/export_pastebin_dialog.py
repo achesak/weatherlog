@@ -43,7 +43,7 @@ class ExportPastebinDialog(Gtk.Dialog):
         self.for_com.set_active(["JSON", "HTML", "CSV"].index(config["pastebin_format"]))
         nam_grid.attach_next_to(self.for_com, for_lbl, Gtk.PositionType.RIGHT, 1, 1)
         
-        exi_lbl = Gtk.Label("Expires: ")
+        exi_lbl = Gtk.Label("Expiration: ")
         exi_lbl.set_alignment(0, 0.5)
         nam_grid.attach_next_to(exi_lbl, for_lbl, Gtk.PositionType.BOTTOM, 1, 1)
         self.exi_com = Gtk.ComboBoxText()

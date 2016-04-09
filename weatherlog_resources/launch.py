@@ -252,3 +252,19 @@ def create_metadata(main_dir, last_profile):
 
     except IOError as e:
         print("create_metadata(): Error saving metadata file (IOError):\n%s" % e)
+
+
+def get_pastebin_constants():
+    """Gets the Pastebin constants."""
+    
+    # Get the units.
+    try:
+        paste_file = open("weatherlog_resources/appdata/pastebin.json", "r")
+        paste_constants = json.load(paste_file)
+        paste_file.close()
+    
+    except IOError as e:
+        print("get_pastebin_constants(): Error reading pastebin constants file (IOError):\n%s" % e)
+        sys.exit()
+    
+    return paste_constants

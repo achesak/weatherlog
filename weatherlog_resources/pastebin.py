@@ -19,7 +19,7 @@ import weatherlog_resources.export as export
 from weatherlog_resources.constants import *
 
 
-def upload_pastebin(data, name, mode, expires, exposure, units, config):
+def upload_pastebin(data, name, mode, expires, exposure, units, config, title):
     """Uploads the data to pastebin."""
     
     # Load the constants file.
@@ -36,7 +36,13 @@ def upload_pastebin(data, name, mode, expires, exposure, units, config):
     
     # Convert the data.
     if mode == "html":
-        new_data = export.html(data, units)
+        data_list = [[title,
+                     ["Date", "Temperature (%s)" % units["temp"], "Wind Chill (%s)" % units["temp"],
+                      "Precipitation (%s)" % units["prec"], "Wind (%s)" % units["wind"],
+                      "Humidity (%%)", "Air Pressure (%s)" % units["airp"], "Visibility (%s)" % units["visi"],
+                      "Cloud Cover", "Notes"],
+                      data]]
+        new_data = export.html_generic(data_list)
     elif mode == "csv":
         new_data = export.csv(data, units)
     elif mode == "json":
@@ -48,7 +54,7 @@ def upload_pastebin(data, name, mode, expires, exposure, units, config):
            "api_paste_private": exposure_dict[exposure],
            "api_paste_expire_date": expires_dict[expires],
            "api_paste_code": new_data}
-           
+    print(expires_dict[expires])
     if mode == "html":
         api["api_paste_format"] = "html5"
     elif mode == "raw":
@@ -61,6 +67,7 @@ def upload_pastebin(data, name, mode, expires, exposure, units, config):
     
     # Upload the text.
     try:
+        print(api)
         pastebin = urlopen("http://pastebin.com/api/api_post.php", urlencode(api))
         result = pastebin.read()
         pastebin.close()
