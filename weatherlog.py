@@ -1231,7 +1231,7 @@ class WeatherLog(Gtk.Window):
         if pastebin_response == PastebinExport.INVALID_KEY:
             show_error_dialog(self, "Export to Pastebin - %s" % self.last_profile, "Invalid API key. Please check the key entered in the Options window.")
         elif pastebin_response == PastebinExport.ERROR:
-            show_error_dialog(self, "Export to Pastebin - %s" % self.last_profile, "The data could not be uploaded to Pastebin.")
+            show_error_dialog(self, "Export to Pastebin - %s" % self.last_profile, "The data could not be uploaded to Pastebin:\n\n%s" % result)
         elif pastebin_response == PastebinExport.NO_CONSTANTS:
             show_error_dialog(self, "Export to Pastebin - %s" % self.last_profile, "Missing constants file. The data could not be uploaded to Pastebin.")
         elif pastebin_response == PastebinExport.SUCCESS:

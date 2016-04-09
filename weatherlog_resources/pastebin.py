@@ -8,8 +8,10 @@
 try:
     from urllib.request import urlopen
     from urllib.parse import urlencode
+    from urllib.error import URLError
 except ImportError:
     from urllib import urlopen, urlencode
+    from urllib2 import URLError
 # Import json and export for converting data format.
 import json
 import weatherlog_resources.export as export
@@ -69,5 +71,5 @@ def upload_pastebin(data, name, mode, expires, exposure, units, config):
         else:
             return PastebinExport.SUCCESS, result
         
-    except:
-        return PastebinExport.ERROR, False
+    except IOError as e:
+        return PastebinExport.ERROR, "Could not connect to Pastebin."
