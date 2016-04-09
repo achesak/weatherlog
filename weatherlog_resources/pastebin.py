@@ -39,7 +39,7 @@ def upload_pastebin(data, name, mode, expires, exposure, units, config, title):
         data_list = [[title,
                      ["Date", "Temperature (%s)" % units["temp"], "Wind Chill (%s)" % units["temp"],
                       "Precipitation (%s)" % units["prec"], "Wind (%s)" % units["wind"],
-                      "Humidity (%%)", "Air Pressure (%s)" % units["airp"], "Visibility (%s)" % units["visi"],
+                      "Humidity (%)", "Air Pressure (%s)" % units["airp"], "Visibility (%s)" % units["visi"],
                       "Cloud Cover", "Notes"],
                       data]]
         new_data = export.html_generic(data_list)

@@ -1195,7 +1195,7 @@ class WeatherLog(Gtk.Window):
             data_list = [[self.update_title(),
                            ["Date", "Temperature (%s)" % self.units["temp"], "Wind Chill (%s)" % self.units["temp"],
                             "Precipitation (%s)" % self.units["prec"], "Wind (%s)" % self.units["wind"],
-                            "Humidity (%%)", "Air Pressure (%s)" % self.units["airp"], "Visibility (%s)" % self.units["visi"],
+                            "Humidity (%)", "Air Pressure (%s)" % self.units["airp"], "Visibility (%s)" % self.units["visi"],
                             "Cloud Cover", "Notes"],
                             self.data]]
             export.html_generic(data_list, filename)
