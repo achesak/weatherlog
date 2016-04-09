@@ -90,16 +90,16 @@ def csv(data2, units, filename = ""):
     data = data2[:]
     
     # Build the string.
-    csv = """"Date","Temperature (%s)","Wind Chill (%s)","Precipitation (%s)","Wind (%s)","Humidity (%%)","Air Pressure (%s)","Visibility (%s","Cloud Cover","Notes"\n""" % (units["temp"], units["temp"], units["prec"], units["wind"], units["airp"], units["visi"])
+    csv = u""""Date","Temperature (%s)","Wind Chill (%s)","Precipitation (%s)","Wind (%s)","Humidity (%%)","Air Pressure (%s)","Visibility (%s)","Cloud Cover","Notes"\n""" % (units["temp"], units["temp"], units["prec"], units["wind"], units["airp"], units["visi"])
     
     # Add the data. Loop through each list, and add it as a row.
     for i in data:
         for j in range(0, len(i)):
             i[j] = i[j].encode("utf-8")
-        csv += """"%s","%s","%s","%s","%s","%s","%s","%s","%s","%s"\n""" % (i[0], i[1], i[2], i[3], i[4], i[5], i[6], i[7], i[8], i[9])
+        csv += u""""%s","%s","%s","%s","%s","%s","%s","%s","%s","%s"\n""" % (i[0], i[1], i[2], i[3], i[4], i[5], i[6], i[7], i[8], i[9])
     
     # Remove the last newline character.
-    csv = csv[:-1]
+    csv = csv[:-1].replace(u"\xb0", "")
     
     # Write to the file.
     if filename:

@@ -54,7 +54,6 @@ def upload_pastebin(data, name, mode, expires, exposure, units, config, title):
            "api_paste_private": exposure_dict[exposure],
            "api_paste_expire_date": expires_dict[expires],
            "api_paste_code": new_data}
-    print(expires_dict[expires])
     if mode == "html":
         api["api_paste_format"] = "html5"
     elif mode == "raw":
