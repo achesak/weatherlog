@@ -153,34 +153,34 @@ class WeatherLog(Gtk.Window):
         self.liststore = Gtk.ListStore(str, str, str, str, str, str, str, str, str, str)
         self.treeview = Gtk.TreeView(model = self.liststore)
         date_text = Gtk.CellRendererText()
-        self.date_col = Gtk.TreeViewColumn("Date", date_text, text = 0)
+        self.date_col = Gtk.TreeViewColumn("Date", date_text, text = DatasetColumn.DATE)
         self.treeview.append_column(self.date_col)
         temp_text = Gtk.CellRendererText()
-        self.temp_col = Gtk.TreeViewColumn("Temperature (%s)" % self.units["temp"], temp_text, text = 1)
+        self.temp_col = Gtk.TreeViewColumn("Temperature (%s)" % self.units["temp"], temp_text, text = DatasetColumn.TEMPERATURE)
         self.treeview.append_column(self.temp_col)
         chil_text = Gtk.CellRendererText()
-        self.chil_col = Gtk.TreeViewColumn("Wind Chill (%s)" % self.units["temp"], chil_text, text = 2)
+        self.chil_col = Gtk.TreeViewColumn("Wind Chill (%s)" % self.units["temp"], chil_text, text = DatasetColumn.WIND_CHILL)
         self.treeview.append_column(self.chil_col)
         prec_text = Gtk.CellRendererText()
-        self.prec_col = Gtk.TreeViewColumn("Precipitation (%s)" % self.units["prec"], prec_text, text = 3)
+        self.prec_col = Gtk.TreeViewColumn("Precipitation (%s)" % self.units["prec"], prec_text, text = DatasetColumn.PRECIPITATION)
         self.treeview.append_column(self.prec_col)
         wind_text = Gtk.CellRendererText()
-        self.wind_col = Gtk.TreeViewColumn("Wind (%s)" % self.units["wind"], wind_text, text = 4)
+        self.wind_col = Gtk.TreeViewColumn("Wind (%s)" % self.units["wind"], wind_text, text = DatasetColumn.WIND)
         self.treeview.append_column(self.wind_col)
         humi_text = Gtk.CellRendererText()
-        self.humi_col = Gtk.TreeViewColumn("Humidity (%)", humi_text, text = 5)
+        self.humi_col = Gtk.TreeViewColumn("Humidity (%)", humi_text, text = DatasetColumn.HUMIDITY)
         self.treeview.append_column(self.humi_col)
         airp_text = Gtk.CellRendererText()
-        self.airp_col = Gtk.TreeViewColumn("Air Pressure (%s)" % self.units["airp"], airp_text, text = 6)
+        self.airp_col = Gtk.TreeViewColumn("Air Pressure (%s)" % self.units["airp"], airp_text, text = DatasetColumn.AIR_PRESSURE)
         self.treeview.append_column(self.airp_col)
         visi_text = Gtk.CellRendererText()
-        self.visi_col = Gtk.TreeViewColumn("Visibility (%s)" % self.units["visi"], visi_text, text = 7)
+        self.visi_col = Gtk.TreeViewColumn("Visibility (%s)" % self.units["visi"], visi_text, text = DatasetColumn.VISIBILITY)
         self.treeview.append_column(self.visi_col)
         clou_text = Gtk.CellRendererText()
-        self.clou_col = Gtk.TreeViewColumn("Cloud Cover", clou_text, text = 8)
+        self.clou_col = Gtk.TreeViewColumn("Cloud Cover", clou_text, text = DatasetColumn.CLOUD_COVER)
         self.treeview.append_column(self.clou_col)
         note_text = Gtk.CellRendererText()
-        self.note_col = Gtk.TreeViewColumn("Notes", note_text, text = 9)
+        self.note_col = Gtk.TreeViewColumn("Notes", note_text, text = DatasetColumn.NOTES)
         self.treeview.append_column(self.note_col)
         
         # Create the menus.
@@ -342,12 +342,12 @@ class WeatherLog(Gtk.Window):
             wind_dir = "None"
         
         # If the date has already been entered, tell the user and prompt to continue.
-        if date in datasets.get_column(self.data, 0):
+        if date in datasets.get_column(self.data, DatasetColumn.DATE):
             overwrite = show_question_dialog(self, "Add New Data", "The date %s has already been entered.\n\nOverwrite with new data?" % date)
             
             if overwrite == Gtk.ResponseType.OK:
                 # Delete the existing data.
-                index = datasets.get_column(self.data, 0).index(date)
+                index = datasets.get_column(self.data, DatasetColumn.DATE).index(date)
                 del self.data[index]
             else:
                 return
@@ -372,7 +372,7 @@ class WeatherLog(Gtk.Window):
         self.data.append(new_data)
         
         # Sort the list by date.
-        self.data = sorted(self.data, key = lambda x: datetime.datetime.strptime(x[0], "%d/%m/%Y"))
+        self.data = sorted(self.data, key = lambda x: datetime.datetime.strptime(x[DatasetColumn.DATE], "%d/%m/%Y"))
         
         # Update the UI.
         self.update_list()
@@ -401,7 +401,7 @@ class WeatherLog(Gtk.Window):
                 return
         
         # Get the index of the date.
-        index = datasets.get_column(self.data, 0).index(date)
+        index = datasets.get_column(self.data, DatasetColumn.DATE).index(date)
         
         # Get the new data.
         edit_dlg = EditDialog(self, self.last_profile, self.data[index], date, self.units)
@@ -507,7 +507,7 @@ class WeatherLog(Gtk.Window):
         
         # Loop through the list of dates and delete them.
         for i in ndates:
-            index = datasets.get_column(self.data, 0).index(i)
+            index = datasets.get_column(self.data, DatasetColumn.DATE).index(i)
             del self.data[index]
         
         # Update the UI.
@@ -585,11 +585,11 @@ class WeatherLog(Gtk.Window):
             return
         
         # Get the first and last entered dates.
-        day_start = dates.split_date(self.data[0][0])
-        day_end = dates.split_date(self.data[len(self.data) - 1][0])
+        day_start = dates.split_date(self.data[0][DatasetColumn.DATE])
+        day_end = dates.split_date(self.data[len(self.data) - 1][DatasetColumn.DATE])
         
         # Get a list of datetimes from the dates.
-        datelist = dates.date_list_datetime(datasets.get_column(self.data, 0))
+        datelist = dates.date_list_datetime(datasets.get_column(self.data, DatasetColumn.DATE))
         
         # Get the starting and ending dates.
         cal_dlg = CalendarRangeDialog(self, "Info in Range - %s" % self.last_profile, day_start, day_end)
@@ -731,11 +731,11 @@ class WeatherLog(Gtk.Window):
             return
         
         # Get the first and last entered dates.
-        day_start = dates.split_date(self.data[0][0])
-        day_end = dates.split_date(self.data[len(self.data) - 1][0])
+        day_start = dates.split_date(self.data[0][DatasetColumn.DATE])
+        day_end = dates.split_date(self.data[len(self.data) - 1][DatasetColumn.DATE])
         
         # Get a list of datetimes from the dates.
-        datelist = dates.date_list_datetime(datasets.get_column(self.data, 0))
+        datelist = dates.date_list_datetime(datasets.get_column(self.data, DatasetColumn.DATE))
         
         # Get the starting and ending dates.
         cal_dlg = CalendarRangeDialog(self, "Charts in Range - %s" % self.last_profile, day_start, day_end)
@@ -872,11 +872,11 @@ class WeatherLog(Gtk.Window):
             return
         
         # Get the first and last entered dates.
-        day_start = dates.split_date(self.data[0][0])
-        day_end = dates.split_date(self.data[len(self.data) - 1][0])
+        day_start = dates.split_date(self.data[0][DatasetColumn.DATE])
+        day_end = dates.split_date(self.data[len(self.data) - 1][DatasetColumn.DATE])
         
         # Get a list of datetimes from the dates.
-        datelist = dates.date_list_datetime(datasets.get_column(self.data, 0))
+        datelist = dates.date_list_datetime(datasets.get_column(self.data, DatasetColumn.DATE))
         
         # Get the starting and ending dates.
         cal_dlg = CalendarRangeDialog(self, "Graphs in Range - %s" % self.last_profile, day_start, day_end)
@@ -1061,11 +1061,11 @@ class WeatherLog(Gtk.Window):
         
             # Filter the new data to make sure there are no duplicates.
             new_data = []
-            date_col = datasets.get_column(self.data, 0)
+            date_col = datasets.get_column(self.data, DatasetColumn.DATE)
             for i in data3:
                 
                 # If the date already appears, don't include it.
-                if i[0] not in date_col:
+                if i[DatasetColumn.DATE] not in date_col:
                     new_data.append(i)
             
             # Append the data. 
@@ -1149,7 +1149,7 @@ class WeatherLog(Gtk.Window):
             
             # Get the new data list.
             for i in ndata:
-                if i[0] in dates:
+                if i[DatasetColumn.DATE] in dates:
                     self.data.append(i)
         
         # If the user pressed Import All, import all of the data.
@@ -1559,12 +1559,12 @@ class WeatherLog(Gtk.Window):
         # Build the new data list.
         new_data = io.read_profile(main_dir = self.main_dir, name = profiles[0])
         for i in range(1, len(profiles)):
-            date_col = datasets.get_column(new_data, 0)
+            date_col = datasets.get_column(new_data, DatasetColumn.DATE)
             
             # Read the data and merge the dates in if they do not already appear.
             merge_data = io.read_profile(main_dir = self.main_dir, name = profiles[i])
             for row in merge_data:
-                if row[0] not in date_col:
+                if row[DatasetColumn.DATE] not in date_col:
                     new_data.append(row)
         
         # Sort and update the data.
@@ -1640,13 +1640,13 @@ class WeatherLog(Gtk.Window):
         # Get the data.
         ndata = []
         for i in range(0, len(self.data)):
-            if self.data[i][0] in ndates:
+            if self.data[i][DatasetColumn.DATE] in ndates:
                 ndata.append(self.data[i])
         
         # If the user wants to move the data, delete the items in the current dataset.
         if response == DialogResponse.MOVE_DATA:
             
-            self.data = [x for x in data if x[0] not in ndates]
+            self.data = [x for x in data if x[DatasetColumn.DATE] not in ndates]
         
             # Reset the list.
             self.update_list()
@@ -1713,13 +1713,13 @@ class WeatherLog(Gtk.Window):
         # Get the data.
         ndata = []
         for i in range(0, len(self.data)):
-            if self.data[i][0] in ndates:
+            if self.data[i][DatasetColumn.DATE] in ndates:
                 ndata.append(self.data[i])
 
         # If the user wants to move the data, delete the items in the current dataset.
         if response == DialogResponse.MOVE_DATA:
             
-            self.data = [x for x in data if x[0] not in ndates]
+            self.data = [x for x in data if x[DatasetColumn.DATE] not in ndates]
         
             # Reset the list.
             self.update_list()
@@ -1732,11 +1732,11 @@ class WeatherLog(Gtk.Window):
         
         # Filter the new data to make sure there are no duplicates.
         new_data = []
-        date_col = datasets.get_column(data2, 0)
+        date_col = datasets.get_column(data2, DatasetColumn.DATE)
         for i in ndata:
             
             # If the date already appears, don't include it.
-            if i[0] not in date_col:
+            if i[DatasetColumn.DATE] not in date_col:
                 new_data.append(i)
         
         # Append and sort the data.
@@ -1882,7 +1882,7 @@ class WeatherLog(Gtk.Window):
         
         # Truncate the note fields before the data is added to the interface.
         if self.config["truncate_notes"]:
-            new_data = datasets.truncate_column(self.data, 9, 46)
+            new_data = datasets.truncate_column(self.data, DatasetColumn.NOTES, 46)
         else:
             new_data = copy.deepcopy(self.data)
             
