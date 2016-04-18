@@ -91,6 +91,7 @@ from weatherlog_resources.dialogs.location_dialog import LocationDialog
 from weatherlog_resources.dialogs.weather_dialog import CurrentWeatherDialog
 from weatherlog_resources.dialogs.export_pastebin_dialog import ExportPastebinDialog
 from weatherlog_resources.dialogs.about_dialog import WeatherLogAboutDialog
+from weatherlog_resources.dialogs.dataset_add_select_dialog import DatasetAddSelectionDialog
 from weatherlog_resources.dialogs.misc_dialogs import *
 
 
@@ -223,8 +224,7 @@ class WeatherLog(Gtk.Window):
             ("remove_dataset", None, "_Remove Datasets...", "<Control><Shift>r", None, self.remove_dataset),
             ("rename_dataset", None, "Re_name Dataset...", None, None, self.rename_dataset),
             ("merge_datasets", None, "_Merge Datasets...", None, None, self.merge_datasets),
-            ("copy_new", None, "Copy _Data to New Dataset...", None, None, self.data_dataset_new),
-            ("copy_existing", None, "Copy Data to _Existing Dataset...", None, None, self.data_dataset_existing)
+            ("copy_data_dataset", None, "Copy _Data...", None, None, self.copy_data_dataset)
         ])
         action_group.add_actions([
             ("options_menu", None, "_Options"),
@@ -1658,12 +1658,12 @@ class WeatherLog(Gtk.Window):
         io.write_profile(main_dir = self.main_dir, name = name, data = ndata)
     
     
-    def data_dataset_existing(self, event):
-        """Copies or moves data to an existing dataset."""
+    def copy_data_dataset(self, event):
+        """Copies or moves data to another dataset."""
         
         # If there is no data, tell the user and don't continue.
         if len(self.data) == 0:
-            show_no_data_dialog(self, "Copy Data to Existing Dataset", message = "There is no data to copy.")
+            show_no_data_dialog(self, "Copy Data", message = "There is no data to copy.")
             return
         
         # Get the dates.
@@ -1676,79 +1676,111 @@ class WeatherLog(Gtk.Window):
         # Get the dataset list.
         profiles = io.get_profile_list(self.main_dir, self.last_profile)
         
-        # If there are no other datasets, don't continue.
-        if len(profiles) == 0:
-            show_alert_dialog(self, "Copy Data to Existing Dataset", "There are no other datasets.")
+        # Get the new name or selected dataset.
+        dat_dlg = DatasetAddSelectionDialog(self, "Copy Data", profiles)
+        response1 = dat_dlg.run()
+        new_name = dat_dlg.add_ent.get_text().lstrip().rstrip()
+        model1, treeiter1 = dat_dlg.treeview.get_selection().get_selected()
+        dat_dlg.destroy()
+        
+        # If the user did not enter a dataset or nothing was selected, don't continue:
+        if response1 != DialogResponse.USE_NEW and response1 != DialogResponse.USE_SELECTED:
             return
         
-        # Get the dataset.
-        exi_dlg = DatasetSelectionDialog(self, "Copy Data to Existing Dataset", profiles)
-        response = exi_dlg.run()
-        model, treeiter = exi_dlg.treeview.get_selection().get_selected()
-        exi_dlg.destroy()
+        # Get the selected name.
+        if response1 == DialogResponse.USE_SELECTED:
+            try:
+                sel_name = model1[treeiter1][0]
+            except:
+                return
         
-        # If the user did not click OK or nothing was selected, don't continue:
-        if response != Gtk.ResponseType.OK or treeiter == None:
-            return
-            
-        # Get the dataset name.
-        name = model[treeiter][0]
+        # Validate the entered name. If the name isn't valid, don't continue.
+        if response1 == DialogResponse.USE_NEW:
+            valid = validate.validate_profile(self.main_dir, new_name)
+            if valid != "":
+                show_error_dialog(self, "Copy Data", valid)
+                return
         
         # Get the dates to move or copy.
         buttons = [["Cancel", Gtk.ResponseType.CANCEL], ["Move Data", DialogResponse.MOVE_DATA], ["Copy Data", DialogResponse.COPY_DATA]]
         date_dlg = DateSelectionDialog(self, "Copy Data to Existing Dataset", dates, buttons)
-        response = date_dlg.run()
-        model, treeiter = date_dlg.treeview.get_selection().get_selected_rows()
+        response2 = date_dlg.run()
+        model2, treeiter2 = date_dlg.treeview.get_selection().get_selected_rows()
         date_dlg.destroy()
         
         # If the user did not click OK or nothing was selected, don't continue:
-        if (response != DialogResponse.MOVE_DATA and response != DialogResponse.COPY_DATA) or treeiter == None:
+        if (response2 != DialogResponse.MOVE_DATA and response2 != DialogResponse.COPY_DATA) or treeiter2 == None:
             return
             
         # Get the dates.
         ndates = []
-        for i in treeiter:
-            ndates.append(model[i][0])
+        for i in treeiter2:
+            ndates.append(model2[i][0])
         
         # Get the data.
         ndata = []
         for i in range(0, len(self.data)):
             if self.data[i][DatasetColumn.DATE] in ndates:
                 ndata.append(self.data[i])
+        
+        # If the user entered a new dataset name, create the dataset.
+        if response1 == DialogResponse.USE_NEW:
+            
+            # Create the directory and file.
+            io.write_blank_profile(self.main_dir, new_name)
+            launch.create_metadata(self.main_dir, new_name)
+            
+            # If the user wants to move the data, delete the items in the current dataset.
+            if response2 == DialogResponse.MOVE_DATA:
+                
+                self.data = [x for x in self.data if x[DatasetColumn.DATE] not in ndates]
+            
+                # Reset the list.
+                self.update_list()
+            
+                # Update the title.
+                self.update_title()
+            
+            # Put the data in the new dataset.
+            io.write_profile(main_dir = self.main_dir, name = new_name, data = ndata)
+        
+        # Otherwise, use the selected dataset:
+        elif response1 == DialogResponse.USE_SELECTED:
 
-        # If the user wants to move the data, delete the items in the current dataset.
-        if response == DialogResponse.MOVE_DATA:
+            # If the user wants to move the data, delete the items in the current dataset.
+            if response2 == DialogResponse.MOVE_DATA:
+                
+                self.data = [x for x in self.data if x[DatasetColumn.DATE] not in ndates]
             
-            self.data = [x for x in data if x[DatasetColumn.DATE] not in ndates]
-        
-            # Reset the list.
-            self.update_list()
-        
-            # Set the new title.
-            self.update_title()
-        
-        # Load the data.
-        data2 = io.read_profile(main_dir = self.main_dir, name = name)
-        
-        # Filter the new data to make sure there are no duplicates.
-        new_data = []
-        date_col = datasets.get_column(data2, DatasetColumn.DATE)
-        for i in ndata:
+                # Reset the list.
+                self.update_list()
             
-            # If the date already appears, don't include it.
-            if i[DatasetColumn.DATE] not in date_col:
-                new_data.append(i)
-        
-        # Append and sort the data.
-        data2 += new_data
-        data2 = sorted(data2, key = lambda x: datetime.datetime.strptime(x[0], '%d/%m/%Y'))
-        
-        # Save the data.
-        io.write_profile(main_dir = self.main_dir, name = name, data = data2)
-        now = datetime.datetime.now()
-        modified = "%d/%d/%d" % (now.day, now.month, now.year)
-        creation, modified2 = io.get_metadata(self.main_dir, self.last_profile)
-        io.write_metadata(main_dir, last_profile, creation, modified)
+                # Set the new title.
+                self.update_title()
+            
+            # Load the data.
+            data2 = io.read_profile(main_dir = self.main_dir, name = sel_name)
+            
+            # Filter the new data to make sure there are no duplicates.
+            new_data = []
+            date_col = datasets.get_column(data2, DatasetColumn.DATE)
+            for i in ndata:
+                
+                # If the date already appears, don't include it.
+                if i[DatasetColumn.DATE] not in date_col:
+                    new_data.append(i)
+            
+            # Append and sort the data.
+            data2 += new_data
+            data2 = sorted(data2, key = lambda x: datetime.datetime.strptime(x[0], '%d/%m/%Y'))
+            
+            # Save the data.
+            self.save()
+            io.write_profile(main_dir = self.main_dir, name = sel_name, data = data2)
+            now = datetime.datetime.now()
+            modified = "%d/%d/%d" % (now.day, now.month, now.year)
+            creation, modified2 = io.get_metadata(self.main_dir, self.last_profile)
+            io.write_metadata(self.main_dir, self.last_profile, creation, modified)
     
     
     def options(self, event):

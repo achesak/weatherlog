@@ -28,13 +28,13 @@ def validate_profile(main_dir, name):
     """Validates a dataset name."""
     
     if not name:
-        return "The dataset name \"%s\" is not valid. Dataset names may not be blank."
+        return "The dataset name \"%s\" is not valid. Dataset names may not be blank." % name
     elif name.lstrip().rstrip() == "":
-        return "The dataset name \"%s\" is not valid. Dataset names may not be all spaces."
+        return "The dataset name \"%s\" is not valid. Dataset names may not be all spaces." % name
     elif name.startswith("."):
-        return "The dataset name \"%s\" is not valid. Dataset names may not start with a period."
+        return "The dataset name \"%s\" is not valid. Dataset names may not start with a period." % name
     elif re.compile("[^a-zA-Z1-90 \.\-\+\(\)\?\!]").match(name):
-        return "The dataset name \"%s\" is not valid. Dataset names may only be letters, numbers, and spaces."
+        return "The dataset name \"%s\" is not valid. Dataset names may only be letters, numbers, and spaces." % name
     elif os.path.isdir("%s/profiles/%s" % (main_dir, name)):
         return "The dataset name \"%s\" is already in use." % name
     else:

@@ -25,6 +25,8 @@ class DialogResponse:
     IMPORT_OVERWRITE = 22
     MOVE_DATA = 34
     COPY_DATA = 35
+    USE_NEW = 40
+    USE_SELECTED = 41
     EXPORT_CSV = 98
     EXPORT_HTML = 99
 

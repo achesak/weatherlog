@@ -43,8 +43,7 @@
       <menuitem action="rename_dataset" />
       <menuitem action="merge_datasets" />
       <separator />
-      <menuitem action="copy_new" />
-      <menuitem action="copy_existing" />
+      <menuitem action="copy_data_dataset" />
     </menu>
     <menu action="options_menu">
       <menuitem action="options" />

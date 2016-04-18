@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 
-# This file defines the dialog for selecting a dataset.
+# This file defines the dialog for creating or selecting a dataset.
 
 
 # Import GTK for the dialog.
@@ -10,22 +10,36 @@ from gi.repository import Gtk
 from weatherlog_resources.constants import *
 
 
-class DatasetSelectionDialog(Gtk.Dialog):
-    """Shows the dataset selection dialog."""
+class DatasetAddSelectionDialog(Gtk.Dialog):
+    """Shows the dataset creation/selection dialog."""
     
-    def __init__(self, parent, title, datasets, select_mode = DatasetSelectionMode.SINGLE):
+    def __init__(self, parent, title, datasets):
         """Create the dialog."""
         
         # Create the dialog.
         Gtk.Dialog.__init__(self, title, parent, Gtk.DialogFlags.MODAL)
         self.set_default_size(500, 300)
         self.add_button("Cancel", Gtk.ResponseType.CANCEL)
-        self.add_button("OK", Gtk.ResponseType.OK)
+        self.add_button("Create Dataset", DialogResponse.USE_NEW)
+        self.add_button("Use Selected Dataset", DialogResponse.USE_SELECTED)
         
-        # Create the frame.
+        # Set up the main grid.
+        dat_grid = Gtk.Grid()
+        self.get_content_area().add(dat_grid)
+        
+        # Create the creation frame.
+        add_frame = Gtk.Frame()
+        add_frame.set_label("Create new dataset: ")
+        dat_grid.add(add_frame)
+        
+        # Create the creation entry.
+        self.add_ent = Gtk.Entry()
+        add_frame.add(self.add_ent)
+        
+        # Create the selection frame.
         sel_frame = Gtk.Frame()
-        sel_frame.set_label("Select dataset:")
-        self.get_content_area().add(sel_frame)
+        sel_frame.set_label("Select existing dataset: ")
+        dat_grid.attach_next_to(sel_frame, add_frame, Gtk.PositionType.BOTTOM, 1, 1)
         
         # Create the Dataset, Creation Date, and Last Modified Date columns.
         self.liststore = Gtk.ListStore(str, str, str)
@@ -40,11 +54,7 @@ class DatasetSelectionDialog(Gtk.Dialog):
         self.mod_col = Gtk.TreeViewColumn("Last Modified Date", mod_text, text = 2)
         self.treeview.append_column(self.mod_col)
         
-        # Allow for multiple items to be selected, if appropriate.
-        if select_mode == DatasetSelectionMode.MULTIPLE:
-            self.treeview.get_selection().set_mode(Gtk.SelectionMode.MULTIPLE)
-        
-        # Add the datasets..
+        # Add the datasets.
         for i in datasets:
             self.liststore.append(i)
         
@@ -56,7 +66,8 @@ class DatasetSelectionDialog(Gtk.Dialog):
         sel_frame.add(scrolled_win)
         
         # Connect 'Enter' key to the OK button.
-        ok_btn = self.get_widget_for_response(response_id = Gtk.ResponseType.OK)
+        self.add_ent.set_activates_default(True)
+        ok_btn = self.get_widget_for_response(response_id = DialogResponse.USE_SELECTED)
         ok_btn.set_can_default(True)
         ok_btn.grab_default()
         
