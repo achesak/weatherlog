@@ -68,6 +68,7 @@ class ImportType:
 
 # Dataset columns:
 class DatasetColumn:
+    DATE = 0
     TEMPERATURE = 1
     WIND_CHILL = 2
     PRECIPITATION = 3
