@@ -5,7 +5,7 @@
 
 
 __all__ = ["SelectionMode", "DialogResponse", "ImportValidation", "DateValidation", "PastebinExport", "DatasetSelectionMode",
-           "ImportType"]
+           "ImportType", "DatasetColumn"]
 
 
 # Data subset selection mode:
@@ -64,3 +64,16 @@ class DatasetSelectionMode:
 class ImportType:
     MERGE = 0
     OVERWRITE = 0
+
+
+# Dataset columns:
+class DatasetColumn:
+    TEMPERATURE = 1
+    WIND_CHILL = 2
+    PRECIPITATION = 3
+    WIND = 4
+    HUMIDITY = 5
+    AIR_PRESSURE = 6
+    VISIBILITY = 7
+    CLOUD_COVER = 8
+    NOTES = 9
