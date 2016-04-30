@@ -11,7 +11,7 @@ from gi.repository import Gtk
 class DateSelectionDialog(Gtk.Dialog):
     """Shows the date selection dialog."""
     
-    def __init__(self, parent, title, dates, buttons = [["Cancel", Gtk.ResponseType.CANCEL], ["OK", Gtk.ResponseType.OK]], show_conflicts = False):
+    def __init__(self, parent, title, dates, buttons = [["Cancel", Gtk.ResponseType.CANCEL], ["OK", Gtk.ResponseType.OK]], default_button = Gtk.ResponseType.OK, show_conflicts = False):
         """Create the dialog."""
         
         # Create the dialog.
@@ -26,12 +26,21 @@ class DateSelectionDialog(Gtk.Dialog):
         self.get_content_area().add(sel_frame)
         
         # Create the Date selection.
-        self.liststore = Gtk.ListStore(str)
+        if show_conflicts:
+            self.liststore = Gtk.ListStore(str, str)
+        else:
+            self.liststore = Gtk.ListStore(str)
         self.treeview = Gtk.TreeView(model = self.liststore)
         self.treeview.get_selection().set_mode(Gtk.SelectionMode.MULTIPLE)
         date_text = Gtk.CellRendererText()
         self.date_col = Gtk.TreeViewColumn("Date", date_text, text = 0)
         self.treeview.append_column(self.date_col)
+        
+        # Show the Conflict column, if required.
+        if show_conflicts:
+            conf_text = Gtk.CellRendererText()
+            self.conf_col = Gtk.TreeViewColumn("Conflict", conf_text, text = 1)
+            self.treeview.append_column(self.conf_col)
         
         # Display the UI.
         scrolled_win = Gtk.ScrolledWindow()
@@ -42,7 +51,15 @@ class DateSelectionDialog(Gtk.Dialog):
         
         # Add the dates.
         for i in dates:
-            self.liststore.append(i)
+            if show_conflicts:
+                self.liststore.append(i)
+            else:
+                self.liststore.append([i])
+        
+        # Connect 'Enter' key to the OK button.
+        ok_btn = self.get_widget_for_response(response_id = default_button)
+        ok_btn.set_can_default(True)
+        ok_btn.grab_default()
         
         # Show the dialog.
         self.show_all()

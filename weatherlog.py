@@ -1631,7 +1631,11 @@ class WeatherLog(Gtk.Window):
         
         # Get the dates to move or copy.
         buttons = [["Cancel", Gtk.ResponseType.CANCEL], ["Move Data", DialogResponse.MOVE_DATA], ["Copy Data", DialogResponse.COPY_DATA]]
-        date_dlg = DateSelectionDialog(self, "Copy Data to Existing Dataset", dates, buttons)
+        if response1 == DialogResponse.USE_NEW:
+            date_dlg = DateSelectionDialog(self, "Copy Data", dates2, buttons, DialogResponse.COPY_DATA)
+        else:
+            conflicts = datasets.conflict_exists(datasets.get_column(io.read_profile(main_dir = self.main_dir, name = sel_name), 0), datasets.get_column(self.data, 0))
+            date_dlg = DateSelectionDialog(self, "Copy Data", conflicts, buttons, DialogResponse.COPY_DATA, show_conflicts = True)
         response2 = date_dlg.run()
         model2, treeiter2 = date_dlg.treeview.get_selection().get_selected_rows()
         date_dlg.destroy()
@@ -1665,8 +1669,6 @@ class WeatherLog(Gtk.Window):
             
                 # Reset the list.
                 self.update_list()
-            
-                # Update the title.
                 self.update_title()
             
             # Put the data in the new dataset.
@@ -1682,8 +1684,6 @@ class WeatherLog(Gtk.Window):
             
                 # Reset the list.
                 self.update_list()
-            
-                # Set the new title.
                 self.update_title()
             
             # Load the data.
