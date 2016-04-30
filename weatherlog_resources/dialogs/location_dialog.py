@@ -16,7 +16,6 @@ class LocationDialog(Gtk.Dialog):
         
         # Create the dialog.
         Gtk.Dialog.__init__(self, "Get Current Weather", parent, Gtk.DialogFlags.MODAL)
-        self.set_resizable(False)
         self.add_button("Cancel", Gtk.ResponseType.CANCEL)
         self.add_button("OK", Gtk.ResponseType.OK)
         

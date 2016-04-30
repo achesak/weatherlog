@@ -37,7 +37,6 @@ class AddNewDialog(Gtk.Dialog):
         # Create the dialog.
         Gtk.Dialog.__init__(self, "Add New Data - %s" % profile, parent, Gtk.DialogFlags.MODAL)
         self.set_size_request(500, 600)
-        self.set_resizable(False)
         self.add_button("Cancel", Gtk.ResponseType.CANCEL)
         self.add_button("OK", Gtk.ResponseType.OK)
         
