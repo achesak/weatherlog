@@ -11,7 +11,7 @@ from gi.repository import Gtk
 class DateSelectionDialog(Gtk.Dialog):
     """Shows the date selection dialog."""
     
-    def __init__(self, parent, title, dates, buttons = [["Cancel", Gtk.ResponseType.CANCEL], ["OK", Gtk.ResponseType.OK]], default_button = Gtk.ResponseType.OK, show_conflicts = False):
+    def __init__(self, parent, title, dates, buttons = [["Cancel", Gtk.ResponseType.CANCEL], ["OK", Gtk.ResponseType.OK]], default_button = Gtk.ResponseType.OK, show_conflicts = False, multi_select = True):
         """Create the dialog."""
         
         # Create the dialog.
@@ -31,7 +31,8 @@ class DateSelectionDialog(Gtk.Dialog):
         else:
             self.liststore = Gtk.ListStore(str)
         self.treeview = Gtk.TreeView(model = self.liststore)
-        self.treeview.get_selection().set_mode(Gtk.SelectionMode.MULTIPLE)
+        if multi_select:
+            self.treeview.get_selection().set_mode(Gtk.SelectionMode.MULTIPLE)
         date_text = Gtk.CellRendererText()
         self.date_col = Gtk.TreeViewColumn("Date", date_text, text = 0)
         self.treeview.append_column(self.date_col)
@@ -51,10 +52,7 @@ class DateSelectionDialog(Gtk.Dialog):
         
         # Add the dates.
         for i in dates:
-            if show_conflicts:
-                self.liststore.append(i)
-            else:
-                self.liststore.append([i])
+            self.liststore.append(i)
         
         # Connect 'Enter' key to the OK button.
         ok_btn = self.get_widget_for_response(response_id = default_button)

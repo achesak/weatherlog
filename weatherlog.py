@@ -386,6 +386,16 @@ class WeatherLog(Gtk.Window):
     def edit(self, event, edit_date = None):
         """Edits a row of data."""
         
+        # If there is no data, tell the user and don't show the date selection.
+        if len(self.data) == 0:
+            show_no_data_dialog(self, "Edit Data - %s" % self.last_profile, message = "There is no data to remove.")
+            return
+        
+        # Get the dates.
+        dates = []
+        for i in self.data:
+            dates.append([i[0]])
+        
         # Get the selected date.
         if edit_date != None:
             date = edit_date
@@ -397,8 +407,19 @@ class WeatherLog(Gtk.Window):
                 date = tm.get_value(ti, 0)
             
             except:
-                show_error_dialog(self, "Edit Data - %s" % self.last_profile, "No date selected.")
-                return
+        
+                # If no date was selected, show the dialog to select one.
+                dat_dlg = DateSelectionDialog(self, "Edit Data - %s" % self.last_profile, dates, multi_select = False)
+                response = dat_dlg.run()
+                model, treeiter = dat_dlg.treeview.get_selection().get_selected()
+                dat_dlg.destroy()
+                
+                # If the user did not click OK or nothing was selected, don't continue.
+                if response != Gtk.ResponseType.OK or treeiter == None:
+                    return
+                
+                # Get the date.
+                date = model[treeiter][0]
         
         # Get the index of the date.
         index = datasets.get_column(self.data, DatasetColumn.DATE).index(date)
@@ -1632,7 +1653,7 @@ class WeatherLog(Gtk.Window):
         # Get the dates to move or copy.
         buttons = [["Cancel", Gtk.ResponseType.CANCEL], ["Move Data", DialogResponse.MOVE_DATA], ["Copy Data", DialogResponse.COPY_DATA]]
         if response1 == DialogResponse.USE_NEW:
-            date_dlg = DateSelectionDialog(self, "Copy Data", dates2, buttons, DialogResponse.COPY_DATA)
+            date_dlg = DateSelectionDialog(self, "Copy Data", dates, buttons, DialogResponse.COPY_DATA)
         else:
             conflicts = datasets.conflict_exists(datasets.get_column(io.read_profile(main_dir = self.main_dir, name = sel_name), 0), datasets.get_column(self.data, 0))
             date_dlg = DateSelectionDialog(self, "Copy Data", conflicts, buttons, DialogResponse.COPY_DATA, show_conflicts = True)
