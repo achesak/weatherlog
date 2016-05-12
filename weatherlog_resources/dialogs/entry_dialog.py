@@ -1,21 +1,22 @@
 # -*- coding: utf-8 -*-
 
 
-# This file defines the dialog for entering a dataset name.
+# This file defines the dialog for entering a string.
 
 
 # Import GTK for the dialog.
 from gi.repository import Gtk
 
 
-class DatasetNameDialog(Gtk.Dialog):
+class GenericEntryDialog(Gtk.Dialog):
     """Shows the dialog for adding a dataset."""
     
-    def __init__(self, parent, title, message = "Enter dataset name:", default_text = ""):
+    def __init__(self, parent, title, message = "", default_text = ""):
         """Create the dialog."""
         
         # Create the dialog.
         Gtk.Dialog.__init__(self, title, parent, Gtk.DialogFlags.MODAL)
+        self.set_size_request(300, 0)
         self.add_button("Cancel", Gtk.ResponseType.CANCEL)
         self.add_button("OK", Gtk.ResponseType.OK)
         

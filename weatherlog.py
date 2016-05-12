@@ -77,21 +77,20 @@ import weatherlog_resources.pastebin as pastebin
 # Import dialogs.
 from weatherlog_resources.dialogs.new_dialog import AddNewDialog
 from weatherlog_resources.dialogs.edit_dialog import EditDialog
-from weatherlog_resources.dialogs.info_dialog import GenericInfoDialog
-from weatherlog_resources.dialogs.dataset_name_dialog import DatasetNameDialog
-from weatherlog_resources.dialogs.dataset_selection_dialog import DatasetSelectionDialog
-from weatherlog_resources.dialogs.calendar_dialog import CalendarRangeDialog
+from weatherlog_resources.dialogs.entry_dialog import GenericEntryDialog
 from weatherlog_resources.dialogs.date_selection_dialog import DateSelectionDialog
-from weatherlog_resources.dialogs.options_dialog import OptionsDialog
+from weatherlog_resources.dialogs.calendar_dialog import CalendarRangeDialog
+from weatherlog_resources.dialogs.info_dialog import GenericInfoDialog
 from weatherlog_resources.dialogs.chart_dialog import GenericChartDialog
 from weatherlog_resources.dialogs.graph_dialog import GenericGraphDialog
+from weatherlog_resources.dialogs.dataset_selection_dialog import DatasetSelectionDialog
+from weatherlog_resources.dialogs.dataset_add_select_dialog import DatasetAddSelectionDialog
 from weatherlog_resources.dialogs.data_subset_selection_dialog import DataSubsetSelectionDialog
 from weatherlog_resources.dialogs.import_selection_dialog import ImportSelectionDialog
-from weatherlog_resources.dialogs.location_dialog import LocationDialog
-from weatherlog_resources.dialogs.weather_dialog import CurrentWeatherDialog
 from weatherlog_resources.dialogs.export_pastebin_dialog import ExportPastebinDialog
+from weatherlog_resources.dialogs.weather_dialog import CurrentWeatherDialog
+from weatherlog_resources.dialogs.options_dialog import OptionsDialog
 from weatherlog_resources.dialogs.about_dialog import WeatherLogAboutDialog
-from weatherlog_resources.dialogs.dataset_add_select_dialog import DatasetAddSelectionDialog
 from weatherlog_resources.dialogs.misc_dialogs import *
 
 
@@ -552,9 +551,9 @@ class WeatherLog(Gtk.Window):
         if not here or not location:
             
             # Get the location.
-            loc_dlg = LocationDialog(self, "Enter location: ")
+            loc_dlg = GenericEntryDialog(self, title = "Get Current Weather", message = "Enter location: ")
             response = loc_dlg.run()
-            location = loc_dlg.loc_ent.get_text().lstrip().rstrip()
+            location = loc_dlg.nam_ent.get_text().lstrip().rstrip()
             loc_dlg.destroy()
             
             if response != Gtk.ResponseType.OK:
@@ -1116,7 +1115,7 @@ class WeatherLog(Gtk.Window):
             return
         
         # Get the new dataset name.
-        new_dlg = DatasetNameDialog(self, "Import as New Dataset")
+        new_dlg = GenericEntryDialog(self, title = "Import as New Dataset", message = "Enter dataset name:")
         response = new_dlg.run()
         name = new_dlg.nam_ent.get_text().lstrip().rstrip()
         new_dlg.destroy()
@@ -1361,7 +1360,7 @@ class WeatherLog(Gtk.Window):
         """Adds a new dataset."""
         
         # Get the name for the new dataset.
-        new_dlg = DatasetNameDialog(self, "Add Dataset")
+        new_dlg = GenericEntryDialog(self, title = "Add Dataset", message = "Enter dataset name:")
         response = new_dlg.run()
         name = new_dlg.nam_ent.get_text().lstrip().rstrip()
         new_dlg.destroy()
@@ -1474,7 +1473,7 @@ class WeatherLog(Gtk.Window):
         old_name = model[treeiter][0]
         
         # Get the new dataset name.
-        ren_dlg = DatasetNameDialog(self, "Rename Dataset", message = "Enter new name for \"%s\": " % old_name)
+        ren_dlg = GenericEntryDialog(self, title = "Rename Dataset", message = "Enter new name for \"%s\":" % old_name)
         response = ren_dlg.run()
         new_name = ren_dlg.nam_ent.get_text().lstrip().rstrip()
         ren_dlg.destroy()
@@ -1553,7 +1552,7 @@ class WeatherLog(Gtk.Window):
             profiles.append(model[i][0])
         
         # Get the name for the new dataset.
-        nam_dlg = DatasetNameDialog(self, "Merge Datasets", message = "Enter dataset name: ", default_text = profiles[0])
+        nam_dlg = GenericEntryDialog(self, title = "Merge Datasets", message = "Enter dataset name:", default_text = profiles[0])
         response = nam_dlg.run()
         merge_name = nam_dlg.nam_ent.get_text()
         nam_dlg.destroy()
