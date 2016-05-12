@@ -16,6 +16,7 @@ class ExportPastebinDialog(Gtk.Dialog):
         
         # Create the dialog.
         Gtk.Dialog.__init__(self, title, parent, Gtk.DialogFlags.MODAL)
+        self.set_size_request(500, 0)
         self.add_button("Cancel", Gtk.ResponseType.CANCEL)
         self.add_button("OK", Gtk.ResponseType.OK)
         
@@ -31,6 +32,7 @@ class ExportPastebinDialog(Gtk.Dialog):
         nam_lbl.set_alignment(0, 0.5)
         nam_grid.add(nam_lbl)
         self.nam_ent = Gtk.Entry()
+        self.nam_ent.set_hexpand(True)
         nam_grid.attach_next_to(self.nam_ent, nam_lbl, Gtk.PositionType.RIGHT, 1, 1)
         
         for_lbl = Gtk.Label("Format: ")
@@ -40,6 +42,7 @@ class ExportPastebinDialog(Gtk.Dialog):
         for i in ["JSON", "HTML", "CSV"]:
             self.for_com.append_text(i)
         self.for_com.set_active(["JSON", "HTML", "CSV"].index(config["pastebin_format"]))
+        self.for_com.set_hexpand(True)
         nam_grid.attach_next_to(self.for_com, for_lbl, Gtk.PositionType.RIGHT, 1, 1)
         
         exi_lbl = Gtk.Label("Expiration: ")
@@ -49,6 +52,7 @@ class ExportPastebinDialog(Gtk.Dialog):
         for i in ["Never", "1 Hour", "1 Day", "1 Week", "2 Weeks", "1 Month"]:
             self.exi_com.append_text(i)
         self.exi_com.set_active(["N", "1H", "1D", "1W", "2W", "1M"].index(config["pastebin_expires"]))
+        self.exi_com.set_hexpand(True)
         nam_grid.attach_next_to(self.exi_com, exi_lbl, Gtk.PositionType.RIGHT, 1, 1)
         
         exo_lbl = Gtk.Label("Exposure: ")
@@ -58,6 +62,7 @@ class ExportPastebinDialog(Gtk.Dialog):
         for i in ["Public", "Unlisted"]:
             self.exo_com.append_text(i)
         self.exo_com.set_active(config["pastebin_exposure"])
+        self.exo_com.set_hexpand(True)
         nam_grid.attach_next_to(self.exo_com, exo_lbl, Gtk.PositionType.RIGHT, 1, 1)
         
         # Connect 'Enter' key to the OK button.
