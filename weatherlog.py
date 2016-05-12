@@ -565,6 +565,11 @@ class WeatherLog(Gtk.Window):
             return
         
         # Get the weather data.
+        weather_data = get_weather.get_weather(location, self.config, self.units, self.weather_codes)
+        if len(weather_data) < 4:
+            show_error_dialog(self, "Get Current Weather", "Error:\n\n%s" % weather_data[0])
+            return
+        
         city, data, prefill_data, code = get_weather.get_weather(location, self.config, self.units, self.weather_codes)
         image_url = get_weather.get_weather_image(code)
         
