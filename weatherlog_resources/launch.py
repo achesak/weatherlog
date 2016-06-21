@@ -87,7 +87,7 @@ def get_weather_codes():
     return codes
 
 
-def check_files_exist(main_dir, conf_dir):
+def ensure_files_exist(main_dir, conf_dir):
     """Checks to see if the base files exist, and create them if they don't."""
 
     # Check to see if the data directory exists, and create it if it doesn't.

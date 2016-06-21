@@ -107,7 +107,7 @@ class WeatherLog(Gtk.Window):
         # Get the configuration.
         self.config = launch.get_config(self.conf_dir)
         # Check if the directory and base files exist, and create them if they don't.
-        launch.check_files_exist(self.main_dir, self.conf_dir)
+        launch.ensure_files_exist(self.main_dir, self.conf_dir)
         # Get the application restore data.
         self.last_profile, self.original_profile, self.profile_exists, self.last_width, self.last_height = launch.get_restore_data(self.main_dir, self.conf_dir, self.config, self.default_width, self.default_height)
         # Get the units.
@@ -1303,7 +1303,7 @@ class WeatherLog(Gtk.Window):
         # Restore all files to their default states.
         shutil.rmtree(self.main_dir)
         shutil.rmtree(self.conf_dir)
-        launch.check_files_exist(self.main_dir, self.conf_dir)
+        launch.ensure_files_exist(self.main_dir, self.conf_dir)
         
         # Set the default config.
         self.config = launch.get_config(self.conf_dir)
