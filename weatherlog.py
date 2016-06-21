@@ -100,23 +100,17 @@ class WeatherLog(Gtk.Window):
     def __init__(self):
         """Initializes the application."""
         
-        # Get the application's UI data.
+        # Get the application's data, constants, and user data.
         self.version, self.title, self.menu_data, self.icon_small, self.icon_medium, self.default_width, self.default_height, self.help_link = launch.get_ui_info()
-        # Get the data and configuration directories.
         self.main_dir, self.conf_dir = launch.get_main_dir()
-        # Get the configuration.
         self.config = launch.get_config(self.conf_dir)
-        # Check if the directory and base files exist, and create them if they don't.
         launch.ensure_files_exist(self.main_dir, self.conf_dir)
-        # Get the application restore data.
+        
         self.last_profile, self.original_profile, self.profile_exists, self.last_width, self.last_height = launch.get_restore_data(self.main_dir, self.conf_dir, self.config, self.default_width, self.default_height)
-        # Get the units.
         self.units = launch.get_units(self.config)
-        # Get the dataset data.
         self.data = launch.get_data(self.main_dir, self.last_profile)
-        # Get the weather codes.
+        
         self.weather_codes = launch.get_weather_codes()
-        # Get the Pastebin constants.
         self.pastebin_constants = launch.get_pastebin_constants()
         
         # Try importing matplotlib, just so we know if it's installed.
@@ -136,8 +130,6 @@ class WeatherLog(Gtk.Window):
         
         # Add the data.
         self.update_list()
-        
-        # Set the new title.
         self.update_title()
     
     
@@ -275,10 +267,7 @@ class WeatherLog(Gtk.Window):
     def delete_event(self, widget, event):
         """Saves the last dataset and window size."""
         
-        # Get the current window size.
         width, height = self.get_size()
-        
-        # Save the restore data.
         io.write_restore_data(self.conf_dir, self.last_profile,  height, width)
     
     
