@@ -190,7 +190,6 @@ class WeatherLog(Gtk.Window):
             ("add_new", Gtk.STOCK_ADD, "Add _New Data...", "<Control>n", "Add a new day to the list", self.add_new),
             ("edit", Gtk.STOCK_EDIT, "_Edit Data...", "<Control>e", None, self.edit),
             ("remove", Gtk.STOCK_REMOVE, "Remo_ve Data...", "<Control>r", "Remove a day from the list", self.remove),
-            ("clear_data", Gtk.STOCK_CLEAR, "Clear Current _Data...", None, "Clear the data", self.clear),
             ("clear_all", None, "Clear _All Data...", None, None, self.clear_all),
             ("get_current_here", None, "Get Current _Weather...", "<Control>w", None, lambda x: self.get_weather(True)),
             ("get_current_there", None, "Get Current Weather _For...", None, None, lambda x: self.get_weather(False)),
@@ -1267,24 +1266,6 @@ class WeatherLog(Gtk.Window):
             if response == Gtk.ResponseType.OK:
                 webbrowser.open(result)
     
-    
-    def clear(self, event):
-        """Clears the data."""
-        
-        # Only show the dialog if the user wants that.
-        if self.config["confirm_del"]:
-            response = show_question_dialog(self, "Clear Current Data - %s" % self.last_profile, "Are you sure you want to clear the data? This action cannot be undone.")
-            if response != Gtk.ResponseType.OK:
-                return
-        
-        # Clear the data.
-        self.data[:] = []
-        self.liststore.clear()
-        
-        # Update the title and save the data.
-        self.update_title()
-        self.save()
-        
     
     def clear_all(self, event):
         """Clears all data."""
