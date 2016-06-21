@@ -8,6 +8,8 @@
 import weatherlog_resources.dialogs.pywapi.pywapi as pywapi
 # Import the functions for converting degrees to a direction.
 import weatherlog_resources.degrees as degrees
+# Import application constants.
+from weatherlog_resources.constants import *
 
 
 # Define day dictionary.
@@ -88,63 +90,63 @@ def get_weather_image(code):
     img_url = "error.png"
     
     # Sunny:
-    if code in [32, 34]:
+    if code in WeatherCondition.SUNNY:
         img_url = "sunny.png"
     
     # Cloudy:
-    if code in [26]:
+    if code in WeatherCondition.CLOUDY:
         img_url = "cloudy.png"
     
     # Clear (night):
-    if code in [31, 33]:
+    if code in WeatherCondition.CLEAR_NIGHT:
         img_url = "clear_night.png"
     
     # Partly cloudy and similar:
-    if code in [27, 28, 29, 30, 44]:
+    if code in WeatherCondition.PARTLY_CLOUDY:
         img_url = "partly_cloudy.png"
     
     # Fog and similar:
-    if code in [19, 20, 21, 22]:
+    if code in WeatherCondition.FOG:
         img_url = "fog.png"
     
     # Windy and similar:
-    if code in [23, 24, 0, 2, 15]:
+    if code in WeatherCondition.WIND:
         img_url = "windy.png"
     
     # Light rain and similar:
-    if code in [8, 9]:
+    if code in WeatherCondition.RAIN_LIGHT:
         img_url = "rain_little.png"
     
     # Rain and similar:
-    if code in [10, 11, 12, 40]:
+    if code in WeatherCondition.RAIN:
         img_url = "rain.png"
     
     # Heavy rain and similar:
-    if code in [1, 6, 17, 18, 35]:
+    if code in WeatherCondition.RAIN_HEAVY:
         img_url = "rain_lots.png"
     
     # Thunderstorms and similar:
-    if code in [4, 37, 38, 39, 45, 47]:
+    if code in WeatherCondition.THUNDERSTORM:
         img_url = "rain_thunder.png"
     
     # Heavy thunderstorms and similar:
-    if code in [3]:
+    if code in WeatherCondition.THUNDERSTORM_HEAVY:
         img_url = "rain_thunder_lots.png"
     
     # Mixed snow - rain and similar:
-    if code in [5, 7]:
+    if code in WeatherCondition.MIXED:
         img_url = "rain_snow.png"
     
     # Light snow and similar:
-    if code in [13, 14]:
+    if code in WeatherCondition.SNOW_LIGHT:
         img_url = "snow_little.png"
     
     # Snow and similar:
-    if code in [16, 42, 46]:
+    if code in WeatherCondition.SNOW:
         img_url = "snow.png"
     
     # Heavy snow and similar:
-    if code in [41, 43]:
+    if code in WeatherCondition.SNOW_HEAVY:
         img_url = "snow_lots.png"
     
     return base_url + img_url

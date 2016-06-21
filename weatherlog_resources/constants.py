@@ -5,7 +5,7 @@
 
 
 __all__ = ["SelectionMode", "DialogResponse", "ImportValidation", "DateValidation", "PastebinExport", "DatasetSelectionMode",
-           "ImportType", "DatasetColumn"]
+           "ImportType", "DatasetColumn", "WeatherCondition"]
 
 
 # Data subset selection mode:
@@ -80,3 +80,22 @@ class DatasetColumn:
     VISIBILITY = 7
     CLOUD_COVER = 8
     NOTES = 9
+
+
+# Weather condition codes:
+class WeatherCondition:
+    SUNNY = [32, 34]
+    CLOUDY = [26]
+    CLEAR_NIGHT = [31, 33]
+    PARTLY_CLOUDY = [27, 28, 29, 30, 44]
+    FOG = [19, 20, 21, 22]
+    WIND = [23, 24, 0, 2, 15]
+    RAIN = [10, 11, 12, 40]
+    RAIN_LIGHT = [8, 9]
+    RAIN_HEAVY = [1, 6, 17, 18, 35]
+    THUNDERSTORM = [4, 37, 38, 39, 45, 47]
+    THUNDERSTORM_HEAVY = [3]
+    MIXED = [5, 7]
+    SNOW = [16, 42, 46]
+    SNOW_LIGHT = [13, 14]
+    SNOW_HEAVY = [41, 43]
