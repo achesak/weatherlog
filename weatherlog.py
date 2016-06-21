@@ -486,19 +486,22 @@ class WeatherLog(Gtk.Window):
             dates.append([i[0]])
         
         # Get the dates to remove.
-        rem_dlg = DateSelectionDialog(self, "Remove Data - %s" % self.last_profile, dates)
+        rem_dlg = DateSelectionDialog(self, "Remove Data - %s" % self.last_profile, dates, buttons = [["Cancel", Gtk.ResponseType.CANCEL], ["Remove All", DialogResponse.REMOVE_ALL], ["OK", Gtk.ResponseType.OK]])
         response = rem_dlg.run()
         model, treeiter = rem_dlg.treeview.get_selection().get_selected_rows()
         rem_dlg.destroy()
         
-        # If the user did not click OK or nothing was selected, don't continue.
-        if response != Gtk.ResponseType.OK or treeiter == None:
+        # If the user did not click OK or Remove Allor nothing was selected, don't continue.
+        if (response != DialogResponse.REMOVE_ALL) and (response != Gtk.ResponseType.OK or treeiter == None):
             return
         
         # Get the dates.
-        ndates = []
-        for i in treeiter:
-            ndates.append(model[i][0])
+        if response == DialogResponse.REMOVE_ALL:
+            ndates = datasets.get_column(self.data, 0)
+        else:
+            ndates = []
+            for i in treeiter:
+                ndates.append(model[i][0])
         
         # If there were no dates selected, don't continue.
         if len(ndates) == 0:
