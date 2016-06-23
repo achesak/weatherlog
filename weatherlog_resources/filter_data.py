@@ -234,3 +234,32 @@ def filter_or(set1, set2):
     
     filtered = sorted(filtered, key = lambda x: datetime.datetime.strptime(x[0], "%d/%m/%Y"))
     return filtered
+
+
+def filter_quick(data, search_term, case_insensitive):
+    """Filters the data based on a search term and given options."""
+    
+    filtered = []
+    
+    # Convert the case of the data if needed. TODO: this is quite inefficient
+    if case_insensitive:
+        new_data = []
+        for row in data:
+            new_data.append(map(str.lower, row))
+    else:
+        new_data = data[:]
+        
+    # Filter the data.
+    for index in range(0, len(new_data)):
+        if filter_quick_compare(new_data[index], search_term):
+            filtered.append(data[index])
+    
+    return filtered
+
+
+def filter_quick_compare(row, search_term):
+    """Returns whether or not the search term is contained in the row for a quick search."""
+    
+    for item in row:
+        if search_term in item:
+            return True

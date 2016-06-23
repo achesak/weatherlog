@@ -32,6 +32,7 @@
       <menuitem action="graphs_range" />
       <menuitem action="graphs_selected" />
       <separator />
+      <menuitem action="quick_search" />
       <menuitem action="view_subset" />
     </menu>
     <menu action="datasets_menu">

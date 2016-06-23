@@ -85,7 +85,9 @@ from weatherlog_resources.dialogs.chart_dialog import GenericChartDialog
 from weatherlog_resources.dialogs.graph_dialog import GenericGraphDialog
 from weatherlog_resources.dialogs.dataset_selection_dialog import DatasetSelectionDialog
 from weatherlog_resources.dialogs.dataset_add_select_dialog import DatasetAddSelectionDialog
+from weatherlog_resources.dialogs.quick_search_dialog import QuickSearchDialog
 from weatherlog_resources.dialogs.data_subset_selection_dialog import DataSubsetSelectionDialog
+from weatherlog_resources.dialogs.data_subset_dialog import DataSubsetDialog
 from weatherlog_resources.dialogs.import_selection_dialog import ImportSelectionDialog
 from weatherlog_resources.dialogs.export_pastebin_dialog import ExportPastebinDialog
 from weatherlog_resources.dialogs.weather_dialog import CurrentWeatherDialog
@@ -205,7 +207,8 @@ class WeatherLog(Gtk.Window):
             ("graphs", None, "_Graphs...", "<Control>g", None, lambda x: self.show_graph_generic()),
             ("graphs_range", None, "Gra_phs in Range...", "<Control><Shift>g", None, lambda x: self.graph_range()),
             ("graphs_selected", None, "Grap_hs for Selected Dates...", None, None, lambda x: self.graph_selected()),
-            ("view_subset", None, "View _Data Subset...", "<Control>d", None, self.select_data_subset),
+            ("quick_search", None, "_Quick Search...", "<Control>d", None, self.quick_search),
+            ("view_subset", None, "View _Data Subset...", "<Control><Shift>d", None, self.select_data_subset),
         ])
         action_group.add_actions([
             ("datasets_menu", None, "_Datasets"),
@@ -996,6 +999,51 @@ class WeatherLog(Gtk.Window):
         graph_dlg = GenericGraphDialog(self, "Graphs - %s" % self.last_profile, data2, self.last_profile, self.units, self.config)
         response = graph_dlg.run()
         graph_dlg.destroy()
+    
+    
+    def quick_search(self, event):
+        """Shows the quick search dialog."""
+        
+        # If there is no data, tell the user and don't show the subset dialog.
+        if len(self.data) == 0:
+            show_no_data_dialog(self, "Quick Search - %s" % self.last_profile)
+            return
+        
+        # Get the search term and options.
+        qui_dlg = QuickSearchDialog(self, self.last_profile)
+        response = qui_dlg.run()
+        search_term = qui_dlg.inp_ent.get_text()
+        opt_insensitive = qui_dlg.case_chk.get_active()
+        qui_dlg.destroy()
+        
+        # If the user did not click OK or nothing was entered, don't continue.
+        if response != Gtk.ResponseType.OK or search_term.strip() == "":
+            return
+        
+        # Filter and display the data.
+        filtered = filter_data.filter_quick(self.data, search_term, opt_insensitive)
+        
+        if len(filtered) == 0:
+            show_alert_dialog(self, "Quick Search - %s" % self.last_profile, "No data matches the specified search term.")
+            return
+        
+        sub_dlg = DataSubsetDialog(self, "Quick Search - %s" % self.last_profile, filtered, self.units, self.config)
+        response = sub_dlg.run()
+        sub_dlg.destroy()
+
+        # If the user clicked Export:
+        if response == DialogResponse.EXPORT:
+
+            # Get the filename and export the info.
+            response2, filename = show_export_dialog(self, "Quick Search - %s" % self.last_profile)
+            if response2 == Gtk.ResponseType.OK:
+                data_list = [["WeatherLog Subset Data - %s - %s to %s" % (self.last_profile, (filtered[0][0] if len(filtered) != 0 else "None"), (filtered[len(filtered)-1][0] if len(filtered) != 0 else "None")),
+                               ["Date", "Temperature (%s)" % self.units["temp"], "Wind Chill (%s)" % self.units["temp"],
+                                "Precipitation (%s)" % self.units["prec"], "Wind (%s)" % self.units["wind"],
+                                "Humidity (%%)", "Air Pressure (%s)" % self.units["airp"], "Visibility (%s)" % self.units["visi"],
+                                "Cloud Cover", "Notes"],
+                                filtered]]
+                export.html_generic(data_list, filename)
     
     
     def select_data_subset(self, event):
