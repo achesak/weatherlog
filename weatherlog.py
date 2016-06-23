@@ -1024,10 +1024,10 @@ class WeatherLog(Gtk.Window):
         filtered = filter_data.filter_quick(self.data, search_term, opt_insensitive)
         
         if len(filtered) == 0:
-            show_alert_dialog(self, "Quick Search - %s" % self.last_profile, "No data matches the specified search term.")
+            show_alert_dialog(self, "Quick Search Results - %s" % self.last_profile, "No data matches the specified search term.")
             return
         
-        sub_dlg = DataSubsetDialog(self, "Quick Search - %s" % self.last_profile, filtered, self.units, self.config)
+        sub_dlg = DataSubsetDialog(self, "Quick Search Results - %s" % self.last_profile, filtered, self.units, self.config)
         response = sub_dlg.run()
         sub_dlg.destroy()
 
@@ -1035,9 +1035,9 @@ class WeatherLog(Gtk.Window):
         if response == DialogResponse.EXPORT:
 
             # Get the filename and export the info.
-            response2, filename = show_export_dialog(self, "Quick Search - %s" % self.last_profile)
+            response2, filename = show_export_dialog(self, "Quick Search Results - %s" % self.last_profile)
             if response2 == Gtk.ResponseType.OK:
-                data_list = [["WeatherLog Subset Data - %s - %s to %s" % (self.last_profile, (filtered[0][0] if len(filtered) != 0 else "None"), (filtered[len(filtered)-1][0] if len(filtered) != 0 else "None")),
+                data_list = [["WeatherLog Quick Search Results - %s - %s to %s" % (self.last_profile, (filtered[0][0] if len(filtered) != 0 else "None"), (filtered[len(filtered)-1][0] if len(filtered) != 0 else "None")),
                                ["Date", "Temperature (%s)" % self.units["temp"], "Wind Chill (%s)" % self.units["temp"],
                                 "Precipitation (%s)" % self.units["prec"], "Wind (%s)" % self.units["wind"],
                                 "Humidity (%%)", "Air Pressure (%s)" % self.units["airp"], "Visibility (%s)" % self.units["visi"],
