@@ -354,7 +354,7 @@ class DataSubsetSelectionDialog(Gtk.Window):
                 data_list = [["WeatherLog Data Subset Results - %s - %s to %s" % (self.last_profile, (filtered[0][0] if len(filtered) != 0 else "None"), (filtered[len(filtered)-1][0] if len(filtered) != 0 else "None")),
                                ["Date", "Temperature (%s)" % self.units["temp"], "Wind Chill (%s)" % self.units["temp"],
                                 "Precipitation (%s)" % self.units["prec"], "Wind (%s)" % self.units["wind"],
-                                "Humidity (%%)", "Air Pressure (%s)" % self.units["airp"], "Visibility (%s)" % self.units["visi"],
+                                "Humidity (%)", "Air Pressure (%s)" % self.units["airp"], "Visibility (%s)" % self.units["visi"],
                                 "Cloud Cover", "Notes"],
                                 filtered]]
                 export.html_generic(data_list, filename)
