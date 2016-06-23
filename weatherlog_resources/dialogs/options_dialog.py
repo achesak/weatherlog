@@ -148,6 +148,24 @@ class OptionsDialog(Gtk.Dialog):
         self.trun_chk.set_active(config["truncate_notes"])
         int_grid.attach_next_to(self.trun_chk, self.cex_chk, Gtk.PositionType.BOTTOM, 2, 1)
         
+        # Create the Search tab.
+        search_grid = Gtk.Grid()
+        search_grid.set_hexpand(True)
+        search_grid.set_vexpand(True)
+        search_grid.set_column_spacing(10)
+        search_grid.set_row_spacing(5)
+        search_grid_lbl = Gtk.Label("Search")
+        
+        # Create the default case insensitive checkbox.
+        self.case_chk = Gtk.CheckButton("Default case insensitive")
+        self.case_chk.set_tooltip_text("Default to case insensitive when searching.")
+        self.case_chk.set_margin_left(5)
+        self.case_chk.set_margin_right(5)
+        self.case_chk.set_margin_top(5)
+        self.case_chk.set_margin_bottom(5)
+        self.case_chk.set_active(config["default_case_insensitive"])
+        search_grid.add(self.case_chk)
+        
         # Create the Graphs tab.
         graph_grid = Gtk.Grid()
         graph_grid.set_hexpand(True)
@@ -286,6 +304,7 @@ class OptionsDialog(Gtk.Dialog):
         opt_box.add(notebook)
         notebook.append_page(gen_grid, gen_grid_lbl)
         notebook.append_page(int_grid, int_grid_lbl)
+        notebook.append_page(search_grid, search_grid_lbl)
         notebook.append_page(graph_grid, graph_grid_lbl)
         notebook.append_page(paste_grid, paste_grid_lbl)
         

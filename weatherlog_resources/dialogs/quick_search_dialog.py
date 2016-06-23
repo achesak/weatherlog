@@ -11,7 +11,7 @@ from gi.repository import Gtk
 class QuickSearchDialog(Gtk.Dialog):
     """Shows the dialog for a quick search."""
     
-    def __init__(self, parent, last_profile):
+    def __init__(self, parent, last_profile, config):
         """Create the dialog."""
         
         # Create the dialog.
@@ -41,6 +41,7 @@ class QuickSearchDialog(Gtk.Dialog):
         qui_grid.attach_next_to(opt_frame, inp_frame, Gtk.PositionType.BOTTOM, 1, 1)
         self.case_chk = Gtk.CheckButton("Case insensitive")
         self.case_chk.set_tooltip_text("Match search term regardless of case.")
+        self.case_chk.set_active(config["default_case_insensitive"])
         self.case_chk.set_margin_top(5)
         self.case_chk.set_margin_bottom(5)
         opt_frame.add(self.case_chk)

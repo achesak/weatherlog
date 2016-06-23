@@ -1010,7 +1010,7 @@ class WeatherLog(Gtk.Window):
             return
         
         # Get the search term and options.
-        qui_dlg = QuickSearchDialog(self, self.last_profile)
+        qui_dlg = QuickSearchDialog(self, self.last_profile, self.config)
         response = qui_dlg.run()
         search_term = qui_dlg.inp_ent.get_text()
         opt_insensitive = qui_dlg.case_chk.get_active()
@@ -1784,6 +1784,7 @@ class WeatherLog(Gtk.Window):
         pastebin_format = opt_dlg.pform_com.get_active_text()
         pastebin_expires = opt_dlg.pexpi_com.get_active_text()
         pastebin_exposure = opt_dlg.pexpo_com.get_active_text()
+        default_case_insensitive = opt_dlg.case_chk.get_active()
         opt_dlg.destroy()
         
         # If the user did not press OK or Reset, don't continue.
@@ -1823,6 +1824,7 @@ class WeatherLog(Gtk.Window):
             self.config["pastebin_format"] = pastebin_format
             self.config["pastebin_expires"] = self.pastebin_constants["expires"][pastebin_expires]
             self.config["pastebin_exposure"] = self.pastebin_constants["exposure"][pastebin_exposure]
+            self.config["default_case_insensitive"] = default_case_insensitive
         
         # Configure the units.
         self.units = launch.get_units(self.config)

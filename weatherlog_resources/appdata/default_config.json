@@ -19,5 +19,6 @@
     "pastebin_default_name": "WeatherLog exported data",
     "pastebin_format": "JSON",
     "pastebin_expires": "N",
-    "pastebin_exposure": 0
+    "pastebin_exposure": 0,
+    "default_case_insensitive": false
 }
