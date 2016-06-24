@@ -25,8 +25,11 @@ platform.
 
 WeatherLog is released under the [MIT open source license](http://opensource.org/licenses/mit-license.php). See the `LICENSE.md` file for more information.
 
-WeatherLog uses [python-weather-api](https://launchpad.net/python-weather-api) to get data from weather APIs. See the `README` and `LICENSE` files in
-`weatherlog_resources/dialogs/pywapi` for more information.
+WeatherLog uses the [OpenWeatherMap](http://openweathermap.org/) service to get current weather conditions and forecasts. Please see their [terms of service](http://openweathermap.org/terms)
+before using these features.
+
+WeatherLog uses [weatherlog-openweathermap](https://github.com/achesak/weatherlog-openweathermap) to get weather data from OpenWeatherMap. This library is released
+under the MIT open source license.
 
 Icons:
 * Weather icons from a set by [Mr J](https://www.iconfinder.com/iconsets/weather-icons-8).
