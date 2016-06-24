@@ -1,7 +1,6 @@
 {
     "pre-fill": false,
     "restore": true,
-    "location": "",
     "units": "metric",
     "show_units": true,
     "show_dates": true,
@@ -20,5 +19,10 @@
     "pastebin_format": "JSON",
     "pastebin_expires": "N",
     "pastebin_exposure": 0,
-    "default_case_insensitive": false
+    "default_case_insensitive": false,
+    "openweathermap": "90310936256969827ebcd5cabcc0a14c",
+    "city": "",
+    "zipcode": "",
+    "country": "",
+    "location_type": "city"
 }

@@ -61,26 +61,12 @@ class OptionsDialog(Gtk.Dialog):
         self.imp_chk.set_active(config["import_all"])
         gen_grid.attach_next_to(self.imp_chk, self.del_chk, Gtk.PositionType.BOTTOM, 2, 1)
         
-        # Create the location entry.
-        loc_lbl = Gtk.Label("Location: ")
-        loc_lbl.set_tooltip_text("Location used for automatically filling in fields when adding new data. Note that this must be a 5-digit US zip code.")
-        loc_lbl.set_margin_left(5)
-        loc_lbl.set_alignment(0, 0.5)
-        gen_grid.attach_next_to(loc_lbl, self.imp_chk, Gtk.PositionType.BOTTOM, 1, 1)
-        self.loc_ent = Gtk.Entry()
-        self.loc_ent.set_margin_right(5)
-        self.loc_ent.set_hexpand(True)
-        self.loc_ent.set_max_length(5)
-        self.loc_ent.connect("changed", self.filter_numbers)
-        self.loc_ent.set_text(config["location"])
-        gen_grid.attach_next_to(self.loc_ent, loc_lbl, Gtk.PositionType.RIGHT, 1, 1)
-        
         # Create the units combobox.
         unit_lbl = Gtk.Label("Units: ")
         unit_lbl.set_tooltip_text("Measurement units used for display and conversion.")
         unit_lbl.set_margin_left(5)
         unit_lbl.set_alignment(0, 0.5)
-        gen_grid.attach_next_to(unit_lbl, loc_lbl, Gtk.PositionType.BOTTOM, 1, 1)
+        gen_grid.attach_next_to(unit_lbl, self.imp_chk, Gtk.PositionType.BOTTOM, 1, 1)
         self.unit_com = Gtk.ComboBoxText()
         self.unit_com.set_margin_right(5)
         self.unit_com.set_margin_bottom(5)
@@ -89,6 +75,82 @@ class OptionsDialog(Gtk.Dialog):
             self.unit_com.append_text(i)
         self.unit_com.set_active(["Metric", "Imperial"].index(config["units"].title()))
         gen_grid.attach_next_to(self.unit_com, unit_lbl, Gtk.PositionType.RIGHT, 1, 1)
+        
+        # Create the Data tab.
+        dat_grid = Gtk.Grid()
+        dat_grid.set_hexpand(True)
+        dat_grid.set_vexpand(True)
+        dat_grid.set_column_spacing(10)
+        dat_grid.set_row_spacing(5)
+        dat_grid_lbl = Gtk.Label("Data")
+        
+        # Create the location type radiobuttons.
+        self.use_city_rbtn = Gtk.RadioButton.new_with_label_from_widget(None, "Use city")
+        self.use_zip_rbtn = Gtk.RadioButton.new_with_label_from_widget(self.use_city_rbtn, "Use zipcode")
+        self.use_city_rbtn.set_margin_top(5)
+        self.use_city_rbtn.set_margin_right(5)
+        self.use_city_rbtn.set_margin_left(5)
+        self.use_zip_rbtn.set_margin_right(5)
+        self.use_zip_rbtn.set_margin_left(5)
+        dat_grid.add(self.use_city_rbtn)
+        if config["location_type"] == "city":
+            self.use_city_rbtn.set_active(True)
+        else:
+            self.use_zip_rbtn.set_active(True)
+        dat_grid.attach_next_to(self.use_zip_rbtn, self.use_city_rbtn, Gtk.PositionType.BOTTOM, 2, 1)
+        
+        # Create the zipcode entry.
+        zip_lbl = Gtk.Label("Zipcode: ")
+        zip_lbl.set_tooltip_text("Zipcode used for automatically filling in fields when adding new data.")
+        zip_lbl.set_margin_left(5)
+        zip_lbl.set_alignment(0, 0.5)
+        dat_grid.attach_next_to(zip_lbl, self.use_zip_rbtn, Gtk.PositionType.BOTTOM, 1, 1)
+        self.zip_ent = Gtk.Entry()
+        self.zip_ent.set_margin_right(5)
+        self.zip_ent.set_hexpand(True)
+        self.zip_ent.set_max_length(5)
+        self.zip_ent.connect("changed", self.filter_numbers)
+        self.zip_ent.set_text(config["zipcode"])
+        dat_grid.attach_next_to(self.zip_ent, zip_lbl, Gtk.PositionType.RIGHT, 1, 1)
+        
+        # Create the city entry.
+        cit_lbl = Gtk.Label("City: ")
+        cit_lbl.set_tooltip_text("City used for automatically filling in fields when adding new data.")
+        cit_lbl.set_margin_left(5)
+        cit_lbl.set_alignment(0, 0.5)
+        dat_grid.attach_next_to(cit_lbl, zip_lbl, Gtk.PositionType.BOTTOM, 1, 1)
+        self.cit_ent = Gtk.Entry()
+        self.cit_ent.set_margin_right(5)
+        self.cit_ent.set_hexpand(True)
+        self.cit_ent.set_text(config["city"])
+        dat_grid.attach_next_to(self.cit_ent, cit_lbl, Gtk.PositionType.RIGHT, 1, 1)
+        
+        # Create the country code entry.
+        cnt_lbl = Gtk.Label("Country: ")
+        cnt_lbl.set_tooltip_text("Country code used for automatically filling in fields when adding new data.")
+        cnt_lbl.set_margin_left(5)
+        cnt_lbl.set_alignment(0, 0.5)
+        dat_grid.attach_next_to(cnt_lbl, cit_lbl, Gtk.PositionType.BOTTOM, 1, 1)
+        self.cnt_ent = Gtk.Entry()
+        self.cnt_ent.set_margin_right(5)
+        self.cnt_ent.set_hexpand(True)
+        self.cnt_ent.set_max_length(2)
+        self.cnt_ent.set_text(config["country"])
+        dat_grid.attach_next_to(self.cnt_ent, cnt_lbl, Gtk.PositionType.RIGHT, 1, 1)
+        
+        # Create the openweathermap devkey entry.
+        owm_lbl = Gtk.Label("API key: ")
+        owm_lbl.set_tooltip_text("API key used for getting data from OpenWeatherMap.\n\nPlease replace with your own if you use this feature frequently.")
+        owm_lbl.set_margin_left(5)
+        owm_lbl.set_margin_bottom(5)
+        owm_lbl.set_alignment(0, 0.5)
+        dat_grid.attach_next_to(owm_lbl, cnt_lbl, Gtk.PositionType.BOTTOM, 1, 1)
+        self.owm_ent = Gtk.Entry()
+        self.owm_ent.set_margin_right(5)
+        self.owm_ent.set_margin_bottom(5)
+        self.owm_ent.set_hexpand(True)
+        self.owm_ent.set_text(config["openweathermap"])
+        dat_grid.attach_next_to(self.owm_ent, owm_lbl, Gtk.PositionType.RIGHT, 1, 1)
         
         # Create the Interface tab.
         int_grid = Gtk.Grid()
@@ -303,6 +365,7 @@ class OptionsDialog(Gtk.Dialog):
         opt_box = self.get_content_area()
         opt_box.add(notebook)
         notebook.append_page(gen_grid, gen_grid_lbl)
+        notebook.append_page(dat_grid, dat_grid_lbl)
         notebook.append_page(int_grid, int_grid_lbl)
         notebook.append_page(search_grid, search_grid_lbl)
         notebook.append_page(graph_grid, graph_grid_lbl)
@@ -320,5 +383,5 @@ class OptionsDialog(Gtk.Dialog):
     def filter_numbers(self, event):
         """Filters non-numbers out of the entry."""
         
-        text = self.loc_ent.get_text()
-        self.loc_ent.set_text("".join([i for i in text if i in "0123456789"]))
+        text = self.zip_ent.get_text()
+        self.zip_ent.set_text("".join([i for i in text if i in "0123456789"]))

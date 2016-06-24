@@ -5,7 +5,7 @@
 
 
 # Import the weather API.
-import weatherlog_resources.dialogs.pywapi.pywapi as pywapi
+import weatherlog_resources.openweathermap.api as api
 # Import the functions for converting degrees to a direction.
 import weatherlog_resources.degrees as degrees
 # Import application constants.
@@ -152,32 +152,27 @@ def get_weather_image(code):
     return base_url + img_url
 
 
-def get_prefill_data(user_location, units):
+def get_prefill_data(user_location, units, config):
     """Gets the data used to automatically fill Add New dialog."""
     
     # Get the data.
-    data = pywapi.get_weather_from_yahoo(user_location, units = ("metric" if units["prec"] == "cm" else "imperial"))
-    if "error" in data:
-        return False, data["error"]
+    data = api.get_current_weather(config["openweathermap"], units = ("metric" if units["prec"] == "cm" else "imperial"), zipcode = config["zipcode"],
+                                   location = config["location"], country = config["country"])
+    
+    
+    if data["cod"] == 401:
+        return False, "Invalid API key. Please check Options and enter a valid API key"
     
     pre = {
-        "temp": float(data["condition"]["temp"]),
-        "chil": float(data["wind"]["chill"]),
+        "temp": float(data["main"]["temp"]),
+        "chil": float(data["main"]["temp"]),
         "wind": float(data["wind"]["speed"]),
-        "wind_dir": float(data["wind"]["direction"]),
-        "humi": float(data["atmosphere"]["humidity"]),
-        "airp": float(data["atmosphere"]["pressure"]),
-        "airp_change": int(data["atmosphere"]["rising"])
+        "wind_dir": float(data["wind"]["deg"]),
+        "humi": float(data["main"]["humidity"]),
+        "airp": float(data["main"]["pressure"]),
+        "clou": int(data["clouds"]["all"])
     }
     
-    if units["airp"] == "mbar":
-        pre["airp"] *= 33.86389
-    
-    if data["atmosphere"]["visibility"].lstrip().rstrip() == "":
-        pre["visi"] = 0.0
-    else:
-        pre["visi"] = float(data["atmosphere"]["visibility"])
-    
-    location = "%s, %s" % (data["location"]["city"], data["location"]["country"])
+    location = "%s, %s" % (data["name"], data["sys"]["country"])
     
     return location, pre

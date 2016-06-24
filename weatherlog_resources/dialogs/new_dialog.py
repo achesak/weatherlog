@@ -12,18 +12,15 @@ from gi.repository import Gtk
 from weatherlog_resources.dialogs.misc_dialogs import *
 # Import the date selecter dialog.
 from weatherlog_resources.dialogs.calendar_dialog import CalendarDialog
-# Import pywapi to pre-fill the fields.
-import weatherlog_resources.dialogs.pywapi.pywapi as pywapi
-# Import function to convert degrees to a wind direction.
-import weatherlog_resources.degrees as degrees
 # Import functions for getting the weather.
 import weatherlog_resources.get_weather as get_weather
-
+import weatherlog_resources.degrees as degrees
+import weatherlog_resources.clouds as clouds
 
 class AddNewDialog(Gtk.Dialog):
     """Shows the "Add New" dialog."""
     
-    def __init__(self, parent, profile, user_location, prefill, show_prefill_dlg, units, prefill_data = []):
+    def __init__(self, parent, profile, user_location, user_zipcode, prefill, show_prefill_dlg, units, config, prefill_data = []):
         """Create the dialog."""
         
         # Determine the default units.
@@ -243,8 +240,8 @@ class AddNewDialog(Gtk.Dialog):
             station = False
         
         # Pre-fill the fields, if the user wants that.
-        elif prefill and user_location and len(user_location) == 5:
-            station, data = get_weather.get_prefill_data(user_location, units)
+        elif prefill and (user_location or user_zipcode):
+            station, data = get_weather.get_prefill_data(user_location, units, config)
             
             if not station:
                 error_message = data if isinstance(data, str) else data["error"]
@@ -256,8 +253,7 @@ class AddNewDialog(Gtk.Dialog):
                 self.wind_sbtn.set_value(data["wind"])
                 self.humi_sbtn.set_value(data["humi"])
                 self.airp_sbtn.set_value(data["airp"])
-                self.airp_com.set_active(data["airp_change"])
-                self.visi_sbtn.set_value(data["visi"])
+                self.clou_com.set_active(clouds.percent_to_term(data["clou"]))
         
         # Connect 'Enter' key to the OK button.
         ok_btn = self.get_widget_for_response(response_id = Gtk.ResponseType.OK)

@@ -296,7 +296,7 @@ class WeatherLog(Gtk.Window):
         """Shows the dialog for input of new data."""
         
         # Get the data to add.
-        new_dlg = AddNewDialog(self, self.last_profile, self.config["location"], self.config["pre-fill"], self.config["show_pre-fill"], self.units, prefill_data)
+        new_dlg = AddNewDialog(self, self.last_profile, self.config["city"], self.config["zipcode"], self.config["pre-fill"], self.config["show_pre-fill"], self.units, self.config, prefill_data)
         response = new_dlg.run()
         date = new_dlg.date_ent.get_text()
         temp = new_dlg.temp_sbtn.get_value()
@@ -1767,7 +1767,6 @@ class WeatherLog(Gtk.Window):
         response = opt_dlg.run()
         prefill = opt_dlg.pre_chk.get_active()
         restore = opt_dlg.win_chk.get_active()
-        location = opt_dlg.loc_ent.get_text()
         units_ = opt_dlg.unit_com.get_active_text().lower()
         show_dates = opt_dlg.date_chk.get_active()
         show_units = opt_dlg.unit_chk.get_active()
@@ -1785,6 +1784,11 @@ class WeatherLog(Gtk.Window):
         pastebin_expires = opt_dlg.pexpi_com.get_active_text()
         pastebin_exposure = opt_dlg.pexpo_com.get_active_text()
         default_case_insensitive = opt_dlg.case_chk.get_active()
+        zipcode = opt_dlg.zip_ent.get_text()
+        city = opt_dlg.cit_ent.get_text()
+        country = opt_dlg.cnt_ent.get_text()
+        location_type = "city" if opt_dlg.use_city_rbtn.get_active() else "zip"
+        openweathermap = opt_dlg.owm_ent.get_text()
         opt_dlg.destroy()
         
         # If the user did not press OK or Reset, don't continue.
@@ -1807,7 +1811,6 @@ class WeatherLog(Gtk.Window):
             # Set the configuration.
             self.config["pre-fill"] = prefill
             self.config["restore" ] = restore
-            self.config["location"] = location
             self.config["units"] = units_
             self.config["show_dates"] = show_dates
             self.config["show_units"] = show_units
@@ -1825,6 +1828,11 @@ class WeatherLog(Gtk.Window):
             self.config["pastebin_expires"] = self.pastebin_constants["expires"][pastebin_expires]
             self.config["pastebin_exposure"] = self.pastebin_constants["exposure"][pastebin_exposure]
             self.config["default_case_insensitive"] = default_case_insensitive
+            self.config["zipcode"] = zipcode
+            self.config["city"] = city
+            self.config["country"] = country
+            self.config["location_type"] = location_type
+            self.config["openweathermap"] = openweathermap
         
         # Configure the units.
         self.units = launch.get_units(self.config)
