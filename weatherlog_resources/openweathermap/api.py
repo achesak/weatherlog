@@ -51,7 +51,7 @@ __all__ = ["get_current_weather", "get_forecast"]
 class OpenWeatherMap:
     BASE = "http://api.openweathermap.org/data/2.5/"
     WEATHER = "http://api.openweathermap.org/data/2.5/weather?"
-    FORECAST = "http://api.openweathermap.org/data/2.5/forecast?"
+    FORECAST = "http://api.openweathermap.org/data/2.5/forecast/daily?cnt=7&"
 
 
 def build_api_url(devkey, mode, units, zipcode, location, country):

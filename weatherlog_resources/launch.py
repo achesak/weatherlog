@@ -21,6 +21,8 @@ try:
     import cPickle as pickle
 except ImportError:
     import pickle
+# Import weather codes.
+from weatherlog_resources.openweathermap.codes import codes
 
 
 def get_main_dir():
@@ -74,15 +76,6 @@ def get_ui_info():
 
 def get_weather_codes():
     """Get the weather codes."""
-    
-    try:
-        codes_file = open("weatherlog_resources/appdata/weather_codes.json", "r")
-        codes = json.load(codes_file)
-        codes_file.close()
-    
-    except IOError as e: 
-        print("get_weather_codes(): Error reading weather codes file (IOError):\n%s" % e)
-        sys.exit()
     
     return codes
 

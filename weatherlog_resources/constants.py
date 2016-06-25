@@ -85,21 +85,21 @@ class DatasetColumn:
 
 # Weather condition codes:
 class WeatherCondition:
-    SUNNY = [32, 34]
-    CLOUDY = [26]
-    CLEAR_NIGHT = [31, 33]
-    PARTLY_CLOUDY = [27, 28, 29, 30, 44]
-    FOG = [19, 20, 21, 22]
-    WIND = [23, 24, 0, 2, 15]
-    RAIN = [10, 11, 12, 40]
-    RAIN_LIGHT = [8, 9]
-    RAIN_HEAVY = [1, 6, 17, 18, 35]
-    THUNDERSTORM = [4, 37, 38, 39, 45, 47]
-    THUNDERSTORM_HEAVY = [3]
-    MIXED = [5, 7]
-    SNOW = [16, 42, 46]
-    SNOW_LIGHT = [13, 14]
-    SNOW_HEAVY = [41, 43]
+    SUNNY = [800, 904, 951]
+    CLOUDY = [804]
+    CLEAR_NIGHT = []
+    PARTLY_CLOUDY = [801, 802, 803]
+    FOG = [701, 711, 721, 741, 751, 761, 762]
+    WIND = [731, 771, 781, 900, 901, 902, 905, 952, 953, 954, 955, 956, 957, 958, 959, 962]
+    RAIN = [302, 312, 313, 314, 501, 520, 521, 531]
+    RAIN_LIGHT = [300, 301, 310, 311, 321, 500]
+    RAIN_HEAVY = [502, 503, 504, 511, 522, 906]
+    THUNDERSTORM = [200, 201, 210, 211, 230, 231, 960]
+    THUNDERSTORM_HEAVY = [202, 212, 232, 961]
+    MIXED = [615, 616]
+    SNOW = [601, 611, 612, 621, 903]
+    SNOW_LIGHT = [600, 620]
+    SNOW_HEAVY = [602, 622]
 
 
 # Cloud coverage types:

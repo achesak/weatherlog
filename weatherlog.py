@@ -539,8 +539,11 @@ class WeatherLog(Gtk.Window):
         location = ""
         
         # If getting the weather for the current location, make sure this location has been specified.
-        if here and len(self.config["location"]) == 5:
-            location = self.config["location"]
+        if here:
+            if self.config["location_type"] == "city" and self.config["city"]:
+                location = self.config["city"]
+            elif self.config["location_type"] == "zip" and self.config["zipcode"]:
+                location = self.config["zipcode"]
         
         if not here or not location:
             
@@ -553,18 +556,8 @@ class WeatherLog(Gtk.Window):
             if response != Gtk.ResponseType.OK:
                 return
         
-        # Make sure the location is valid.
-        if not location or len(location) != 5 or not location.isdigit():
-            show_error_dialog(self, "Get Current Weather", "The specified location is not valid. Only 5-digit US zipcodes are currently supported.")
-            return
-        
         # Get the weather data.
-        weather_data = get_weather.get_weather(location, self.config, self.units, self.weather_codes)
-        if len(weather_data) < 4:
-            show_error_dialog(self, "Get Current Weather", "Error:\n\n%s" % weather_data[0])
-            return
-        
-        city, data, prefill_data, code = get_weather.get_weather(location, self.config, self.units, self.weather_codes)
+        city, data, prefill_data, code = get_weather.get_weather(self.config, self.units, self.weather_codes)
         image_url = get_weather.get_weather_image(code)
         
         # Check if there was an error. Usually this is because the user has no internet connection.

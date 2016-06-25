@@ -235,8 +235,7 @@ class AddNewDialog(Gtk.Dialog):
             self.wind_com.set_active(["None", "N", "NNE", "NE", "ENE", "E", "ESE", "SE", "SSE", "S", "SSW", "SW", "WSW", "W", "WNW", "NW", "NNW"].index(prefill_data[3]))
             self.humi_sbtn.set_value(prefill_data[4])
             self.airp_sbtn.set_value(prefill_data[5])
-            self.airp_com.set_active(["Steady", "Rising", "Falling"].index(prefill_data[6]))
-            self.visi_sbtn.set_value(prefill_data[7])
+            self.airp_com.set_active(prefill_data[6])
             station = False
         
         # Pre-fill the fields, if the user wants that.
@@ -249,8 +248,8 @@ class AddNewDialog(Gtk.Dialog):
             else:
                 self.temp_sbtn.set_value(data["temp"])
                 self.chil_sbtn.set_value(data["chil"])
-                self.wind_com.set_active(["None", "N", "NNE", "NE", "ENE", "E", "ESE", "SE", "SSE", "S", "SSW", "SW", "WSW", "W", "WNW", "NW", "NNW"].index(degrees.degree_to_direction(data["wind_dir"])))
                 self.wind_sbtn.set_value(data["wind"])
+                self.wind_com.set_active(["None", "N", "NNE", "NE", "ENE", "E", "ESE", "SE", "SSE", "S", "SSW", "SW", "WSW", "W", "WNW", "NW", "NNW"].index(degrees.degree_to_direction(data["wind_dir"])))
                 self.humi_sbtn.set_value(data["humi"])
                 self.airp_sbtn.set_value(data["airp"])
                 self.clou_com.set_active(clouds.percent_to_term(data["clou"]))
@@ -264,8 +263,8 @@ class AddNewDialog(Gtk.Dialog):
         self.show_all()
         
         # Show the dialog saying data has been prefilled.
-        if show_prefill_dlg and prefill and user_location and len(user_location) == 5 and station:
-            show_alert_dialog(self, "Add New Data - %s" % profile, "Some fields have been automatically filled using data from Yahoo! Weather.\n\nLocation is set to %s, at %s." % (user_location, station))
+        if show_prefill_dlg and prefill and (user_location or user_zipcode) and station:
+            show_alert_dialog(self, "Add New Data - %s" % profile, "Some fields have been automatically filled using data from OpenWeatherMap.\n\nLocation is set to %s." % station)
     
     
     def select_date(self, event):
