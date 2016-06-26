@@ -385,7 +385,7 @@ class WeatherLog(Gtk.Window):
         
         # If there is no data, tell the user and don't show the date selection.
         if len(self.data) == 0:
-            show_no_data_dialog(self, "Edit Data - %s" % self.last_profile, message = "There is no data to remove.")
+            show_no_data_dialog(self, "Edit Data - %s" % self.last_profile, message = "There is no data to edit.")
             return
         
         # Get the dates.
