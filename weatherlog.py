@@ -53,6 +53,13 @@ try:
     import cPickle as pickle
 except ImportError:
     import pickle
+# Import URLError for error checking
+try:
+    # Python 2
+    from urllib2 import URLError
+except:
+    # Python 3
+    from urllib.request import URLError
 
 # Tell Python not to create bytecode files, as they mess with the git repo.
 # This line can be removed be the user, if desired.
@@ -557,8 +564,12 @@ class WeatherLog(Gtk.Window):
                 return
         
         # Get the weather data.
-        city, data, prefill_data, code = get_weather.get_weather(self.config, self.units, self.weather_codes)
-        image_url = get_weather.get_weather_image(code)
+        try:
+            city, data, prefill_data, code = get_weather.get_weather(self.config, self.units, self.weather_codes)
+            image_url = get_weather.get_weather_image(code)
+        except URLError:
+            show_error_dialog(self, "Get Current Weather", "Cannot get current weather; no internet connection.");
+            return
         
         # Check if there was an error. Usually this is because the user has no internet connection.
         if isinstance(city, str) and not data and not prefill_data:
