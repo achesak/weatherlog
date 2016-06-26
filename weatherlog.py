@@ -544,6 +544,11 @@ class WeatherLog(Gtk.Window):
     def get_weather(self, here):
         """Gets the current weather."""
         
+        # Check if the API key is set.
+        if not self.config["openweathermap"]:
+            show_error_dialog(self, "Get Weather", "No API key. Please check the key entered in the Options window.")
+            return
+        
         location = ""
         location_type = self.config["location_type"]
         
