@@ -206,14 +206,14 @@ class WeatherLog(Gtk.Window):
         action_group.add_actions([
             ("info_global_menu", None, "_Info"),
             ("info", Gtk.STOCK_INFO, "_Info...", "<Control>i", "Show info about the data", lambda x: self.show_info_generic()),
-            ("info_range", None, "Info in _Range...", "<Control><Shift>i", None, lambda x: self.info_range()),
-            ("info_selected", None, "Info for _Selected Dates...", None, None, lambda x: self.info_selected()),
+            ("info_range", None, "Info in _Range...", "<Control><Shift>i", None, lambda x: self.data_range("info")),
+            ("info_selected", None, "Info for _Selected Dates...", None, None, lambda x: self.data_selected("info")),
             ("charts", None, "_Charts...", "<Control>c", None, lambda x: self.show_chart_generic()),
-            ("charts_range", None, "Charts i_n Range...", "<Control><Shift>c", None, lambda x: self.chart_range()),
-            ("charts_selected", None, "Charts _for Selected Dates...", None, None, lambda x: self.chart_selected()),
+            ("charts_range", None, "Charts i_n Range...", "<Control><Shift>c", None, lambda x: self.data_range("charts")),
+            ("charts_selected", None, "Charts _for Selected Dates...", None, None, lambda x: self.data_selected("charts")),
             ("graphs", None, "_Graphs...", "<Control>g", None, lambda x: self.show_graph_generic()),
-            ("graphs_range", None, "Gra_phs in Range...", "<Control><Shift>g", None, lambda x: self.graph_range()),
-            ("graphs_selected", None, "Grap_hs for Selected Dates...", None, None, lambda x: self.graph_selected()),
+            ("graphs_range", None, "Gra_phs in Range...", "<Control><Shift>g", None, lambda x: self.data_range("graphs")),
+            ("graphs_selected", None, "Grap_hs for Selected Dates...", None, None, lambda x: self.data_selected("graphs")),
             ("quick_search", None, "_Quick Search...", "<Control>d", None, self.quick_search),
             ("view_subset", None, "View _Data Subset...", "<Control><Shift>d", None, self.select_data_subset),
         ])
@@ -545,6 +545,17 @@ class WeatherLog(Gtk.Window):
         
         location = ""
         
+        if not here:
+            
+            # Get the location.
+            loc_dlg = GenericEntryDialog(self, title = "Get Current Weather", message = "Enter location: ")
+            response = loc_dlg.run()
+            location = loc_dlg.nam_ent.get_text().lstrip().rstrip()
+            loc_dlg.destroy()
+            
+            if response != Gtk.ResponseType.OK:
+                return
+        
         # If getting the weather for the current location, make sure this location has been specified.
         if here:
             if self.config["location_type"] == "city" and self.config["city"]:
@@ -552,7 +563,7 @@ class WeatherLog(Gtk.Window):
             elif self.config["location_type"] == "zip" and self.config["zipcode"]:
                 location = self.config["zipcode"]
         
-        if not here or not location:
+        if not location:
             
             # Get the location.
             loc_dlg = GenericEntryDialog(self, title = "Get Current Weather", message = "Enter location: ")
@@ -599,12 +610,20 @@ class WeatherLog(Gtk.Window):
             self.add_new(False, prefill_data)
             
     
-    def info_range(self):
-        """Gets the range for the info to display."""
+    def data_range(self, mode):
+        """Gets the range for the data to display."""
+        
+        # Determine the dialog titles.
+        if mode == "info":
+            title = "Info in Range - %s" % self.last_profile
+        elif mode == "charts":
+            title = "Charts in Range - %s" % self.last_profile
+        elif mode == "graphs":
+            title = "Graphs in Range - %s" % self.last_profile
         
         # If there is no data, tell the user and don't show the info dialog.
         if len(self.data) == 0:
-            show_no_data_dialog(self, "Info - %s" % self.last_profile)
+            show_no_data_dialog(self, title)
             return
         
         # Get the first and last entered dates.
@@ -615,7 +634,7 @@ class WeatherLog(Gtk.Window):
         datelist = dates.date_list_datetime(datasets.get_column(self.data, DatasetColumn.DATE))
         
         # Get the starting and ending dates.
-        cal_dlg = CalendarRangeDialog(self, "Info in Range - %s" % self.last_profile, day_start, day_end)
+        cal_dlg = CalendarRangeDialog(self, title, day_start, day_end)
         response = cal_dlg.run()
         year1, month1, day1 = cal_dlg.start_cal.get_date()
         year2, month2, day2 = cal_dlg.end_cal.get_date()
@@ -635,28 +654,42 @@ class WeatherLog(Gtk.Window):
         
         # Check to make sure these dates are valid, and cancel the action if not.
         if start_index == DateValidation.INVALID:
-            show_error_dialog(self, "Info in Range - %s" % self.last_profile, "%s is not a valid date.\n\nThis date is not present and is not before any other dates." % date1)
+            show_error_dialog(self, title, "%s is not a valid date.\n\nThis date is not present and is not before any other dates." % date1)
             return
         if end_index == DateValidation.INVALID:
-            show_error_dialog(self, "Info in Range - %s" % self.last_profile, "%s is not a valid date.\n\nThis date is not present and is not after any other dates." % date2)
+            show_error_dialog(self, title, "%s is not a valid date.\n\nThis date is not present and is not after any other dates." % date2)
             return
         if end_index < start_index:
-            show_error_dialog(self, "Info in Range - %s" % self.last_profile, "The ending date must be after the starting date.")
+            show_error_dialog(self, title, "The ending date must be after the starting date.")
             return
         
         # Get the new list.
         data2 = self.data[start_index:end_index + 1]
         
-        # Pass the data to the info dialog.
-        self.show_info_generic(data = data2)
+        # Pass the data to the appropriate dialog.
+        if mode == "info":
+            self.show_info_generic(data = data2)
+        elif mode == "charts":
+            self.show_chart_generic(data = data2)
+        elif mode == "graphs":
+            self.show_graph_generic(data = data2)
+            
     
     
-    def info_selected(self):
-        """Gets the selected dates to for the info to display."""
+    def data_selected(self, mode):
+        """Gets the selected dates to for the data to display."""
+        
+        # Determine the dialog titles.
+        if mode == "info":
+            title = "Info for Selected Dates - %s" % self.last_profile
+        elif mode == "charts":
+            title = "Charts for Selected Dates - %s" % self.last_profile
+        elif mode == "graphs":
+            title = "Graphs for Selected Dates - %s" % self.last_profile
         
         # If there is no data, tell the user and don't show the info dialog.
         if len(self.data) == 0:
-            show_no_data_dialog(self, "Info - %s" % self.last_profile)
+            show_no_data_dialog(self, title)
             return
         
         # Get the dates.
@@ -665,7 +698,7 @@ class WeatherLog(Gtk.Window):
             dates.append([i[0]])
         
         # Get the selected dates.
-        info_dlg = DateSelectionDialog(self, "Info for Selected Dates - %s" % self.last_profile, dates)
+        info_dlg = DateSelectionDialog(self, title, dates)
         response = info_dlg.run()
         model, treeiter = info_dlg.treeview.get_selection().get_selected_rows()
         info_dlg.destroy()
@@ -689,8 +722,13 @@ class WeatherLog(Gtk.Window):
         if len(ndata) == 0:
             return
         
-        # Pass the data to the info dialog.
-        self.show_info_generic(data = ndata)
+        # Pass the data to the appropriate dialog.
+        if mode == "info":
+            self.show_info_generic(data = ndata)
+        elif mode == "charts":
+            self.show_chart_generic(data = ndata)
+        elif mode == "graphs":
+            self.show_graph_generic(data = ndata)
     
     
     def show_info_generic(self, data = False):
@@ -743,100 +781,6 @@ class WeatherLog(Gtk.Window):
         
         # Close the dialog.
         info_dlg.destroy()
-        
-    
-    def chart_range(self):
-        """Gets the range for the chart to display."""
-        
-        # If there is no data, tell the user and don't show the info dialog.
-        if len(self.data) == 0:
-            show_no_data_dialog(self, "Charts - %s" % self.last_profile)
-            return
-        
-        # Get the first and last entered dates.
-        day_start = dates.split_date(self.data[0][DatasetColumn.DATE])
-        day_end = dates.split_date(self.data[len(self.data) - 1][DatasetColumn.DATE])
-        
-        # Get a list of datetimes from the dates.
-        datelist = dates.date_list_datetime(datasets.get_column(self.data, DatasetColumn.DATE))
-        
-        # Get the starting and ending dates.
-        cal_dlg = CalendarRangeDialog(self, "Charts in Range - %s" % self.last_profile, day_start, day_end)
-        response = cal_dlg.run()
-        year1, month1, day1 = cal_dlg.start_cal.get_date()
-        year2, month2, day2 = cal_dlg.end_cal.get_date()
-        date1 = "%d/%d/%d" % (day1, month1 + 1, year1)
-        date2 = "%d/%d/%d" % (day2, month2 + 1, year2)
-        cal_dlg.destroy()
-        
-        # If the user did not click OK, don't continue.
-        if response != Gtk.ResponseType.OK:
-            return
-        
-        # Get the indices.
-        dt_start = datetime.datetime(year1, month1 + 1, day1)
-        start_index = dates.date_above(dt_start, datelist)
-        dt_end = datetime.datetime(year2, month2 + 1, day2)
-        end_index = dates.date_below(dt_end, datelist)
-        
-        # Check to make sure these dates are valid, and cancel the action if not.
-        if start_index == DateValidation.INVALID:
-            show_error_dialog(self, "Charts in Range - %s" % self.last_profile, "%s is not a valid date.\n\nThis date is not present and is not before any other dates." % date1)
-            return
-        if end_index == DateValidation.INVALID:
-            show_error_dialog(self, "Charts in Range - %s" % self.last_profile, "%s is not a valid date.\n\nThis date is not present and is not after any other dates." % date2)
-            return
-        if end_index < start_index:
-            show_error_dialog(self, "Charts in Range - %s" % self.last_profile, "The ending date must be after the starting date.")
-            return
-        
-        # Get the new list.
-        data2 = self.data[start_index:end_index + 1]
-        
-        # Pass the data to the charts dialog.
-        self.show_chart_generic(data = data2)
-    
-    
-    def chart_selected(self):
-        """Gets the selected dates to for the charts to display."""
-        
-        # If there is no data, tell the user and don't show the info dialog.
-        if len(self.data) == 0:
-            show_no_data_dialog(self, "Charts - %s" % self.last_profile)
-            return
-        
-        # Get the dates.
-        dates = []
-        for i in self.data:
-            dates.append([i[0]])
-        
-        # Get the selected dates.
-        info_dlg = DateSelectionDialog(self, "Charts for Selected Dates - %s" % self.last_profile, dates)
-        response = info_dlg.run()
-        model, treeiter = info_dlg.treeview.get_selection().get_selected_rows()
-        info_dlg.destroy()
-        
-        # If the user did not click OK or nothing was selected, don't continue.
-        if response != Gtk.ResponseType.OK or treeiter == None:
-            return
-        
-        # Get the dates.
-        ndates = []
-        for i in treeiter:
-            ndates.append(model[i][0])
-        
-        # Get the data.
-        ndata = []
-        for i in range(0, len(self.data)):
-            if self.data[i][0] in ndates:
-                ndata.append(self.data[i])
-        
-        # If there is no data, don't continue.
-        if len(ndata) == 0:
-            return
-        
-        # Pass the data to the charts dialog.
-        self.show_chart_generic(data = ndata)
     
     
     def show_chart_generic(self, data = False):
@@ -884,100 +828,6 @@ class WeatherLog(Gtk.Window):
         
         # Close the dialog.
         chart_dlg.destroy()
-    
-    
-    def graph_range(self):
-        """Gets the range for the graph to display."""
-        
-        # If there is no data, tell the user and don't show the info dialog.
-        if len(self.data) == 0:
-            show_no_data_dialog(self, "Graphs - %s" % self.last_profile)
-            return
-        
-        # Get the first and last entered dates.
-        day_start = dates.split_date(self.data[0][DatasetColumn.DATE])
-        day_end = dates.split_date(self.data[len(self.data) - 1][DatasetColumn.DATE])
-        
-        # Get a list of datetimes from the dates.
-        datelist = dates.date_list_datetime(datasets.get_column(self.data, DatasetColumn.DATE))
-        
-        # Get the starting and ending dates.
-        cal_dlg = CalendarRangeDialog(self, "Graphs in Range - %s" % self.last_profile, day_start, day_end)
-        response = cal_dlg.run()
-        year1, month1, day1 = cal_dlg.start_cal.get_date()
-        year2, month2, day2 = cal_dlg.end_cal.get_date()
-        date1 = "%d/%d/%d" % (day1, month1 + 1, year1)
-        date2 = "%d/%d/%d" % (day2, month2 + 1, year2)
-        cal_dlg.destroy()
-        
-        # If the user did not click OK, don't continue.
-        if response != Gtk.ResponseType.OK:
-            return
-        
-        # Get the indices.
-        dt_start = datetime.datetime(year1, month1 + 1, day1)
-        start_index = dates.date_above(dt_start, datelist)
-        dt_end = datetime.datetime(year2, month2 + 1, day2)
-        end_index = dates.date_below(dt_end, datelist)
-        
-        # Check to make sure these dates are valid, and cancel the action if not.
-        if start_index == DateValidation.INVALID:
-            show_error_dialog(self, "Graphs in Range - %s" % self.last_profile, "%s is not a valid date.\n\nThis date is not present and is not before any other dates." % date1)
-            return
-        if end_index == DateValidation.INVALID:
-            show_error_dialog(self, "Graphs in Range - %s" % self.last_profile, "%s is not a valid date.\n\nThis date is not present and is not after any other dates." % date2)
-            return
-        if end_index < start_index:
-            show_error_dialog(self, "Graphs in Range - %s" % self.last_profile, "The ending date must be after the starting date.")
-            return
-        
-        # Get the new list.
-        data2 = self.data[start_index:end_index + 1]
-        
-        # Pass the data to the charts dialog.
-        self.show_graph_generic(data = data2)
-    
-    
-    def graph_selected(self):
-        """Gets the selected dates to for the graphs to display."""
-        
-        # If there is no data, tell the user and don't show the info dialog.
-        if len(self.data) == 0:
-            show_no_data_dialog(self, "Graphs - %s" % self.last_profile)
-            return
-        
-        # Get the dates.
-        dates = []
-        for i in self.data:
-            dates.append([i[0]])
-        
-        # Get the selected dates.
-        info_dlg = DateSelectionDialog(self, "Graphs for Selected Dates - %s" % self.last_profile, dates)
-        response = info_dlg.run()
-        model, treeiter = info_dlg.treeview.get_selection().get_selected_rows()
-        info_dlg.destroy()
-        
-        # If the user did not click OK or nothing was selected, don't continue.
-        if response != Gtk.ResponseType.OK or treeiter == None:
-            return
-        
-        # Get the dates.
-        ndates = []
-        for i in treeiter:
-            ndates.append(model[i][0])
-        
-        # Get the data.
-        ndata = []
-        for i in range(0, len(self.data)):
-            if self.data[i][0] in ndates:
-                ndata.append(self.data[i])
-        
-        # If there is no data, don't continue.
-        if len(ndata) == 0:
-            return
-        
-        # Pass the data to the charts dialog.
-        self.show_graph_generic(data = ndata)
     
     
     def show_graph_generic(self, data = False):
