@@ -86,7 +86,7 @@ class OptionsDialog(Gtk.Dialog):
         
         # Create the location type radiobuttons.
         self.use_city_rbtn = Gtk.RadioButton.new_with_label_from_widget(None, "Use city")
-        self.use_zip_rbtn = Gtk.RadioButton.new_with_label_from_widget(self.use_city_rbtn, "Use zipcode")
+        self.use_zip_rbtn = Gtk.RadioButton.new_with_label_from_widget(self.use_city_rbtn, "Use zip code")
         self.use_city_rbtn.set_margin_top(5)
         self.use_city_rbtn.set_margin_right(5)
         self.use_city_rbtn.set_margin_left(5)
@@ -100,8 +100,8 @@ class OptionsDialog(Gtk.Dialog):
         dat_grid.attach_next_to(self.use_zip_rbtn, self.use_city_rbtn, Gtk.PositionType.BOTTOM, 2, 1)
         
         # Create the zipcode entry.
-        zip_lbl = Gtk.Label("Zipcode: ")
-        zip_lbl.set_tooltip_text("Zipcode used for automatically filling in fields when adding new data.")
+        zip_lbl = Gtk.Label("Zip code: ")
+        zip_lbl.set_tooltip_text("Zip code used for automatically filling in fields when adding new data.")
         zip_lbl.set_margin_left(5)
         zip_lbl.set_alignment(0, 0.5)
         dat_grid.attach_next_to(zip_lbl, self.use_zip_rbtn, Gtk.PositionType.BOTTOM, 1, 1)

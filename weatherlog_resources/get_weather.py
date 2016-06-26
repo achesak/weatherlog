@@ -26,15 +26,15 @@ days = {"Sun": "Sunday", "Mon": "Monday", "Tue": "Tuesday", "Wed": "Wednesday",
         "Thu": "Thursday", "Fri": "Friday", "Sat": "Saturday"}
 
 
-def get_weather(config, units, weather_codes):
+def get_weather(config, units, weather_codes, location, location_type):
     """Gets the current weather for the specified location."""
     
     # Get the location to use.
-    if config["location_type"] == "city":
+    if location_type == "city":
         zipcode = None
-        city = config["city"]
-    elif config["location_type"] == "zip":
-        zipcode = config["zipcode"]
+        city = location
+    elif location_type == "zip":
+        zipcode = location
         city = None
 
     # Get the current weather and forecasts.

@@ -98,6 +98,7 @@ from weatherlog_resources.dialogs.data_subset_dialog import DataSubsetDialog
 from weatherlog_resources.dialogs.import_selection_dialog import ImportSelectionDialog
 from weatherlog_resources.dialogs.export_pastebin_dialog import ExportPastebinDialog
 from weatherlog_resources.dialogs.weather_dialog import CurrentWeatherDialog
+from weatherlog_resources.dialogs.location_dialog import LocationDialog
 from weatherlog_resources.dialogs.options_dialog import OptionsDialog
 from weatherlog_resources.dialogs.about_dialog import WeatherLogAboutDialog
 from weatherlog_resources.dialogs.misc_dialogs import *
@@ -544,13 +545,15 @@ class WeatherLog(Gtk.Window):
         """Gets the current weather."""
         
         location = ""
+        location_type = self.config["location_type"]
         
         if not here:
             
             # Get the location.
-            loc_dlg = GenericEntryDialog(self, title = "Get Current Weather", message = "Enter location: ")
+            loc_dlg = LocationDialog(self, self.config)
             response = loc_dlg.run()
             location = loc_dlg.nam_ent.get_text().lstrip().rstrip()
+            location_type = "city" if loc_dlg.use_city_rbtn.get_active() else "zip"
             loc_dlg.destroy()
             
             if response != Gtk.ResponseType.OK:
@@ -560,15 +563,18 @@ class WeatherLog(Gtk.Window):
         if here:
             if self.config["location_type"] == "city" and self.config["city"]:
                 location = self.config["city"]
+                location_type = "city"
             elif self.config["location_type"] == "zip" and self.config["zipcode"]:
                 location = self.config["zipcode"]
+                location_type = "zip"
         
         if not location:
             
             # Get the location.
-            loc_dlg = GenericEntryDialog(self, title = "Get Current Weather", message = "Enter location: ")
+            loc_dlg = LocationDialog(self, self.config)
             response = loc_dlg.run()
             location = loc_dlg.nam_ent.get_text().lstrip().rstrip()
+            location_type = "city" if loc_dlg.use_city_rbtn.get_active() else "zip"
             loc_dlg.destroy()
             
             if response != Gtk.ResponseType.OK:
@@ -576,7 +582,7 @@ class WeatherLog(Gtk.Window):
         
         # Get the weather data.
         try:
-            city, data, prefill_data, code = get_weather.get_weather(self.config, self.units, self.weather_codes)
+            city, data, prefill_data, code = get_weather.get_weather(self.config, self.units, self.weather_codes, location, location_type)
             image_url = get_weather.get_weather_image(code)
         except (URLError, ValueError):
             show_error_dialog(self, "Get Current Weather", "Cannot get current weather; no internet connection.");
