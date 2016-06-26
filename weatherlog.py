@@ -1848,3 +1848,4 @@ elif __name__ == "__main__" and len(sys.argv) == 2 and sys.argv[1] == "purge":
         shutil.rmtree(main_dir)
     if os.path.exists(conf_dir):
         shutil.rmtree(conf_dir)
+    print("All data deleted.")
