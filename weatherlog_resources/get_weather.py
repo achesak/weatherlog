@@ -21,11 +21,6 @@ import weatherlog_resources.clouds as clouds
 from weatherlog_resources.constants import *
 
 
-# Define day dictionary.
-days = {"Sun": "Sunday", "Mon": "Monday", "Tue": "Tuesday", "Wed": "Wednesday",
-        "Thu": "Thursday", "Fri": "Friday", "Sat": "Saturday"}
-
-
 def get_weather(config, units, weather_codes, location, location_type):
     """Gets the current weather for the specified location."""
     
@@ -116,7 +111,7 @@ def get_weather(config, units, weather_codes, location, location_type):
 
 
 def get_weather_image(code):
-    """Gets the path to the image to display for the given code. Uses Yahoo Weather codes."""
+    """Gets the path to the image to display for the given code. Uses OpenWeatherLog codes."""
     
     base_url = "weatherlog_resources/images/weather_icons/"
     img_url = "error.png"
