@@ -9,7 +9,7 @@ from gi.repository import Gtk
 
 
 class GenericEntryDialog(Gtk.Dialog):
-    """Shows the dialog for adding a string."""
+    """Shows the dialog for entering a string."""
     
     def __init__(self, parent, title, message = "", default_text = ""):
         """Create the dialog."""
