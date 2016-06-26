@@ -694,23 +694,28 @@ class WeatherLog(Gtk.Window):
         
         # Get the dates.
         dates = []
+        ndates = []
         for i in self.data:
             dates.append([i[0]])
         
         # Get the selected dates.
-        info_dlg = DateSelectionDialog(self, title, dates)
+        info_dlg = DateSelectionDialog(self, title, dates, buttons = [["Cancel", Gtk.ResponseType.CANCEL], ["Select All", DialogResponse.SELECT_ALL], ["OK", Gtk.ResponseType.OK]])
         response = info_dlg.run()
         model, treeiter = info_dlg.treeview.get_selection().get_selected_rows()
         info_dlg.destroy()
         
+        # If the user clicked Select All, use all the dates.
+        if response == DialogResponse.SELECT_ALL:
+            ndates = datasets.get_column(dates, 0)
+        
         # If the user did not click OK or nothing was selected, don't continue.
-        if response != Gtk.ResponseType.OK or treeiter == None:
+        elif response != Gtk.ResponseType.OK or treeiter == None:
             return
         
         # Get the dates.
-        ndates = []
-        for i in treeiter:
-            ndates.append(model[i][0])
+        if len(ndates) == 0:
+            for i in treeiter:
+                ndates.append(model[i][0])
         
         # Get the data.
         ndata = []
