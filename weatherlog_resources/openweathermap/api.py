@@ -51,7 +51,7 @@ __all__ = ["get_current_weather", "get_forecast"]
 class OpenWeatherMap:
     BASE = "http://api.openweathermap.org/data/2.5/"
     WEATHER = "http://api.openweathermap.org/data/2.5/weather?"
-    FORECAST = "http://api.openweathermap.org/data/2.5/forecast/daily?cnt=7&"
+    FORECAST = "http://api.openweathermap.org/data/2.5/forecast/daily?"
 
 
 def build_api_url(devkey, mode, units, zipcode, location, country):
@@ -85,10 +85,11 @@ def get_current_weather(devkey, units = "metric", zipcode = None, location = Non
     return json.loads(result)
 
 
-def get_forecast(devkey, units = "metric", zipcode = None, location = None, country = None):
+def get_forecast(devkey, units = "metric", zipcode = None, location = None, country = None, days = "7"):
     """Gets the forecast for the given location."""
     
     api_url = build_api_url(devkey, OpenWeatherMap.FORECAST, units, zipcode, location, country)
+    api_url += "&cnt=%s" % days
     
     request = urlopen(api_url)
     result = request.read()

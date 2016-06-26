@@ -24,5 +24,6 @@
     "city": "",
     "zipcode": "",
     "country": "",
-    "location_type": "city"
+    "location_type": "city",
+    "forecast_period": 7
 }

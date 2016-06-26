@@ -1648,6 +1648,7 @@ class WeatherLog(Gtk.Window):
         country = opt_dlg.cnt_ent.get_text()
         location_type = "city" if opt_dlg.use_city_rbtn.get_active() else "zip"
         openweathermap = opt_dlg.owm_ent.get_text()
+        forecast_period = opt_dlg.fcast_sbtn.get_value()
         opt_dlg.destroy()
         
         # If the user did not press OK or Reset, don't continue.
@@ -1692,6 +1693,7 @@ class WeatherLog(Gtk.Window):
             self.config["country"] = country
             self.config["location_type"] = location_type
             self.config["openweathermap"] = openweathermap
+            self.config["forecast_period"] = forecast_period
         
         # Configure the units.
         self.units = launch.get_units(self.config)
