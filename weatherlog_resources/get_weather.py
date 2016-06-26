@@ -182,7 +182,7 @@ def get_prefill_data(user_location, units, config):
     
     # Get the data.
     data = api.get_current_weather(config["openweathermap"], units = ("metric" if units["prec"] == "cm" else "imperial"), zipcode = config["zipcode"],
-                                   location = config["location"], country = config["country"])
+                                   location = config["city"], country = config["country"])
     
     
     if data["cod"] == 401:
