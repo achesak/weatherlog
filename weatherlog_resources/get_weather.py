@@ -6,6 +6,13 @@
 
 # Import datetime for time conversions.
 import datetime
+# Import URLError for error checking
+try:
+    # Python 2
+    from urllib2 import URLError
+except:
+    # Python 3
+    from urllib.request import URLError
 # Import the weather API.
 import weatherlog_resources.openweathermap.api as api
 import weatherlog_resources.degrees as degrees
@@ -181,9 +188,11 @@ def get_prefill_data(user_location, units, config):
     """Gets the data used to automatically fill Add New dialog."""
     
     # Get the data.
-    data = api.get_current_weather(config["openweathermap"], units = ("metric" if units["prec"] == "cm" else "imperial"), zipcode = config["zipcode"],
-                                   location = config["city"], country = config["country"])
-    
+    try:
+        data = api.get_current_weather(config["openweathermap"], units = ("metric" if units["prec"] == "cm" else "imperial"), zipcode = config["zipcode"],
+                                       location = config["city"], country = config["country"])
+    except URLError:
+        return False, "Cannot get current weather; no internet connection."
     
     if data["cod"] == 401:
         return False, "Invalid API key. Please check Options and enter a valid API key"
