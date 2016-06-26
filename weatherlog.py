@@ -593,11 +593,6 @@ class WeatherLog(Gtk.Window):
             show_error_dialog(self, "Get Current Weather", "Cannot get current weather; no internet connection.");
             return
         
-        # Check if there was an error. Usually this is because the user has no internet connection.
-        if isinstance(city, str) and not data and not prefill_data:
-            show_error_dialog(self, "Get Current Weather", "Error:\n\n%s" % city)
-            return
-        
         # Show the current weather.
         info_dlg = CurrentWeatherDialog(self, "Current Weather For %s" % city, data, image_url)
         response = info_dlg.run()

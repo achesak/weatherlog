@@ -17,6 +17,7 @@ import weatherlog_resources.get_weather as get_weather
 import weatherlog_resources.degrees as degrees
 import weatherlog_resources.clouds as clouds
 
+
 class AddNewDialog(Gtk.Dialog):
     """Shows the "Add New" dialog."""
     
