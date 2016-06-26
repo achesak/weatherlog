@@ -567,7 +567,7 @@ class WeatherLog(Gtk.Window):
         try:
             city, data, prefill_data, code = get_weather.get_weather(self.config, self.units, self.weather_codes)
             image_url = get_weather.get_weather_image(code)
-        except URLError:
+        except (URLError, ValueError):
             show_error_dialog(self, "Get Current Weather", "Cannot get current weather; no internet connection.");
             return
         

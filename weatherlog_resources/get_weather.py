@@ -191,7 +191,7 @@ def get_prefill_data(user_location, units, config):
     try:
         data = api.get_current_weather(config["openweathermap"], units = ("metric" if units["prec"] == "cm" else "imperial"), zipcode = config["zipcode"],
                                        location = config["city"], country = config["country"])
-    except URLError:
+    except (URLError, ValueError):
         return False, "Cannot get current weather; no internet connection."
     
     if data["cod"] == 401:
