@@ -42,6 +42,10 @@ def get_weather(config, units, weather_codes, location, location_type):
         return "Invalid API key. Please check Options and enter a valid API key", False, False
     data = []
     
+    # Sometimes wind degree is not specified. If this is the case, set it to '0'.
+    if not "deg" in result["wind"]:
+        result["wind"]["deg"] = 0
+    
     # Build the data lists.
     conditions = []
     for cond in result["weather"]:
@@ -191,6 +195,10 @@ def get_prefill_data(user_location, units, config):
     
     if data["cod"] == 401:
         return False, "Invalid API key. Please check Options and enter a valid API key"
+    
+    # Sometimes wind degree is not specified. If this is the case, set it to '0'.
+    if not "deg" in data["wind"]:
+        data["wind"]["deg"] = 0
     
     pre = {
         "temp": float(data["main"]["temp"]),
