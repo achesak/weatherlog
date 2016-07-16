@@ -12,6 +12,7 @@ import datetime
 try:
     from matplotlib.figure import Figure
     from matplotlib.dates import date2num
+    from matplotlib.ticker import MaxNLocator
     from matplotlib.backends.backend_gtk3agg import FigureCanvasGTK3Agg as FigureCanvas
 except:
     pass
@@ -97,6 +98,7 @@ class GenericGraphDialog(Gtk.Dialog):
         pramt_box = Gtk.Box()
         pramt_box_lbl = Gtk.Label("Precipitation (Amount)")
         pramt_figure = Figure(figsize = (12, 6))
+        pramt_figure.gca().yaxis.set_major_locator(MaxNLocator(integer = True))
         pramt_graph = pramt_figure.add_subplot(1,1,1)
         pramt_graph.bar([0, 1, 2, 3], data["prec_amount"], width = 0.5, color = config["graph_color"], hatch = hatches[config["hatch_style"]])
         pramt_graph.set_xlabel("Precipitation Type")
@@ -114,6 +116,7 @@ class GenericGraphDialog(Gtk.Dialog):
         prday_box = Gtk.Box()
         prday_box_lbl = Gtk.Label("Precipitation (Days)")
         prday_figure = Figure(figsize = (12, 6))
+        prday_figure.gca().yaxis.set_major_locator(MaxNLocator(integer = True))
         prday_graph = prday_figure.add_subplot(1,1,1)
         prday_graph.bar([0, 1, 2, 3, 4], data["prec_days"], width = 0.5, color = config["graph_color"], hatch = hatches[config["hatch_style"]])
         prday_graph.set_xlabel("Precipitation Type")
@@ -185,6 +188,7 @@ class GenericGraphDialog(Gtk.Dialog):
         airc_box = Gtk.Box()
         airc_box_lbl = Gtk.Label("Air Pressure (Change)")
         airc_figure = Figure(figsize = (12, 6))
+        airc_figure.gca().yaxis.set_major_locator(MaxNLocator(integer = True))
         airc_graph = airc_figure.add_subplot(1,1,1)
         airc_graph.bar([0, 1, 2], data["airp_change"], width = 0.5, color = config["graph_color"], hatch = hatches[config["hatch_style"]])
         airc_graph.set_xlabel("Air Pressure Change")
@@ -220,6 +224,7 @@ class GenericGraphDialog(Gtk.Dialog):
         clou_box = Gtk.Box()
         clou_box_lbl = Gtk.Label("Cloud Cover")
         clou_figure = Figure(figsize = (12, 6))
+        clou_figure.gca().yaxis.set_major_locator(MaxNLocator(integer = True))
         clou_graph = clou_figure.add_subplot(1,1,1)
         clou_graph.bar([0, 1, 2, 3, 4], data["clou_days"], width = 0.5, color = config["graph_color"], hatch = hatches[config["hatch_style"]])
         clou_graph.set_xlabel("Cloud Cover")
@@ -237,6 +242,7 @@ class GenericGraphDialog(Gtk.Dialog):
         ctyp_box = Gtk.Box()
         ctyp_box_lbl = Gtk.Label("Cloud Type")
         ctyp_figure = Figure(figsize = (12, 6))
+        ctyp_figure.gca().yaxis.set_major_locator(MaxNLocator(integer = True))
         ctyp_figure.subplots_adjust(bottom = 0.25)
         ctyp_graph = ctyp_figure.add_subplot(1,1,1)
         ctyp_graph.bar([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10], data["clou_types"], width = 0.5, color = config["graph_color"], hatch = hatches[config["hatch_style"]])
