@@ -28,31 +28,7 @@ def temp_chart(data, units):
     for i in range(0, len(data)):
         
         temp = [data[i][0], "%.2f %s" % (temp_data[i], units["temp"])]
-        if temp_avg == temp_data[i]:
-            average = "Average Value"
-        else:
-            average = temp_avg - temp_data[i]
-            average = "%.2f %s %s" % (abs(average), units["temp"], "above" if temp_avg < temp_data[i] else "below")
-        temp.append(average)
-        if temp_low == temp_data[i]:
-            low = "Lowest Value"
-        else:
-            low = temp_low - temp_data[i]
-            low = "%.2f %s %s" % (abs(low), units["temp"], "above" if temp_low < temp_data[i] else "below")
-        temp.append(low)
-        if temp_high == temp_data[i]:
-            high = "Highest Value"
-        else:
-            high = temp_high - temp_data[i]
-            high = "%.2f %s %s" % (abs(high), units["temp"], "above" if temp_high < temp_data[i] else "below")
-        temp.append(high)
-        if temp_median == temp_data[i]:
-            median = "Median Value"
-        else:
-            median = temp_median - temp_data[i]
-            median = "%.2f %s %s" % (abs(median), units["temp"], "above" if temp_median < temp_data[i] else "below")
-        temp.append(median)
-        
+        temp += build_chart(temp_data[i], temp_low, temp_high, temp_avg, temp_median, units["temp"])
         data2.append(temp)
     
     return data2
@@ -73,31 +49,7 @@ def chil_chart(data, units):
     for i in range(0, len(data)):
         
         chil = [data[i][0], "%.2f %s" % (chil_data[i], units["temp"])]
-        if chil_avg == chil_data[i]:
-            average = "Average Value"
-        else:
-            average = chil_avg - chil_data[i]
-            average = "%.2f %s %s" % (abs(average), units["temp"], "above" if chil_avg < chil_data[i] else "below")
-        chil.append(average)
-        if chil_low == chil_data[i]:
-            low = "Lowest Value"
-        else:
-            low = chil_low - chil_data[i]
-            low = "%.2f %s %s" % (abs(low), units["temp"], "above" if chil_low < chil_data[i] else "below")
-        chil.append(low)
-        if chil_high == chil_data[i]:
-            high = "Highest Value"
-        else:
-            high = chil_high - chil_data[i]
-            high = "%.2f %s %s" % (abs(high), units["temp"], "above" if chil_high < chil_data[i] else "below")
-        chil.append(high)
-        if chil_median == chil_data[i]:
-            median = "Median Value"
-        else:
-            median = chil_median - chil_data[i]
-            median = "%.2f %s %s" % (abs(median), units["temp"], "above" if chil_median < chil_data[i] else "below")
-        chil.append(median)
-        
+        chil += build_chart(chil_data[i], chil_low, chil_high, chil_avg, chil_median, units["temp"])
         data2.append(chil)
     
     return data2
@@ -121,31 +73,7 @@ def prec_chart(data, units):
     for i in range(0, len(data)):
         
         prec = [data[i][0], "%.2f %s" % (prec_data1[i], units["prec"])]
-        if prec_avg == prec_data1[i]:
-            average = "Average Value"
-        else:
-            average = prec_avg - prec_data1[i]
-            average = "%.2f %s %s" % (abs(average), units["prec"], "above" if prec_avg < prec_data1[i] else "below")
-        prec.append(average)
-        if prec_low == prec_data1[i]:
-            low = "Lowest Value"
-        else:
-            low = prec_low - prec_data1[i]
-            low = "%.2f %s %s" % (abs(low), units["prec"], "above" if prec_low < prec_data1[i] else "below")
-        prec.append(low)
-        if prec_high == prec_data1[i]:
-            high = "Highest Value"
-        else:
-            high = prec_high - prec_data1[i]
-            high = "%.2f %s %s" % (abs(high), units["prec"], "above" if prec_high < prec_data1[i] else "below")
-        prec.append(high)
-        if prec_median == prec_data1[i]:
-            median = "Median Value"
-        else:
-            median = prec_median - prec_data1[i]
-            median = "%.2f %s %s" % (abs(median), units["prec"], "above" if prec_median < prec_data1[i] else "below")
-        prec.append(median)
-        
+        prec += build_chart(prec_data1[i], prec_low, prec_high, prec_avg, prec_median, units["prec"])
         data2.append(prec)
     
     return data2
@@ -168,31 +96,7 @@ def wind_chart(data, units):
     for i in range(0, len(data)):
         
         wind = [data[i][0], "%.2f %s" % (wind_data1[i], units["wind"])]
-        if wind_avg == wind_data1[i]:
-            average = "Average Value"
-        else:
-            average = wind_avg - wind_data1[i]
-            average = "%.2f %s %s" % (abs(average), units["wind"], "above" if wind_avg < wind_data1[i] else "below")
-        wind.append(average)
-        if wind_low == wind_data1[i]:
-            low = "Lowest Value"
-        else:
-            low = wind_low - wind_data1[i]
-            low = "%.2f %s %s" % (abs(low), units["wind"], "above" if wind_low < wind_data1[i] else "below")
-        wind.append(low)
-        if wind_high == wind_data1[i]:
-            high = "Highest Value"
-        else:
-            high = wind_high - wind_data1[i]
-            high = "%.2f %s %s" % (abs(high), units["wind"], "above" if wind_high < wind_data1[i] else "below")
-        wind.append(high)
-        if wind_median == wind_data1[i]:
-            median = "Median Value"
-        else:
-            median = wind_median - wind_data1[i]
-            median = "%.2f %s %s" % (abs(median), units["wind"], "above" if wind_median < wind_data1[i] else "below")
-        wind.append(median)
-        
+        wind += build_chart(wind_data1[i], wind_low, wind_high, wind_avg, wind_median, units["wind"])
         data2.append(wind)
     
     return data2
@@ -213,31 +117,7 @@ def humi_chart(data, units):
     for i in range(0, len(data)):
         
         humi = [data[i][0], "%.2f%%" % (humi_data[i])]
-        if humi_avg == humi_data[i]:
-            average = "Average Value"
-        else:
-            average = humi_avg - humi_data[i]
-            average = "%.2f%% %s" % (abs(average), "above" if humi_avg < humi_data[i] else "below")
-        humi.append(average)
-        if humi_low == humi_data[i]:
-            low = "Lowest Value"
-        else:
-            low = humi_low - humi_data[i]
-            low = "%.2f%% %s" % (abs(low), "above" if humi_low < humi_data[i] else "below")
-        humi.append(low)
-        if humi_high == humi_data[i]:
-            high = "Highest Value"
-        else:
-            high = humi_high - humi_data[i]
-            high = "%.2f%% %s" % (abs(high), "above" if humi_high < humi_data[i] else "below")
-        humi.append(high)
-        if humi_median == humi_data[i]:
-            median = "Median Value"
-        else:
-            median = humi_median - humi_data[i]
-            median = "%.2f%% %s" % (abs(median), "above" if humi_median < humi_data[i] else "below")
-        humi.append(median)
-        
+        humi += build_chart(humi_data[i], humi_low, humi_high, humi_avg, humi_median, "%")
         data2.append(humi)
     
     return data2
@@ -259,31 +139,7 @@ def airp_chart(data, units):
     for i in range(0, len(data)):
         
         airp = [data[i][0], "%.2f %s" % (airp_data1[i], units["airp"])]
-        if airp_avg == airp_data1[i]:
-            average = "Average Value"
-        else:
-            average = airp_avg - airp_data1[i]
-            average = "%.2f %s %s" % (abs(average), units["airp"], "above" if airp_avg < airp_data1[i] else "below")
-        airp.append(average)
-        if airp_low == airp_data1[i]:
-            low = "Lowest Value"
-        else:
-            low = airp_low - airp_data1[i]
-            low = "%.2f %s %s" % (abs(low), units["airp"], "above" if airp_low < airp_data1[i] else "below")
-        airp.append(low)
-        if airp_high == airp_data1[i]:
-            high = "Highest Value"
-        else:
-            high = airp_high - airp_data1[i]
-            high = "%.2f %s %s" % (abs(high), units["airp"], "above" if airp_high < airp_data1[i] else "below")
-        airp.append(high)
-        if airp_median == airp_data1[i]:
-            median = "Median Value"
-        else:
-            median = airp_median - airp_data1[i]
-            median = "%.2f %s %s" % (abs(median), units["airp"], "above" if airp_median < airp_data1[i] else "below")
-        airp.append(median)
-        
+        airp += build_chart(airp_data1[i], airp_low, airp_high, airp_avg, airp_median, units["airp"])
         data2.append(airp)
     
     return data2
@@ -304,31 +160,43 @@ def visi_chart(data, units):
     for i in range(0, len(data)):
         
         visi = [data[i][0], "%.2f %s" % (visi_data[i], units["visi"])]
-        if visi_avg == visi_data[i]:
-            average = "Average Value"
-        else:
-            average = visi_avg - visi_data[i]
-            average = "%.2f %s %s" % (abs(average), units["visi"], "above" if visi_avg < visi_data[i] else "below")
-        visi.append(average)
-        if visi_low == visi_data[i]:
-            low = "Lowest Value"
-        else:
-            low = visi_low - visi_data[i]
-            low = "%.2f %s %s" % (abs(low), units["visi"], "above" if visi_low < visi_data[i] else "below")
-        visi.append(low)
-        if visi_high == visi_data[i]:
-            high = "Highest Value"
-        else:
-            high = visi_high - visi_data[i]
-            high = "%.2f %s %s" % (abs(high), units["visi"], "above" if visi_high < visi_data[i] else "below")
-        visi.append(high)
-        if visi_median == visi_data[i]:
-            median = "Median Value"
-        else:
-            median = visi_median - visi_data[i]
-            median = "%.2f %s %s" % (abs(median), units["visi"], "above" if visi_median < visi_data[i] else "below")
-        visi.append(median)
-        
+        visi += build_chart(visi_data[i], visi_low, visi_high, visi_avg, visi_median, units["visi"])
         data2.append(visi)
     
     return data2
+
+
+def build_chart(value, min_val, max_val, avg_val, med_val, unit):
+    """Builds a chart row."""
+    
+    row = []
+    
+    if value == avg_val:
+        avg = "Average"
+    else:
+        avg = avg_val - value
+        avg = "%s %.2f %s" % ("+" if avg_val < value else "-", abs(avg), unit)
+    row.append(avg)
+    
+    if value == min_val:
+        low = "Low"
+    else:
+        low = min_val - value
+        low = "%s %.2f %s" % ("+" if min_val < value else "-", abs(low), unit)
+    row.append(low)
+    
+    if value == max_val:
+        high = "High"
+    else:
+        high = max_val - value
+        high = "%s %.2f %s" % ("+" if max_val < value else "-", abs(high), unit)
+    row.append(high)
+    
+    if value == med_val:
+        median = "Median"
+    else:
+        median = med_val - value
+        median = "%s %.2f %s" % ("+" if med_val < value else "-", abs(median), unit)
+    row.append(median)
+    
+    return row
