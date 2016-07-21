@@ -117,7 +117,7 @@ def humi_chart(data, units):
     for i in range(0, len(data)):
         
         humi = [data[i][0], "%.2f%%" % (humi_data[i])]
-        humi += build_chart(humi_data[i], humi_low, humi_high, humi_avg, humi_median, "%")
+        humi += build_chart(humi_data[i], humi_low, humi_high, humi_avg, humi_median, "%", unit_space = False)
         data2.append(humi)
     
     return data2
@@ -166,7 +166,7 @@ def visi_chart(data, units):
     return data2
 
 
-def build_chart(value, min_val, max_val, avg_val, med_val, unit):
+def build_chart(value, min_val, max_val, avg_val, med_val, unit, unit_space = True):
     """Builds a chart row."""
     
     row = []
@@ -175,28 +175,28 @@ def build_chart(value, min_val, max_val, avg_val, med_val, unit):
         avg = "Average"
     else:
         avg = avg_val - value
-        avg = "%s %.2f %s" % ("+" if avg_val < value else "-", abs(avg), unit)
+        avg = "%s %.2f%s%s" % ("+" if avg_val < value else "-", abs(avg), " " if unit_space else "", unit)
     row.append(avg)
     
     if value == min_val:
         low = "Low"
     else:
         low = min_val - value
-        low = "%s %.2f %s" % ("+" if min_val < value else "-", abs(low), unit)
+        low = "%s %.2f%s%s" % ("+" if min_val < value else "-", abs(low), " " if unit_space else "", unit)
     row.append(low)
     
     if value == max_val:
         high = "High"
     else:
         high = max_val - value
-        high = "%s %.2f %s" % ("+" if max_val < value else "-", abs(high), unit)
+        high = "%s %.2f%s%s" % ("+" if max_val < value else "-", abs(high), " " if unit_space else "", unit)
     row.append(high)
     
     if value == med_val:
         median = "Median"
     else:
         median = med_val - value
-        median = "%s %.2f %s" % ("+" if med_val < value else "-", abs(median), unit)
+        median = "%s %.2f%s%s" % ("+" if med_val < value else "-", abs(median), " " if unit_space else "", unit)
     row.append(median)
     
     return row
