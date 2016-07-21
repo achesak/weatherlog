@@ -77,4 +77,4 @@ def upload_pastebin(data, name, mode, expires, exposure, units, config, title):
             return PastebinExport.SUCCESS, result
         
     except IOError as e:
-        return PastebinExport.ERROR, "Could not connect to Pastebin."
+        return PastebinExport.ERROR, "Cannot connect to Pastebin; no internet connection."
