@@ -58,6 +58,12 @@ class DataSubsetSelectionDialog(Gtk.Window):
         self.mode_btn_all = Gtk.RadioButton.new_with_label_from_widget(None, "Match all")
         self.mode_btn_one = Gtk.RadioButton.new_with_label_from_widget(self.mode_btn_all, "Match at least one")
         self.mode_btn_none = Gtk.RadioButton.new_with_label_from_widget(self.mode_btn_all, "Match none")
+        if config["default_selection_mode"] == "Match all":
+            self.mode_btn_all.set_active(True)
+        elif config["default_selection_mode"] == "Match at least one":
+            self.mode_btn_one.set_active(True)
+        elif config["default_selection_mode"] == "Match none":
+            self.mode_btn_none.set_active(True)
         mode_grid.add(self.mode_btn_all)
         mode_grid.attach_next_to(self.mode_btn_one, self.mode_btn_all, Gtk.PositionType.BOTTOM, 1, 1)
         mode_grid.attach_next_to(self.mode_btn_none, self.mode_btn_one, Gtk.PositionType.BOTTOM, 1, 1)

@@ -238,9 +238,23 @@ class OptionsDialog(Gtk.Dialog):
         self.case_chk.set_margin_left(5)
         self.case_chk.set_margin_right(5)
         self.case_chk.set_margin_top(5)
-        self.case_chk.set_margin_bottom(5)
         self.case_chk.set_active(config["default_case_insensitive"])
-        search_grid.add(self.case_chk)
+        search_grid.attach(self.case_chk, 0, 0, 2, 1)
+        
+        # Create the default selection mode combobox.
+        smode_lbl = Gtk.Label("Selection mode: ")
+        smode_lbl.set_tooltip_text("Default selection mode used with data subsets.")
+        smode_lbl.set_margin_left(5)
+        smode_lbl.set_alignment(0, 0.5)
+        search_grid.attach_next_to(smode_lbl, self.case_chk, Gtk.PositionType.BOTTOM, 1, 1)
+        self.smode_com = Gtk.ComboBoxText()
+        self.smode_com.set_margin_right(5)
+        self.smode_com.set_margin_bottom(5)
+        self.smode_com.set_hexpand(True)
+        for i in ["Match all", "Match at least one", "Match none"]:
+            self.smode_com.append_text(i)
+        self.smode_com.set_active(["Match all", "Match at least one", "Match none"].index(config["default_selection_mode"]))
+        search_grid.attach_next_to(self.smode_com, smode_lbl, Gtk.PositionType.RIGHT, 1, 1)
         
         # Create the Graphs tab.
         graph_grid = Gtk.Grid()

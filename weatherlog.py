@@ -1657,6 +1657,7 @@ class WeatherLog(Gtk.Window):
         location_type = "city" if opt_dlg.use_city_rbtn.get_active() else "zip"
         openweathermap = opt_dlg.owm_ent.get_text()
         forecast_period = opt_dlg.fcast_sbtn.get_value()
+        default_selection_mode = opt_dlg.smode_com.get_active_text()
         opt_dlg.destroy()
         
         # If the user did not press OK or Reset, don't continue.
@@ -1702,6 +1703,7 @@ class WeatherLog(Gtk.Window):
             self.config["location_type"] = location_type
             self.config["openweathermap"] = openweathermap
             self.config["forecast_period"] = forecast_period
+            self.config["default_selection_mode"] = default_selection_mode
         
         # Configure the units.
         self.units = launch.get_units(self.config)

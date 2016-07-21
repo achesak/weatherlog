@@ -25,5 +25,6 @@
     "zipcode": "",
     "country": "",
     "location_type": "city",
-    "forecast_period": 7
+    "forecast_period": 7,
+    "default_selection_mode": "Match all"
 }
