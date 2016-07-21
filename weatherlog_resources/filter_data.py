@@ -13,7 +13,7 @@ import datetime
 
 # condition parameter is a list with the format:
 # [field, operator, value]
-def filter_data(data, condition):
+def filter_data(data, condition, insensitive):
     """Filters the data based on the user's conditions."""
     
     # Create the list for the filtered data.
@@ -74,14 +74,14 @@ def filter_data(data, condition):
     
     # Loop through the data, and add it to the filtered list if it matches the condition.
     for i in range(0, len(data)):
-        matches = filter_compare(col[i], condition[1].lower(), condition[2], string_compare)
+        matches = filter_compare(col[i], condition[1].lower(), condition[2], string_compare, insensitive)
         if matches:
             filtered.append(data[i])
     
     return filtered
 
 
-def filter_compare(item, operator, value, string_compare):
+def filter_compare(item, operator, value, string_compare, insensitive):
     """Checks whether the item matches the condition. Returns true if it does, and false otherwise."""
     
     # Remove all whitespace from the value and the item to compare.
@@ -96,8 +96,8 @@ def filter_compare(item, operator, value, string_compare):
         for i in range(0, len(value)):
             value[i] = float(value[i])
     
-    # If this is a string comparison, convert everything to lowercase.
-    if string_compare:
+    # If this is a string comparison and the user wants insensitive comparison, convert everything to lowercase.
+    if string_compare and insensitive:
         for i in range(0, len(value)):
             value[i] = value[i].lower()
         item = "".join(item.split())

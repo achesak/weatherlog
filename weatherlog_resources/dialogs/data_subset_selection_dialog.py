@@ -74,7 +74,6 @@ class DataSubsetSelectionDialog(Gtk.Window):
         self.case_chk.set_margin_bottom(5)
         opt_frame.add(self.case_chk)
         input_grid.attach_next_to(opt_frame, mode_frame, Gtk.PositionType.BOTTOM, 1, 1)
-        
 
         # Create the new condition widgets.
         cond_frame = Gtk.Frame()
@@ -246,7 +245,7 @@ class DataSubsetSelectionDialog(Gtk.Window):
         """Resets all fields and clears all conditions."""
 
         # Ask the user to confirm.
-        if show_question_dialog(self, "Reset", "Are you sure you want to reset all fields and conditions?") != Gtk.ResponseType.OK:
+        if show_question_dialog(self, "Reset", "Are you sure you want to reset all conditions?") != Gtk.ResponseType.OK:
             return
 
         # Clear the fields.
@@ -315,6 +314,7 @@ class DataSubsetSelectionDialog(Gtk.Window):
             sel_mode = SelectionMode.ONE
         elif self.mode_btn_none.get_active():
             sel_mode = SelectionMode.NONE
+        opt_insensitive = self.case_chk.get_active()
         conditions = []
         for i in self.liststore:
             if i[2].lstrip().rstrip() == "":
@@ -327,7 +327,7 @@ class DataSubsetSelectionDialog(Gtk.Window):
         for i in conditions:
 
             # Get the filtered list.
-            subset = filter_data.filter_data(self.data, i)
+            subset = filter_data.filter_data(self.data, i, opt_insensitive)
 
             # If this is the first condition, add all the data to the filtered list.
             if first:
