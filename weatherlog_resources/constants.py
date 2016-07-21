@@ -109,4 +109,4 @@ class CloudCoverageType:
     MOSTLY_SUNNY = 1
     PARTLY_CLOUDY = 2
     MOSTLY_CLOUDY = 3
-    CLOUDY = 4
+    CLOUDY = 4zz
