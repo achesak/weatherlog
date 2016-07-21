@@ -55,14 +55,26 @@ class DataSubsetSelectionDialog(Gtk.Window):
         mode_frame.set_label("Selection mode")
         mode_grid = Gtk.Grid()
         mode_grid.set_row_spacing(5)
-        self.mode_btn_all = Gtk.RadioButton.new_with_label_from_widget(None, "Match All")
-        self.mode_btn_one = Gtk.RadioButton.new_with_label_from_widget(self.mode_btn_all, "Match At Least One")
-        self.mode_btn_none = Gtk.RadioButton.new_with_label_from_widget(self.mode_btn_all, "Match None")
+        self.mode_btn_all = Gtk.RadioButton.new_with_label_from_widget(None, "Match all")
+        self.mode_btn_one = Gtk.RadioButton.new_with_label_from_widget(self.mode_btn_all, "Match at least one")
+        self.mode_btn_none = Gtk.RadioButton.new_with_label_from_widget(self.mode_btn_all, "Match none")
         mode_grid.add(self.mode_btn_all)
         mode_grid.attach_next_to(self.mode_btn_one, self.mode_btn_all, Gtk.PositionType.BOTTOM, 1, 1)
         mode_grid.attach_next_to(self.mode_btn_none, self.mode_btn_one, Gtk.PositionType.BOTTOM, 1, 1)
         mode_frame.add(mode_grid)
         input_grid.add(mode_frame)
+        
+        # Create the options.
+        opt_frame = Gtk.Frame()
+        opt_frame.set_label("Search options")
+        self.case_chk = Gtk.CheckButton("Case insensitive")
+        self.case_chk.set_tooltip_text("Match search term regardless of case.")
+        self.case_chk.set_active(config["default_case_insensitive"])
+        self.case_chk.set_margin_top(5)
+        self.case_chk.set_margin_bottom(5)
+        opt_frame.add(self.case_chk)
+        input_grid.attach_next_to(opt_frame, mode_frame, Gtk.PositionType.BOTTOM, 1, 1)
+        
 
         # Create the new condition widgets.
         cond_frame = Gtk.Frame()
@@ -78,7 +90,7 @@ class DataSubsetSelectionDialog(Gtk.Window):
             self.field_com.append_text(i)
         self.field_com.set_active(0)
         cond_grid.attach_next_to(self.field_com, field_lbl, Gtk.PositionType.RIGHT, 1, 1)
-        cond_lbl = Gtk.Label("Condition: ")
+        cond_lbl = Gtk.Label("Operator: ")
         cond_lbl.set_alignment(0, 0.5)
         cond_grid.attach_next_to(cond_lbl, field_lbl, Gtk.PositionType.BOTTOM, 1, 1)
         self.cond_com = Gtk.ComboBoxText()
@@ -102,7 +114,7 @@ class DataSubsetSelectionDialog(Gtk.Window):
         self.add_btn.connect("clicked", self.add_condition)
         cond_btn_box.pack_end(self.add_btn, True, True, 0)
         cond_frame.add(cond_grid)
-        input_grid.attach_next_to(cond_frame, mode_frame, Gtk.PositionType.BOTTOM, 1, 1)
+        input_grid.attach_next_to(cond_frame, opt_frame, Gtk.PositionType.BOTTOM, 1, 1)
 
         # Create the data conditions listbox.
         self.liststore = Gtk.ListStore(str, str, str)
@@ -112,7 +124,7 @@ class DataSubsetSelectionDialog(Gtk.Window):
         self.field_col = Gtk.TreeViewColumn("Field", field_text, text = 0)
         self.treeview.append_column(self.field_col)
         cond_text = Gtk.CellRendererText()
-        self.cond_col = Gtk.TreeViewColumn("Condition", cond_text, text = 1)
+        self.cond_col = Gtk.TreeViewColumn("Operator", cond_text, text = 1)
         self.treeview.append_column(self.cond_col)
         value_text = Gtk.CellRendererText()
         self.value_col = Gtk.TreeViewColumn("Value", value_text, text = 2)
