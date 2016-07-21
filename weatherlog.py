@@ -1177,9 +1177,11 @@ class WeatherLog(Gtk.Window):
     def clear_all(self, event):
         """Clears all data."""
         
+        confirm_text = "Are you sure you want to clear all the data? This will delete all data in all datasets, and will also reset any changed options.\n\nThis action cannot be undone."
+        
         # Only show the confirmation dialog if the user wants that.
         if self.config["confirm_del"]:
-            response = show_question_dialog(self, "Clear All Data", "Are you sure you want to clear all the data? This action cannot be undone.")
+            response = show_question_dialog(self, "Clear All Data", confirm_text)
             if response != Gtk.ResponseType.OK:
                 return
 
