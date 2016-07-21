@@ -275,7 +275,12 @@ class AddNewDialog(Gtk.Dialog):
         date_dlg = CalendarDialog(self, "Add New Data", "Select date: ")
         response = date_dlg.run()
         year, month, day = date_dlg.info_cal.get_date()
-        date = "%d/%d/%d" % (day, month + 1, year)
+        year, month, day = str(year), str(month + 1), str(day)
+        if len(month) == 1:
+            month = "0" + month
+        if len(day) == 1:
+            day = "0" + day
+        date = "%s/%s/%s" % (day, month, year)
         date_dlg.close()
         
         # Insert the date.
