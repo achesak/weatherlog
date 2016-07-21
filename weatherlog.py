@@ -37,6 +37,8 @@ THE SOFTWARE.
 
 
 # Import Gtk and Gdk for the interface.
+import gi
+gi.require_version("Gtk", "3.0")
 from gi.repository import Gtk, Gdk, GdkPixbuf
 # Import json for saving export data.
 import json
