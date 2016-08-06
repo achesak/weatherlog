@@ -261,3 +261,15 @@ def get_pastebin_constants():
         sys.exit()
     
     return paste_constants
+
+
+def check_dependencies():
+    """Checks if dependencies required by the application are installed."""
+    
+    try:
+        from matplotlib.figure import Figure
+        matplotlib_installed = True
+    except ImportError:
+        matplotlib_installed = False
+    
+    return matplotlib_installed

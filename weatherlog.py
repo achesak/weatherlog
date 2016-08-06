@@ -118,19 +118,14 @@ class WeatherLog(Gtk.Window):
         self.config = launch.get_config(self.conf_dir)
         launch.ensure_files_exist(self.main_dir, self.conf_dir)
         
+        self.matplotlib_installed = launch.check_dependencies()
+        
         self.last_profile, self.original_profile, self.profile_exists, self.last_width, self.last_height = launch.get_restore_data(self.main_dir, self.conf_dir, self.config, self.default_width, self.default_height)
         self.units = launch.get_units(self.config)
         self.data = launch.get_data(self.main_dir, self.last_profile)
         
         self.weather_codes = launch.get_weather_codes()
         self.pastebin_constants = launch.get_pastebin_constants()
-        
-        # Try importing matplotlib, just so we know if it's installed.
-        try:
-            from matplotlib.figure import Figure
-            self.matplotlib_installed = True
-        except ImportError:
-            self.matplotlib_installed = False
         
         # Create the user interface.
         self.create_interface()
