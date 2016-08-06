@@ -84,7 +84,7 @@ import weatherlog_resources.get_weather as get_weather
 import weatherlog_resources.pastebin as pastebin
 
 # Import dialogs.
-from weatherlog_resources.dialogs.new_dialog import AddNewDialog
+from weatherlog_resources.dialogs.add_dialog import AddNewDialog
 from weatherlog_resources.dialogs.edit_dialog import EditDialog
 from weatherlog_resources.dialogs.entry_dialog import GenericEntryDialog
 from weatherlog_resources.dialogs.date_selection_dialog import DateSelectionDialog
