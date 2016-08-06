@@ -204,14 +204,14 @@ class WeatherLog(Gtk.Window):
         action_group.add_actions([
             ("info_global_menu", None, "_Info"),
             ("info", Gtk.STOCK_INFO, "_Info...", "<Control>i", "Show info about the data", lambda x: self.show_info_generic()),
-            ("info_range", None, "Info in _Range...", "<Control><Shift>i", None, lambda x: self.data_range("info")),
-            ("info_selected", None, "Info for _Selected Dates...", None, None, lambda x: self.data_selected("info")),
+            ("info_range", None, "Info in _Range...", "<Control><Shift>i", None, lambda x: self.data_range(InfoType.INFO)),
+            ("info_selected", None, "Info for _Selected Dates...", None, None, lambda x: self.data_selected(InfoType.INFO)),
             ("charts", None, "_Charts...", "<Control>c", None, lambda x: self.show_chart_generic()),
-            ("charts_range", None, "Charts i_n Range...", "<Control><Shift>c", None, lambda x: self.data_range("charts")),
-            ("charts_selected", None, "Charts _for Selected Dates...", None, None, lambda x: self.data_selected("charts")),
+            ("charts_range", None, "Charts i_n Range...", "<Control><Shift>c", None, lambda x: self.data_range(InfoType.CHART)),
+            ("charts_selected", None, "Charts _for Selected Dates...", None, None, lambda x: self.data_selected(InfoType.CHART)),
             ("graphs", None, "_Graphs...", "<Control>g", None, lambda x: self.show_graph_generic()),
-            ("graphs_range", None, "Gra_phs in Range...", "<Control><Shift>g", None, lambda x: self.data_range("graphs")),
-            ("graphs_selected", None, "Grap_hs for Selected Dates...", None, None, lambda x: self.data_selected("graphs")),
+            ("graphs_range", None, "Gra_phs in Range...", "<Control><Shift>g", None, lambda x: self.data_range(InfoType.GRAPH)),
+            ("graphs_selected", None, "Grap_hs for Selected Dates...", None, None, lambda x: self.data_selected(InfoType.GRAPH)),
             ("quick_search", None, "_Quick Search...", "<Control>d", None, self.quick_search),
             ("view_subset", None, "View _Data Subset...", "<Control><Shift>d", None, self.select_data_subset),
         ])
@@ -617,11 +617,11 @@ class WeatherLog(Gtk.Window):
         """Gets the range for the data to display."""
         
         # Determine the dialog titles.
-        if mode == "info":
+        if mode == InfoType.INFO:
             title = "Info in Range - %s" % self.last_profile
-        elif mode == "charts":
+        elif mode == InfoType.CHART:
             title = "Charts in Range - %s" % self.last_profile
-        elif mode == "graphs":
+        elif mode == InfoType.GRAPH:
             title = "Graphs in Range - %s" % self.last_profile
         
         # If there is no data, tell the user and don't show the info dialog.
@@ -670,11 +670,11 @@ class WeatherLog(Gtk.Window):
         data2 = self.data[start_index:end_index + 1]
         
         # Pass the data to the appropriate dialog.
-        if mode == "info":
+        if mode == InfoType.INFO:
             self.show_info_generic(data = data2)
-        elif mode == "charts":
+        elif mode == InfoType.CHART:
             self.show_chart_generic(data = data2)
-        elif mode == "graphs":
+        elif mode == InfoType.GRAPH:
             self.show_graph_generic(data = data2)
             
     
@@ -683,11 +683,11 @@ class WeatherLog(Gtk.Window):
         """Gets the selected dates to for the data to display."""
         
         # Determine the dialog titles.
-        if mode == "info":
+        if mode == InfoType.INFO:
             title = "Info for Selected Dates - %s" % self.last_profile
-        elif mode == "charts":
+        elif mode == InfoType.CHART:
             title = "Charts for Selected Dates - %s" % self.last_profile
-        elif mode == "graphs":
+        elif mode == InfoType.GRAPH:
             title = "Graphs for Selected Dates - %s" % self.last_profile
         
         # If there is no data, tell the user and don't show the info dialog.
@@ -731,11 +731,11 @@ class WeatherLog(Gtk.Window):
             return
         
         # Pass the data to the appropriate dialog.
-        if mode == "info":
+        if mode == InfoType.INFO:
             self.show_info_generic(data = ndata)
-        elif mode == "charts":
+        elif mode == InfoType.CHART:
             self.show_chart_generic(data = ndata)
-        elif mode == "graphs":
+        elif mode == InfoType.GRAPH:
             self.show_graph_generic(data = ndata)
     
     

@@ -5,7 +5,7 @@
 
 
 __all__ = ["SelectionMode", "DialogResponse", "ImportValidation", "DateValidation", "PastebinExport", "DatasetSelectionMode",
-           "ImportType", "DatasetColumn", "WeatherCondition", "CloudCoverageType"]
+           "ImportType", "DatasetColumn", "WeatherCondition", "CloudCoverageType", "InfoType"]
 
 
 # Data subset selection mode:
@@ -110,3 +110,10 @@ class CloudCoverageType:
     PARTLY_CLOUDY = 2
     MOSTLY_CLOUDY = 3
     CLOUDY = 4
+
+
+# Info types:
+class InfoType:
+    INFO = 0
+    CHART = 1
+    GRAPH = 2
