@@ -196,7 +196,7 @@ class WeatherLog(Gtk.Window):
             ("remove", Gtk.STOCK_REMOVE, "Remo_ve Data...", "<Control>r", "Remove a day from the list", self.remove),
             ("clear_all", None, "Clear _All Data...", None, None, self.clear_all),
             ("get_current_here", None, "Get Current _Weather...", "<Control>w", None, lambda x: self.get_weather(True)),
-            ("get_current_there", None, "Get Current Weather _For...", None, None, lambda x: self.get_weather(False)),
+            ("get_current_there", None, "Get Current Weather _For...", "<Control><Shift>w", None, lambda x: self.get_weather(False)),
             ("exit", Gtk.STOCK_QUIT, "_Quit", None, "Close the application", lambda x: self.exit())
         ])
         action_group.add_actions([
