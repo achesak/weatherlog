@@ -5,7 +5,7 @@
 ################################################################################
 #
 # WeatherLog
-# Version 4.7
+# Version 4.8
 #
 # WeatherLog is an application for keeping track of the weather and
 # getting information about past trends.
@@ -1443,19 +1443,19 @@ class WeatherLog(Gtk.Window):
         
         # If the name is already in use, ask the user is they want to delete the old dataset.
         elif valid.endswith("already in use."):
+            
             del_old = show_question_dialog(self, "Merge Datasets", "%s\n\nWould you like to delete the existing dataset?" % valid)
             if del_old != Gtk.ResponseType.OK:
                 return
-            
-            # Delete the existing dataset.
+                
             shutil.rmtree("%s/profiles/%s" % (self.main_dir, merge_name))
         
         # Build the new data list.
         new_data = io.read_profile(main_dir = self.main_dir, name = profiles[0])
         for i in range(1, len(profiles)):
-            date_col = datasets.get_column(new_data, DatasetColumn.DATE)
             
             # Read the data and merge the dates in if they do not already appear.
+            date_col = datasets.get_column(new_data, DatasetColumn.DATE)
             merge_data = io.read_profile(main_dir = self.main_dir, name = profiles[i])
             for row in merge_data:
                 if row[DatasetColumn.DATE] not in date_col:
