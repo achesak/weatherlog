@@ -1610,7 +1610,7 @@ class WeatherLog(Gtk.Window):
         # Get the new options.
         opt_dlg = OptionsDialog(self, self.config)
         response = opt_dlg.run()
-        new_config = {}
+        new_config = self.config
         new_config["pre-fill"] = opt_dlg.pre_chk.get_active()
         new_config["restore"] = opt_dlg.win_chk.get_active()
         new_config["units"] = opt_dlg.unit_com.get_active_text().lower()
