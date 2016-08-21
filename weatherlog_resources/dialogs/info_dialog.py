@@ -1,7 +1,12 @@
 # -*- coding: utf-8 -*-
 
 
-# This file defines the info dialog.
+################################################################################
+#
+# WeatherLog: dialogs/info_dialog.py
+# This dialog shows the dataset info.
+#
+################################################################################
 
 
 # Import GTK for the dialog.

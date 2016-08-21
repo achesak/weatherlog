@@ -1,7 +1,12 @@
 # -*- coding: utf-8 -*-
 
 
-# This file defines the dialog for entering a string.
+################################################################################
+#
+# WeatherLog: dialogs/entry_dialog.py
+# This dialog enters a string.
+#
+################################################################################
 
 
 # Import GTK for the dialog.

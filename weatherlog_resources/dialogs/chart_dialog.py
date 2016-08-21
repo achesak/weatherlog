@@ -1,7 +1,12 @@
 # -*- coding: utf-8 -*-
 
 
-# This file defines the chart dialog.
+################################################################################
+#
+# WeatherLog: dialogs/chart_dialog.py
+# This dialog shows the dataset charts.
+#
+################################################################################
 
 
 # Import GTK for the dialog.

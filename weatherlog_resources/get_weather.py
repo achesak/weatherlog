@@ -1,7 +1,12 @@
 # -*- coding: utf-8 -*-
 
 
-# This file defines functions used for getting the current weather.
+################################################################################
+#
+# WeatherLog: get_weather.py
+# This module gets the current weather.
+#
+################################################################################
 
 
 # Import datetime for time conversions.
@@ -13,11 +18,11 @@ try:
 except:
     # Python 3
     from urllib.request import URLError
-# Import the weather API.
+    
+# Import application modules.
 import weatherlog_resources.openweathermap.api as api
 import weatherlog_resources.degrees as degrees
 import weatherlog_resources.clouds as clouds
-# Import application constants.
 from weatherlog_resources.constants import *
 
 

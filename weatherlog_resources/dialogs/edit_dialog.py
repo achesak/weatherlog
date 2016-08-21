@@ -1,14 +1,19 @@
 # -*- coding: utf-8 -*-
 
 
-# This file defines the edit dialog.
+################################################################################
+#
+# WeatherLog: dialogs/edit_dialog.py
+# This dialog edits an existing row of data.
+#
+################################################################################
 
 
 # Import GTK for the dialog.
 from gi.repository import Gtk
-# Import the functions for working with datasets.
+
+# Import application modules.
 import weatherlog_resources.datasets as datasets
-# Import the dialogs.
 from weatherlog_resources.dialogs.misc_dialogs import *
 
 

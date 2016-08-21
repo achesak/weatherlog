@@ -1,12 +1,16 @@
 # -*- coding: utf-8 -*-
 
 
-# This file defines the function for converting cloudiness percentage to a human readable term.
+################################################################################
+#
+# WeatherLog: clouds.py
+# This module converts cloudiness percentage to a human readable term.
+#
+################################################################################
 
 
-# Import the cloud constants.
+# Import application modules.
 from weatherlog_resources.openweathermap.constants import CloudCoverage
-# Import application constants.
 from weatherlog_resources.constants import * 
 
 

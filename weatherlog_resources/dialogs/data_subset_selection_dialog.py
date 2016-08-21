@@ -1,22 +1,23 @@
 # -*- coding: utf-8 -*-
 
 
-# This file defines the data subset selection dialog.
+################################################################################
+#
+# WeatherLog: dialogs/data_subset_selection_dialog.py
+# This dialog allows the user to enter a detailed search.
+#
+################################################################################
 
 
 # Import GTK for the dialog.
 from gi.repository import Gtk, Gdk
-# Import constants.
+
+# Import application modules.
 from weatherlog_resources.constants import *
-# Import the dataset functions.
 import weatherlog_resources.datasets as datasets
-# Import the functions for filtering data.
 import weatherlog_resources.filter_data as filter_data
-# Import the functions for exporting info.
 import weatherlog_resources.export as export
-# Import the subset display dialog.
 from weatherlog_resources.dialogs.data_subset_dialog import DataSubsetDialog
-# Import generic dialogs.
 from weatherlog_resources.dialogs.misc_dialogs import *
 
 

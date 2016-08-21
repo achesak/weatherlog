@@ -1,7 +1,12 @@
 # -*- coding: utf-8 -*-
 
 
-# This file defines the dialog for exporting to Pastebin.
+################################################################################
+#
+# WeatherLog: dialogs/export_pastebin_dialog.py
+# This dialog exports data to pastebin.com
+#
+################################################################################
 
 
 # Import GTK for the dialog.

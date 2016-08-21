@@ -1,12 +1,18 @@
 # -*- coding: utf-8 -*-
 
 
-# This file defines the current weather dialog.
+################################################################################
+#
+# WeatherLog: dialogs/weather_dialog.py
+# This dialog displays the current weather conditions, location, and forecast.
+#
+################################################################################
 
 
 # Import GTK for the dialog.
 from gi.repository import Gtk
-# Import constants.
+
+# Import application modules.
 from weatherlog_resources.constants import *
 
 

@@ -1,7 +1,12 @@
 # -*- coding: utf-8 -*-
 
 
-# This file defines the calendar dialog.
+################################################################################
+#
+# WeatherLog: dialogs/calendar_dialog.py
+# This dialog enters a date or a range of dates using calendars.
+#
+################################################################################
 
 
 # Import GTK for the dialog.

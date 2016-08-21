@@ -1,7 +1,12 @@
 # -*- coding: utf-8 -*-
 
 
-# This file defines functions used for uploading data to pastebin.
+################################################################################
+#
+# WeatherLog: pastebin.py
+# This module uploads data to pastebin.com.
+#
+################################################################################
 
 
 # Import urlopen and urlencode for making requests.
@@ -12,10 +17,11 @@ try:
 except ImportError:
     from urllib import urlopen, urlencode
     from urllib2 import URLError
-# Import json and export for converting data format.
+# Import json for converting data format.
 import json
+
+# Import application modules.
 import weatherlog_resources.export as export
-# Import application constants.
 from weatherlog_resources.constants import *
 
 

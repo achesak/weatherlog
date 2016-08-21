@@ -1,8 +1,12 @@
-#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
 
-# weatherlog-openweathermap: constants module
+################################################################################
+#
+# weatherlog-openweathermap: contants.py
+# This module contains cloudiness percentage constants.
+#
+################################################################################
 
 
 __all__ = ["CloudCoverage"]

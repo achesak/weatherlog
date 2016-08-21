@@ -1,7 +1,12 @@
 # -*- coding: utf-8 -*-
 
 
-# This file defines the data subset dialog.
+################################################################################
+#
+# WeatherLog: dialogs/data_subset_dialog.py
+# This dialog displays data subsets.
+#
+################################################################################
 
 
 # Import GTK for the dialog.

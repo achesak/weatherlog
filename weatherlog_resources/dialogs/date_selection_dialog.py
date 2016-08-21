@@ -1,7 +1,12 @@
 # -*- coding: utf-8 -*-
 
 
-# This file defines the dialog for selecting dates.
+################################################################################
+#
+# WeatherLog: dialogs/date_selection_dialog.py
+# This dialog selects dates from a list.
+#
+################################################################################
 
 
 # Import GTK for the dialog.

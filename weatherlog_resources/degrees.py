@@ -1,7 +1,12 @@
 # -*- coding: utf-8 -*-
 
 
-# This file defines the function for converting degrees to a compass direction.
+################################################################################
+#
+# WeatherLog: degrees.py
+# This module converts degrees to compass directions.
+#
+################################################################################
 
 
 def degree_to_direction(deg):

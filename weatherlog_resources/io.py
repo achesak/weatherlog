@@ -1,7 +1,12 @@
 # -*- coding: utf-8 -*-
 
 
-# This file defines the functions for reading and writing dataset, metadata, and configuration files.
+################################################################################
+#
+# WeatherLog: io.py
+# This module reads and writes dataset, metadata, and configuration files.
+#
+################################################################################
 
 
 # Import os for creating directories.

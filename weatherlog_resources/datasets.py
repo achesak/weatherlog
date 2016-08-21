@@ -1,7 +1,12 @@
 # -*- coding: utf-8 -*-
 
 
-# This file defines functions working with datasets.
+################################################################################
+#
+# WeatherLog: datasets.py
+# This module manipulates datasets.
+#
+################################################################################
 
 
 # Import copy for copying lists.

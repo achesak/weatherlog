@@ -1,7 +1,12 @@
 # -*- coding: utf-8 -*-
 
 
-# This file defines the about dialog.
+################################################################################
+#
+# WeatherLog: dialogs/about_dialog.py
+# This dialog displays information about the application.
+#
+################################################################################
 
 
 # Import Gtk for the dialog.

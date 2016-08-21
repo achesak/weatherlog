@@ -1,12 +1,18 @@
 # -*- coding: utf-8 -*-
 
 
-# This file defines functions for displaying miscellaneous dialogs.
+################################################################################
+#
+# WeatherLog: dialogs/misc_dialogs.py
+# These are generic dialogs for miscellaneous tasks.
+#
+################################################################################
 
 
 # Import GTK for the dialog.
 from gi.repository import Gtk
-# Import the application constants.
+
+# Import application modules
 from weatherlog_resources.constants import *
 
 __all__ = ["show_alert_dialog", "show_error_dialog", "show_question_dialog", "show_file_dialog",

@@ -1,15 +1,19 @@
 # -*- coding: utf-8 -*-
 
 
-# This file defines the functions for getting the chart data.
+################################################################################
+#
+# WeatherLog: charts.py
+# This module calculates and organizes data for the Charts feature.
+#
+################################################################################
 
 
 # Import collections.Counter for getting the mode of the data.
 from collections import Counter
 
-# Import the dataset functions.
+# Import application modules.
 import weatherlog_resources.datasets as datasets
-# Import the calculation functions.
 import weatherlog_resources.calculations as calculations
 
 

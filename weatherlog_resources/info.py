@@ -1,7 +1,12 @@
 # -*- coding: utf-8 -*-
 
 
-# This file defines the functions for getting the info.
+################################################################################
+#
+# WeatherLog: info.py
+# This module calculates and organizes data for the Info feature.
+#
+################################################################################
 
 
 # Import future to make division work properly.
@@ -11,7 +16,7 @@ import datetime
 # Import collections.Counter for getting the mode of the data.
 from collections import Counter
 
-# Import the dataset and calculation functions.
+# Import application modules.
 import weatherlog_resources.datasets as datasets
 import weatherlog_resources.calculations as calculations
 

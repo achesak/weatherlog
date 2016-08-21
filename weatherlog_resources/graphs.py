@@ -1,19 +1,24 @@
 # -*- coding: utf-8 -*-
 
 
-# This file defines the functions for getting the data for the graphs.
+################################################################################
+#
+# WeatherLog: graphs.py
+# This module calculates and organizes data for the Graphs feature.
+#
+################################################################################
 
 
 # Import datetime for date calculations.
 import datetime
-
-# Import the dataset functions.
-import weatherlog_resources.datasets as datasets
 # Import date2num for converting dates to numbers.
 try:
     from matplotlib.dates import date2num
 except ImportError:
 	pass
+
+# Import application modules.
+import weatherlog_resources.datasets as datasets
 
 
 def get_dates(dates):

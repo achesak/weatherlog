@@ -1,7 +1,12 @@
 # -*- coding: utf-8 -*-
 
 
-# This file defines the functions for launching and setting up the application.
+################################################################################
+#
+# WeatherLog: launch.py
+# This module sets up and launches the application.
+#
+################################################################################
 
 
 # Import json for loading and saving the data.
@@ -21,7 +26,8 @@ try:
     import cPickle as pickle
 except ImportError:
     import pickle
-# Import weather codes.
+    
+# Import application modules.
 from weatherlog_resources.openweathermap.codes import codes
 
 

@@ -1,7 +1,12 @@
 # -*- coding: utf-8 -*-
 
 
-# This file defines constants used by other parts of the application.
+################################################################################
+#
+# WeatherLog: constants.py
+# This moduledefines constants used by the rest of the application.
+#
+################################################################################
 
 
 __all__ = ["SelectionMode", "DialogResponse", "ImportValidation", "DateValidation", "PastebinExport", "DatasetSelectionMode",

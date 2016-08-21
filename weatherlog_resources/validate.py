@@ -1,7 +1,12 @@
 # -*- coding: utf-8 -*-
 
 
-# This file defines functions for validating user-entered data.
+################################################################################
+#
+# WeatherLog: validate.py
+# This module validates user-entered data.
+#
+################################################################################
 
 
 # Import re for pattern matching.
@@ -9,9 +14,8 @@ import re
 # Import os.path for checking if a directory exists.
 import os.path
 
-# Import constants.
+# Import application modules.
 from weatherlog_resources.constants import *
-# Import io for reading files.
 import weatherlog_resources.io as io
 
 

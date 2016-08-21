@@ -1,7 +1,12 @@
 # -*- coding: utf-8 -*-
 
 
-# This file defines functions used for getting the data.
+################################################################################
+#
+# WeatherLog: calculations.py
+# This module contains functions for basic info calculations.
+#
+################################################################################
 
 
 # Import the math module for rounding numbers.

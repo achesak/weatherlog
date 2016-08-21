@@ -1,10 +1,15 @@
 # -*- coding: utf-8 -*-
 
 
-# This file defines the functions for exporting data to HTML and CSV.
+################################################################################
+#
+# WeatherLog: export.py
+# This module formats and exports data to HTML and CSV.
+#
+################################################################################
 
 
-# Import the functions for writing to files.
+# Import application modules.
 import weatherlog_resources.io as io
 
 

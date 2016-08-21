@@ -1,13 +1,12 @@
-#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
 
 ################################################################################
-
+#
 # weatherlog-openweathermap: api module
-
+#
 # This library is used by WeatherLog to get data from Open Weather Map: http://openweathermap.org/
-
+#
 # Released under the MIT open source license:
 license_text = """
 Copyright (c) 2016 Adam Chesak
@@ -30,7 +29,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 """
-
+#
 ################################################################################
 
 

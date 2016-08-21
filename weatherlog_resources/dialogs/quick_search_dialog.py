@@ -1,7 +1,12 @@
 # -*- coding: utf-8 -*-
 
 
-# This file defines the dialog for quick search.
+################################################################################
+#
+# WeatherLog: dialogs/quick_search_dialog.py
+# This dialog allows the user to enter a basic search.
+#
+################################################################################
 
 
 # Import GTK for the dialog.

@@ -1,7 +1,12 @@
 # -*- coding: utf-8 -*-
 
 
-# This file defines functions for working with dates.
+################################################################################
+#
+# WeatherLog: dates.py
+# This module works with dates.
+#
+################################################################################
 
 
 # Import datetime for date calculations.

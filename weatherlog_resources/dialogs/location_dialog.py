@@ -1,7 +1,12 @@
 # -*- coding: utf-8 -*-
 
 
-# This file defines the dialog for entering a location.
+################################################################################
+#
+# WeatherLog: dialogs/location_dialog.py
+# This dialog enters a location.
+#
+################################################################################
 
 
 # Import GTK for the dialog.

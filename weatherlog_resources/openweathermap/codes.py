@@ -1,8 +1,12 @@
-#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
 
-# weatherlog-openweathermap: codes module
+################################################################################
+#
+# weatherlog-openweathermap: codes.py
+# This module contains weather codes and the corrosponding weather text.
+#
+################################################################################
 
 
 __all__ = ["codes"]

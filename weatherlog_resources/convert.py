@@ -1,7 +1,12 @@
 # -*- coding: utf-8 -*-
 
 
-# This file defines the function for converting between units.
+################################################################################
+#
+# WeatherLog: convert.py
+# This module converts between units.
+#
+################################################################################
 
 
 # Import this so dividing works correctly in Python 2.

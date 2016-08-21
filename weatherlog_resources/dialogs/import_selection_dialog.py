@@ -1,12 +1,18 @@
 # -*- coding: utf-8 -*-
 
 
-# This file defines the dialog for selecting which dates to import.
+################################################################################
+#
+# WeatherLog: dialogs/import_selection_dialog.py
+# This dialog selects which dates to import.
+#
+################################################################################
 
 
 # Import GTK for the dialog.
 from gi.repository import Gtk
-# Import the application constants.
+
+# Import application modules.
 from weatherlog_resources.constants import *
 
 

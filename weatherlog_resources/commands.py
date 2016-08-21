@@ -1,11 +1,17 @@
 # -*- coding: utf-8 -*-
 
 
-# This file defines the functions for command line features.
+################################################################################
+#
+# WeatherLog: commands.py
+# This module implements the command line features.
+#
+################################################################################
 
 
 # Import modules for working with directories.
 import shutil, os, os.path
+
 # Import application modules.
 import weatherlog_resources.launch as launch
 

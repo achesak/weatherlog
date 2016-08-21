@@ -1,14 +1,19 @@
 # -*- coding: utf-8 -*-
 
 
-# This file defines the options dialog.
+################################################################################
+#
+# WeatherLog: dialogs/options_dialog.py
+# This dialog shows and alters the application configuration.
+#
+################################################################################
 
 
 # Import GTK for the dialog.
 from gi.repository import Gtk, Gdk
-# Import convert for converting between color systems.
+
+# Import application modules.
 import weatherlog_resources.convert as convert
-# Import the application constants.
 from weatherlog_resources.constants import *
 
 

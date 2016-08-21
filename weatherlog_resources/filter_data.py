@@ -1,14 +1,19 @@
 # -*- coding: utf-8 -*-
 
 
-# This file defines the functions for filtering the data based
-# on the user-specified conditions.
+################################################################################
+#
+# WeatherLog: filter_data.py
+# This module filters data based on user-specified conditions.
+#
+################################################################################
 
 
-# Import the dataset functions.
-import weatherlog_resources.datasets as datasets
 # Import datetime for sorting the data.
 import datetime
+
+# Import application modules.
+import weatherlog_resources.datasets as datasets
 
 
 # condition parameter is a list with the format:

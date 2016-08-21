@@ -1,18 +1,22 @@
 # -*- coding: utf-8 -*-
 
 
-# This file defines the add new dialog.
+################################################################################
+#
+# WeatherLog: dialogs/quick_search_dialog.py
+# This dialog enters a new row of data.
+#
+################################################################################
 
 
 # Import time for getting the current date.
 import time
 # Import GTK for the dialog.
 from gi.repository import Gtk
-# Import the dialogs.
+
+# Import application modules.
 from weatherlog_resources.dialogs.misc_dialogs import *
-# Import the date selecter dialog.
 from weatherlog_resources.dialogs.calendar_dialog import CalendarDialog
-# Import functions for getting the weather.
 import weatherlog_resources.get_weather as get_weather
 import weatherlog_resources.degrees as degrees
 import weatherlog_resources.clouds as clouds
