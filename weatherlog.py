@@ -369,10 +369,8 @@ class WeatherLog(Gtk.Window):
         # Sort the list by date.
         self.data = sorted(self.data, key = lambda x: datetime.datetime.strptime(x[DatasetColumn.DATE], "%d/%m/%Y"))
         
-        # Update the UI.
+        # Update and save the data.
         self.update_list()
-        
-        # Update the title and save the data.
         self.update_title()
         self.save()
         self.debug("add_new", new_data)
@@ -472,10 +470,8 @@ class WeatherLog(Gtk.Window):
                     note]
         self.data[index] = new_data
         
-        # Update the UI.
+        # Update and save the data.
         self.update_list()
-        
-        # Save the data.
         self.save()
         self.debug("edit", new_data)
     
@@ -529,10 +525,8 @@ class WeatherLog(Gtk.Window):
             index = datasets.get_column(self.data, DatasetColumn.DATE).index(i)
             del self.data[index]
         
-        # Update the UI.
+        # Update and save the data.
         self.update_list()
-        
-        # Update the title and save the data.
         self.update_title()
         self.save()
         self.debug("remove", index)
@@ -1082,10 +1076,8 @@ class WeatherLog(Gtk.Window):
         if response == DialogResponse.IMPORT_ALL:
             self.data = ndata[:]
         
-        # Add the data.
+        # Update and save the data.
         self.update_list()
-        
-        # Update the title and save the data.
         self.update_title()
         self.save()
     
@@ -1239,9 +1231,9 @@ class WeatherLog(Gtk.Window):
         # Read the data and switch to the other dataset.
         self.data = io.read_profile(main_dir = self.main_dir, name = name)
         self.last_profile = name
-        self.update_list()
         
-        # Update the title and save the data.
+        # Update and save the data.
+        self.update_list()
         self.update_title()
         self.save()
     
