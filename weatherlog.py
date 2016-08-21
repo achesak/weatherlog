@@ -57,10 +57,8 @@ except ImportError:
     import pickle
 # Import URLError for error checking
 try:
-    # Python 2
     from urllib2 import URLError
 except:
-    # Python 3
     from urllib.request import URLError
 
 # Tell Python not to create bytecode files, as they mess with the git repo.
@@ -347,7 +345,6 @@ class WeatherLog(Gtk.Window):
                 del self.data[index]
             else:
                 return
-            
 
         # Check that all fields are in the correct units, and convert if necessary.
         convert_check = [temp, chil, prec, wind, visi]
@@ -386,9 +383,7 @@ class WeatherLog(Gtk.Window):
             return
         
         # Get the dates.
-        dates = []
-        for i in self.data:
-            dates.append([i[0]])
+        dates = datasets.get_column_list(self.data, [0])
         
         # Get the selected date.
         if edit_date != None:
@@ -486,9 +481,7 @@ class WeatherLog(Gtk.Window):
             return
         
         # Get the dates.
-        dates = []
-        for i in self.data:
-            dates.append([i[0]])
+        dates = datasets.get_column_list(self.data, [0])
         
         # Get the dates to remove.
         rem_dlg = DateSelectionDialog(self, "Remove Data - %s" % self.last_profile, dates, buttons = [["Cancel", Gtk.ResponseType.CANCEL], ["Remove All", DialogResponse.REMOVE_ALL], ["OK", Gtk.ResponseType.OK]])
@@ -512,7 +505,7 @@ class WeatherLog(Gtk.Window):
         if len(ndates) == 0:
             return
         
-        # COnfirm that the user wants to delete the row.
+        # Confirm that the user wants to delete the row.
         if self.config["confirm_del"]:
             dates = ""
             for date in ndates:
@@ -521,7 +514,7 @@ class WeatherLog(Gtk.Window):
             if response != Gtk.ResponseType.OK:
                 return
         
-        # Loop through the list of dates and delete them.
+        # Delete the selected dates.
         for i in ndates:
             index = datasets.get_column(self.data, DatasetColumn.DATE).index(i)
             del self.data[index]
@@ -691,10 +684,8 @@ class WeatherLog(Gtk.Window):
             return
         
         # Get the dates.
-        dates = []
         ndates = []
-        for i in self.data:
-            dates.append([i[0]])
+        dates = datasets.get_column_list(self.data, [0])
         
         # Get the selected dates.
         info_dlg = DateSelectionDialog(self, title, dates, buttons = [["Cancel", Gtk.ResponseType.CANCEL], ["Select All", DialogResponse.SELECT_ALL], ["OK", Gtk.ResponseType.OK]])
@@ -1498,11 +1489,8 @@ class WeatherLog(Gtk.Window):
             return
         
         # Get the dates.
-        dates = []
-        dates2 = []
-        for i in self.data:
-            dates.append([i[0]])
-            dates2.append(i[0])
+        dates = datasets.get_column_list(self.data, [0])
+        dates2 = datasets.get_column(self.data, 0)
         
         # Get the dataset list.
         profiles = io.get_profile_list(self.main_dir, self.last_profile)
