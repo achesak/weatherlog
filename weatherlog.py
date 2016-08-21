@@ -1688,7 +1688,6 @@ class WeatherLog(Gtk.Window):
                 new_data = convert.convert(self.data, self.config["units"])
                 self.data[:] = []
                 self.data[:] = new_data[:]
-                self.update_list()
         
         # Add/remove the units from the column titles.
         if not self.config["show_units"]:
