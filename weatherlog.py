@@ -82,6 +82,7 @@ import weatherlog_resources.graphs as graphs
 import weatherlog_resources.filter_data as filter_data
 import weatherlog_resources.get_weather as get_weather
 import weatherlog_resources.pastebin as pastebin
+import weatherlog_resources.commands as commands
 
 # Import dialogs.
 from weatherlog_resources.dialogs.add_dialog import AddNewDialog
@@ -1810,12 +1811,8 @@ if __name__ == "__main__" and len(sys.argv) == 1:
     win.show_all()
     Gtk.main()
 
-# "purge" command: deletes all program files
-elif __name__ == "__main__" and len(sys.argv) == 2 and sys.argv[1] == "purge":
+# Commands:
+elif __name__ == "__main__" and len(sys.argv) == 2:
     
-    main_dir, conf_dir = launch.get_main_dir()
-    if os.path.exists(main_dir):
-        shutil.rmtree(main_dir)
-    if os.path.exists(conf_dir):
-        shutil.rmtree(conf_dir)
-    print("All data deleted.")
+    if sys.argv[1] == "purge":
+        commands.purge()
