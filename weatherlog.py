@@ -1629,78 +1629,52 @@ class WeatherLog(Gtk.Window):
         # Get the new options.
         opt_dlg = OptionsDialog(self, self.config)
         response = opt_dlg.run()
-        prefill = opt_dlg.pre_chk.get_active()
-        restore = opt_dlg.win_chk.get_active()
-        units_ = opt_dlg.unit_com.get_active_text().lower()
-        show_dates = opt_dlg.date_chk.get_active()
-        show_units = opt_dlg.unit_chk.get_active()
-        confirm_del = opt_dlg.del_chk.get_active()
-        show_prefill = opt_dlg.pdl_chk.get_active()
-        confirm_exit = opt_dlg.cex_chk.get_active()
-        import_all = opt_dlg.imp_chk.get_active()
-        truncate_notes = opt_dlg.trun_chk.get_active()
-        graph_color = convert.rgba_to_hex(opt_dlg.graph_color_btn.get_rgba())[0:7]
-        line_width = opt_dlg.width_sbtn.get_value()
-        line_style = opt_dlg.line_com.get_active_text()
-        hatch_style = opt_dlg.hatch_com.get_active_text()
-        pastebin = opt_dlg.pname_ent.get_text()
-        pastebin_format = opt_dlg.pform_com.get_active_text()
-        pastebin_expires = opt_dlg.pexpi_com.get_active_text()
-        pastebin_exposure = opt_dlg.pexpo_com.get_active_text()
-        default_case_insensitive = opt_dlg.case_chk.get_active()
-        zipcode = opt_dlg.zip_ent.get_text()
-        city = opt_dlg.cit_ent.get_text()
-        country = opt_dlg.cnt_ent.get_text()
-        location_type = "city" if opt_dlg.use_city_rbtn.get_active() else "zip"
-        openweathermap = opt_dlg.owm_ent.get_text()
-        forecast_period = opt_dlg.fcast_sbtn.get_value()
-        default_selection_mode = opt_dlg.smode_com.get_active_text()
+        new_config = {}
+        new_config["pre-fill"] = opt_dlg.pre_chk.get_active()
+        new_config["restore"] = opt_dlg.win_chk.get_active()
+        new_config["units"] = opt_dlg.unit_com.get_active_text().lower()
+        new_config["show_dates"] = opt_dlg.date_chk.get_active()
+        new_config["show_units"] = opt_dlg.unit_chk.get_active()
+        new_config["confirm_del"] = opt_dlg.del_chk.get_active()
+        new_config["show_pre-fill"] = opt_dlg.pdl_chk.get_active()
+        new_config["confirm_exit"] = opt_dlg.cex_chk.get_active()
+        new_config["import_all"] = opt_dlg.imp_chk.get_active()
+        new_config["truncate_notes"] = opt_dlg.trun_chk.get_active()
+        new_config["graph_color"] = convert.rgba_to_hex(opt_dlg.graph_color_btn.get_rgba())[0:7]
+        new_config["line_width"] = opt_dlg.width_sbtn.get_value()
+        new_config["line_style"] = opt_dlg.line_com.get_active_text()
+        new_config["hatch_style"] = opt_dlg.hatch_com.get_active_text()
+        new_config["pastebin"] = opt_dlg.pname_ent.get_text()
+        new_config["pastebin_format"] = opt_dlg.pform_com.get_active_text()
+        new_config["pastebin_expires"] = self.pastebin_constants["expires"][opt_dlg.pexpi_com.get_active_text()]
+        new_config["pastebin_exposure"] = self.pastebin_constants["exposure"][opt_dlg.pexpo_com.get_active_text()]
+        new_config["default_case_insensitive"] = opt_dlg.case_chk.get_active()
+        new_config["zipcode"] = opt_dlg.zip_ent.get_text()
+        new_config["city"] = opt_dlg.cit_ent.get_text()
+        new_config["country"] = opt_dlg.cnt_ent.get_text()
+        new_config["location_type"] = "city" if opt_dlg.use_city_rbtn.get_active() else "zip"
+        new_config["openweathermap"] = opt_dlg.owm_ent.get_text()
+        new_config["forecast_period"] = opt_dlg.fcast_sbtn.get_value()
+        new_config["default_selection_mode"] = opt_dlg.smode_com.get_active_text()
         opt_dlg.destroy()
         
         # If the user did not press OK or Reset, don't continue.
         if response != Gtk.ResponseType.OK and response != DialogResponse.RESET:
             return
         
-        # If the user pressed Reset, get the default fields.
+        # If the user pressed Reset, set all options to default.
         if response == DialogResponse.RESET:
             
-            # Confirm that the user wants to reset.
             reset = show_question_dialog(opt_dlg, "Options", "Are you sure you want to reset the options to the default values?")
             if response == Gtk.ResponseType.CANCEL:
                 return
             
-            # Get the default options.
             self.config = launch.get_config(self.conf_dir, get_default = True)
         
         else:
         
             # Set the configuration.
-            self.config["pre-fill"] = prefill
-            self.config["restore" ] = restore
-            self.config["units"] = units_
-            self.config["show_dates"] = show_dates
-            self.config["show_units"] = show_units
-            self.config["confirm_del"] = confirm_del
-            self.config["show_pre-fill"] = show_prefill
-            self.config["confirm_exit"] = confirm_exit
-            self.config["import_all"] = import_all
-            self.config["truncate_notes"] = truncate_notes
-            self.config["graph_color"] = graph_color
-            self.config["line_width"] = line_width
-            self.config["line_style"] = line_style
-            self.config["hatch_style"] = hatch_style
-            self.config["pastebin"] = pastebin
-            self.config["pastebin_format"] = pastebin_format
-            self.config["pastebin_expires"] = self.pastebin_constants["expires"][pastebin_expires]
-            self.config["pastebin_exposure"] = self.pastebin_constants["exposure"][pastebin_exposure]
-            self.config["default_case_insensitive"] = default_case_insensitive
-            self.config["zipcode"] = zipcode
-            self.config["city"] = city
-            self.config["country"] = country
-            self.config["location_type"] = location_type
-            self.config["openweathermap"] = openweathermap
-            self.config["forecast_period"] = forecast_period
-            self.config["default_selection_mode"] = default_selection_mode
+            self.config = new_config
         
         # Configure the units.
         self.units = launch.get_units(self.config)
@@ -1712,8 +1686,6 @@ class WeatherLog(Gtk.Window):
                 
                 # Convert the data.
                 new_data = convert.convert(self.data, self.config["units"])
-                
-                # Update the list.
                 self.data[:] = []
                 self.data[:] = new_data[:]
                 self.update_list()
