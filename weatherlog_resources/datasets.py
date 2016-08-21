@@ -23,6 +23,19 @@ def get_column(data, col):
     """Gets a column of the data."""
     
     return [x[col] for x in data]
+
+
+def get_column_list(data, cols):
+    """Gets one or more columns of the data."""
+    
+    new_cols = []
+    for row in data:
+        new_row = []
+        for index in cols:
+            new_row.append(row[index])
+        new_cols.append(new_row)
+    
+    return new_cols
  
 
 def split_list(data):
