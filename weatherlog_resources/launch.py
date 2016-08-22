@@ -89,10 +89,9 @@ def get_weather_codes():
 def ensure_files_exist(main_dir, conf_dir):
     """Checks to see if the base files exist, and create them if they don't."""
 
-    # Check to see if the data directory exists, and create it if it doesn't.
+    # Dataset directory and files:
     if not os.path.exists(main_dir) or not os.path.isdir(main_dir):
 
-        # Create the default data directory and files.
         os.makedirs(main_dir)
         os.makedirs("%s/profiles/Main Dataset" % main_dir)
         last_prof_data = open("%s/profiles/Main Dataset/weather" % main_dir, "w")
@@ -100,10 +99,9 @@ def ensure_files_exist(main_dir, conf_dir):
         last_prof_data.close()
         create_metadata(main_dir, "Main Dataset")
 
-    # Check to see if the configuration directory exists, and create it if it doesn't.
+    # Configuration directory and files:
     if not os.path.exists(conf_dir) or not os.path.isdir(conf_dir):
 
-        # Create the default configuration directory and files.
         os.makedirs(conf_dir)
         last_prof = open("%s/lastprofile" % conf_dir, "w")
         last_prof.write("Main Dataset")
@@ -143,7 +141,6 @@ def get_config(conf_dir, get_default = False):
 def get_restore_data(main_dir, conf_dir, config, default_width, default_height, default_profile = "Main Dataset"):
     """Gets the last window size."""
 
-    # Otherwise, get the previous window size.
     try:
         rest_file = open("%s/application_restore.json" % conf_dir, "r")
         rest_data = json.load(rest_file)
@@ -189,8 +186,7 @@ def get_restore_data(main_dir, conf_dir, config, default_width, default_height, 
             pickle.dump([], last_prof_data)
             last_prof_data.close()
             create_metadata(main_dir, "Main Dataset")
-
-            # Set the dataset name.
+            
             last_profile = "Main Dataset"
     
     # If the user doesn't want to restore the window size, set the size to the defaults.
@@ -203,7 +199,6 @@ def get_restore_data(main_dir, conf_dir, config, default_width, default_height, 
 def get_units(config):
     """Gets the units."""
     
-    # Get the units.
     try:
         units_file = open("weatherlog_resources/appdata/units.json", "r")
         units = json.load(units_file)
@@ -220,7 +215,6 @@ def get_data(main_dir, last_profile):
     """Gets the data."""
 
     try:
-        # Load the data.
         data_file = open("%s/profiles/%s/weather" % (main_dir, last_profile), "r")
         data = pickle.load(data_file)
         data_file.close()
@@ -243,7 +237,6 @@ def create_metadata(main_dir, last_profile):
     now = datetime.datetime.now()
     modified = "%d/%d/%d" % (now.day, now.month, now.year)
 
-    # Write the metadata to the file.
     try:
         meta_file = open("%s/profiles/%s/metadata.json" % (main_dir, last_profile), "w")
         json.dump({"creation": modified, "modified": modified}, meta_file)
@@ -256,7 +249,6 @@ def create_metadata(main_dir, last_profile):
 def get_pastebin_constants():
     """Gets the Pastebin constants."""
     
-    # Get the units.
     try:
         paste_file = open("weatherlog_resources/appdata/pastebin.json", "r")
         paste_constants = json.load(paste_file)

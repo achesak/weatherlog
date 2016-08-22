@@ -8,11 +8,17 @@
 #
 ################################################################################
 
-
+# Import sys for version checking.
+import sys
 # Import the math module for rounding numbers.
 import math
 # Import the collections module for getting the mode of a list of numbers.
 import collections
+# Import statistics for getting the median of a list of numbers.
+try:
+    import statistics
+except ImportError:
+    pass
 
 
 def mean(numbers):
@@ -24,16 +30,19 @@ def mean(numbers):
 def median(numbers2):
     """Finds the median of a list of numbers."""
     
-    numbers = numbers2[:]
-    numbers.sort()
+    # If running in Python 3, use statistics module.
+    if sys.version_info >= (3, 0):
+        return statistics.median(numbers2)
     
-    # If the list has an odd number of items:
+    numbers = sorted(numbers2)
+    
+    # Odd number of items:
     if len(numbers) % 2:
         return numbers[int(math.floor(len(numbers) / 2))];
     
-    # If the list has an even number of items:
+    # Even number of items:
     else:
-        return (numbers[len(numbers) / 2] + numbers[(len(numbers) / 2) - 1]) / 2;
+        return (numbers[len(numbers) / 2] + numbers[(len(numbers) / 2) - 1]) / 2;   
 
 
 def range(numbers):

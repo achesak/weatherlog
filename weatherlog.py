@@ -1769,7 +1769,6 @@ class WeatherLog(Gtk.Window):
     def show_help(self, event):
         """Shows the help in a web browser."""
         
-        # Open the help file.
         webbrowser.open_new(self.help_link)    
     
 
@@ -1778,15 +1777,11 @@ class WeatherLog(Gtk.Window):
         
         # Confirm that the user wants to exit, if needed.
         if self.config["confirm_exit"]:
-            
             response = show_question_dialog(self, "Quit", "Are you sure you want to close WeatherLog?")
             if response != Gtk.ResponseType.OK:
                 return
-        
-        # Save the data.
+    
         self.save()
-        
-        # Close the  application.
         Gtk.main_quit()
 
 
