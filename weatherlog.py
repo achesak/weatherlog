@@ -340,7 +340,6 @@ class WeatherLog(Gtk.Window):
             overwrite = show_question_dialog(self, "Add New Data", "The date %s has already been entered.\n\nOverwrite with new data?" % date)
             
             if overwrite == Gtk.ResponseType.OK:
-                # Delete the existing data.
                 index = datasets.get_column(self.data, DatasetColumn.DATE).index(date)
                 del self.data[index]
             else:
@@ -489,7 +488,7 @@ class WeatherLog(Gtk.Window):
         model, treeiter = rem_dlg.treeview.get_selection().get_selected_rows()
         rem_dlg.destroy()
         
-        # If the user did not click OK or Remove Allor nothing was selected, don't continue.
+        # If the user did not click OK or Remove All or nothing was selected, don't continue.
         if (response != DialogResponse.REMOVE_ALL) and (response != Gtk.ResponseType.OK or treeiter == None):
             return
         
@@ -1647,7 +1646,7 @@ class WeatherLog(Gtk.Window):
         if response == DialogResponse.RESET:
             
             reset = show_question_dialog(opt_dlg, "Options", "Are you sure you want to reset the options to the default values?")
-            if response == Gtk.ResponseType.CANCEL:
+            if reset == Gtk.ResponseType.CANCEL:
                 return
             
             self.config = launch.get_config(self.conf_dir, get_default = True)
@@ -1659,8 +1658,6 @@ class WeatherLog(Gtk.Window):
         
         # Configure the units.
         self.units = launch.get_units(self.config)
-        
-        # If the units changed, ask the user if they want to convert the data.
         if current_units != self.config["units"]:
             response = show_question_dialog(opt_dlg, "Options", "The units have changed from %s to %s.\n\nWould you like to convert the current data to the new units?" % (current_units, self.config["units"]))
             if response == Gtk.ResponseType.OK:
@@ -1788,7 +1785,6 @@ class WeatherLog(Gtk.Window):
 # Show the window and start the application.
 if __name__ == "__main__" and len(sys.argv) == 1:
     
-    # Show the window and start the application.
     win = WeatherLog()
     win.connect("delete-event", win.exit)
     win.show_all()
