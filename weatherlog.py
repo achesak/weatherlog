@@ -1548,20 +1548,13 @@ class WeatherLog(Gtk.Window):
         # If the user entered a new dataset name, create the dataset.
         if response1 == DialogResponse.USE_NEW:
             
+            # If the user wants to move the data, delete the items in the current dataset.
+            if response2 == DialogResponse.MOVE_DATA:
+                self.data = [x for x in self.data if x[DatasetColumn.DATE] not in ndates]
+            
             # Create the directory and file.
             io.write_blank_profile(self.main_dir, new_name)
             launch.create_metadata(self.main_dir, new_name)
-            
-            # If the user wants to move the data, delete the items in the current dataset.
-            if response2 == DialogResponse.MOVE_DATA:
-                
-                self.data = [x for x in self.data if x[DatasetColumn.DATE] not in ndates]
-            
-                # Reset the list.
-                self.update_list()
-                self.update_title()
-            
-            # Put the data in the new dataset.
             io.write_profile(main_dir = self.main_dir, name = new_name, data = ndata)
         
         # Otherwise, use the selected dataset:
@@ -1569,12 +1562,7 @@ class WeatherLog(Gtk.Window):
 
             # If the user wants to move the data, delete the items in the current dataset.
             if response2 == DialogResponse.MOVE_DATA:
-                
                 self.data = [x for x in self.data if x[DatasetColumn.DATE] not in ndates]
-            
-                # Reset the list.
-                self.update_list()
-                self.update_title()
             
             # Load the data.
             data2 = io.read_profile(main_dir = self.main_dir, name = sel_name)
@@ -1584,7 +1572,6 @@ class WeatherLog(Gtk.Window):
             date_col = datasets.get_column(data2, DatasetColumn.DATE)
             for i in ndata:
                 
-                # If the date already appears, don't include it.
                 if i[DatasetColumn.DATE] not in date_col:
                     new_data.append(i)
             
@@ -1599,6 +1586,10 @@ class WeatherLog(Gtk.Window):
             modified = "%d/%d/%d" % (now.day, now.month, now.year)
             creation, modified2 = io.get_metadata(self.main_dir, self.last_profile)
             io.write_metadata(self.main_dir, self.last_profile, creation, modified)
+        
+        # Update the title and data.
+        self.update_list()
+        self.update_title()
     
     
     def options(self, event):
@@ -1652,8 +1643,7 @@ class WeatherLog(Gtk.Window):
             self.config = launch.get_config(self.conf_dir, get_default = True)
         
         else:
-        
-            # Set the configuration.
+            
             self.config = new_config
         
         # Configure the units.
