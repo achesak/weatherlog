@@ -212,7 +212,7 @@ class WeatherLog(Gtk.Window):
             ("graphs_range", None, "Gra_phs in Range...", "<Control><Shift>g", None, lambda x: self.data_range(InfoType.GRAPH)),
             ("graphs_selected", None, "Grap_hs for Selected Dates...", None, None, lambda x: self.data_selected(InfoType.GRAPH)),
             ("quick_search", None, "_Quick Search...", "<Control>d", None, self.quick_search),
-            ("view_subset", None, "View _Data Subset...", "<Control><Shift>d", None, self.select_data_subset),
+            ("view_subset", None, "_Data Subset...", "<Control><Shift>d", None, self.select_data_subset),
         ])
         action_group.add_actions([
             ("datasets_menu", None, "_Datasets"),
@@ -1058,13 +1058,12 @@ class WeatherLog(Gtk.Window):
             for i in treeiter:
                 dates.append(model[i][0])
             
-            # Get the new data list.
             for i in ndata:
                 if i[DatasetColumn.DATE] in dates:
                     self.data.append(i)
         
         # If the user pressed Import All, import all of the data.
-        if response == DialogResponse.IMPORT_ALL:
+        elif response == DialogResponse.IMPORT_ALL:
             self.data = ndata[:]
         
         # Update and save the data.
@@ -1175,8 +1174,6 @@ class WeatherLog(Gtk.Window):
         
         # Set the default config.
         self.config = launch.get_config(self.conf_dir)
-        
-        # Configure the units.
         self.units = launch.get_units(self.config)
         
         # Update the main window.
@@ -1368,11 +1365,11 @@ class WeatherLog(Gtk.Window):
         
         # If the name is already in use, ask the user is they want to delete the old dataset.
         elif valid.endswith("already in use."):
+            
             del_old = show_question_dialog(self, "Rename Dataset", "%s\n\nWould you like to delete the existing dataset?" % valid)
             if del_old != Gtk.ResponseType.OK:
                 return
             
-            # Delete the existing dataset.
             shutil.rmtree("%s/profiles/%s" % (self.main_dir, new_name))
             
         # Rename the directory.
@@ -1487,11 +1484,9 @@ class WeatherLog(Gtk.Window):
             show_no_data_dialog(self, "Copy Data", message = "There is no data to copy.")
             return
         
-        # Get the dates.
+        # Get the dates and datasets.
         dates = datasets.get_column_list(self.data, [0])
         dates2 = datasets.get_column(self.data, 0)
-        
-        # Get the dataset list.
         profiles = io.get_profile_list(self.main_dir, self.last_profile)
         
         # Get the new name or selected dataset.
