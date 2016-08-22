@@ -915,6 +915,13 @@ class WeatherLog(Gtk.Window):
         if response != Gtk.ResponseType.OK and response != DialogResponse.IMPORT_OVERWRITE:
             return
         
+        # Error checking for when the Import and Overwrite option is chosen. GTK will allow this
+        # to be clicked when no filename has been entered, causing an error. Check to make sure
+        # there was a filename to work around this.
+        if (response == DialogResponse.IMPORT_OVERWRITE) and (not filename or not os.path.isfile(filename)):
+            show_error_dialog(self, "Import - %s" % self.last_profile, "No filename entered.")
+            return
+        
         # If the imported data is invalid, don't continue.
         validate_error = validate.validate_data(filename)
         if validate_error != ImportValidation.VALID:
