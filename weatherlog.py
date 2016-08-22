@@ -1230,7 +1230,7 @@ class WeatherLog(Gtk.Window):
         """Adds a new dataset."""
         
         # Get the name for the new dataset.
-        new_dlg = GenericEntryDialog(self, title = "Add Dataset", message = "Enter dataset name:")
+        new_dlg = GenericEntryDialog(self, title = "Add Dataset", message = "Enter dataset name:", filter_dataset_name = True)
         response = new_dlg.run()
         name = new_dlg.nam_ent.get_text().lstrip().rstrip()
         new_dlg.destroy()
