@@ -86,7 +86,7 @@ def write_blank_profile(main_dir, name):
 
 
 def write_standard_file(filename, data):
-    """Writes a file without formatting it as JSON."""
+    """Writes a basic file."""
 
     try:
         data_file = open(filename, "w")
@@ -95,6 +95,21 @@ def write_standard_file(filename, data):
 
     except IOError as e:
         print("write_standard_file(): Error saving data file (IOError):\n%s" % e)
+
+
+def write_json_file(filename, data, indent = False, indent_amount = 4):
+    """Writes a JSON file."""
+    
+    try:
+        data_file = open(filename, "w")
+        if indent:
+            json.dump(data, data_file, indent = indent_amount)
+        else:
+            json.dump(data, data_file)
+        data_file.close()
+
+    except IOError as e:
+        print("write_json_file(): Error saving data file (IOError):\n%s" % e)
 
 
 def get_profile_list(main_dir, last_profile, exclude_current = True):

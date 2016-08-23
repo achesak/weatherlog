@@ -66,12 +66,34 @@ class OptionsDialog(Gtk.Dialog):
         self.imp_chk.set_active(config["import_all"])
         gen_grid.attach_next_to(self.imp_chk, self.del_chk, Gtk.PositionType.BOTTOM, 2, 1)
         
+        # Create the JSON indent checkbox.
+        self.ind_chk = Gtk.CheckButton("Indent JSON data")
+        self.ind_chk.set_tooltip_text("Indent exported JSON data in order to make it more human-readable.")
+        self.ind_chk.set_margin_left(5)
+        self.ind_chk.set_margin_right(5)
+        self.ind_chk.set_active(config["json_indent"])
+        gen_grid.attach_next_to(self.ind_chk, self.imp_chk, Gtk.PositionType.BOTTOM, 2, 1)
+        
+        # Create the JSON indent amount spinbutton.
+        iamt_lbl = Gtk.Label("Indent amount: ")
+        iamt_lbl.set_tooltip_text("Number of spaces used to indent exported JSON data.")
+        iamt_lbl.set_margin_left(5)
+        iamt_lbl.set_alignment(0, 0.5)
+        gen_grid.attach_next_to(iamt_lbl, self.ind_chk, Gtk.PositionType.BOTTOM, 1, 1)
+        iamt_adj = Gtk.Adjustment(lower = 1, upper = 20, step_increment = 1)
+        self.iamt_sbtn = Gtk.SpinButton(digits = 0 , adjustment = iamt_adj)
+        self.iamt_sbtn.set_numeric(False)
+        self.iamt_sbtn.set_value(config["json_indent_amount"])
+        self.iamt_sbtn.set_margin_right(5)
+        self.iamt_sbtn.set_hexpand(True)
+        gen_grid.attach_next_to(self.iamt_sbtn, iamt_lbl, Gtk.PositionType.RIGHT, 1, 1)
+        
         # Create the units combobox.
         unit_lbl = Gtk.Label("Units: ")
         unit_lbl.set_tooltip_text("Measurement units used for display and conversion.")
         unit_lbl.set_margin_left(5)
         unit_lbl.set_alignment(0, 0.5)
-        gen_grid.attach_next_to(unit_lbl, self.imp_chk, Gtk.PositionType.BOTTOM, 1, 1)
+        gen_grid.attach_next_to(unit_lbl, iamt_lbl, Gtk.PositionType.BOTTOM, 1, 1)
         self.unit_com = Gtk.ComboBoxText()
         self.unit_com.set_margin_right(5)
         self.unit_com.set_margin_bottom(5)

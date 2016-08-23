@@ -84,7 +84,7 @@ def show_export_dialog(self, title):
 def show_save_dialog(self, title):
     """Shows the file chooser (save) dialog."""
     
-    export_dlg = Gtk.FileChooserDialog(title, self, Gtk.FileChooserAction.SAVE, (Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL, "Export to CSV", DialogResponse.EXPORT_CSV, "Export to HTML", DialogResponse.EXPORT_HTML, "Export", Gtk.ResponseType.OK))
+    export_dlg = Gtk.FileChooserDialog(title, self, Gtk.FileChooserAction.SAVE, (Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL, "Export to JSON", DialogResponse.EXPORT_JSON, "Export to CSV", DialogResponse.EXPORT_CSV, "Export to HTML", DialogResponse.EXPORT_HTML, "Export", Gtk.ResponseType.OK))
     export_dlg.set_do_overwrite_confirmation(True)
     response = export_dlg.run()
     filename = export_dlg.get_filename()

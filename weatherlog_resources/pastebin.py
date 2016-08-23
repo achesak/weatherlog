@@ -52,7 +52,10 @@ def upload_pastebin(data, name, mode, expires, exposure, units, config, title):
     elif mode == "csv":
         new_data = export.csv(data, units)
     elif mode == "json":
-        new_data = json.dumps(data)
+        if config["json_indent"]:
+            new_data = json.dumps(data, indent = config["json_indent_amount"])
+        else:
+            new_data = json.dumps(data)
     
     # Build the api string.
     api = {"api_option": "paste",

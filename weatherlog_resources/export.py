@@ -4,7 +4,7 @@
 ################################################################################
 #
 # WeatherLog: export.py
-# This module formats and exports data to HTML and CSV.
+# This module formats and exports data to HTML, CSV, and JSON.
 #
 ################################################################################
 
@@ -111,3 +111,9 @@ def csv(data2, units, filename = ""):
         io.write_standard_file(filename, csv)
     else:
         return csv
+
+
+def json(data, config, filename = ""):
+    """Converts the data to JSON."""
+    
+    io.write_json_file(filename, data, config["json_indent"], config["json_indent_amount"])

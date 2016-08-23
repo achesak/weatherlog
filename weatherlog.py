@@ -1091,19 +1091,21 @@ class WeatherLog(Gtk.Window):
         response, filename = show_save_dialog(self, "Export - %s" % self.last_profile)
         
         # If the user did not press OK, don't continue.
-        if response != Gtk.ResponseType.OK and response != DialogResponse.EXPORT_CSV and response != DialogResponse.EXPORT_HTML:
+        if response != Gtk.ResponseType.OK and response != DialogResponse.EXPORT_CSV and response != DialogResponse.EXPORT_HTML and response != DialogResponse.EXPORT_JSON:
             return
         
-        # Error checking for when the HTML and CSV options are chosen. GTK will allow these
+        # Error checking for when the HTML, CSV, or JSON options are chosen. GTK will allow these
         # to be clicked when no filename has been entered, causing an error. Check to make sure
         # there was a filename to work around this.
-        if (response == DialogResponse.EXPORT_CSV or response == DialogResponse.EXPORT_HTML) and not filename:
+        if (response == DialogResponse.EXPORT_CSV or response == DialogResponse.EXPORT_HTML or response == DialogResponse.EXPORT_JSON) and not filename:
             show_error_dialog(self, "Export - %s" % self.last_profile, "No filename entered.")
             return
         
         # Export the data.
         if response == Gtk.ResponseType.OK:
             io.write_profile(filename = filename, data = self.data)
+        elif response == DialogResponse.EXPORT_JSON:
+            export.json(self.data, self.config, filename)
         elif response == DialogResponse.EXPORT_CSV:
             export.csv(self.data, self.units, filename)
         elif response == DialogResponse.EXPORT_HTML:
@@ -1629,6 +1631,8 @@ class WeatherLog(Gtk.Window):
         new_config["openweathermap"] = opt_dlg.owm_ent.get_text()
         new_config["forecast_period"] = opt_dlg.fcast_sbtn.get_value()
         new_config["default_selection_mode"] = opt_dlg.smode_com.get_active_text()
+        new_config["json_indent"] = opt_dlg.ind_chk.get_active()
+        new_config["json_indent_amount"] = int(opt_dlg.iamt_sbtn.get_value())
         opt_dlg.destroy()
         
         # If the user did not press OK or Reset, don't continue.
