@@ -19,16 +19,7 @@ except ImportError:
 
 # Import application modules.
 import weatherlog_resources.datasets as datasets
-
-
-def get_dates(dates):
-    """Changes the dates to the datetime representation."""
-    
-    new_dates = []
-    for i in dates:
-        new_dates.append(date2num(datetime.datetime.strptime(i, "%d/%m/%Y")))
-    
-    return new_dates
+import weatherlog_resources.dates as dates
 
 
 def get_data(data):
@@ -36,7 +27,7 @@ def get_data(data):
     
     # Get the date data.
     date_data = datasets.get_column(data, 0)
-    new_dates = get_dates(date_data)
+    new_dates = dates.get_datetimes(date_data)
     
     # Get the data.
     temp_data = datasets.convert_float(datasets.get_column(data, 1))

@@ -11,6 +11,11 @@
 
 # Import datetime for date calculations.
 import datetime
+# Import date2num for converting dates to numbers.
+try:
+    from matplotlib.dates import date2num
+except ImportError:
+	pass
 
 
 def split_date(date):
@@ -97,3 +102,13 @@ def date_below(date, datelist):
             break
     
     return index
+
+
+def get_datetimes(dates):
+    """Changes the dates to the datetime representation."""
+    
+    new_dates = []
+    for i in dates:
+        new_dates.append(date2num(datetime.datetime.strptime(i, "%d/%m/%Y")))
+    
+    return new_dates
