@@ -29,12 +29,6 @@ def split_date(date):
     return (days, months, years)
 
 
-def date_to_iso(day, month, year):
-    """Formats a date in ISO notation."""
-    
-    return str(year) + "-" + (str(month) if month > 9 else "0" + str(month)) + "-" + (str(day) if day > 9 else "0" + str(day))
-
-
 def date_list_datetime(dates):
     """Converts a list of dates (as dd/mm/yy) to datetimes."""
     
