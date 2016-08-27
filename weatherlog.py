@@ -1035,7 +1035,7 @@ class WeatherLog(Gtk.Window):
         
         # Ask the user what dates they want to import.
         if not self.config["import_all"]:
-            date_dlg = ImportSelectionDialog(self, "Import as New Profile - %s" % name, datasets.get_column(ndata, 0))
+            date_dlg = ImportSelectionDialog(self, "Import as New Dataset - %s" % name, datasets.get_column(ndata, 0))
             response = date_dlg.run()
             model, treeiter = date_dlg.treeview.get_selection().get_selected_rows()
             date_dlg.destroy()
