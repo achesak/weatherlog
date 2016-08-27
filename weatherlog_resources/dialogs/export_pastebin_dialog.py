@@ -19,7 +19,6 @@ class ExportPastebinDialog(Gtk.Dialog):
     def __init__(self, parent, title, config):
         """Create the dialog."""
         
-        # Create the dialog.
         Gtk.Dialog.__init__(self, title, parent, Gtk.DialogFlags.MODAL)
         self.set_size_request(500, 0)
         self.add_button("Cancel", Gtk.ResponseType.CANCEL)

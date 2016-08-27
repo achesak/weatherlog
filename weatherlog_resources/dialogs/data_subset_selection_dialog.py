@@ -27,7 +27,6 @@ class DataSubsetSelectionDialog(Gtk.Window):
     def __init__(self, parent, profile, data, config, units):
         """Create the dialog."""
 
-        # Create the dialog.
         Gtk.Window.__init__(self)
         self.set_title("View Data Subset - %s" % profile)
         self.set_resizable(True)

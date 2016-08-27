@@ -28,7 +28,6 @@ class EditDialog(Gtk.Dialog):
         if units["prec"] == "in":
             unit = 1
         
-        # Create the dialog
         Gtk.Dialog.__init__(self, "Edit %s - %s" % (date, profile), parent, Gtk.DialogFlags.MODAL)
         self.set_size_request(500, 600)
         self.add_button("Cancel", Gtk.ResponseType.CANCEL)

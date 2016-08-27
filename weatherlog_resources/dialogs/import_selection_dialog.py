@@ -22,7 +22,6 @@ class ImportSelectionDialog(Gtk.Dialog):
     def __init__(self, parent, title, dates, show_conflicts = False):
         """Create the dialog."""
         
-        # Create the dialog.
         Gtk.Dialog.__init__(self, title, parent, Gtk.DialogFlags.MODAL)
         self.set_default_size(300, 300)
         self.add_button("Cancel", Gtk.ResponseType.CANCEL)

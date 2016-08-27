@@ -19,7 +19,6 @@ class LocationDialog(Gtk.Dialog):
     def __init__(self, parent, config):
         """Create the dialog."""
         
-        # Create the dialog.
         Gtk.Dialog.__init__(self, "Get Current Weather", parent, Gtk.DialogFlags.MODAL)
         self.set_size_request(300, 0)
         self.add_button("Cancel", Gtk.ResponseType.CANCEL)
@@ -31,8 +30,7 @@ class LocationDialog(Gtk.Dialog):
         loc_grid.set_row_spacing(3)
         self.get_content_area().add(loc_grid)
         
-        # Create the location type frame and radiobuttons.
-        # Default to type set in options.
+        # Create the location type frame and radiobuttons; default to type set in options.
         type_frame = Gtk.Frame()
         type_frame.set_label("Location type")
         type_grid = Gtk.Grid()

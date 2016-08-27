@@ -19,7 +19,6 @@ class GenericChartDialog(Gtk.Dialog):
     def __init__(self, parent, title, data):
         """Create the dialog."""
         
-        # Create the dialog.
         Gtk.Dialog.__init__(self, title, parent)
         self.set_default_size(1000, 500)
         self.add_button("Export", 9)

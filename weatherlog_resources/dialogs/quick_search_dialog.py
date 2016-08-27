@@ -19,7 +19,6 @@ class QuickSearchDialog(Gtk.Dialog):
     def __init__(self, parent, last_profile, config):
         """Create the dialog."""
         
-        # Create the dialog.
         Gtk.Dialog.__init__(self, "Quick Search - %s" % last_profile, parent, Gtk.DialogFlags.MODAL)
         self.set_size_request(300, 0)
         self.add_button("Cancel", Gtk.ResponseType.CANCEL)

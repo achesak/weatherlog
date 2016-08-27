@@ -36,7 +36,6 @@ class AddNewDialog(Gtk.Dialog):
         # Get the current date.
         date = time.strftime("%d/%m/%Y")
         
-        # Create the dialog.
         Gtk.Dialog.__init__(self, "Add New Data - %s" % profile, parent, Gtk.DialogFlags.MODAL)
         self.set_size_request(500, 600)
         self.add_button("Cancel", Gtk.ResponseType.CANCEL)

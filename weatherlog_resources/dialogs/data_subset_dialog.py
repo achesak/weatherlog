@@ -21,7 +21,6 @@ class DataSubsetDialog(Gtk.Dialog):
     def __init__(self, parent, title, data, units, config):
         """Create the dialog."""
         
-        # Create the dialog.
         Gtk.Dialog.__init__(self, title, parent)
         self.set_default_size(1200, 500)
         self.add_button("Export", 9)

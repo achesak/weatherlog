@@ -19,7 +19,6 @@ class GenericInfoDialog(Gtk.Dialog):
     def __init__(self, parent, title, data):
         """Create the dialog."""
         
-        # Create the dialog.
         Gtk.Dialog.__init__(self, title, parent)
         self.set_default_size(700, 400)
         self.add_button("Export", 9)

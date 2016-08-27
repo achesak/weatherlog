@@ -22,7 +22,6 @@ class CurrentWeatherDialog(Gtk.Dialog):
     def __init__(self, parent, title, data, image_path):
         """Create the dialog."""
         
-        # Create the dialog.
         Gtk.Dialog.__init__(self, title, parent, Gtk.DialogFlags.MODAL)
         self.set_default_size(500, 700)
         self.add_button("Add", DialogResponse.ADD_DATA)

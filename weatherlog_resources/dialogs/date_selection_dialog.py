@@ -19,7 +19,6 @@ class DateSelectionDialog(Gtk.Dialog):
     def __init__(self, parent, title, dates, buttons = [["Cancel", Gtk.ResponseType.CANCEL], ["OK", Gtk.ResponseType.OK]], default_button = Gtk.ResponseType.OK, show_conflicts = False, multi_select = True):
         """Create the dialog."""
         
-        # Create the dialog.
         Gtk.Dialog.__init__(self, title, parent, Gtk.DialogFlags.MODAL)
         self.set_default_size(300, 300)
         for i in buttons:

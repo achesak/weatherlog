@@ -35,7 +35,6 @@ class GenericGraphDialog(Gtk.Dialog):
                    "Small downward stripes": "\\\\", "Horizontal stripes": "-", "Crosshatch": "+", "Diagonal crosshatch": "x", \
                    "Stars": "*", "Dots": ".", "Small circles": "o", "Large circles": "O"}
         
-        # Create the dialog.
         Gtk.Dialog.__init__(self, title, parent)
         self.set_default_size(1000, 600)
         self.add_button("Close", Gtk.ResponseType.CLOSE)

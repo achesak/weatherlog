@@ -23,7 +23,6 @@ class OptionsDialog(Gtk.Dialog):
     def __init__(self, parent, config):
         """Create the dialog."""
         
-        # Create the dialog.
         Gtk.Dialog.__init__(self, "Options", parent, Gtk.DialogFlags.MODAL)
         self.add_button("Reset", DialogResponse.RESET)
         self.add_button("Cancel", Gtk.ResponseType.CANCEL)
