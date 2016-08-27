@@ -30,7 +30,8 @@ class AddNewDialog(Gtk.Dialog):
         
         # Determine the default units.
         unit = 0
-        if units["prec"] == "in":
+        print config["units"]
+        if config["units"] == "imperial":
             unit = 1
         
         # Get the current date.
