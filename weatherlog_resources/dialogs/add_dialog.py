@@ -30,7 +30,6 @@ class AddNewDialog(Gtk.Dialog):
         
         # Determine the default units.
         unit = 0
-        print config["units"]
         if config["units"] == "imperial":
             unit = 1
         
