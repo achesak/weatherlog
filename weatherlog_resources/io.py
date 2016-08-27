@@ -24,11 +24,11 @@ except ImportError:
     import pickle
 
 
-def write_profile(main_dir = "", name = "", filename = "", data = []):
+def write_dataset(main_dir = "", name = "", filename = "", data = []):
     """Writes the data to the dataset file."""
 
     # Get the filename.
-    filename = filename if filename != "" else "%s/profiles/%s/weather" % (main_dir, name)
+    filename = filename if filename != "" else "%s/datasets/%s/weather" % (main_dir, name)
 
     try:
         data_file = open(filename, "w")
@@ -37,19 +37,19 @@ def write_profile(main_dir = "", name = "", filename = "", data = []):
         return True
 
     except IOError as e:
-        print("write_profile(): Error saving dataset file (IOError):\n%s" % e)
+        print("write_dataset(): Error saving dataset file (IOError):\n%s" % e)
         return False
 
     except (TypeError, ValueError) as e:
-        print("write_profile(): Error saving dataset file (TypeError or ValueError):\n%s" % e)
+        print("write_dataset(): Error saving dataset file (TypeError or ValueError):\n%s" % e)
         return False
 
 
-def read_profile(main_dir = "", name = "", filename = ""):
+def read_dataset(main_dir = "", name = "", filename = ""):
     """Reads the data from the dataset file."""
 
     # Get the filename.
-    filename = filename if filename != "" else "%s/profiles/%s/weather" % (main_dir, name)
+    filename = filename if filename != "" else "%s/datasets/%s/weather" % (main_dir, name)
 
     try:
         data_file = open(filename, "r")
@@ -57,31 +57,31 @@ def read_profile(main_dir = "", name = "", filename = ""):
         data_file.close()
 
     except IOError as e:
-        print("read_profile(): Error importing data (IOError):\n%s" % e)
+        print("read_dataset(): Error importing data (IOError):\n%s" % e)
         data = []
 
     except (TypeError, ValueError) as e:
-        print("read_profile(): Error importing data (TypeError or ValueError):\n%s" % e)
+        print("read_dataset(): Error importing data (TypeError or ValueError):\n%s" % e)
         data = []
 
     return data
 
 
-def write_blank_profile(main_dir, name):
+def write_blank_dataset(main_dir, name):
     """Writes a blank dataset file."""
 
     try:
-        os.makedirs("%s/profiles/%s" % (main_dir, name))
-        new_prof_file = open("%s/profiles/%s/weather" % (main_dir, name), "w")
+        os.makedirs("%s/datasets/%s" % (main_dir, name))
+        new_prof_file = open("%s/datasets/%s/weather" % (main_dir, name), "w")
         pickle.dump([], new_prof_file)
         new_prof_file.close()
     
     except IOError as e:
-        print("write_blank_profile(): Error saving dataset file (IOError):\n%s" % e)
+        print("write_blank_dataset(): Error saving dataset file (IOError):\n%s" % e)
         data = []
 
     except (TypeError, ValueError) as e:
-        print("write_blank_profile(): Error saving dataset file (TypeError or ValueError):\n%s" % e)
+        print("write_blank_dataset(): Error saving dataset file (TypeError or ValueError):\n%s" % e)
         data = []
 
 
@@ -112,37 +112,37 @@ def write_json_file(filename, data, indent = False, indent_amount = 4):
         print("write_json_file(): Error saving data file (IOError):\n%s" % e)
 
 
-def get_profile_list(main_dir, last_profile, exclude_current = True):
+def get_dataset_list(main_dir, last_dataset, exclude_current = True):
     """Gets the list of datasets."""
 
     # Remember the correct directory and switch to where the datasets are stored.
     current_dir = os.getcwd()
-    os.chdir("%s/profiles" % main_dir)
+    os.chdir("%s/datasets" % main_dir)
 
     # Get the list of datasets and sort the list.
-    profiles = glob.glob("*")
+    datasets = glob.glob("*")
     if exclude_current:
-        profiles = list(set(profiles) - set([last_profile]))
-    profiles.sort()
+        datasets = list(set(datasets) - set([last_dataset]))
+    datasets.sort()
 
     # Get the creation and last modified dates.
-    for i in range(0, len(profiles)):
+    for i in range(0, len(datasets)):
 
         # Get the dates.
-        creation, modified = get_metadata(main_dir, profiles[i])
-        profiles[i] = [profiles[i], creation, modified]
+        creation, modified = get_metadata(main_dir, datasets[i])
+        datasets[i] = [datasets[i], creation, modified]
 
     # Switch back to the previous directory.
     os.chdir(current_dir)
 
-    return profiles
+    return datasets
 
 
-def get_metadata(main_dir, last_profile):
+def get_metadata(main_dir, last_dataset):
     """Gets the current metadata."""
 
     try:
-        meta_file = open("%s/profiles/%s/metadata.json" % (main_dir, last_profile), "r")
+        meta_file = open("%s/datasets/%s/metadata.json" % (main_dir, last_dataset), "r")
         meta_data = json.load(meta_file)
         meta_file.close()
         creation = meta_data["creation"]
@@ -156,11 +156,11 @@ def get_metadata(main_dir, last_profile):
     return creation, modified
 
 
-def write_metadata(main_dir, last_profile, creation, modified):
+def write_metadata(main_dir, last_dataset, creation, modified):
     """Writes the metadata file."""
 
     try:
-        meta_file = open("%s/profiles/%s/metadata.json" % (main_dir, last_profile), "w")
+        meta_file = open("%s/datasets/%s/metadata.json" % (main_dir, last_dataset), "w")
         json.dump({"creation": creation, "modified": modified}, meta_file)
         meta_file.close()
 
@@ -192,4 +192,4 @@ def write_restore_data(conf_dir, last_dataset, window_height, window_width):
         rest_file.close()
 
     except IOError as e:
-        print("write_last_profile(): Error saving application restore file (IOError):\n%s" % e)
+        print("write_last_dataset(): Error saving application restore file (IOError):\n%s" % e)

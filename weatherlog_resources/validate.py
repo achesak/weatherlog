@@ -28,7 +28,7 @@ validate_dataset_strings = {ImportValidation.VALID: "No error, this should never
                             ImportValidation.NO_DATA: "The file contains no data."}
 
 
-def validate_profile(main_dir, name):
+def validate_dataset(main_dir, name):
     """Validates a dataset name."""
     
     if not name:
@@ -39,7 +39,7 @@ def validate_profile(main_dir, name):
         return "The dataset name \"%s\" is not valid. Dataset names may not start with a period." % name
     elif re.compile("[^a-zA-Z1-90 \.\-\+\(\)\?\!]").match(name):
         return "The dataset name \"%s\" is not valid. Dataset names may only be letters, numbers, and spaces." % name
-    elif os.path.isdir("%s/profiles/%s" % (main_dir, name)):
+    elif os.path.isdir("%s/datasets/%s" % (main_dir, name)):
         return "The dataset name \"%s\" is already in use." % name
     else:
         return ""
@@ -50,7 +50,7 @@ def validate_data(filename):
     
     # Test 1: must be readable.
     try:
-        data = io.read_profile(filename = filename)
+        data = io.read_dataset(filename = filename)
     except:
         return ImportValidation.CANNOT_UNPICKLE
     

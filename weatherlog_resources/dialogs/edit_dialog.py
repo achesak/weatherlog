@@ -20,7 +20,7 @@ from weatherlog_resources.dialogs.misc_dialogs import *
 class EditDialog(Gtk.Dialog):
     """Shows the "Edit" dialog."""
     
-    def __init__(self, parent, profile, data, date, units):
+    def __init__(self, parent, dataset, data, date, units):
         """Create the dialog."""
         
         # Determine the default units.
@@ -28,7 +28,7 @@ class EditDialog(Gtk.Dialog):
         if units["prec"] == "in":
             unit = 1
         
-        Gtk.Dialog.__init__(self, "Edit %s - %s" % (date, profile), parent, Gtk.DialogFlags.MODAL)
+        Gtk.Dialog.__init__(self, "Edit %s - %s" % (date, dataset), parent, Gtk.DialogFlags.MODAL)
         self.set_size_request(500, 600)
         self.add_button("Cancel", Gtk.ResponseType.CANCEL)
         self.add_button("OK", Gtk.ResponseType.OK)

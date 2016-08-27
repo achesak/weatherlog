@@ -25,7 +25,7 @@ import weatherlog_resources.clouds as clouds
 class AddNewDialog(Gtk.Dialog):
     """Shows the "Add New" dialog."""
     
-    def __init__(self, parent, profile, user_location, user_zipcode, prefill, show_prefill_dlg, units, config, prefill_data = []):
+    def __init__(self, parent, dataset, user_location, user_zipcode, prefill, show_prefill_dlg, units, config, prefill_data = []):
         """Create the dialog."""
         
         # Determine the default units.
@@ -36,7 +36,7 @@ class AddNewDialog(Gtk.Dialog):
         # Get the current date.
         date = time.strftime("%d/%m/%Y")
         
-        Gtk.Dialog.__init__(self, "Add New Data - %s" % profile, parent, Gtk.DialogFlags.MODAL)
+        Gtk.Dialog.__init__(self, "Add New Data - %s" % dataset, parent, Gtk.DialogFlags.MODAL)
         self.set_size_request(500, 600)
         self.add_button("Cancel", Gtk.ResponseType.CANCEL)
         self.add_button("OK", Gtk.ResponseType.OK)
@@ -248,7 +248,7 @@ class AddNewDialog(Gtk.Dialog):
             
             if not station:
                 error_message = data if isinstance(data, str) else data["error"]
-                show_error_dialog(self, "Add New Data - %s" % profile, "Error:\n\n%s" % error_message)
+                show_error_dialog(self, "Add New Data - %s" % dataset, "Error:\n\n%s" % error_message)
             else:
                 self.temp_sbtn.set_value(data["temp"])
                 self.chil_sbtn.set_value(data["chil"])
@@ -268,7 +268,7 @@ class AddNewDialog(Gtk.Dialog):
         
         # Show the dialog saying data has been prefilled.
         if show_prefill_dlg and prefill and (user_location or user_zipcode) and station:
-            show_alert_dialog(self, "Add New Data - %s" % profile, "Some fields have been automatically filled using data from OpenWeatherMap.\n\nLocation is set to %s." % station)
+            show_alert_dialog(self, "Add New Data - %s" % dataset, "Some fields have been automatically filled using data from OpenWeatherMap.\n\nLocation is set to %s." % station)
     
     
     def select_date(self, event):
