@@ -125,6 +125,7 @@ class WeatherLog(Gtk.Window):
         
         self.weather_codes = launch.get_weather_codes()
         self.pastebin_constants = launch.get_pastebin_constants()
+        self.graph_data = launch.get_graph_data()
         
         # Create the user interface.
         self.create_interface()
@@ -843,7 +844,7 @@ class WeatherLog(Gtk.Window):
         data2 = graphs.get_data(data)
         
         # Show the graph.
-        graph_dlg = GenericGraphDialog(self, "Graphs - %s" % self.last_profile, data2, self.last_profile, self.units, self.config)
+        graph_dlg = GenericGraphDialog(self, "Graphs - %s" % self.last_profile, data2, self.last_profile, self.units, self.config, self.graph_data)
         response = graph_dlg.run()
         graph_dlg.destroy()
     

@@ -261,6 +261,21 @@ def get_pastebin_constants():
     return paste_constants
 
 
+def get_graph_data():
+    """Gets the graph line and hatch data."""
+    
+    try:
+        graph_file = open("weatherlog_resources/appdata/graphs.json", "r")
+        graph_data = json.load(graph_file)
+        graph_file.close()
+    
+    except IOError as e:
+        print("get_graph_data(): Error reading graph data file (IOError):\n%s" % e)
+        sys.exit()
+    
+    return graph_data
+
+
 def check_dependencies():
     """Checks if dependencies required by the application are installed."""
     

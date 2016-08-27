@@ -26,14 +26,11 @@ except:
 class GenericGraphDialog(Gtk.Dialog):
     """Shows the graph dialog."""
     
-    def __init__(self, parent, title, data, last_profile, units, config):
+    def __init__(self, parent, title, data, last_profile, units, config, graph_data):
         """Create the dialog."""
         
-        # Dicts for getting the style from config:
-        lines = {"Solid": "-", "Dashes": "--", "Dots": ":", "Dashes and dots": "-."}
-        hatches = {"Solid": "", "Large upward stripes": "/", "Small upward stripes": "//", "Large downward stripes": "\\", \
-                   "Small downward stripes": "\\\\", "Horizontal stripes": "-", "Crosshatch": "+", "Diagonal crosshatch": "x", \
-                   "Stars": "*", "Dots": ".", "Small circles": "o", "Large circles": "O"}
+        lines = graph_data["lines"]
+        hatches = graph_data["hatches"]
         
         Gtk.Dialog.__init__(self, title, parent)
         self.set_default_size(1000, 600)

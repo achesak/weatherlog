@@ -1,0 +1,22 @@
+{
+    "lines": {
+        "Solid": "-",
+        "Dashes": "--",
+        "Dots": ":",
+        "Dashes and dots": "-."
+    },
+    
+    "hatches": {
+        "Solid": "",
+        "Large upward stripes": "/",
+        "Small upward stripes": "//",
+        "Large downward stripes": "\\",
+        "Small downward stripes": "\\\\",
+        "Horizontal stripes": "-",
+        "Crosshatch": "+",
+        "Diagonal crosshatch": "x",
+        "Stars": "*", "Dots": ".",
+        "Small circles": "o",
+        "Large circles": "O"
+    }
+}
