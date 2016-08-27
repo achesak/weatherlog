@@ -1714,7 +1714,7 @@ class WeatherLog(Gtk.Window):
         if self.config["truncate_notes"]:
             new_data = datasets.truncate_column(self.data, DatasetColumn.NOTES, 46)
         else:
-            new_data = copy.deepcopy(self.data)
+            new_data = self.data
             
         self.liststore.clear()
         for i in new_data:
