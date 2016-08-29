@@ -103,9 +103,6 @@ def ensure_files_exist(main_dir, conf_dir):
     if not os.path.exists(conf_dir) or not os.path.isdir(conf_dir):
 
         os.makedirs(conf_dir)
-        last_prof = open("%s/lastdataset" % conf_dir, "w")
-        last_prof.write("Main Dataset")
-        last_prof.close()
 
 
 def get_config(conf_dir, get_default = False):
