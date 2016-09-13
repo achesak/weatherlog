@@ -121,7 +121,7 @@ class WeatherLog(Gtk.Window):
         
         self.last_dataset, self.original_dataset, self.dataset_exists, self.last_width, self.last_height = launch.get_restore_data(self.main_dir, self.conf_dir, self.config, self.default_width, self.default_height)
         self.units = launch.get_units(self.config)
-        self.data = launch.get_data(self.main_dir, self.last_dataset)
+        self.data = io.read_dataset(self.main_dir, self.last_dataset)
         
         self.weather_codes = launch.get_weather_codes()
         self.pastebin_constants = launch.get_pastebin_constants()
@@ -1053,7 +1053,7 @@ class WeatherLog(Gtk.Window):
         # Create the dataset directory and file.
         self.last_dataset = name
         io.write_blank_dataset(self.main_dir, name)
-        launch.create_metadata(self.main_dir, name)
+        io.write_metadata(self.main_dir, name, now = True)
         
         # Clear the data.
         self.data[:] = []
@@ -1267,7 +1267,7 @@ class WeatherLog(Gtk.Window):
         
         # Create the new dataset and clear the old data.
         io.write_blank_dataset(self.main_dir, name)
-        launch.create_metadata(self.main_dir, name)
+        io.write_metadata(self.main_dir, name, now = True)
         self.last_dataset = name
         self.data[:] = []
         self.liststore.clear()
@@ -1312,7 +1312,7 @@ class WeatherLog(Gtk.Window):
         if len(datasets) == len(starting_datasets):
             self.last_dataset, a, b = launch.get_last_dataset(self.main_dir, self.conf_dir)
             self.data = io.read_dataset(main_dir = self.main_dir, name = self.last_dataset)
-            launch.create_metadata(self.main_dir, self.last_dataset)
+            io.write_metadata(self.main_dir, self.last_dataset, now = True)
         
         # If the user did not delete all the datasets but deleted the current one, switch to the "first" of the rest:
         elif self.last_dataset in datasets:
@@ -1479,7 +1479,7 @@ class WeatherLog(Gtk.Window):
         
         # Create the new dataset directory and metadata.
         io.write_blank_dataset(self.main_dir, merge_name)
-        launch.create_metadata(self.main_dir, merge_name)
+        io.write_metadata(self.main_dir, merge_name, now = True)
         self.last_dataset = merge_name
         
         # Update the title.
@@ -1560,7 +1560,7 @@ class WeatherLog(Gtk.Window):
             
             # Create the directory and file.
             io.write_blank_dataset(self.main_dir, new_name)
-            launch.create_metadata(self.main_dir, new_name)
+            io.write_metadata(self.main_dir, new_name, now = True)
             io.write_dataset(main_dir = self.main_dir, name = new_name, data = ndata)
         
         # Otherwise, use the selected dataset:

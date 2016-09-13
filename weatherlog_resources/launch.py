@@ -29,6 +29,7 @@ except ImportError:
     
 # Import application modules.
 from weatherlog_resources.openweathermap.codes import codes
+import weatherlog_resources.io as io
 
 
 def get_main_dir():
@@ -97,7 +98,7 @@ def ensure_files_exist(main_dir, conf_dir):
         last_prof_data = open("%s/datasets/Main Dataset/weather" % main_dir, "w")
         pickle.dump([], last_prof_data)
         last_prof_data.close()
-        create_metadata(main_dir, "Main Dataset")
+        io.write_metadata(main_dir, "Main Dataset", now = True)
 
     # Configuration directory and files:
     if not os.path.exists(conf_dir) or not os.path.isdir(conf_dir):
@@ -182,7 +183,7 @@ def get_restore_data(main_dir, conf_dir, config, default_width, default_height, 
             last_prof_data = open("%s/datasets/Main Dataset/weather" % main_dir, "w")
             pickle.dump([], last_prof_data)
             last_prof_data.close()
-            create_metadata(main_dir, "Main Dataset")
+            io.write_metadata(main_dir, "Main Dataset", now = True)
             
             last_dataset = "Main Dataset"
     
@@ -206,41 +207,6 @@ def get_units(config):
         sys.exit()
     
     return units[config["units"]]
-
-
-def get_data(main_dir, last_dataset):
-    """Gets the data."""
-
-    try:
-        data_file = open("%s/datasets/%s/weather" % (main_dir, last_dataset), "r")
-        data = pickle.load(data_file)
-        data_file.close()
-
-    except IOError as e:
-        print("get_data(): Error importing data (IOError):\n%s" % e)
-        sys.exit()
-
-    except (TypeError, ValueError) as e:
-        print("get_data(): Error importing data (TypeError or ValueError):\n%s" % e)
-        sys.exit()
-
-    return data
-
-
-def create_metadata(main_dir, last_dataset):
-    """Creates the default metadata file."""
-
-    # Get the current time.
-    now = datetime.datetime.now()
-    modified = "%d/%d/%d" % (now.day, now.month, now.year)
-
-    try:
-        meta_file = open("%s/datasets/%s/metadata.json" % (main_dir, last_dataset), "w")
-        json.dump({"creation": modified, "modified": modified}, meta_file)
-        meta_file.close()
-
-    except IOError as e:
-        print("create_metadata(): Error saving metadata file (IOError):\n%s" % e)
 
 
 def get_pastebin_constants():

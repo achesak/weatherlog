@@ -17,6 +17,8 @@ import glob
 import time
 # Import json for saving the configuration file.
 import json
+# Import datetime for getting the current time.
+import datetime
 # Import pickle for loading and saving the data.
 try:
     import cPickle as pickle
@@ -156,8 +158,13 @@ def get_metadata(main_dir, last_dataset):
     return creation, modified
 
 
-def write_metadata(main_dir, last_dataset, creation, modified):
+def write_metadata(main_dir, last_dataset, creation = "", modified = "", now = False):
     """Writes the metadata file."""
+    
+    if now:
+        now = datetime.datetime.now()
+        creation = "%d/%d/%d" % (now.day, now.month, now.year)
+        modified = creation
 
     try:
         meta_file = open("%s/datasets/%s/metadata.json" % (main_dir, last_dataset), "w")
