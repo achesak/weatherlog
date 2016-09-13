@@ -1498,10 +1498,10 @@ class WeatherLog(Gtk.Window):
         # Get the dates and datasets.
         dates = datasets.get_column_list(self.data, [0])
         dates2 = datasets.get_column(self.data, 0)
-        datasets = io.get_dataset_list(self.main_dir, self.last_dataset)
+        dataset_list = io.get_dataset_list(self.main_dir, self.last_dataset)
         
         # Get the new name or selected dataset.
-        dat_dlg = DatasetAddSelectionDialog(self, "Copy Data", datasets)
+        dat_dlg = DatasetAddSelectionDialog(self, "Copy Data", dataset_list)
         response1 = dat_dlg.run()
         new_name = dat_dlg.add_ent.get_text().lstrip().rstrip()
         model1, treeiter1 = dat_dlg.treeview.get_selection().get_selected()
