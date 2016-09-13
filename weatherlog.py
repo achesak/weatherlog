@@ -254,6 +254,7 @@ class WeatherLog(Gtk.Window):
         grid.attach_next_to(toolbar, menubar, Gtk.PositionType.BOTTOM, 1, 1)
         grid.attach_next_to(scrolled_win, toolbar, Gtk.PositionType.BOTTOM, 1, 1)
         self.add(grid)
+        self.treeview.grab_focus()
         self.show_all()
         
         # Bind the events.
