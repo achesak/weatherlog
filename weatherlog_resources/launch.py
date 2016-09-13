@@ -30,6 +30,7 @@ except ImportError:
 # Import application modules.
 from weatherlog_resources.openweathermap.codes import codes
 import weatherlog_resources.io as io
+import weatherlog_resources.datasets as datasets
 
 
 def get_main_dir():
@@ -154,14 +155,9 @@ def get_restore_data(main_dir, conf_dir, config, default_width, default_height, 
         last_height = default_height
         last_dataset = default_dataset
     
-    # Get the list of datasets.
-    current_dir = os.getcwd()
-    os.chdir("%s/datasets" % main_dir)
-    datasets_list = glob.glob("*")
-    os.chdir(current_dir)
-
-    # Check if the dataset exists:
-    if last_dataset in datasets_list:
+    # Check if the dataset exists. 
+    dataset_list = datasets.get_column(io.get_dataset_list(main_dir, "", False), 0)
+    if last_dataset in dataset_list:
         dataset_exists = True
         original_dataset = ""
     else:
@@ -172,20 +168,12 @@ def get_restore_data(main_dir, conf_dir, config, default_width, default_height, 
     if not dataset_exists:
 
         # If the default dataset exists, switch to that.
-        if "Main Dataset" in datasets_list:
+        if "Main Dataset" in dataset_list:
             last_dataset = "Main Dataset"
 
-        # Otherwise, create the dataset:
+        # Otherwise, create the default dataset.
         else:
-
-            # Create the Main Dataset directory and data file.
-            os.makedirs("%s/datasets/Main Dataset" % main_dir)
-            last_prof_data = open("%s/datasets/Main Dataset/weather" % main_dir, "w")
-            pickle.dump([], last_prof_data)
-            last_prof_data.close()
-            io.write_metadata(main_dir, "Main Dataset", now = True)
-            
-            last_dataset = "Main Dataset"
+            ensure_files_exist(main_dir, conf_dir)
     
     # If the user doesn't want to restore the window size, set the size to the defaults.
     if not config["restore"]:
