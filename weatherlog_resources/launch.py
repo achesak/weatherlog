@@ -62,6 +62,10 @@ def get_ui_info():
         print("get_ui_info(): Error reading UI file (IOError):\n%s" % e)
         sys.exit()
     
+    except (TypeError, ValueError) as e:
+        print("get_ui_info(): Error reading UI file (TypeError or ValueError):\n%s" % e)
+        sys.exit()
+    
     try:
         menu_file = open("weatherlog_resources/appdata/menu.xml", "r")
         menu_data = menu_file.read()
@@ -69,6 +73,10 @@ def get_ui_info():
     
     except IOError as e:
         print("get_ui_info(): Error reading menu file (IOError):\n%s" % e)
+        sys.exit()
+    
+    except (TypeError, ValueError) as e:
+        print("get_ui_info(): Error reading menu file (TypeError or ValueError):\n%s" % e)
         sys.exit()
     
     version = ui_data["version"]
@@ -119,6 +127,10 @@ def get_config(conf_dir, get_default = False):
     except IOError as e:
         print("get_config(): Error reading default config file (IOError):\n%s" % e)
         sys.exit()
+    
+    except (TypeError, ValueError) as e:
+        print("get_config(): Error reading default config file (TypeError or ValueError):\n%s" % e)
+        sys.exit()
 
     # Get the configuration.
     try:
@@ -127,8 +139,11 @@ def get_config(conf_dir, get_default = False):
         config_file.close()
 
     except IOError as e:
-        # If there was an error, use the defaults instead.
         print("get_config(): Error reading config file (IOError):\n%s\nContinuing with default..." % e)
+        config = default_config
+    
+    except (TypeError, ValueError) as e:
+        print("get_config(): Error reading config file (TypeError or ValueError):\n%s\nContinuing with default..." % e)
         config = default_config
     
     if get_default:
@@ -149,8 +164,13 @@ def get_restore_data(main_dir, conf_dir, config, default_width, default_height, 
         last_dataset = rest_data["last_dataset"]
 
     except IOError as e:
-        # If there was an error, use the default data instead.
         print("get_window_size(): Error reading application restore file (IOError):\n%s\nContinuing with default..." % e)
+        last_width = default_width
+        last_height = default_height
+        last_dataset = default_dataset
+    
+    except (TypeError, ValueError) as e:
+        print("get_window_size(): Error reading application restore file (TypeError or ValueError):\n%s\nContinuing with default..." % e)
         last_width = default_width
         last_height = default_height
         last_dataset = default_dataset
@@ -194,6 +214,10 @@ def get_units(config):
         print("get_units(): Error reading units file (IOError):\n%s" % e)
         sys.exit()
     
+    except (ValueError, TypeError) as e:
+        print("get_units(): Error reading units file (ValueError or TypeError):\n%s" % e)
+        sys.exit()
+    
     return units[config["units"]]
 
 
@@ -209,6 +233,10 @@ def get_pastebin_constants():
         print("get_pastebin_constants(): Error reading pastebin constants file (IOError):\n%s" % e)
         sys.exit()
     
+    except (ValueError, TypeError) as e:
+        print("get_pastebin_constants(): Error reading pastebin constants file (ValueError or TypeError):\n%s" % e)
+        sys.exit()
+    
     return paste_constants
 
 
@@ -222,6 +250,10 @@ def get_graph_data():
     
     except IOError as e:
         print("get_graph_data(): Error reading graph data file (IOError):\n%s" % e)
+        sys.exit()
+    
+    except (ValueError, TypeError) as e:
+        print("get_graph_data(): Error reading graph data file (ValueError or TypeError):\n%s" % e)
         sys.exit()
     
     return graph_data

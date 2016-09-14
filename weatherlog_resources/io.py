@@ -112,6 +112,9 @@ def write_json_file(filename, data, indent = False, indent_amount = 4):
 
     except IOError as e:
         print("write_json_file(): Error saving data file (IOError):\n%s" % e)
+    
+    except (TypeError, ValueError) as e:
+        print("write_json_file(): Error saving data file (TypeError or ValueError):\n%s" % e)
 
 
 def get_dataset_list(main_dir, last_dataset, exclude_current = True):
@@ -154,6 +157,11 @@ def get_metadata(main_dir, last_dataset):
         print("get_metadata(): Error reading metadata file (IOError):\n%s" % e)
         creation = "Error"
         modified = "Error"
+    
+    except (TypeError, ValueError) as e:
+        print("get_metadata(): Error reading metadata file (TypeError or ValueError):\n%s" % e)
+        creation = "Error"
+        modified = "Error"
 
     return creation, modified
 
@@ -173,6 +181,9 @@ def write_metadata(main_dir, last_dataset, creation = "", modified = "", now = F
 
     except IOError as e:
         print("write_metadata(): Error saving metadata file (IOError):\n%s" % e)
+    
+    except (TypeError, ValueError) as e:
+        print("write_metadata(): Error saving metadata file (TypeError or ValueError):\n%s" % e)
 
 
 def write_config(conf_dir, config):
@@ -199,4 +210,7 @@ def write_restore_data(conf_dir, last_dataset, window_height, window_width):
         rest_file.close()
 
     except IOError as e:
-        print("write_last_dataset(): Error saving application restore file (IOError):\n%s" % e)
+        print("write_restore_data(): Error saving application restore file (IOError):\n%s" % e)
+    
+    except (TypeError, ValueError) as e:
+        print("write_restore_data(): Error saving application restore file (TypeError or ValueError):\n%s" % e)
