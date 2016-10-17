@@ -192,6 +192,7 @@ class WeatherLog(Gtk.Window):
             ("clear_all", None, "Clear _All Data...", None, None, self.clear_all),
             ("get_current_here", None, "Get Current _Weather...", "<Control>w", None, lambda x: self.get_weather(True)),
             ("get_current_there", None, "Get Current Weather _For...", "<Control><Shift>w", None, lambda x: self.get_weather(False)),
+            ("options", None, "_Options...", "F2", None, self.options),
             ("exit", Gtk.STOCK_QUIT, "_Quit", None, "Close the application", lambda x: self.exit())
         ])
         action_group.add_actions([
@@ -223,10 +224,6 @@ class WeatherLog(Gtk.Window):
             ("rename_dataset", None, "Re_name Dataset...", None, None, self.rename_dataset),
             ("merge_datasets", None, "_Merge Datasets...", None, None, self.merge_datasets),
             ("copy_data_dataset", None, "Copy _Data...", None, None, self.copy_data_dataset)
-        ])
-        action_group.add_actions([
-            ("options_menu", None, "_Options"),
-            ("options", None, "_Options...", "F2", None, self.options)
         ])
         action_group.add_actions([
             ("help_menu", None, "_Help"),

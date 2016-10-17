@@ -10,6 +10,8 @@
       <menuitem action="get_current_here" />
       <menuitem action="get_current_there" />
       <separator />
+      <menuitem action="options" />
+      <separator />
       <menuitem action="exit" />
     </menu>
     <menu action="file_menu">
@@ -44,9 +46,6 @@
       <menuitem action="merge_datasets" />
       <separator />
       <menuitem action="copy_data_dataset" />
-    </menu>
-    <menu action="options_menu">
-      <menuitem action="options" />
     </menu>
     <menu action="help_menu">
       <menuitem action="about" />
