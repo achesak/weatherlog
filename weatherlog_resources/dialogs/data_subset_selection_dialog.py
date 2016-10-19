@@ -72,13 +72,20 @@ class DataSubsetSelectionDialog(Gtk.Window):
         
         # Create the options.
         opt_frame = Gtk.Frame()
+        opt_grid = Gtk.Grid()
+        opt_grid.set_row_spacing(5)
         opt_frame.set_label("Search options")
         self.case_chk = Gtk.CheckButton("Case insensitive")
         self.case_chk.set_tooltip_text("Match search term regardless of case.")
         self.case_chk.set_active(config["default_case_insensitive"])
         self.case_chk.set_margin_top(5)
-        self.case_chk.set_margin_bottom(5)
-        opt_frame.add(self.case_chk)
+        opt_grid.add(self.case_chk)
+        self.rsearch_chk = Gtk.CheckButton("Reset conditions after search")
+        self.rsearch_chk.set_tooltip_text("Reset the conditions after search completion")
+        self.rsearch_chk.set_active(config["reset_search"])
+        self.rsearch_chk.set_margin_bottom(5)
+        opt_grid.attach_next_to(self.rsearch_chk, self.case_chk, Gtk.PositionType.BOTTOM, 1, 1)
+        opt_frame.add(opt_grid)
         input_grid.attach_next_to(opt_frame, mode_frame, Gtk.PositionType.BOTTOM, 1, 1)
 
         # Create the new condition widgets.
@@ -247,11 +254,11 @@ class DataSubsetSelectionDialog(Gtk.Window):
         self.value_ent.set_text("")
 
 
-    def reset_conditions(self, widget):
+    def reset_conditions(self, widget, confirm = True):
         """Resets all fields and clears all conditions."""
 
         # Ask the user to confirm.
-        if show_question_dialog(self, "Reset", "Are you sure you want to reset all conditions?") != Gtk.ResponseType.OK:
+        if confirm and show_question_dialog(self, "Reset", "Are you sure you want to reset all conditions?") != Gtk.ResponseType.OK:
             return
 
         # Clear the fields.
@@ -362,6 +369,10 @@ class DataSubsetSelectionDialog(Gtk.Window):
         if len(filtered) == 0:
             show_alert_dialog(self, "Data Subset Results - %s" % self.last_dataset, "No data matches the specified condition(s).")
             return
+
+        # If reset conditions is selected, clear them.
+        if self.rsearch_chk.get_active():
+            self.reset_conditions(1, confirm = False)
 
         # Show the subset.
         sub_dlg = DataSubsetDialog(self, "Data Subset Results - %s" % self.last_dataset, filtered, self.units, self.config)

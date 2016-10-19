@@ -28,5 +28,6 @@
     "forecast_period": 7,
     "default_selection_mode": "Match all",
     "json_indent": true,
-    "json_indent_amount": 4
+    "json_indent_amount": 4,
+    "reset_search": false
 }

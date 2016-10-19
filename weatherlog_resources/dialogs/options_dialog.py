@@ -266,13 +266,21 @@ class OptionsDialog(Gtk.Dialog):
         self.case_chk.set_margin_top(5)
         self.case_chk.set_active(config["default_case_insensitive"])
         search_grid.attach(self.case_chk, 0, 0, 2, 1)
+
+        # Create the reset search checkbox.
+        self.rsearch_chk = Gtk.CheckButton("Reset conditions after search")
+        self.rsearch_chk.set_tooltip_text("Reset the conditions after search completion")
+        self.rsearch_chk.set_margin_left(5)
+        self.rsearch_chk.set_margin_right(5)
+        self.rsearch_chk.set_active(config["reset_search"])
+        search_grid.attach_next_to(self.rsearch_chk, self.case_chk, Gtk.PositionType.BOTTOM, 2, 1)
         
         # Create the default selection mode combobox.
         smode_lbl = Gtk.Label("Selection mode: ")
         smode_lbl.set_tooltip_text("Default selection mode used with data subsets.")
         smode_lbl.set_margin_left(5)
         smode_lbl.set_alignment(0, 0.5)
-        search_grid.attach_next_to(smode_lbl, self.case_chk, Gtk.PositionType.BOTTOM, 1, 1)
+        search_grid.attach_next_to(smode_lbl, self.rsearch_chk, Gtk.PositionType.BOTTOM, 1, 1)
         self.smode_com = Gtk.ComboBoxText()
         self.smode_com.set_margin_right(5)
         self.smode_com.set_margin_bottom(5)

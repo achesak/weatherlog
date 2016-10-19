@@ -1633,6 +1633,7 @@ class WeatherLog(Gtk.Window):
         new_config["default_selection_mode"] = opt_dlg.smode_com.get_active_text()
         new_config["json_indent"] = opt_dlg.ind_chk.get_active()
         new_config["json_indent_amount"] = int(opt_dlg.iamt_sbtn.get_value())
+        new_config["reset_search"] = opt_dlg.rsearch_chk.get_active()
         opt_dlg.destroy()
         
         # If the user did not press OK or Reset, don't continue.
