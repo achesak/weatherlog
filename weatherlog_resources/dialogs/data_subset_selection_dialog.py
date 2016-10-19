@@ -327,6 +327,11 @@ class DataSubsetSelectionDialog(Gtk.Window):
                 continue
             conditions.append(i[:])
 
+        # If there are no conditions, don't continue.
+        if len(conditions) == 0:
+            show_alert_dialog(self, "Data Subset Results - %s" % self.last_dataset, "No conditions entered.")
+            return
+
         # Loop through the conditions and filter the data.
         filtered = []
         first = True

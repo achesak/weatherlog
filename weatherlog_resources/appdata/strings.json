@@ -1,0 +1,43 @@
+{
+
+
+    "notes": "// http://stackoverflow.com/a/15882054 // see that for usage and implementation",
+
+    "main": {
+        "name": "WeatherLog"
+    },
+
+    "title": {
+        "options": "Options"
+
+
+    },
+
+    "message": {
+
+        "error": {
+
+        }
+
+    },
+
+    "button": {
+
+        "options": {
+            "reset": "Reset",
+            "cancel": "Cancel",
+            "ok": "OK"
+        }
+
+    },
+
+    "list": {
+
+        "main": {
+            "date": "Date",
+            "temp": "Temperature (%s)"
+
+        }
+
+    }
+}

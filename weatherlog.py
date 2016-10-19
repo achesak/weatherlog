@@ -113,6 +113,7 @@ class WeatherLog(Gtk.Window):
         
         # Get the application's data, constants, and user data.
         self.version, self.title, self.menu_data, self.icon_small, self.icon_medium, self.default_width, self.default_height, self.help_link = launch.get_ui_info()
+        self.strings = launch.get_strings()
         self.main_dir, self.conf_dir = launch.get_main_dir()
         self.config = launch.get_config(self.conf_dir)
         launch.ensure_files_exist(self.main_dir, self.conf_dir)
@@ -238,22 +239,22 @@ class WeatherLog(Gtk.Window):
         self.add_accel_group(accel_group)
         ui_manager.insert_action_group(action_group)
         
-        # Create the grid for the UI and add the UI items.
+        # Build the UI.
         grid = Gtk.Grid()
-        menubar = ui_manager.get_widget("/menubar")
-        toolbar = ui_manager.get_widget("/toolbar")
+        self.menubar = ui_manager.get_widget("/menubar")
+        self.toolbar = ui_manager.get_widget("/toolbar")
         self.context_menu = ui_manager.get_widget("/context_menu")
         scrolled_win = Gtk.ScrolledWindow()
         scrolled_win.set_hexpand(True)
         scrolled_win.set_vexpand(True)
         scrolled_win.add(self.treeview)
-        grid.add(menubar)
-        grid.attach_next_to(toolbar, menubar, Gtk.PositionType.BOTTOM, 1, 1)
-        grid.attach_next_to(scrolled_win, toolbar, Gtk.PositionType.BOTTOM, 1, 1)
+        grid.add(self.menubar)
+        grid.attach_next_to(self.toolbar, self.menubar, Gtk.PositionType.BOTTOM, 1, 1)
+        grid.attach_next_to(scrolled_win, self.toolbar, Gtk.PositionType.BOTTOM, 1, 1)
         self.add(grid)
         self.treeview.grab_focus()
         self.show_all()
-        
+
         # Bind the events.
         self.connect("delete-event", self.delete_event)
         self.treeview.connect("button-press-event", self.context_event)
