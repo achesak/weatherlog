@@ -189,7 +189,7 @@ class WeatherLog(Gtk.Window):
             ("weather_menu", None, "_Weather"),
             ("add_new", Gtk.STOCK_ADD, "Add _New Data...", "<Control>n", "Add a new day to the list", self.add_new),
             ("edit", Gtk.STOCK_EDIT, "_Edit Data...", "<Control>e", None, self.edit),
-            ("remove", Gtk.STOCK_REMOVE, "Remo_ve Data...", "<Control>r", "Remove a day from the list", self.remove),
+            ("remove", Gtk.STOCK_REMOVE, "_Remove Data...", "<Control>r", "Remove a day from the list", self.remove),
             ("clear_all", None, "Clear _All Data...", None, None, self.clear_all),
             ("get_current_here", None, "Get Current _Weather...", "<Control>w", None, lambda x: self.get_weather(True)),
             ("get_current_there", None, "Get Current Weather _For...", "<Control><Shift>w", None, lambda x: self.get_weather(False)),
@@ -199,7 +199,7 @@ class WeatherLog(Gtk.Window):
         action_group.add_actions([
             ("file_menu", None, "_File"),
             ("import", Gtk.STOCK_OPEN, "_Import...", None, "Import data from a file", self.import_data),
-            ("import_dataset", None, "Import as New _Dataset...", None, None, self.import_new_dataset),
+            ("import_dataset", None, "Import as _New Dataset...", None, None, self.import_new_dataset),
             ("export", Gtk.STOCK_SAVE, "_Export...", None, "Export data to a file", self.export_file),
             ("export_pastebin", None, "Export to _Pastebin...", None, None, self.export_pastebin)
         ])
@@ -212,7 +212,7 @@ class WeatherLog(Gtk.Window):
             ("charts_range", None, "Charts i_n Range...", "<Control><Shift>c", None, lambda x: self.data_range(InfoType.CHART)),
             ("charts_selected", None, "Charts _for Selected Dates...", None, None, lambda x: self.data_selected(InfoType.CHART)),
             ("graphs", None, "_Graphs...", "<Control>g", None, lambda x: self.show_graph_generic()),
-            ("graphs_range", None, "Gra_phs in Range...", "<Control><Shift>g", None, lambda x: self.data_range(InfoType.GRAPH)),
+            ("graphs_range", None, "Gr_aphs in Range...", "<Control><Shift>g", None, lambda x: self.data_range(InfoType.GRAPH)),
             ("graphs_selected", None, "Grap_hs for Selected Dates...", None, None, lambda x: self.data_selected(InfoType.GRAPH)),
             ("quick_search", None, "_Quick Search...", "<Control>d", None, self.quick_search),
             ("view_subset", None, "_Data Subset...", "<Control><Shift>d", None, self.select_data_subset),
@@ -224,7 +224,7 @@ class WeatherLog(Gtk.Window):
             ("remove_dataset", None, "_Remove Datasets...", "<Control><Shift>r", None, self.remove_dataset),
             ("rename_dataset", None, "Re_name Dataset...", None, None, self.rename_dataset),
             ("merge_datasets", None, "_Merge Datasets...", None, None, self.merge_datasets),
-            ("copy_data_dataset", None, "Copy _Data...", None, None, self.copy_data_dataset)
+            ("copy_data_dataset", None, "_Copy Data...", None, None, self.copy_data_dataset)
         ])
         action_group.add_actions([
             ("help_menu", None, "_Help"),
