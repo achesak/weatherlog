@@ -21,7 +21,7 @@
       <menuitem action="export" />
       <menuitem action="export_pastebin" />
     </menu>
-    <menu action="info_global_menu">
+    <menu action="data_menu">
       <menuitem action="info" />
       <menuitem action="info_range" />
       <menuitem action="info_selected" />

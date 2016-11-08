@@ -204,7 +204,7 @@ class WeatherLog(Gtk.Window):
             ("export_pastebin", None, "Export to _Pastebin...", None, None, self.export_pastebin)
         ])
         action_group.add_actions([
-            ("info_global_menu", None, "_Info"),
+            ("data_menu", None, "_Data"),
             ("info", Gtk.STOCK_INFO, "_Info...", "<Control>i", "Show info about the data", lambda x: self.show_info_generic()),
             ("info_range", None, "Info in _Range...", "<Control><Shift>i", None, lambda x: self.data_range(InfoType.INFO)),
             ("info_selected", None, "Info for _Selected Dates...", None, None, lambda x: self.data_selected(InfoType.INFO)),
@@ -218,7 +218,7 @@ class WeatherLog(Gtk.Window):
             ("view_subset", None, "_Data Subset...", "<Control><Shift>d", None, self.select_data_subset),
         ])
         action_group.add_actions([
-            ("datasets_menu", None, "_Datasets"),
+            ("datasets_menu", None, "Data_sets"),
             ("switch_dataset", None, "_Switch Dataset...", "<Control><Shift>s", None, self.switch_dataset),
             ("add_dataset", None, "_Add Dataset...", "<Control><Shift>n", None, self.add_dataset),
             ("remove_dataset", None, "_Remove Datasets...", "<Control><Shift>r", None, self.remove_dataset),
