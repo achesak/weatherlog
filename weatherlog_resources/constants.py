@@ -10,7 +10,7 @@
 
 
 __all__ = ["SelectionMode", "DialogResponse", "ImportValidation", "DateValidation", "PastebinExport", "DatasetSelectionMode",
-           "ImportType", "DatasetColumn", "WeatherCondition", "CloudCoverageType", "InfoType"]
+           "ImportType", "DatasetColumn", "WeatherCondition", "CloudCoverageType", "InfoType", "DatasetValidation"]
 
 
 # Data subset selection mode:
@@ -54,6 +54,16 @@ class ImportValidation:
 class DateValidation:
 	VALID = 1
 	INVALID = -1
+
+
+# Dataset validation values:
+class DatasetValidation:
+    VALID = 1
+    BLANK = 2
+    ALL_SPACE = 3
+    LEADING_PERIOD = 4
+    CONTAINS_SYMBOL = 5
+    IN_USE = 6
 
 
 # Pastebin export values:

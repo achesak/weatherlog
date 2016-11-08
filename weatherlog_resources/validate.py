@@ -19,30 +19,41 @@ from weatherlog_resources.constants import *
 import weatherlog_resources.io as io
 
 
-validate_dataset_strings = {ImportValidation.VALID: "No error, this should never display.",
-                            ImportValidation.NOT_LIST: "Data is not a list.",
-                            ImportValidation.NOT_SUBLIST: "One or more items in the data are not lists.",
-                            ImportValidation.INCORRECT_LENGTH: "One or more lists do not have the correct length.",
-                            ImportValidation.NOT_STRING: "One or more data fields are not strings.",
-                            ImportValidation.CANNOT_UNPICKLE: "The file is not in the correct format.",
-                            ImportValidation.NO_DATA: "The file contains no data."}
+validate_dataset_strings = {
+    ImportValidation.VALID: "No error, this should never display.",
+    ImportValidation.NOT_LIST: "Data is not a list.",
+    ImportValidation.NOT_SUBLIST: "One or more items in the data are not lists.",
+    ImportValidation.INCORRECT_LENGTH: "One or more lists do not have the correct length.",
+    ImportValidation.NOT_STRING: "One or more data fields are not strings.",
+    ImportValidation.CANNOT_UNPICKLE: "The file is not in the correct format.",
+    ImportValidation.NO_DATA: "The file contains no data."
+}
+
+validate_dataset_name_strings = {
+    DatasetValidation.VALID: "No error, this should never display.",
+    DatasetValidation.BLANK: "Dataset names cannot be blank.",
+    DatasetValidation.ALL_SPACE: "Dataset names cannot be all space.",
+    DatasetValidation.LEADING_PERIOD: "Dataset names cannot begin with a period.",
+    DatasetValidation.CONTAINS_SYMBOL: "Dataset names can only contain letters, numbers, and spaces.",
+    DatasetValidation.IN_USE: "Dataset name is already in use."
+}
 
 
 def validate_dataset(main_dir, name):
     """Validates a dataset name."""
     
     if not name:
-        return "The dataset name \"%s\" is not valid. Dataset names may not be blank." % name
+        return DatasetValidation.BLANK
     elif name.lstrip().rstrip() == "":
-        return "The dataset name \"%s\" is not valid. Dataset names may not be all spaces." % name
+        return DatasetValidation.ALL_SPACE
     elif name.startswith("."):
-        return "The dataset name \"%s\" is not valid. Dataset names may not start with a period." % name
+        return DatasetValidation.LEADING_PERIOD
     elif re.compile("[^a-zA-Z1-90 \.\-\+\(\)\?\!]").match(name):
-        return "The dataset name \"%s\" is not valid. Dataset names may only be letters, numbers, and spaces." % name
+        return DatasetValidation.CONTAINS_SYMBOL
     elif os.path.isdir("%s/datasets/%s" % (main_dir, name)):
-        return "The dataset name \"%s\" is already in use." % name
+        return DatasetValidation.IN_USE
     else:
-        return ""
+        return DatasetValidation.VALID
 
 
 def validate_data(filename):

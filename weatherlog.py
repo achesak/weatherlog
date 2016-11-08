@@ -1025,8 +1025,8 @@ class WeatherLog(Gtk.Window):
         # Validate the name. If it contains a non-alphanumeric character or is just space,
         # show a dialog and cancel the action.
         valid = validate.validate_dataset(self.main_dir, name)
-        if valid != "":
-            show_error_dialog(self, "Import as New Dataset - %s" % self.last_dataset, valid)
+        if valid != DatasetValidation.VALID:
+            show_error_dialog(self, "Import as New Dataset - %s" % self.last_dataset, validate.validate_dataset_name_strings[valid])
             return
         
         # Read the data.
@@ -1250,17 +1250,16 @@ class WeatherLog(Gtk.Window):
         
         # Validate the name. If the name isn't valid, don't continue.
         valid = validate.validate_dataset(self.main_dir, name)
-        if valid.endswith("\".\")."):
-            show_error_dialog(self, "Add Dataset", valid)
+        if valid != DatasetValidation.VALID and valid != DatasetValidation.IN_USE:
+            show_error_dialog(self, "Add Dataset", validate.validate_dataset_name_strings[valid])
             return
         
         # If the name is already in use, ask the user is they want to delete the old dataset.
-        elif valid.endswith("already in use."):
-            del_old = show_question_dialog(self, "Add Dataset", "%s\n\nWould you like to delete the existing dataset?" % valid)
+        elif valid == DatasetValidation.IN_USE:
+            del_old = show_question_dialog(self, "Add Dataset", "%s\n\nWould you like to delete the existing dataset?" % validate.validate_dataset_name_strings[valid])
             if del_old != Gtk.ResponseType.OK:
                 return
-            
-            # Delete the existing dataset.
+
             shutil.rmtree("%s/datasets/%s" % (self.main_dir, name))
         
         # Create the new dataset and clear the old data.
@@ -1367,19 +1366,18 @@ class WeatherLog(Gtk.Window):
             return
         
         # Validate the name. If the name isn't valid, don't continue.
-        valid = validate.validate_dataset(self.main_dir, new_name)
-        if valid.endswith("\".\")."):
-            show_error_dialog(self, "Rename Dataset", valid)
+        valid = validate.validate_dataset(self.main_dir, name)
+        if valid != DatasetValidation.VALID and valid != DatasetValidation.IN_USE:
+            show_error_dialog(self, "Rename Dataset", validate.validate_dataset_name_strings[valid])
             return
         
         # If the name is already in use, ask the user is they want to delete the old dataset.
-        elif valid.endswith("already in use."):
-            
-            del_old = show_question_dialog(self, "Rename Dataset", "%s\n\nWould you like to delete the existing dataset?" % valid)
+        elif valid == DatasetValidation.IN_USE:
+            del_old = show_question_dialog(self, "Rename Dataset", "%s\n\nWould you like to delete the existing dataset?" % validate.validate_dataset_name_strings[valid])
             if del_old != Gtk.ResponseType.OK:
                 return
-            
-            shutil.rmtree("%s/datasets/%s" % (self.main_dir, new_name))
+                
+            shutil.rmtree("%s/datasets/%s" % (self.main_dir, name))
             
         # Rename the directory.
         os.rename("%s/datasets/%s" % (self.main_dir, old_name), "%s/datasets/%s" % (self.main_dir, new_name))
@@ -1441,19 +1439,18 @@ class WeatherLog(Gtk.Window):
             return
         
         # Validate the name. If the name isn't valid, don't continue.
-        valid = validate.validate_dataset(self.main_dir, merge_name)
-        if valid.endswith("\".\").") and merge_name not in datasets:
-            show_error_dialog(self, "Merge Datasets", valid)
+        valid = validate.validate_dataset(self.main_dir, name)
+        if valid != DatasetValidation.VALID and valid != DatasetValidation.IN_USE:
+            show_error_dialog(self, "Merge Datasets", validate.validate_dataset_name_strings[valid])
             return
         
         # If the name is already in use, ask the user is they want to delete the old dataset.
-        elif valid.endswith("already in use."):
-            
-            del_old = show_question_dialog(self, "Merge Datasets", "%s\n\nWould you like to delete the existing dataset?" % valid)
+        elif valid == DatasetValidation.IN_USE:
+            del_old = show_question_dialog(self, "Merge Datasets", "%s\n\nWould you like to delete the existing dataset?" % validate.validate_dataset_name_strings[valid])
             if del_old != Gtk.ResponseType.OK:
                 return
                 
-            shutil.rmtree("%s/datasets/%s" % (self.main_dir, merge_name))
+            shutil.rmtree("%s/datasets/%s" % (self.main_dir, name))
         
         # Build the new data list.
         new_data = io.read_dataset(main_dir = self.main_dir, name = datasets[0])
@@ -1519,8 +1516,8 @@ class WeatherLog(Gtk.Window):
         # Validate the entered name. If the name isn't valid, don't continue.
         if response1 == DialogResponse.USE_NEW:
             valid = validate.validate_dataset(self.main_dir, new_name)
-            if valid != "":
-                show_error_dialog(self, "Copy Data", valid)
+            if valid != DatasetValidation.VALID:
+                show_error_dialog(self, "Copy Data", validate.validate_dataset_name_strings[valid])
                 return
         
         # Get the dates to move or copy.
