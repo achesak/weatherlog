@@ -89,9 +89,9 @@ from weatherlog_resources.dialogs.entry_dialog import GenericEntryDialog
 from weatherlog_resources.dialogs.date_selection_dialog import DateSelectionDialog
 from weatherlog_resources.dialogs.calendar_dialog import CalendarDialog
 from weatherlog_resources.dialogs.calendar_range_dialog import CalendarRangeDialog
-from weatherlog_resources.dialogs.info_dialog import GenericInfoDialog
-from weatherlog_resources.dialogs.chart_dialog import GenericChartDialog
-from weatherlog_resources.dialogs.graph_dialog import GenericGraphDialog
+from weatherlog_resources.dialogs.info_dialog import InfoDialog
+from weatherlog_resources.dialogs.chart_dialog import ChartDialog
+from weatherlog_resources.dialogs.graph_dialog import GraphDialog
 from weatherlog_resources.dialogs.dataset_selection_dialog import DatasetSelectionDialog
 from weatherlog_resources.dialogs.dataset_add_select_dialog import DatasetAddSelectionDialog
 from weatherlog_resources.dialogs.quick_search_dialog import QuickSearchDialog
@@ -751,7 +751,7 @@ class WeatherLog(Gtk.Window):
         ]
         
         # Show the info.
-        info_dlg = GenericInfoDialog(self, "Info - %s" % self.last_dataset, data2)
+        info_dlg = InfoDialog(self, "Info - %s" % self.last_dataset, data2)
         response = info_dlg.run()
         
         # If the user clicked Export:
@@ -800,7 +800,7 @@ class WeatherLog(Gtk.Window):
         ]
         
         # Show the chart.
-        chart_dlg = GenericChartDialog(self, "Charts - %s" % self.last_dataset, data2)
+        chart_dlg = ChartDialog(self, "Charts - %s" % self.last_dataset, data2)
         response = chart_dlg.run()
         
         # If the user clicked Export:
@@ -844,7 +844,7 @@ class WeatherLog(Gtk.Window):
         data2 = graphs.get_data(data)
         
         # Show the graph.
-        graph_dlg = GenericGraphDialog(self, "Graphs - %s" % self.last_dataset, data2, self.last_dataset, self.units, self.config, self.graph_data)
+        graph_dlg = GraphDialog(self, "Graphs - %s" % self.last_dataset, data2, self.last_dataset, self.units, self.config, self.graph_data)
         response = graph_dlg.run()
         graph_dlg.destroy()
     

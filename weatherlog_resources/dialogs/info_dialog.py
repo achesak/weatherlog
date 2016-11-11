@@ -13,7 +13,7 @@
 from gi.repository import Gtk
 
 
-class GenericInfoDialog(Gtk.Dialog):
+class InfoDialog(Gtk.Dialog):
     """Shows the info dialog."""
     
     def __init__(self, parent, title, data):

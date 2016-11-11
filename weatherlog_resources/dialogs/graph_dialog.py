@@ -23,7 +23,7 @@ except:
     pass
 
 
-class GenericGraphDialog(Gtk.Dialog):
+class GraphDialog(Gtk.Dialog):
     """Shows the graph dialog."""
     
     def __init__(self, parent, title, data, last_dataset, units, config, graph_data):

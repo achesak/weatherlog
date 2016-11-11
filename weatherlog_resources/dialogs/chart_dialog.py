@@ -13,7 +13,7 @@
 from gi.repository import Gtk
 
 
-class GenericChartDialog(Gtk.Dialog):
+class ChartDialog(Gtk.Dialog):
     """Shows the chart dialog."""
     
     def __init__(self, parent, title, data):
