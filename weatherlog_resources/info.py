@@ -52,7 +52,7 @@ def general_info(data, units):
         prec_low = min(prec_data1)
         prec_high = max(prec_data1)
         prec_avg = calculations.mean(prec_data1)
-    except:
+    except ZeroDivisionError:
         prec_low = "None"
         prec_high = "None"
         prec_avg = "None"
@@ -64,7 +64,7 @@ def general_info(data, units):
         wind_low = min(wind_data1)
         wind_high = max(wind_data1)
         wind_avg = calculations.mean(wind_data1)
-    except:
+    except ZeroDivisionError:
         wind_low = "None"
         wind_high = "None"
         wind_avg = "None"
@@ -206,7 +206,7 @@ def prec_info(data, units):
         prec_avg = calculations.mean(prec_data1)
         prec_median = calculations.median(prec_data1)
         prec_range = calculations.range(prec_data1)
-    except:
+    except ZeroDivisionError:
         prec_low = "None"
         prec_high = "None"
         prec_avg = "None"
@@ -294,7 +294,7 @@ def wind_info(data, units):
         wind_avg = calculations.mean(wind_data1)
         wind_median = calculations.median(wind_data1)
         wind_range = calculations.range(wind_data1)
-    except:
+    except ZeroDivisionError:
         wind_low = "None"
         wind_high = "None"
         wind_avg = "None"

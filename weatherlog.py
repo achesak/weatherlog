@@ -58,7 +58,7 @@ except ImportError:
 # Import URLError for error checking
 try:
     from urllib2 import URLError
-except:
+except ImportError:
     from urllib.request import URLError
 
 # Tell Python not to create bytecode files, as they mess with the git repo.
@@ -395,7 +395,7 @@ class WeatherLog(Gtk.Window):
                 tm, ti = tree_sel.get_selected()
                 date = tm.get_value(ti, 0)
             
-            except:
+            except TypeError:
         
                 # If no date was selected, show the dialog to select one.
                 dat_dlg = DateSelectionDialog(self, "Edit Data - %s" % self.last_dataset, dates, multi_select = False)
@@ -1511,7 +1511,7 @@ class WeatherLog(Gtk.Window):
         if response1 == DialogResponse.USE_SELECTED:
             try:
                 sel_name = model1[treeiter1][0]
-            except:
+            except TypeError:
                 return
         
         # Validate the entered name. If the name isn't valid, don't continue.

@@ -38,7 +38,7 @@ def html_cell(cell):
     try:
         new_cell = new_cell.replace("<", "&lt;").replace(">", "&gt;")
         new_cell = new_cell.encode("utf-8")
-    except:
+    except UnicodeError:
         pass
     
     return new_cell

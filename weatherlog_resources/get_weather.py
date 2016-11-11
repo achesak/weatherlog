@@ -15,7 +15,7 @@ import datetime
 try:
     # Python 2
     from urllib2 import URLError
-except:
+except ImportError:
     # Python 3
     from urllib.request import URLError
     

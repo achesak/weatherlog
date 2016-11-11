@@ -38,7 +38,7 @@ try:
     # Python 2
     from urllib2 import urlopen
     from urllib import quote_plus
-except:
+except ImportError:
     # Python 3
     from urllib.request import urlopen
     from urllib.parse import quote_plus
