@@ -44,7 +44,7 @@ class GenericEntryDialog(Gtk.Dialog):
         
         # Bind event for filtering valid dataset name:
         if filter_dataset_name:
-            self.invalid_chars = re.compile("[^a-zA-Z1-90 \.\-\+\(\)\?\!]")
+            self.invalid_chars = re.compile("[/\\\\]")
             self.nam_ent.connect("changed", self.filter_dataset_name)
         
         # Show the dialog.

@@ -42,16 +42,27 @@ validate_dataset_name_strings = {
 def validate_dataset(main_dir, name):
     """Validates a dataset name."""
     
+    # Test 1: must not be blank
     if not name:
         return DatasetValidation.BLANK
+
+    # Test 2: must not be all space
     elif name.lstrip().rstrip() == "":
         return DatasetValidation.ALL_SPACE
+
+    # Test 3: must not start with a period; this can cause issues on Unix-based systems.
     elif name.startswith("."):
         return DatasetValidation.LEADING_PERIOD
-    elif re.compile("[^a-zA-Z1-90 \.\-\+\(\)\?\!]").match(name):
+
+    # Test 4: must not contain invalid symbol.
+    elif re.compile("[/\\\\]").match(name):
         return DatasetValidation.CONTAINS_SYMBOL
+
+    # Test 5: must not be in use.
     elif os.path.isdir("%s/datasets/%s" % (main_dir, name)):
         return DatasetValidation.IN_USE
+
+    # Otherwise, valid.
     else:
         return DatasetValidation.VALID
 
