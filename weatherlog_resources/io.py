@@ -33,7 +33,7 @@ def write_dataset(main_dir = "", name = "", filename = "", data = []):
     filename = filename if filename != "" else "%s/datasets/%s/weather" % (main_dir, name)
 
     try:
-        data_file = open(filename, "w")
+        data_file = open(filename, "wb")
         pickle.dump(data, data_file)
         data_file.close()
         return True
@@ -54,7 +54,7 @@ def read_dataset(main_dir = "", name = "", filename = ""):
     filename = filename if filename != "" else "%s/datasets/%s/weather" % (main_dir, name)
 
     try:
-        data_file = open(filename, "r")
+        data_file = open(filename, "rb")
         data = pickle.load(data_file)
         data_file.close()
 
@@ -74,7 +74,7 @@ def write_blank_dataset(main_dir, name):
 
     try:
         os.makedirs("%s/datasets/%s" % (main_dir, name))
-        new_prof_file = open("%s/datasets/%s/weather" % (main_dir, name), "w")
+        new_prof_file = open("%s/datasets/%s/weather" % (main_dir, name), "wb")
         pickle.dump([], new_prof_file)
         new_prof_file.close()
     
