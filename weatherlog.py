@@ -87,7 +87,8 @@ from weatherlog_resources.dialogs.add_dialog import AddNewDialog
 from weatherlog_resources.dialogs.edit_dialog import EditDialog
 from weatherlog_resources.dialogs.entry_dialog import GenericEntryDialog
 from weatherlog_resources.dialogs.date_selection_dialog import DateSelectionDialog
-from weatherlog_resources.dialogs.calendar_dialog import CalendarRangeDialog
+from weatherlog_resources.dialogs.calendar_dialog import CalendarDialog
+from weatherlog_resources.dialogs.calendar_range_dialog import CalendarRangeDialog
 from weatherlog_resources.dialogs.info_dialog import GenericInfoDialog
 from weatherlog_resources.dialogs.chart_dialog import GenericChartDialog
 from weatherlog_resources.dialogs.graph_dialog import GenericGraphDialog
