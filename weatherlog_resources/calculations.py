@@ -15,6 +15,7 @@ import math
 # Import the collections module for getting the mode of a list of numbers.
 import collections
 # Import statistics for getting the median of a list of numbers.
+# Only available on more recent version of Python 3.x.
 try:
     import statistics
 except ImportError:
@@ -36,11 +37,8 @@ def median(numbers2):
     
     numbers = sorted(numbers2)
     
-    # Odd number of items:
     if len(numbers) % 2:
         return numbers[int(math.floor(len(numbers) / 2))];
-    
-    # Even number of items:
     else:
         return (numbers[len(numbers) / 2] + numbers[(len(numbers) / 2) - 1]) / 2;   
 
