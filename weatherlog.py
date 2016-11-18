@@ -281,7 +281,6 @@ class WeatherLog(Gtk.Window):
     def activated_event(self, widget, treepath, column):
         """Opens the edit dialog on double click."""
         
-        # Get the selected date and pass it to the edit function.
         tree_sel = self.treeview.get_selection()
         tm, ti = tree_sel.get_selected()
         date = tm.get_value(ti, 0)
@@ -316,8 +315,6 @@ class WeatherLog(Gtk.Window):
         visi_unit = new_dlg.visi_unit.get_active_text()
         
         new_dlg.destroy()
-        
-        # If the user did not click OK, don't continue:
         if response != Gtk.ResponseType.OK:
             return
             
@@ -354,8 +351,6 @@ class WeatherLog(Gtk.Window):
                     "%s (%s)" % (clou, ctyp),
                     note]
         self.data.append(new_data)
-        
-        # Sort the list by date.
         self.data = sorted(self.data, key = lambda x: datetime.datetime.strptime(x[DatasetColumn.DATE], "%d/%m/%Y"))
         
         # Update and save the data.
@@ -373,10 +368,8 @@ class WeatherLog(Gtk.Window):
             show_no_data_dialog(self, "Edit Data - %s" % self.last_dataset, message = "There is no data to edit.")
             return
         
-        # Get the dates.
-        dates = datasets.get_column_list(self.data, [0])
-        
         # Get the selected date.
+        dates = datasets.get_column_list(self.data, [0])
         if edit_date != None:
             date = edit_date
         
@@ -428,8 +421,6 @@ class WeatherLog(Gtk.Window):
         visi_unit = edit_dlg.visi_unit.get_active_text()
         
         edit_dlg.destroy()
-        
-        # If the user did not click OK, don't continue.
         if response != Gtk.ResponseType.OK:
             return
         
@@ -480,7 +471,6 @@ class WeatherLog(Gtk.Window):
         model, treeiter = rem_dlg.treeview.get_selection().get_selected_rows()
         rem_dlg.destroy()
         
-        # If the user did not click OK or Remove All or nothing was selected, don't continue.
         if (response != DialogResponse.REMOVE_ALL) and (response != Gtk.ResponseType.OK or treeiter == None):
             return
         
@@ -492,7 +482,6 @@ class WeatherLog(Gtk.Window):
             for i in treeiter:
                 ndates.append(model[i][0])
         
-        # If there were no dates selected, don't continue.
         if len(ndates) == 0:
             return
         
@@ -574,21 +563,16 @@ class WeatherLog(Gtk.Window):
         response = info_dlg.run()
         info_dlg.destroy()
         
-        # If the user clicked Export:
+        # Export the data:
         if response == DialogResponse.EXPORT:
-            
-            # Get the filename.
             response2, filename = show_export_dialog(self, "Export Weather For %s" % city)
-            
-            # Export the info.
             if response2 == Gtk.ResponseType.OK:
                 export.html_generic([["Weather", ["Field", "Value"], data[0]],
                                      ["Location", ["Field", "Value"], data[1]],
                                      ["Forecast", ["Field", "Value"], data[2]]], filename)
         
-        # If the user clicked Add:
+        # Add the data:
         elif response == DialogResponse.ADD_DATA:
-            
             self.add_new(False, prefill_data)
             
     
@@ -603,7 +587,6 @@ class WeatherLog(Gtk.Window):
         elif mode == InfoType.GRAPH:
             title = "Graphs in Range - %s" % self.last_dataset
         
-        # If there is no data, tell the user and don't show the info dialog.
         if len(self.data) == 0:
             show_no_data_dialog(self, title)
             return
@@ -611,8 +594,6 @@ class WeatherLog(Gtk.Window):
         # Get the first and last entered dates.
         day_start = dates.split_date(self.data[0][DatasetColumn.DATE])
         day_end = dates.split_date(self.data[len(self.data) - 1][DatasetColumn.DATE])
-        
-        # Get a list of datetimes from the dates.
         datelist = dates.date_list_datetime(datasets.get_column(self.data, DatasetColumn.DATE))
         
         # Get the starting and ending dates.
@@ -655,7 +636,6 @@ class WeatherLog(Gtk.Window):
             self.show_chart_generic(data = data2)
         elif mode == InfoType.GRAPH:
             self.show_graph_generic(data = data2)
-            
     
     
     def data_selected(self, mode):
@@ -669,7 +649,6 @@ class WeatherLog(Gtk.Window):
         elif mode == InfoType.GRAPH:
             title = "Graphs for Selected Dates - %s" % self.last_dataset
         
-        # If there is no data, tell the user and don't show the info dialog.
         if len(self.data) == 0:
             show_no_data_dialog(self, title)
             return
@@ -688,7 +667,6 @@ class WeatherLog(Gtk.Window):
         if response == DialogResponse.SELECT_ALL:
             ndates = datasets.get_column(dates, 0)
         
-        # If the user did not click OK or nothing was selected, don't continue.
         elif response != Gtk.ResponseType.OK or treeiter == None:
             return
         
@@ -703,7 +681,6 @@ class WeatherLog(Gtk.Window):
             if self.data[i][0] in ndates:
                 ndata.append(self.data[i])
         
-        # If there is no data, don't continue.
         if len(ndata) == 0:
             return
         
@@ -722,7 +699,6 @@ class WeatherLog(Gtk.Window):
         if data == False:
             data = self.data
         
-        # If there is no data, tell the user and don't show the dialog.
         if len(data) == 0:
             show_no_data_dialog(self, "Info - %s" % self.last_dataset)
             return
@@ -744,14 +720,11 @@ class WeatherLog(Gtk.Window):
         # Show the info.
         info_dlg = InfoDialog(self, "Info - %s" % self.last_dataset, data2)
         response = info_dlg.run()
+        info_dlg.destroy()
         
-        # If the user clicked Export:
+        # Export the data:
         if response == DialogResponse.EXPORT:
-            
-            # Get the filename.
             response2, filename = show_export_dialog(self, "Export Info - %s" % self.last_dataset)
-            
-            # Export the info.
             if response2 == Gtk.ResponseType.OK:
                 export.html_generic([["General Info", ["Field", "Value"], data2[0]],
                                      ["Temperature Info", ["Field", "Value"], data2[1]],
@@ -763,9 +736,6 @@ class WeatherLog(Gtk.Window):
                                      ["Visibility Info", ["Field", "Value"], data2[7]],
                                      ["Cloud Cover Info", ["Field", "Value"], data2[8]],
                                      ["Notes Info", ["Field", "Value"], data2[9]]], filename)
-        
-        # Close the dialog.
-        info_dlg.destroy()
     
     
     def show_chart_generic(self, data = False):
@@ -774,7 +744,6 @@ class WeatherLog(Gtk.Window):
         if data == False:
             data = self.data
         
-        # If there is no data, tell the user and don't show the chart dialog.
         if len(data) == 0:
             show_no_data_dialog(self, "Charts - %s" % self.last_dataset)
             return
@@ -793,14 +762,11 @@ class WeatherLog(Gtk.Window):
         # Show the chart.
         chart_dlg = ChartDialog(self, "Charts - %s" % self.last_dataset, data2)
         response = chart_dlg.run()
+        chart_dlg.destroy()
         
-        # If the user clicked Export:
+        # Export the data:
         if response == DialogResponse.EXPORT:
-            
-            # Get the filename.
             response2, filename = show_export_dialog(self, "Export Charts - %s" % self.last_dataset)
-            
-            # Export the info.
             if response2 == Gtk.ResponseType.OK:
                 chart_columns = ["Day", "Value", "Average Difference", "Low Difference", "High Difference", "Median Difference"]
                 export.html_generic([["Temperature Chart", chart_columns, data2[0]],
@@ -810,9 +776,6 @@ class WeatherLog(Gtk.Window):
                                      ["Humidity Chart", chart_columns, data2[4]],
                                      ["Air Pressure Chart", chart_columns, data2[5]],
                                      ["Visibility Chart", chart_columns, data2[6]]], filename)
-        
-        # Close the dialog.
-        chart_dlg.destroy()
     
     
     def show_graph_generic(self, data = False):
@@ -821,7 +784,6 @@ class WeatherLog(Gtk.Window):
         if data == False:
             data = self.data
         
-        # If there is no data, tell the user and don't show the info dialog.
         if len(data) == 0:
             show_no_data_dialog(self, "Graphs - %s" % self.last_dataset)
             return
@@ -843,7 +805,6 @@ class WeatherLog(Gtk.Window):
     def quick_search(self, event):
         """Shows the quick search dialog."""
         
-        # If there is no data, tell the user and don't show the subset dialog.
         if len(self.data) == 0:
             show_no_data_dialog(self, "Quick Search - %s" % self.last_dataset)
             return
@@ -855,7 +816,6 @@ class WeatherLog(Gtk.Window):
         opt_insensitive = qui_dlg.case_chk.get_active()
         qui_dlg.destroy()
         
-        # If the user did not click OK or nothing was entered, don't continue.
         if response != Gtk.ResponseType.OK or search_term.strip() == "":
             return
         
@@ -870,10 +830,8 @@ class WeatherLog(Gtk.Window):
         response = sub_dlg.run()
         sub_dlg.destroy()
 
-        # If the user clicked Export:
+        # Export the data:
         if response == DialogResponse.EXPORT:
-
-            # Get the filename and export the info.
             response2, filename = show_export_dialog(self, "Quick Search Results - %s" % self.last_dataset)
             if response2 == Gtk.ResponseType.OK:
                 data_list = [["WeatherLog Quick Search Results - %s - %s to %s" % (self.last_dataset, (filtered[0][0] if len(filtered) != 0 else "None"), (filtered[len(filtered)-1][0] if len(filtered) != 0 else "None")),
@@ -888,7 +846,6 @@ class WeatherLog(Gtk.Window):
     def select_data_subset(self, event):
         """Shows the data selection dialog."""
         
-        # If there is no data, tell the user and don't show the subset dialog.
         if len(self.data) == 0:
             show_no_data_dialog(self, "View Data Subset - %s" % self.last_dataset)
             return
@@ -903,7 +860,6 @@ class WeatherLog(Gtk.Window):
         # Get the filename.
         response, filename = show_import_dialog(self, "Import - %s" % self.last_dataset)
         
-        # If the user did not click OK, don't continue.
         if response != Gtk.ResponseType.OK and response != DialogResponse.IMPORT_OVERWRITE:
             return
         
@@ -939,7 +895,6 @@ class WeatherLog(Gtk.Window):
         else:
             response3 = DialogResponse.IMPORT_ALL
         
-        # If the user did not press OK or nothing was selected, don't continue:
         if response3 != DialogResponse.IMPORT_ALL and response3 != DialogResponse.IMPORT:
             return
         if response3 == DialogResponse.IMPORT and treeiter == None:
@@ -978,7 +933,6 @@ class WeatherLog(Gtk.Window):
                 if i[DatasetColumn.DATE] not in date_col:
                     new_data.append(i)
             
-            # Append the data. 
             self.data += new_data
         
         # Update and save the data.
@@ -994,7 +948,6 @@ class WeatherLog(Gtk.Window):
         # Get the filename.
         response, filename = show_file_dialog(self, "Import as New Dataset - %s" % self.last_dataset)
         
-        # If the user did not press OK, don't continue.
         if response != Gtk.ResponseType.OK:
             return
         
@@ -1010,7 +963,6 @@ class WeatherLog(Gtk.Window):
         name = new_dlg.nam_ent.get_text().lstrip().rstrip()
         new_dlg.destroy()
         
-        # If the user did not press OK, don't continue.
         if response != Gtk.ResponseType.OK:
             return
             
@@ -1034,7 +986,6 @@ class WeatherLog(Gtk.Window):
         else:
             response = DialogResponse.IMPORT_ALL
         
-        # If the user did not press OK or nothing was selected, don't continue:
         if response != DialogResponse.IMPORT_ALL and response != DialogResponse.IMPORT:
             return
         if response == DialogResponse.IMPORT and treeiter == None:
@@ -1074,7 +1025,6 @@ class WeatherLog(Gtk.Window):
     def export_file(self, event):
         """Exports the data to a file."""
         
-        # If there is no data, tell the user and cancel the action.
         if len(self.data) == 0:
             show_no_data_dialog(self, "Export - %s" % self.last_dataset, message = "There is no data to export.")
             return
@@ -1082,7 +1032,6 @@ class WeatherLog(Gtk.Window):
         # Get the filename.
         response, filename = show_save_dialog(self, "Export - %s" % self.last_dataset)
         
-        # If the user did not press OK, don't continue.
         if response != Gtk.ResponseType.OK and response != DialogResponse.EXPORT_CSV and response != DialogResponse.EXPORT_HTML and response != DialogResponse.EXPORT_JSON:
             return
         
@@ -1113,12 +1062,10 @@ class WeatherLog(Gtk.Window):
     def export_pastebin(self, event):
         """Exports the data to Pastebin."""
         
-        # If there is no data, tell the user and cancel the action.
         if len(self.data) == 0:
             show_no_data_dialog(self, "Export to Pastebin - %s" % self.last_dataset, message = "There is no data to export.")
             return
         
-        # If the API key is blank, tell the user and cancel the action.
         if len(self.config["pastebin"].lstrip().rstrip()) == 0:
             show_error_dialog(self, "Export to Pastebin - %s" % self.last_dataset, "No API key. Please check the key entered in the Options window.")
             return
@@ -1132,7 +1079,6 @@ class WeatherLog(Gtk.Window):
         exposure = pas_dlg.exo_com.get_active_text()
         pas_dlg.destroy()
         
-        # If the user didn't click OK, don't continue.
         if response != Gtk.ResponseType.OK:
             return
         
@@ -1176,8 +1122,6 @@ class WeatherLog(Gtk.Window):
         # Set the default config.
         self.config = launch.get_config(self.conf_dir)
         self.units = launch.get_units(self.config)
-        
-        # Reset the default options
         self.options(True, update_only = True)
     
     
@@ -1187,7 +1131,6 @@ class WeatherLog(Gtk.Window):
         # Get the list of datasets.
         datasets = io.get_dataset_list(self.main_dir, self.last_dataset)
         
-        # If there are no other datasets, cancel the action.
         if len(datasets) == 0:
             show_alert_dialog(self, "Switch Dataset", "There are no other datasets.")
             return
@@ -1198,7 +1141,6 @@ class WeatherLog(Gtk.Window):
         model, treeiter = swi_dlg.treeview.get_selection().get_selected()
         swi_dlg.destroy()
         
-        # If the user did not press OK or nothing was selected, don't continue:
         if response != Gtk.ResponseType.OK or treeiter == None:
             return
         
@@ -1226,7 +1168,6 @@ class WeatherLog(Gtk.Window):
         name = new_dlg.nam_ent.get_text().lstrip().rstrip()
         new_dlg.destroy()
         
-        # If the user did not press OK, don't continue:
         if response != Gtk.ResponseType.OK:
             return
         
@@ -1268,7 +1209,6 @@ class WeatherLog(Gtk.Window):
         model, treeiter = rem_dlg.treeview.get_selection().get_selected_rows()
         rem_dlg.destroy()
         
-        # If the user did not press OK or nothing was selected, don't continue:
         if response != Gtk.ResponseType.OK or treeiter == None:
             return
         
@@ -1277,7 +1217,6 @@ class WeatherLog(Gtk.Window):
         for i in treeiter:
             datasets.append(model[i][0])
         
-        # Only show the confirmation dialog if the user wants that.
         if self.config["confirm_del"]:
             response = show_question_dialog(self, "Remove Datasets", "Are you sure you want to remove the dataset%s? This action cannot be undone." % ("" if len(datasets) == 1 else "s"))
             if response != Gtk.ResponseType.OK:
@@ -1296,14 +1235,12 @@ class WeatherLog(Gtk.Window):
         # If the user did not delete all the datasets but deleted the current one, switch to the "first" of the rest:
         elif self.last_dataset in datasets:
             
-            # Get the dataset name.
             dataset_list = io.get_dataset_list(self.main_dir, self.last_dataset, exclude_current = False)
             if "Main Dataset" in datasets.get_column(dataset_list, 0):
                 new_dataset = "Main Dataset"
             else:
                 new_dataset = dataset_list[0][0]
             
-            # Read the data and switch to the other dataset.
             self.data = io.read_dataset(main_dir = self.main_dir, name = new_dataset)
             self.last_dataset = new_dataset
         
@@ -1325,7 +1262,6 @@ class WeatherLog(Gtk.Window):
         model, treeiter = rds_dlg.treeview.get_selection().get_selected()
         rds_dlg.destroy()
         
-        # If the user did not press OK or nothing was selected, don't continue:
         if response != Gtk.ResponseType.OK or treeiter == None:
             return
         
@@ -1338,11 +1274,9 @@ class WeatherLog(Gtk.Window):
         new_name = ren_dlg.nam_ent.get_text().lstrip().rstrip()
         ren_dlg.destroy()
         
-        # If the user did not press OK, don't continue:
         if response != Gtk.ResponseType.OK:
             return
         
-        # If the name is the old name, don't continue.
         if new_name == old_name:
             show_error_dialog(self, "Rename Dataset", "The new name is the same as the old name.")
             return
@@ -1371,11 +1305,9 @@ class WeatherLog(Gtk.Window):
         # If the renamed dataset is the open one, switch to the renamed dataset:
         if old_name == self.last_dataset:
             
-            # Clear the old data.
             self.data[:] = []
             self.liststore.clear()
-            
-            # Read the data and switch to the new dataset.
+
             self.data = io.read_dataset(main_dir = self.main_dir, name = new_name)
             self.last_dataset = new_name
             self.update_list()
@@ -1390,7 +1322,6 @@ class WeatherLog(Gtk.Window):
         # Get the list of datasets.
         datasets = io.get_dataset_list(self.main_dir, self.last_dataset, exclude_current = False)
         
-        # If there are no other datasets, tell the user and cancel the action.
         if len(datasets) == 0 or len(datasets) == 1:
             show_alert_dialog(self, "Merge Datasets", "There are no other datasets.")
             return
@@ -1401,7 +1332,6 @@ class WeatherLog(Gtk.Window):
         model, treeiter = mer_dlg.treeview.get_selection().get_selected_rows()
         mer_dlg.destroy()
         
-        # If the user did not press OK or nothing was selected, don't continue:
         if response != Gtk.ResponseType.OK or treeiter == None:
             return
         
@@ -1416,7 +1346,6 @@ class WeatherLog(Gtk.Window):
         merge_name = nam_dlg.nam_ent.get_text()
         nam_dlg.destroy()
         
-        # If the user did not press OK, don't continue:
         if response != Gtk.ResponseType.OK:
             return
         
@@ -1467,7 +1396,6 @@ class WeatherLog(Gtk.Window):
     def copy_data_dataset(self, event):
         """Copies or moves data to another dataset."""
         
-        # If there is no data, tell the user and don't continue.
         if len(self.data) == 0:
             show_no_data_dialog(self, "Copy Data", message = "There is no data to copy.")
             return
@@ -1484,7 +1412,6 @@ class WeatherLog(Gtk.Window):
         model1, treeiter1 = dat_dlg.treeview.get_selection().get_selected()
         dat_dlg.destroy()
         
-        # If the user did not enter a dataset or nothing was selected, don't continue:
         if response1 != DialogResponse.USE_NEW and response1 != DialogResponse.USE_SELECTED:
             return
         
@@ -1630,7 +1557,6 @@ class WeatherLog(Gtk.Window):
                 self.config = launch.get_config(self.conf_dir, get_default = True)
             
             else:
-                
                 self.config = new_config
         
         # Configure the units.
