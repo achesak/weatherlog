@@ -1186,18 +1186,8 @@ class WeatherLog(Gtk.Window):
         self.config = launch.get_config(self.conf_dir)
         self.units = launch.get_units(self.config)
         
-        # Update the main window.
-        self.temp_col.set_title("Temperature (%s)" % self.units["temp"])
-        self.chil_col.set_title("Wind Chill (%s)" % self.units["temp"])
-        self.prec_col.set_title("Precipitation (%s)" % self.units["prec"])
-        self.wind_col.set_title("Wind (%s)" % self.units["wind"])
-        self.humi_col.set_title("Humidity (%)")
-        self.visi_col.set_title("Visibility (%s)" % self.units["visi"])
-        self.airp_col.set_title("Air Pressure (%s)" % self.units["airp"])
-        
-        # Update the title and save the data.
-        self.update_title()
-        self.save(from_options = True)
+        # Reset the default options
+        self.options(True, update_only = True)
     
     
     def switch_dataset(self, event):
@@ -1594,62 +1584,63 @@ class WeatherLog(Gtk.Window):
         self.update_title()
     
     
-    def options(self, event):
+    def options(self, event, update_only = False):
         """Shows the Options dialog."""
         
         current_units = self.config["units"]
         
         # Get the new options.
-        opt_dlg = OptionsDialog(self, self.config)
-        response = opt_dlg.run()
-        new_config = self.config
-        new_config["pre-fill"] = opt_dlg.pre_chk.get_active()
-        new_config["restore"] = opt_dlg.win_chk.get_active()
-        new_config["units"] = opt_dlg.unit_com.get_active_text().lower()
-        new_config["show_dates"] = opt_dlg.date_chk.get_active()
-        new_config["show_units"] = opt_dlg.unit_chk.get_active()
-        new_config["confirm_del"] = opt_dlg.del_chk.get_active()
-        new_config["show_pre-fill"] = opt_dlg.pdl_chk.get_active()
-        new_config["confirm_exit"] = opt_dlg.cex_chk.get_active()
-        new_config["import_all"] = opt_dlg.imp_chk.get_active()
-        new_config["truncate_notes"] = opt_dlg.trun_chk.get_active()
-        new_config["graph_color"] = convert.rgba_to_hex(opt_dlg.graph_color_btn.get_rgba())[0:7]
-        new_config["line_width"] = opt_dlg.width_sbtn.get_value()
-        new_config["line_style"] = opt_dlg.line_com.get_active_text()
-        new_config["hatch_style"] = opt_dlg.hatch_com.get_active_text()
-        new_config["pastebin"] = opt_dlg.pname_ent.get_text()
-        new_config["pastebin_format"] = opt_dlg.pform_com.get_active_text()
-        new_config["pastebin_expires"] = self.pastebin_constants["expires"][opt_dlg.pexpi_com.get_active_text()]
-        new_config["pastebin_exposure"] = self.pastebin_constants["exposure"][opt_dlg.pexpo_com.get_active_text()]
-        new_config["default_case_insensitive"] = opt_dlg.case_chk.get_active()
-        new_config["zipcode"] = opt_dlg.zip_ent.get_text()
-        new_config["city"] = opt_dlg.cit_ent.get_text()
-        new_config["country"] = opt_dlg.cnt_ent.get_text()
-        new_config["location_type"] = "city" if opt_dlg.use_city_rbtn.get_active() else "zip"
-        new_config["openweathermap"] = opt_dlg.owm_ent.get_text()
-        new_config["forecast_period"] = opt_dlg.fcast_sbtn.get_value()
-        new_config["default_selection_mode"] = opt_dlg.smode_com.get_active_text()
-        new_config["json_indent"] = opt_dlg.ind_chk.get_active()
-        new_config["json_indent_amount"] = int(opt_dlg.iamt_sbtn.get_value())
-        new_config["reset_search"] = opt_dlg.rsearch_chk.get_active()
-        opt_dlg.destroy()
-        
-        # If the user did not press OK or Reset, don't continue.
-        if response != Gtk.ResponseType.OK and response != DialogResponse.RESET:
-            return
-        
-        # If the user pressed Reset, set all options to default.
-        if response == DialogResponse.RESET:
+        if not update_only:
+            opt_dlg = OptionsDialog(self, self.config)
+            response = opt_dlg.run()
+            new_config = self.config
+            new_config["pre-fill"] = opt_dlg.pre_chk.get_active()
+            new_config["restore"] = opt_dlg.win_chk.get_active()
+            new_config["units"] = opt_dlg.unit_com.get_active_text().lower()
+            new_config["show_dates"] = opt_dlg.date_chk.get_active()
+            new_config["show_units"] = opt_dlg.unit_chk.get_active()
+            new_config["confirm_del"] = opt_dlg.del_chk.get_active()
+            new_config["show_pre-fill"] = opt_dlg.pdl_chk.get_active()
+            new_config["confirm_exit"] = opt_dlg.cex_chk.get_active()
+            new_config["import_all"] = opt_dlg.imp_chk.get_active()
+            new_config["truncate_notes"] = opt_dlg.trun_chk.get_active()
+            new_config["graph_color"] = convert.rgba_to_hex(opt_dlg.graph_color_btn.get_rgba())[0:7]
+            new_config["line_width"] = opt_dlg.width_sbtn.get_value()
+            new_config["line_style"] = opt_dlg.line_com.get_active_text()
+            new_config["hatch_style"] = opt_dlg.hatch_com.get_active_text()
+            new_config["pastebin"] = opt_dlg.pname_ent.get_text()
+            new_config["pastebin_format"] = opt_dlg.pform_com.get_active_text()
+            new_config["pastebin_expires"] = self.pastebin_constants["expires"][opt_dlg.pexpi_com.get_active_text()]
+            new_config["pastebin_exposure"] = self.pastebin_constants["exposure"][opt_dlg.pexpo_com.get_active_text()]
+            new_config["default_case_insensitive"] = opt_dlg.case_chk.get_active()
+            new_config["zipcode"] = opt_dlg.zip_ent.get_text()
+            new_config["city"] = opt_dlg.cit_ent.get_text()
+            new_config["country"] = opt_dlg.cnt_ent.get_text()
+            new_config["location_type"] = "city" if opt_dlg.use_city_rbtn.get_active() else "zip"
+            new_config["openweathermap"] = opt_dlg.owm_ent.get_text()
+            new_config["forecast_period"] = opt_dlg.fcast_sbtn.get_value()
+            new_config["default_selection_mode"] = opt_dlg.smode_com.get_active_text()
+            new_config["json_indent"] = opt_dlg.ind_chk.get_active()
+            new_config["json_indent_amount"] = int(opt_dlg.iamt_sbtn.get_value())
+            new_config["reset_search"] = opt_dlg.rsearch_chk.get_active()
+            opt_dlg.destroy()
             
-            reset = show_question_dialog(opt_dlg, "Options", "Are you sure you want to reset the options to the default values?")
-            if reset == Gtk.ResponseType.CANCEL:
+            # If the user did not press OK or Reset, don't continue.
+            if response != Gtk.ResponseType.OK and response != DialogResponse.RESET:
                 return
             
-            self.config = launch.get_config(self.conf_dir, get_default = True)
-        
-        else:
+            # If the user pressed Reset, set all options to default.
+            if response == DialogResponse.RESET:
+                
+                reset = show_question_dialog(opt_dlg, "Options", "Are you sure you want to reset the options to the default values?")
+                if reset == Gtk.ResponseType.CANCEL:
+                    return
+                
+                self.config = launch.get_config(self.conf_dir, get_default = True)
             
-            self.config = new_config
+            else:
+                
+                self.config = new_config
         
         # Configure the units.
         self.units = launch.get_units(self.config)
