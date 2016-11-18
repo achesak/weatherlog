@@ -219,7 +219,7 @@ class OptionsDialog(Gtk.Dialog):
         
         # Create the Show units in list checkbox.
         self.unit_chk = Gtk.CheckButton("Show units in list")
-        self.unit_chk.set_tooltip_text("Show measurement units in the data list headers.")
+        self.unit_chk.set_tooltip_text("Show measurement units in the data list column titles.")
         self.unit_chk.set_margin_left(5)
         self.unit_chk.set_margin_right(5)
         self.unit_chk.set_active(config["show_units"])
@@ -227,7 +227,7 @@ class OptionsDialog(Gtk.Dialog):
         
         # Create the show pre-fill dialog checkbox.
         self.pdl_chk = Gtk.CheckButton("Show data filling window")
-        self.pdl_chk.set_tooltip_text("Show a window when data fields have been automatically filled.")
+        self.pdl_chk.set_tooltip_text("Show a notification window when data fields have been automatically filled.")
         self.pdl_chk.set_margin_left(5)
         self.pdl_chk.set_margin_right(5)
         self.pdl_chk.set_active(config["show_pre-fill"])

@@ -183,7 +183,7 @@ class WeatherLog(Gtk.Window):
         note_text = Gtk.CellRendererText()
         self.note_col = Gtk.TreeViewColumn("Notes", note_text, text = DatasetColumn.NOTES)
         self.treeview.append_column(self.note_col)
-        self.update_list()
+        self.update_columns()
         
         # Create the menus.
         action_group = Gtk.ActionGroup("actions")
@@ -1645,7 +1645,7 @@ class WeatherLog(Gtk.Window):
                 self.data[:] = new_data[:]
         
         # Add/remove the units from the column titles.
-        self.update_list()
+        self.update_columns()
         
         # Update the title and save the data.
         self.update_title()
