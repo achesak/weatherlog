@@ -183,6 +183,7 @@ class WeatherLog(Gtk.Window):
         note_text = Gtk.CellRendererText()
         self.note_col = Gtk.TreeViewColumn("Notes", note_text, text = DatasetColumn.NOTES)
         self.treeview.append_column(self.note_col)
+        self.update_list()
         
         # Create the menus.
         action_group = Gtk.ActionGroup("actions")
@@ -260,17 +261,7 @@ class WeatherLog(Gtk.Window):
         self.connect("delete-event", self.delete_event)
         self.treeview.connect("button-press-event", self.context_event)
         self.treeview.connect("row-activated", self.activated_event)
-        
-        # Change the titles, if the user doesn't want units to be displayed.
-        if not self.config["show_units"]:
-            self.temp_col.set_title("Temperature")
-            self.chil_col.set_title("Wind Chill")
-            self.prec_col.set_title("Precipitation")
-            self.wind_col.set_title("Wind")
-            self.humi_col.set_title("Humidity")
-            self.visi_col.set_title("Visibility")
-            self.airp_col.set_title("Air Pressure")
-    
+
     
     def delete_event(self, widget, event):
         """Saves the last dataset and window size."""
@@ -1654,22 +1645,7 @@ class WeatherLog(Gtk.Window):
                 self.data[:] = new_data[:]
         
         # Add/remove the units from the column titles.
-        if not self.config["show_units"]:
-            self.temp_col.set_title("Temperature")
-            self.chil_col.set_title("Wind Chill")
-            self.prec_col.set_title("Precipitation")
-            self.wind_col.set_title("Wind")
-            self.humi_col.set_title("Humidity")
-            self.visi_col.set_title("Visibility")
-            self.airp_col.set_title("Air Pressure")
-        else:
-            self.temp_col.set_title("Temperature (%s)" % self.units["temp"])
-            self.chil_col.set_title("Wind Chill (%s)" % self.units["temp"])
-            self.prec_col.set_title("Precipitation (%s)" % self.units["prec"])
-            self.wind_col.set_title("Wind (%s)" % self.units["wind"])
-            self.humi_col.set_title("Humidity (%)")
-            self.visi_col.set_title("Visibility (%s)" % self.units["visi"])
-            self.airp_col.set_title("Air Pressure (%s)" % self.units["airp"])
+        self.update_list()
         
         # Update the title and save the data.
         self.update_title()
@@ -1720,6 +1696,27 @@ class WeatherLog(Gtk.Window):
         
         self.set_title(new_title)
         return new_title
+
+
+    def update_columns(self):
+        """Updates the list column titles."""
+
+        if not self.config["show_units"]:
+            self.temp_col.set_title("Temperature")
+            self.chil_col.set_title("Wind Chill")
+            self.prec_col.set_title("Precipitation")
+            self.wind_col.set_title("Wind")
+            self.humi_col.set_title("Humidity")
+            self.visi_col.set_title("Visibility")
+            self.airp_col.set_title("Air Pressure")
+        else:
+            self.temp_col.set_title("Temperature (%s)" % self.units["temp"])
+            self.chil_col.set_title("Wind Chill (%s)" % self.units["temp"])
+            self.prec_col.set_title("Precipitation (%s)" % self.units["prec"])
+            self.wind_col.set_title("Wind (%s)" % self.units["wind"])
+            self.humi_col.set_title("Humidity (%)")
+            self.visi_col.set_title("Visibility (%s)" % self.units["visi"])
+            self.airp_col.set_title("Air Pressure (%s)" % self.units["airp"])
     
     
     def debug(self, caller, data):
