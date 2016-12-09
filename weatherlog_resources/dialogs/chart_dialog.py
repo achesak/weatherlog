@@ -31,6 +31,8 @@ class ChartDialog(Gtk.Dialog):
         
         # Tab 1: Temperature chart.
         temp_box = Gtk.Box()
+        temp_box.set_hexpand(True)
+        temp_box.set_vexpand(True)
         temp_box_lbl = Gtk.Label("Temperature")
         self.temp_list = Gtk.ListStore(str, str, str, str, str, str)
         self.temp_tree = Gtk.TreeView(model = self.temp_list)
