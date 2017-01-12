@@ -82,6 +82,11 @@ import weatherlog_resources.get_weather as get_weather
 import weatherlog_resources.pastebin as pastebin
 import weatherlog_resources.commands as commands
 
+# Import UI builders.
+import weatherlog_resources.ui.info_builder as info_builder
+import weatherlog_resources.ui.chart_builder as chart_builder
+import weatherlog_resources.ui.graph_builder as graph_builder
+
 # Import dialogs.
 from weatherlog_resources.dialogs.add_dialog import AddNewDialog
 from weatherlog_resources.dialogs.edit_dialog import EditDialog
@@ -149,6 +154,14 @@ class WeatherLog(Gtk.Window):
         Gtk.Window.__init__(self, title = self.title)
         self.set_default_size(self.last_width, self.last_height)
         self.set_icon_from_file(self.icon_small)
+
+        # Create the tabs.
+        self.tabs = Gtk.Notebook()
+        self.tabs.set_tab_pos(Gtk.PositionType.TOP)
+        self.tab_data_lbl = Gtk.Label("Data")
+        self.tab_info_lbl = Gtk.Label("Info")
+        self.tab_chart_lbl = Gtk.Label("Charts")
+        self.tab_graph_lbl = Gtk.Label("Graphs")
         
         # Create the main UI.
         self.liststore = Gtk.ListStore(str, str, str, str, str, str, str, str, str, str)
@@ -207,13 +220,10 @@ class WeatherLog(Gtk.Window):
         ])
         action_group.add_actions([
             ("data_menu", None, "_Data"),
-            ("info", Gtk.STOCK_INFO, "_Info...", "<Control>i", "Show info about the data", lambda x: self.show_info_generic()),
             ("info_range", None, "Info in _Range...", "<Control><Shift>i", None, lambda x: self.data_range(InfoType.INFO)),
             ("info_selected", None, "Info for _Selected Dates...", None, None, lambda x: self.data_selected(InfoType.INFO)),
-            ("charts", None, "_Charts...", "<Control>c", None, lambda x: self.show_chart_generic()),
             ("charts_range", None, "Charts i_n Range...", "<Control><Shift>c", None, lambda x: self.data_range(InfoType.CHART)),
             ("charts_selected", None, "Charts _for Selected Dates...", None, None, lambda x: self.data_selected(InfoType.CHART)),
-            ("graphs", None, "_Graphs...", "<Control>g", None, lambda x: self.show_graph_generic()),
             ("graphs_range", None, "Gr_aphs in Range...", "<Control><Shift>g", None, lambda x: self.data_range(InfoType.GRAPH)),
             ("graphs_selected", None, "Grap_hs for Selected Dates...", None, None, lambda x: self.data_selected(InfoType.GRAPH)),
             ("quick_search", None, "_Quick Search...", "<Control>d", None, self.quick_search),
@@ -240,22 +250,33 @@ class WeatherLog(Gtk.Window):
         accel_group = ui_manager.get_accel_group()
         self.add_accel_group(accel_group)
         ui_manager.insert_action_group(action_group)
+
+        # Set up the tabs.
+        info_builder.info_builder(self)
+        chart_builder.chart_builder(self)
+        graph_builder.graph_builder(self)
         
         # Build the UI.
         grid = Gtk.Grid()
         self.menubar = ui_manager.get_widget("/menubar")
         self.toolbar = ui_manager.get_widget("/toolbar")
         self.context_menu = ui_manager.get_widget("/context_menu")
-        scrolled_win = Gtk.ScrolledWindow()
-        scrolled_win.set_hexpand(True)
-        scrolled_win.set_vexpand(True)
-        scrolled_win.add(self.treeview)
+        self.data_frame = Gtk.ScrolledWindow()
+        self.data_frame.set_hexpand(True)
+        self.data_frame.set_vexpand(True)
+        self.data_frame.add(self.treeview)
         grid.add(self.menubar)
         grid.attach_next_to(self.toolbar, self.menubar, Gtk.PositionType.BOTTOM, 1, 1)
-        grid.attach_next_to(scrolled_win, self.toolbar, Gtk.PositionType.BOTTOM, 1, 1)
+        grid.attach_next_to(self.tabs, self.toolbar, Gtk.PositionType.BOTTOM, 1, 1)
         self.add(grid)
         self.treeview.grab_focus()
         self.show_all()
+
+        # Add the tabs.
+        self.tabs.append_page(self.data_frame, self.tab_data_lbl)
+        self.tabs.append_page(self.info_frame, self.tab_info_lbl)
+        self.tabs.append_page(self.chart_frame, self.tab_chart_lbl)
+        self.tabs.append_page(self.graph_frame, self.tab_graph_lbl)
 
         # Bind the events.
         self.connect("delete-event", self.delete_event)
@@ -1610,6 +1631,8 @@ class WeatherLog(Gtk.Window):
         self.liststore.clear()
         for i in new_data:
             self.liststore.append(i)
+
+        self.update_data()
         
     
     def update_title(self):
@@ -1643,8 +1666,131 @@ class WeatherLog(Gtk.Window):
             self.humi_col.set_title("Humidity (%)")
             self.visi_col.set_title("Visibility (%s)" % self.units["visi"])
             self.airp_col.set_title("Air Pressure (%s)" % self.units["airp"])
-    
-    
+
+
+    def update_data(self):
+        """Updates the Info, Charts, and Graphs tabs."""
+
+        # Clear the existing info data.
+        self.info_gen_list.clear()
+        self.info_temp_list.clear()
+        self.info_chil_list.clear()
+        self.info_prec_list.clear()
+        self.info_wind_list.clear()
+        self.info_humi_list.clear()
+        self.info_airp_list.clear()
+        self.info_visi_list.clear()
+        self.info_clou_list.clear()
+        self.info_note_list.clear()
+
+        # Get the info data.
+        info_data = [
+            info.general_info(self.data, self.units),
+            info.temp_info(self.data, self.units),
+            info.chil_info(self.data, self.units),
+            info.prec_info(self.data, self.units),
+            info.wind_info(self.data, self.units),
+            info.humi_info(self.data, self.units),
+            info.airp_info(self.data, self.units),
+            info.visi_info(self.data, self.units),
+            info.clou_info(self.data, self.units),
+            info.note_info(self.data, self.units)
+        ]
+
+        # Add the info data.
+        for i in info_data[0]:
+            self.info_gen_list.append(i)
+        for i in info_data[1]:
+            self.info_temp_list.append(i)
+        for i in info_data[2]:
+            self.info_chil_list.append(i)
+        for i in info_data[3]:
+            self.info_prec_list.append(i)
+        for i in info_data[4]:
+            self.info_wind_list.append(i)
+        for i in info_data[5]:
+            self.info_humi_list.append(i)
+        for i in info_data[6]:
+            self.info_airp_list.append(i)
+        for i in info_data[7]:
+            self.info_visi_list.append(i)
+        for i in info_data[8]:
+            self.info_clou_list.append(i)
+        for i in info_data[9]:
+            self.info_note_list.append(i)
+
+        # Clear the existing chart data.
+        self.chart_temp_list.clear()
+        self.chart_chil_list.clear()
+        self.chart_prec_list.clear()
+        self.chart_wind_list.clear()
+        self.chart_humi_list.clear()
+        self.chart_airp_list.clear()
+        self.chart_visi_list.clear()
+
+        # Get the chart data.
+        chart_data = [
+            charts.temp_chart(self.data, self.units),
+            charts.chil_chart(self.data, self.units),
+            charts.prec_chart(self.data, self.units),
+            charts.wind_chart(self.data, self.units),
+            charts.humi_chart(self.data, self.units),
+            charts.airp_chart(self.data, self.units),
+            charts.visi_chart(self.data, self.units)
+        ]
+
+        # Add the chart data.
+        for i in chart_data[0]:
+            self.chart_temp_list.append(i)
+        for i in chart_data[1]:
+            self.chart_chil_list.append(i)
+        for i in chart_data[2]:
+            self.chart_prec_list.append(i)
+        for i in chart_data[3]:
+            self.chart_wind_list.append(i)
+        for i in chart_data[4]:
+            self.chart_humi_list.append(i)
+        for i in chart_data[5]:
+            self.chart_airp_list.append(i)
+        for i in chart_data[6]:
+            self.chart_visi_list.append(i)
+
+        # Get the graph data.
+        graph_data = graphs.get_data(self.data)
+        lines = self.graph_data["lines"]
+        hatches = self.graph_data["hatches"]
+
+        # Add the graph data.
+        self.graph_temp_graph.plot(graph_data["date_ticks"], graph_data["temp_data"], color = self.config["graph_color"], linewidth = self.config["line_width"], linestyle = lines[self.config["line_style"]])
+        self.graph_temp_graph.set_xticks(graph_data["date_ticks"])
+        self.graph_temp_graph.set_xticklabels(graph_data["date_labels"], rotation = "vertical")
+        self.graph_chil_graph.plot(graph_data["date_ticks"], graph_data["chil_data"], color = self.config["graph_color"], linewidth = self.config["line_width"], linestyle = lines[self.config["line_style"]])
+        self.graph_chil_graph.set_xticks(graph_data["date_ticks"])
+        self.graph_chil_graph.set_xticklabels(graph_data["date_labels"], rotation = "vertical")
+        self.graph_prec_graph.plot(graph_data["date_ticks"], graph_data["prec_data"], color = self.config["graph_color"], linewidth = self.config["line_width"], linestyle = lines[self.config["line_style"]])
+        self.graph_prec_graph.set_xticks(graph_data["date_ticks"])
+        self.graph_prec_graph.set_xticklabels(graph_data["date_labels"], rotation = "vertical")
+        self.graph_pramt_graph.bar([0, 1, 2, 3], graph_data["prec_amount"], width = 0.5, color = self.config["graph_color"], hatch = hatches[self.config["hatch_style"]])
+        self.graph_prday_graph.bar([0, 1, 2, 3, 4], graph_data["prec_days"], width = 0.5, color = self.config["graph_color"], hatch = hatches[self.config["hatch_style"]])
+        self.graph_wind_graph.plot(graph_data["date_ticks"], graph_data["wind_data"], color = self.config["graph_color"], linewidth = self.config["line_width"], linestyle = lines[self.config["line_style"]])
+        self.graph_wind_graph.set_xticks(graph_data["date_ticks"])
+        self.graph_wind_graph.set_xticklabels(graph_data["date_labels"], rotation = "vertical")
+        self.graph_humi_graph.plot(graph_data["date_ticks"], graph_data["humi_data"], color = self.config["graph_color"], linewidth = self.config["line_width"], linestyle = lines[self.config["line_style"]])
+        self.graph_humi_graph.set_xticks(graph_data["date_ticks"])
+        self.graph_humi_graph.set_xticklabels(graph_data["date_labels"], rotation = "vertical")
+        self.graph_airp_graph.plot(graph_data["date_ticks"], graph_data["airp_data"], color = self.config["graph_color"], linewidth = self.config["line_width"], linestyle = lines[self.config["line_style"]])
+        self.graph_airp_graph.set_xticks(graph_data["date_ticks"])
+        self.graph_airp_graph.set_xticklabels(graph_data["date_labels"], rotation = "vertical")
+        self.graph_airc_graph.bar([0, 1, 2], graph_data["airp_change"], width = 0.5, color = self.config["graph_color"], hatch = hatches[self.config["hatch_style"]])
+        self.graph_visi_graph.plot(graph_data["date_ticks"], graph_data["visi_data"], color = self.config["graph_color"], linewidth = self.config["line_width"], linestyle = lines[self.config["line_style"]])
+        self.graph_visi_graph.set_xticks(graph_data["date_ticks"])
+        self.graph_visi_graph.set_xticklabels(graph_data["date_labels"], rotation = "vertical")
+        self.graph_clou_graph.bar([0, 1, 2, 3, 4], graph_data["clou_days"], width = 0.5, color = self.config["graph_color"], hatch = hatches[self.config["hatch_style"]])
+        self.graph_ctyp_graph.bar([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10], graph_data["clou_types"], width = 0.5, color = self.config["graph_color"], hatch = hatches[self.config["hatch_style"]])
+
+
+
+
     def debug(self, caller, data):
         """Debug mode function."""
         

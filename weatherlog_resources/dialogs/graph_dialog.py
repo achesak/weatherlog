@@ -11,8 +11,6 @@
 
 # Import GTK for the dialog.
 from gi.repository import Gtk
-# Import datetime for sorting by dates.
-import datetime
 # Import matplotlib for graphing.
 try:
     from matplotlib.figure import Figure

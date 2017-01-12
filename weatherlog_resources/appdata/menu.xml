@@ -22,15 +22,12 @@
       <menuitem action="export_pastebin" />
     </menu>
     <menu action="data_menu">
-      <menuitem action="info" />
       <menuitem action="info_range" />
       <menuitem action="info_selected" />
       <separator />
-      <menuitem action="charts" />
       <menuitem action="charts_range" />
       <menuitem action="charts_selected" />
       <separator />
-      <menuitem action="graphs" />
       <menuitem action="graphs_range" />
       <menuitem action="graphs_selected" />
       <separator />
@@ -58,8 +55,6 @@
     <toolitem action="edit" />
     <toolitem action="remove" />
     <separator />
-    <toolitem action="info" />
-    <separator />
     <toolitem action="import" />
     <toolitem action="export" />
   </toolbar>
@@ -67,10 +62,6 @@
     <menuitem action="add_new" />
     <menuitem action="edit" />
     <menuitem action="remove" />
-    <separator />
-    <menuitem action="info" />
-    <menuitem action="charts" />
-    <menuitem action="graphs" />
     <separator />
     <menuitem action="switch_dataset" />
     <menuitem action="add_dataset" />
