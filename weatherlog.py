@@ -37,6 +37,8 @@ THE SOFTWARE.
 
 
 # Import Gtk and Gdk for the interface.
+import gi
+gi.require_version("Gtk", "3.0")
 from gi.repository import Gtk, Gdk, GdkPixbuf
 # Import webbrowser for opening the help in the user's browser.
 import webbrowser
@@ -54,6 +56,10 @@ try:
     from urllib2 import URLError
 except ImportError:
     from urllib.request import URLError
+
+# Tell Python not to create bytecode files, as they mess with the git repo.
+# This line can be removed be the user, if desired.
+sys.dont_write_bytecode = True
 
 # Import application modules.
 from weatherlog_resources.constants import *

@@ -10,12 +10,11 @@
 
 
 # Import datetime for date calculations.
-import datetime
 # Import date2num for converting dates to numbers.
 try:
     from matplotlib.dates import date2num
 except ImportError:
-    pass
+    date2num = None
 
 # Import application modules.
 import weatherlog_resources.datasets as datasets
