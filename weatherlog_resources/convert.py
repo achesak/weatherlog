@@ -141,11 +141,11 @@ def rgba_to_hex(rgba_color):
     red = int(rgba_color.red * 255)
     green = int(rgba_color.green * 255)
     blue = int(rgba_color.blue * 255)
-    return "#{r:02x}{g:02x}{b:02x}".format(r = red,g = green,b = blue)
+    return "#{r:02x}{g:02x}{b:02x}".format(r=red, g=green, b=blue)
 
 
 def hex_to_rgba(hex_color):
     """Converts hex into RGBA (as a tuple)."""
     
     h = ("0x" + hex_color[1:3], "0x" + hex_color[3:5], "0x" + hex_color[5:7])
-    return (int(h[0], 16), int(h[1], 16), int(h[2], 16))
+    return int(h[0], 16), int(h[1], 16), int(h[2], 16)

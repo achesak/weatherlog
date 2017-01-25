@@ -9,9 +9,6 @@
 ################################################################################
 
 
-# Import collections.Counter for getting the mode of the data.
-from collections import Counter
-
 # Import application modules.
 import weatherlog_resources.datasets as datasets
 import weatherlog_resources.calculations as calculations
@@ -64,7 +61,6 @@ def prec_chart(data, units):
     
     # Get the data.
     prec_data1, prec_data2 = datasets.split_list(datasets.get_column(data, 3))
-    prec_split = datasets.split_list2(datasets.get_column(data, 3))
     prec_data1 = datasets.none_to_zero(prec_data1)
     prec_data1 = datasets.convert_float(prec_data1)
     prec_low = min(prec_data1)
@@ -121,7 +117,7 @@ def humi_chart(data, units):
     for i in range(0, len(data)):
         
         humi = [data[i][0], "%.2f%%" % (humi_data[i])]
-        humi += build_chart(humi_data[i], humi_low, humi_high, humi_avg, humi_median, "%", unit_space = False)
+        humi += build_chart(humi_data[i], humi_low, humi_high, humi_avg, humi_median, "%", unit_space=False)
         data2.append(humi)
     
     return data2
@@ -170,7 +166,7 @@ def visi_chart(data, units):
     return data2
 
 
-def build_chart(value, min_val, max_val, avg_val, med_val, unit, unit_space = True):
+def build_chart(value, min_val, max_val, avg_val, med_val, unit, unit_space=True):
     """Builds a chart row."""
     
     row = []

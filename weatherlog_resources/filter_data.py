@@ -144,12 +144,12 @@ def filter_compare(item, operator, value, string_compare, insensitive):
     
     # Compare the item: between.
     if operator == "between":
-        if item > value[0] and item < value[1]:
+        if value[0] < item < value[1]:
             matches = True
     
     # Compare the item: between (inclusive).
     if operator == "between (inclusive)":
-        if item >= value[0] and item <= value[1]:
+        if value[0] <= item <= value[1]:
             matches = True
     
     # Compare the item: outside.
@@ -237,7 +237,7 @@ def filter_or(set1, set2):
         if i[0] not in date_list:
             filtered.append(i)
     
-    filtered = sorted(filtered, key = lambda x: datetime.datetime.strptime(x[0], "%d/%m/%Y"))
+    filtered = sorted(filtered, key=lambda x: datetime.datetime.strptime(x[0], "%d/%m/%Y"))
     return filtered
 
 
@@ -246,7 +246,7 @@ def filter_quick(data, search_term, case_insensitive):
     
     filtered = []
     
-    # Convert the case of the data if needed. TODO: this is quite inefficient
+    # Convert the case of the data if needed.
     if case_insensitive:
         new_data = []
         for row in data:

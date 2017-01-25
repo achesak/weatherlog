@@ -44,7 +44,7 @@ def html_cell(cell):
     return new_cell
 
 
-def html_generic(data_list, filename = None):
+def html_generic(data_list, filename=None):
     """Converts the data to HTML and exports it.
     
     * filename is the file to write to.
@@ -61,7 +61,6 @@ def html_generic(data_list, filename = None):
         html += HTML_START % table[0]
         
         table_data = table[1:]
-        num_columns = len(table_data[0])
         
         # Create the table header.
         html += "<tr>"
@@ -88,32 +87,34 @@ def html_generic(data_list, filename = None):
         return html
 
 
-def csv(data2, units, filename = ""):
+def csv(data2, units, filename=""):
     """Converts the data to CSV."""
     
     # Create a copy of the data. The original list should remain unchanged.
     data = data2[:]
     
     # Build the string.
-    csv = u""""Date","Temperature (%s)","Wind Chill (%s)","Precipitation (%s)","Wind (%s)","Humidity (%%)","Air Pressure (%s)","Visibility (%s)","Cloud Cover","Notes"\n""" % (units["temp"], units["temp"], units["prec"], units["wind"], units["airp"], units["visi"])
+    csv_data = u""""Date","Temperature (%s)","Wind Chill (%s)","Precipitation (%s)","Wind (%s)","Humidity (%%)","Air Pressure (%s)","Visibility (%s)","Cloud Cover","Notes"\n""" % \
+               (units["temp"], units["temp"], units["prec"], units["wind"], units["airp"], units["visi"])
     
     # Add the data. Loop through each list, and add it as a row.
     for i in data:
         for j in range(0, len(i)):
             i[j] = i[j].encode("utf-8")
-        csv += u""""%s","%s","%s","%s","%s","%s","%s","%s","%s","%s"\n""" % (i[0], i[1], i[2], i[3], i[4], i[5], i[6], i[7], i[8], i[9])
+        csv_data += u""""%s","%s","%s","%s","%s","%s","%s","%s","%s","%s"\n""" % \
+                    (i[0], i[1], i[2], i[3], i[4], i[5], i[6], i[7], i[8], i[9])
     
     # Remove the last newline character.
-    csv = csv[:-1].replace(u"\xb0", "")
+    csv_data = csv_data[:-1].replace(u"\xb0", "")
     
     # Write to the file.
     if filename:
-        io.write_standard_file(filename, csv)
+        io.write_standard_file(filename, csv_data)
     else:
-        return csv
+        return csv_data
 
 
-def json(data, config, filename = ""):
+def json(data, config, filename=""):
     """Converts the data to JSON."""
     
     io.write_json_file(filename, data, config["json_indent"], config["json_indent_amount"])

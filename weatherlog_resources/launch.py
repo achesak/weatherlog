@@ -17,15 +17,8 @@ import platform
 import os
 # Import sys for closing the application.
 import sys
-# Import glob for getting a list of directories.
-import glob
-# Import datetime for getting the current time.
-import datetime
 # Import pickle for loading and saving the data.
-try:
-    import cPickle as pickle
-except ImportError:
-    import pickle
+import pickle
     
 # Import application modules.
 from weatherlog_resources.openweathermap.codes import codes
@@ -83,7 +76,6 @@ def get_ui_info():
     title = ui_data["title"]
     icon_small = ui_data["icon_small"]
     icon_medium = ui_data["icon_medium"]
-    icon_medium_about = ui_data["icon_medium_about"]
     default_width = ui_data["default_width"]
     default_height = ui_data["default_height"]
     help_link = ui_data["help_link"]
@@ -107,7 +99,7 @@ def ensure_files_exist(main_dir, conf_dir):
         last_prof_data = open("%s/datasets/Main Dataset/weather" % main_dir, "w")
         pickle.dump([], last_prof_data)
         last_prof_data.close()
-        io.write_metadata(main_dir, "Main Dataset", now = True)
+        io.write_metadata(main_dir, "Main Dataset", now=True)
 
     # Configuration directory and files:
     if not os.path.exists(conf_dir) or not os.path.isdir(conf_dir):
@@ -115,7 +107,7 @@ def ensure_files_exist(main_dir, conf_dir):
         os.makedirs(conf_dir)
 
 
-def get_config(conf_dir, get_default = False):
+def get_config(conf_dir, get_default=False):
     """Loads the settings."""
     
     # Get the default configuration.
@@ -152,7 +144,7 @@ def get_config(conf_dir, get_default = False):
     return config
 
 
-def get_restore_data(main_dir, conf_dir, config, default_width, default_height, default_dataset = "Main Dataset"):
+def get_restore_data(main_dir, conf_dir, config, default_width, default_height, default_dataset="Main Dataset"):
     """Gets the last window size."""
 
     try:
@@ -164,13 +156,15 @@ def get_restore_data(main_dir, conf_dir, config, default_width, default_height, 
         last_dataset = rest_data["last_dataset"]
 
     except IOError as e:
-        print("get_window_size(): Error reading application restore file (IOError):\n%s\nContinuing with default..." % e)
+        print("get_window_size(): Error reading restore file (IOError):\n%s" % e,
+              "Continuing with default...")
         last_width = default_width
         last_height = default_height
         last_dataset = default_dataset
     
     except (TypeError, ValueError) as e:
-        print("get_window_size(): Error reading application restore file (TypeError or ValueError):\n%s\nContinuing with default..." % e)
+        print("get_window_size(): Error reading restore file (TypeError or ValueError):\n%s" % e,
+              "Continuing with default...")
         last_width = default_width
         last_height = default_height
         last_dataset = default_dataset
@@ -272,7 +266,7 @@ def get_strings():
         sys.exit()
 
     except (ValueError, TypeError) as e:
-        print("get_strings(): Error reading strings data file (ValueError or TypeError):\n%s" %e)
+        print("get_strings(): Error reading strings data file (ValueError or TypeError):\n%s" % e)
         sys.exit()
 
     return strings_data
@@ -282,9 +276,7 @@ def check_dependencies():
     """Checks if dependencies required by the application are installed."""
     
     try:
-        from matplotlib.figure import Figure
-        matplotlib_installed = True
+        import matplotlib
+        return True
     except ImportError:
-        matplotlib_installed = False
-    
-    return matplotlib_installed
+        return False

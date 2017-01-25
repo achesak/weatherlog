@@ -4,13 +4,14 @@
 ################################################################################
 #
 # WeatherLog: constants.py
-# This moduledefines constants used by the rest of the application.
+# This module defines constants used by the rest of the application.
 #
 ################################################################################
 
 
-__all__ = ["SelectionMode", "DialogResponse", "ImportValidation", "DateValidation", "PastebinExport", "DatasetSelectionMode",
-           "ImportType", "DatasetColumn", "WeatherCondition", "CloudCoverageType", "InfoType", "DatasetValidation"]
+__all__ = ["SelectionMode", "DialogResponse", "ImportValidation", "DateValidation", "PastebinExport",
+           "DatasetSelectionMode", "ImportType", "DatasetColumn", "WeatherCondition", "CloudCoverageType",
+           "InfoType", "DatasetValidation"]
 
 
 # Data subset selection mode:
@@ -52,8 +53,8 @@ class ImportValidation:
 
 # Date validation values:
 class DateValidation:
-	VALID = 1
-	INVALID = -1
+    VALID = 1
+    INVALID = -1
 
 
 # Dataset validation values:

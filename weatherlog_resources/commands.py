@@ -10,7 +10,9 @@
 
 
 # Import modules for working with directories.
-import shutil, os, os.path
+import shutil
+import os
+import os.path
 
 # Import application modules.
 import weatherlog_resources.launch as launch

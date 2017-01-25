@@ -53,9 +53,11 @@ def upload_pastebin(data, name, mode, expires, exposure, units, config, title):
         new_data = export.csv(data, units)
     elif mode == "json":
         if config["json_indent"]:
-            new_data = json.dumps(data, indent = config["json_indent_amount"])
+            new_data = json.dumps(data, indent=config["json_indent_amount"])
         else:
             new_data = json.dumps(data)
+    else:
+        new_data = ""
     
     # Build the api string.
     api = {"api_option": "paste",
@@ -85,5 +87,5 @@ def upload_pastebin(data, name, mode, expires, exposure, units, config, title):
         else:
             return PastebinExport.SUCCESS, result
         
-    except IOError as e:
+    except IOError:
         return PastebinExport.ERROR, "Cannot connect to Pastebin; no internet connection."

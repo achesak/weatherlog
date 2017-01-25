@@ -42,7 +42,8 @@ class OptionsDialog(Gtk.Dialog):
         
         # Create the pre-fill data checkbox.
         self.pre_chk = Gtk.CheckButton("Automatically fill data")
-        self.pre_chk.set_tooltip_text("Automatically fill in fields when adding new data. Note that this requires the location to be set as well.")
+        self.pre_chk.set_tooltip_text("Automatically fill in fields when adding new data.\n\n" +
+                                      "Note that this requires the location to be set as well.")
         self.pre_chk.set_margin_left(5)
         self.pre_chk.set_margin_right(5)
         self.pre_chk.set_margin_top(5)
@@ -79,8 +80,8 @@ class OptionsDialog(Gtk.Dialog):
         iamt_lbl.set_margin_left(5)
         iamt_lbl.set_alignment(0, 0.5)
         gen_grid.attach_next_to(iamt_lbl, self.ind_chk, Gtk.PositionType.BOTTOM, 1, 1)
-        iamt_adj = Gtk.Adjustment(lower = 1, upper = 20, step_increment = 1)
-        self.iamt_sbtn = Gtk.SpinButton(digits = 0 , adjustment = iamt_adj)
+        iamt_adj = Gtk.Adjustment(lower=1, upper=20, step_increment=1)
+        self.iamt_sbtn = Gtk.SpinButton(digits=0, adjustment=iamt_adj)
         self.iamt_sbtn.set_numeric(False)
         self.iamt_sbtn.set_value(config["json_indent_amount"])
         self.iamt_sbtn.set_margin_right(5)
@@ -135,7 +136,7 @@ class OptionsDialog(Gtk.Dialog):
         self.zip_ent.set_margin_right(5)
         self.zip_ent.set_hexpand(True)
         self.zip_ent.set_max_length(5)
-        self.zip_ent.connect("changed", self.filter_numbers)
+        self.zip_ent.connect("changed", lambda x: self.filter_numbers())
         self.zip_ent.set_text(config["zipcode"])
         dat_grid.attach_next_to(self.zip_ent, zip_lbl, Gtk.PositionType.RIGHT, 1, 1)
         
@@ -170,8 +171,8 @@ class OptionsDialog(Gtk.Dialog):
         fcast_lbl.set_margin_left(5)
         fcast_lbl.set_alignment(0, 0.5)
         dat_grid.attach_next_to(fcast_lbl, cnt_lbl, Gtk.PositionType.BOTTOM, 1, 1)
-        fcast_adj = Gtk.Adjustment(lower = 1, upper = 16, step_increment = 1)
-        self.fcast_sbtn = Gtk.SpinButton(digits = 0, adjustment = fcast_adj)
+        fcast_adj = Gtk.Adjustment(lower=1, upper=16, step_increment=1)
+        self.fcast_sbtn = Gtk.SpinButton(digits=0, adjustment=fcast_adj)
         self.fcast_sbtn.set_numeric(False)
         self.fcast_sbtn.set_value(config["forecast_period"])
         self.fcast_sbtn.set_margin_right(5)
@@ -180,7 +181,8 @@ class OptionsDialog(Gtk.Dialog):
         
         # Create the openweathermap devkey entry.
         owm_lbl = Gtk.Label("API key: ")
-        owm_lbl.set_tooltip_text("API key used for getting data from OpenWeatherMap.\n\nPlease replace with your own if you use this feature frequently.")
+        owm_lbl.set_tooltip_text("API key used for getting data from OpenWeatherMap.\n\n" +
+                                 "Please replace with your own if you use this feature frequently.")
         owm_lbl.set_margin_left(5)
         owm_lbl.set_margin_bottom(5)
         owm_lbl.set_alignment(0, 0.5)
@@ -202,7 +204,8 @@ class OptionsDialog(Gtk.Dialog):
         
         # Create the Restore window size checkbox.
         self.win_chk = Gtk.CheckButton("Restore window size")
-        self.win_chk.set_tooltip_text("Automatically restore window size on application start to the size when previously closed.")
+        self.win_chk.set_tooltip_text("Automatically restore window size on application " +
+                                      "start to the size when previously closed.")
         self.win_chk.set_margin_left(5)
         self.win_chk.set_margin_right(5)
         self.win_chk.set_margin_top(5)
@@ -287,7 +290,8 @@ class OptionsDialog(Gtk.Dialog):
         self.smode_com.set_hexpand(True)
         for i in ["Match all", "Match at least one", "Match none"]:
             self.smode_com.append_text(i)
-        self.smode_com.set_active(["Match all", "Match at least one", "Match none"].index(config["default_selection_mode"]))
+        self.smode_com.set_active(["Match all", "Match at least one", "Match none"]
+                                  .index(config["default_selection_mode"]))
         search_grid.attach_next_to(self.smode_com, smode_lbl, Gtk.PositionType.RIGHT, 1, 1)
         
         # Create the Graphs tab.
@@ -310,7 +314,7 @@ class OptionsDialog(Gtk.Dialog):
         self.graph_color_btn.set_margin_right(5)
         self.graph_color_btn.set_margin_top(5)
         color_rgba = convert.hex_to_rgba(config["graph_color"])
-        default_color = Gdk.RGBA(red = color_rgba[0], green = color_rgba[1], blue = color_rgba[2])
+        default_color = Gdk.RGBA(red=color_rgba[0], green=color_rgba[1], blue=color_rgba[2])
         self.graph_color_btn.set_rgba(default_color)
         graph_grid.attach_next_to(self.graph_color_btn, graph_color_lbl, Gtk.PositionType.RIGHT, 1, 1)
         
@@ -320,8 +324,8 @@ class OptionsDialog(Gtk.Dialog):
         width_lbl.set_margin_left(5)
         width_lbl.set_alignment(0, 0.5)
         graph_grid.attach_next_to(width_lbl, graph_color_lbl, Gtk.PositionType.BOTTOM, 1, 1)
-        width_adj = Gtk.Adjustment(lower = 1, upper = 10, step_increment = 1)
-        self.width_sbtn = Gtk.SpinButton(digits = 0, adjustment = width_adj)
+        width_adj = Gtk.Adjustment(lower=1, upper=10, step_increment=1)
+        self.width_sbtn = Gtk.SpinButton(digits=0, adjustment=width_adj)
         self.width_sbtn.set_numeric(False)
         self.width_sbtn.set_margin_right(5)
         self.width_sbtn.set_value(config["line_width"])
@@ -341,8 +345,9 @@ class OptionsDialog(Gtk.Dialog):
         graph_grid.attach_next_to(self.line_com, line_lbl, Gtk.PositionType.RIGHT, 1, 1)
         
         # Create the bar chart style selector.
-        hatch_styles = ["Solid", "Large upward stripes", "Small upward stripes", "Large downward stripes", "Small downward stripes", \
-                        "Horizontal stripes", "Crosshatch", "Diagonal crosshatch", "Stars", "Dots", "Small circles", "Large circles"]
+        hatch_styles = ["Solid", "Large upward stripes", "Small upward stripes", "Large downward stripes",
+                        "Small downward stripes", "Horizontal stripes", "Crosshatch", "Diagonal crosshatch",
+                        "Stars", "Dots", "Small circles", "Large circles"]
         hatch_lbl = Gtk.Label("Bar chart style: ")
         hatch_lbl.set_tooltip_text("Select the style used for bar charts.")
         hatch_lbl.set_margin_left(5)
@@ -367,7 +372,8 @@ class OptionsDialog(Gtk.Dialog):
         
         # Create the pastebin devkey entry.
         pname_lbl = Gtk.Label("API key: ")
-        pname_lbl.set_tooltip_text("API key used for uploading to Pastebin.com.\n\nPlease replace with your own if you use this feature frequently.")
+        pname_lbl.set_tooltip_text("API key used for uploading to Pastebin.com.\n\n" +
+                                   "Please replace with your own if you use this feature frequently.")
         pname_lbl.set_margin_left(5)
         pname_lbl.set_margin_top(5)
         pname_lbl.set_alignment(0, 0.5)
@@ -434,15 +440,14 @@ class OptionsDialog(Gtk.Dialog):
         notebook.append_page(paste_grid, paste_grid_lbl)
         
         # Connect 'Enter' key to the OK button.
-        ok_btn = self.get_widget_for_response(response_id = Gtk.ResponseType.OK)
+        ok_btn = self.get_widget_for_response(response_id=Gtk.ResponseType.OK)
         ok_btn.set_can_default(True)
         ok_btn.grab_default()
         
         # Show the dialog.
         self.show_all()
-    
-    
-    def filter_numbers(self, event):
+
+    def filter_numbers(self):
         """Filters non-numbers out of the entry."""
         
         text = self.zip_ent.get_text()

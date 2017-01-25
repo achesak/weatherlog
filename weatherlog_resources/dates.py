@@ -15,7 +15,7 @@ import datetime
 try:
     from matplotlib.dates import date2num
 except ImportError:
-	pass
+    date2num = None
 
 
 def split_date(date):
@@ -26,7 +26,7 @@ def split_date(date):
     days = int(days)
     months = int(months) - 1
     years = int(years)
-    return (days, months, years)
+    return days, months, years
 
 
 def date_list_datetime(dates):

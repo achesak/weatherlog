@@ -8,7 +8,7 @@
 # This library is used by WeatherLog to get data from Open Weather Map: http://openweathermap.org/
 #
 # Released under the MIT open source license:
-license_text = """
+"""
 Copyright (c) 2016 Adam Chesak
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -72,7 +72,7 @@ def build_api_url(devkey, mode, units, zipcode, location, country):
     return api_url
 
 
-def get_current_weather(devkey, units = "metric", zipcode = None, location = None, country = None):
+def get_current_weather(devkey, units="metric", zipcode=None, location=None, country=None):
     """Gets the current weather for the given location."""
     
     api_url = build_api_url(devkey, OpenWeatherMap.WEATHER, units, zipcode, location, country)
@@ -84,7 +84,7 @@ def get_current_weather(devkey, units = "metric", zipcode = None, location = Non
     return json.loads(result)
 
 
-def get_forecast(devkey, units = "metric", zipcode = None, location = None, country = None, days = "7"):
+def get_forecast(devkey, units="metric", zipcode=None, location=None, country=None, days="7"):
     """Gets the forecast for the given location."""
     
     api_url = build_api_url(devkey, OpenWeatherMap.FORECAST, units, zipcode, location, country)

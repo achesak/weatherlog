@@ -33,22 +33,24 @@ def get_weather(config, units, weather_codes, location, location_type):
     if location_type == "city":
         zipcode = None
         city = location
-    elif location_type == "zip":
+    else:
         zipcode = location
         city = None
 
     # Get the current weather and forecasts.
-    result = api.get_current_weather(config["openweathermap"], units = ("metric" if units["prec"] == "cm" else "imperial"), zipcode = zipcode,
-                                     location = city, country = config["country"])
-    forecast = api.get_forecast(config["openweathermap"], units = ("metric" if units["prec"] == "cm" else "imperial"), zipcode = zipcode,
-                                location = city, country = config["country"])
+    result = api.get_current_weather(config["openweathermap"],
+                                     units=("metric" if units["prec"] == "cm" else "imperial"), zipcode=zipcode,
+                                     location=city, country=config["country"])
+    forecast = api.get_forecast(config["openweathermap"],
+                                units=("metric" if units["prec"] == "cm" else "imperial"), zipcode=zipcode,
+                                location=city, country=config["country"])
     
     if result["cod"] == 401 or forecast["cod"] == 401:
         return "Invalid API key. Please check Options and enter a valid API key", False, False
     data = []
     
     # Sometimes wind degree is not specified. If this is the case, set it to '0'.
-    if not "deg" in result["wind"]:
+    if "deg" not in result["wind"]:
         result["wind"]["deg"] = 0
     
     # Build the data lists.
@@ -64,7 +66,8 @@ def get_weather(config, units, weather_codes, location, location_type):
         ["Wind direction", degrees.degree_to_direction(int(result["wind"]["deg"]))],
         ["Humidity", "%d%%" % result["main"]["humidity"]],
         ["Air pressure", "%.1f %s" % (result["main"]["pressure"], units["airp"])],
-        ["Cloud cover", ["Sunny", "Mostly sunny", "Partly cloudy", "Mostly cloudy", "Cloudy"][clouds.percent_to_term(result["clouds"]["all"])]],
+        ["Cloud cover", ["Sunny", "Mostly sunny", "Partly cloudy",
+                         "Mostly cloudy", "Cloudy"][clouds.percent_to_term(result["clouds"]["all"])]],
         ["Sunrise", datetime.datetime.fromtimestamp(result["sys"]["sunrise"]).strftime("%H:%M:%S")],
         ["Sunset", datetime.datetime.fromtimestamp(result["sys"]["sunset"]).strftime("%H:%M:%S")]
     ]
@@ -93,7 +96,8 @@ def get_weather(config, units, weather_codes, location, location_type):
         data3.append(["Wind direction", degrees.degree_to_direction(int(fc["deg"]))])
         data3.append(["Humidity", "%d%%" % fc["humidity"]])
         data3.append(["Air pressure", "%.1f %s" % (fc["pressure"], units["airp"])])
-        data3.append(["Cloud cover", ["Sunny", "Mostly sunny", "Partly cloudy", "Mostly cloudy", "Cloudy"][clouds.percent_to_term(fc["clouds"])]])
+        data3.append(["Cloud cover", ["Sunny", "Mostly sunny", "Partly cloudy",
+                                      "Mostly cloudy", "Cloudy"][clouds.percent_to_term(fc["clouds"])]])
         if "rain" in fc:
             data3.append(["Precipitation (rain)", "%.1f %s" % (fc["rain"], units["prec"])])
         if "snow" in fc:
@@ -188,13 +192,14 @@ def get_weather_image(code):
     return base_url + img_url
 
 
-def get_prefill_data(user_location, units, config):
+def get_prefill_data(units, config):
     """Gets the data used to automatically fill Add New dialog."""
     
     # Get the data.
     try:
-        data = api.get_current_weather(config["openweathermap"], units = ("metric" if units["prec"] == "cm" else "imperial"), zipcode = config["zipcode"],
-                                       location = config["city"], country = config["country"])
+        data = api.get_current_weather(config["openweathermap"],
+                                       units=("metric" if units["prec"] == "cm" else "imperial"),
+                                       zipcode=config["zipcode"], location=config["city"], country=config["country"])
     except (URLError, ValueError):
         return False, "Cannot get current weather; no internet connection."
     
@@ -202,7 +207,7 @@ def get_prefill_data(user_location, units, config):
         return False, "Invalid API key. Please check Options and enter a valid API key"
     
     # Sometimes wind degree is not specified. If this is the case, set it to '0'.
-    if not "deg" in data["wind"]:
+    if "deg" not in data["wind"]:
         data["wind"]["deg"] = 0
     
     pre = {

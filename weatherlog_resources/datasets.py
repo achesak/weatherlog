@@ -138,7 +138,7 @@ def truncate_column(data, column, max_length):
         if len(col) > max_length:
             col = col[0:max_length - 6] + " [...]"
         elif newline_split:
-            col = col + " [...]"
+            col += " [...]"
         row[column] = col
     
     return new_data

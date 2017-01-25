@@ -15,7 +15,7 @@ import datetime
 try:
     from matplotlib.dates import date2num
 except ImportError:
-	pass
+    pass
 
 # Import application modules.
 import weatherlog_resources.datasets as datasets

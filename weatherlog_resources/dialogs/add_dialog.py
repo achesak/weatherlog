@@ -244,7 +244,7 @@ class AddNewDialog(Gtk.Dialog):
         
         # Pre-fill the fields, if the user wants that.
         elif prefill and (user_location or user_zipcode):
-            station, data = get_weather.get_prefill_data(user_location, units, config)
+            station, data = get_weather.get_prefill_data(units, config)
             
             if not station:
                 error_message = data if isinstance(data, str) else data["error"]

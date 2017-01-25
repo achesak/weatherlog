@@ -14,10 +14,7 @@ import re
 # Import os.path for checking if a directory exists.
 import os.path
 # Import pickle for loading and saving the data.
-try:
-    import cPickle as pickle
-except ImportError:
-    import pickle
+import pickle
 
 # Import application modules.
 from weatherlog_resources.constants import *
@@ -77,7 +74,7 @@ def validate_data(filename):
     
     # Test 1: must be readable.
     try:
-        data = io.read_dataset(filename = filename)
+        data = io.read_dataset(filename=filename)
     except pickle.PickleError:
         return ImportValidation.CANNOT_UNPICKLE
     

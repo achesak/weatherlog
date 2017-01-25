@@ -19,7 +19,7 @@ import collections
 try:
     import statistics
 except ImportError:
-    pass
+    statistics = None
 
 
 def mean(numbers):
@@ -38,9 +38,9 @@ def median(numbers2):
     numbers = sorted(numbers2)
     
     if len(numbers) % 2:
-        return numbers[int(math.floor(len(numbers) / 2))];
+        return numbers[int(math.floor(len(numbers) / 2))]
     else:
-        return (numbers[len(numbers) / 2] + numbers[(len(numbers) / 2) - 1]) / 2;   
+        return (numbers[len(numbers) / 2] + numbers[(len(numbers) / 2) - 1]) / 2
 
 
 def range(numbers):

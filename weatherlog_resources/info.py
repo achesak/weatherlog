@@ -270,12 +270,18 @@ def prec_info(data, units):
         ["Total snow", "%.2f %s (%s)" % (prec_total_snow, units["prec"], prec_per_snow)],
         ["Total hail", "%.2f %s (%s)" % (prec_total_hail, units["prec"], prec_per_hail)],
         ["Total sleet", "%.2f %s (%s)" % (prec_total_sleet, units["prec"], prec_per_sleet)],
-        ["Days with no precipitation", "%d day%s (%.2f%%)" % (prec_none, "" if prec_none == 1 else "s", (prec_none / num_days) * 100)],
-        ["Days with rain", "%d day%s (%.2f%%)" % (prec_rain, "" if prec_rain == 1 else "s", (prec_rain / num_days) * 100)],
-        ["Days with snow", "%d day%s (%.2f%%)" % (prec_snow, "" if prec_snow == 1 else "s", (prec_snow / num_days) * 100)],
-        ["Days with hail", "%d day%s (%.2f%%)" % (prec_hail, "" if prec_hail == 1 else "s", (prec_hail / num_days) * 100)],
-        ["Days with sleet", "%d day%s (%.2f%%)" % (prec_sleet, "" if prec_sleet == 1 else "s", (prec_sleet / num_days) * 100)],
-        ["Most common precipitation type", "%s (%d occurrences)" % (prec_mode if prec_mode != "" else "None", prec_mode_count)]
+        ["Days with no precipitation", "%d day%s (%.2f%%)" %
+            (prec_none, "" if prec_none == 1 else "s", (prec_none / num_days) * 100)],
+        ["Days with rain", "%d day%s (%.2f%%)" %
+            (prec_rain, "" if prec_rain == 1 else "s", (prec_rain / num_days) * 100)],
+        ["Days with snow", "%d day%s (%.2f%%)" %
+            (prec_snow, "" if prec_snow == 1 else "s", (prec_snow / num_days) * 100)],
+        ["Days with hail", "%d day%s (%.2f%%)" %
+            (prec_hail, "" if prec_hail == 1 else "s", (prec_hail / num_days) * 100)],
+        ["Days with sleet", "%d day%s (%.2f%%)" %
+            (prec_sleet, "" if prec_sleet == 1 else "s", (prec_sleet / num_days) * 100)],
+        ["Most common precipitation type", "%s (%d occurrences)" %
+            (prec_mode if prec_mode != "" else "None", prec_mode_count)]
     ]
     
     return data2
@@ -316,7 +322,8 @@ def wind_info(data, units):
         ["Average wind speed", wind_avg],
         ["Median wind speed", wind_median],
         ["Range of wind speeds", wind_range],
-        ["Most common wind direction", "%s (%d occurrences)" % (wind_mode if wind_mode != "" else "None", wind_mode_count)]
+        ["Most common wind direction", "%s (%d occurrences)" %
+            (wind_mode if wind_mode != "" else "None", wind_mode_count)]
     ]
     
     return data2
@@ -378,10 +385,14 @@ def airp_info(data, units):
         ["Average air pressure", "%.2f %s" % (airp_avg, units["airp"])],
         ["Median air pressure", "%.2f %s" % (airp_median, units["airp"])],
         ["Range of air pressures", "%.2f %s" % (airp_range, units["airp"])],
-        ["Most common air pressure", "%.2f %s (%d occurrences)" % (airp_mode, units["airp"], airp_mode_count)],
-        ["Days with steady pressure", "%d day%s (%d%%)" % (airp_steady, "" if airp_steady == 1 else "s", (airp_steady / num_days) * 100)],
-        ["Days with rising pressure", "%d day%s (%d%%)" % (airp_rising, "" if airp_rising == 1 else "s", (airp_rising / num_days) * 100)],
-        ["Days with falling pressure", "%d day%s (%d%%)" % (airp_falling, "" if airp_falling == 1 else "s", (airp_falling / num_days) * 100)]
+        ["Most common air pressure", "%.2f %s (%d occurrences)" %
+            (airp_mode, units["airp"], airp_mode_count)],
+        ["Days with steady pressure", "%d day%s (%d%%)" %
+            (airp_steady, "" if airp_steady == 1 else "s", (airp_steady / num_days) * 100)],
+        ["Days with rising pressure", "%d day%s (%d%%)" %
+            (airp_rising, "" if airp_rising == 1 else "s", (airp_rising / num_days) * 100)],
+        ["Days with falling pressure", "%d day%s (%d%%)" %
+            (airp_falling, "" if airp_falling == 1 else "s", (airp_falling / num_days) * 100)]
     ]
     
     return data2
@@ -432,59 +443,75 @@ def clou_info(data, units):
         m_dict2[i[0]] = i[1]
     
     # If any of the items don't appear, add dict items for them, with the values set to 0.
-    if not "Sunny" in m_dict1:
+    if "Sunny" not in m_dict1:
         m_dict1["Sunny"] = 0
-    if not "Mostly Sunny" in m_dict1:
+    if "Mostly Sunny" not in m_dict1:
         m_dict1["Mostly Sunny"] = 0
-    if not "Partly Cloudy" in m_dict1:
+    if "Partly Cloudy" not in m_dict1:
         m_dict1["Partly Cloudy"] = 0
-    if not "Mostly Cloudy" in m_dict1:
+    if "Mostly Cloudy" not in m_dict1:
         m_dict1["Mostly Cloudy"] = 0
-    if not "Cloudy" in m_dict1:
+    if "Cloudy" not in m_dict1:
         m_dict1["Cloudy"] = 0
-    if not "None" in m_dict2:
+    if "None" not in m_dict2:
         m_dict2["None"] = 0
-    if not "Unknown" in m_dict2:
+    if "Unknown" not in m_dict2:
         m_dict2["Unknown"] = 0
-    if not "Cirrus" in m_dict2:
+    if "Cirrus" not in m_dict2:
         m_dict2["Cirrus"] = 0
-    if not "Cirrocumulus" in m_dict2:
+    if "Cirrocumulus" not in m_dict2:
         m_dict2["Cirrocumulus"] = 0
-    if not "Cirrostratus" in m_dict2:
+    if "Cirrostratus" not in m_dict2:
         m_dict2["Cirrostratus"] = 0
-    if not "Cumulonimbus" in m_dict2:
+    if "Cumulonimbus" not in m_dict2:
         m_dict2["Cumulonimbus"] = 0
-    if not "Altocumulus" in m_dict2:
+    if "Altocumulus" not in m_dict2:
         m_dict2["Altocumulus"] = 0
-    if not "Altostratus" in m_dict2:
+    if "Altostratus" not in m_dict2:
         m_dict2["Altostratus"] = 0
-    if not "Stratus" in m_dict2:
+    if "Stratus" not in m_dict2:
         m_dict2["Stratus"] = 0
-    if not "Cumulus" in m_dict2:
+    if "Cumulus" not in m_dict2:
         m_dict2["Cumulus"] = 0
-    if not "Stratocumulus" in m_dict2:
+    if "Stratocumulus" not in m_dict2:
         m_dict2["Stratocumulus"] = 0
     
     # Create the data list.
     data2 = [
         ["Most common cloud cover", "%s (%s occurrences)" % (m_list1[0][0], m_list1[0][1])],
         ["Most common cloud type", "%s (%s occurrences)" % (m_list2[0][0], m_list2[0][1])],
-        ["Days sunny", "%s day%s (%d%%)" % (m_dict1["Sunny"], "" if m_dict1["Sunny"] == 1 else "s", (m_dict1["Sunny"] / num_days) * 100)],
-        ["Days mostly sunny", "%s day%s (%d%%)" % (m_dict1["Mostly Sunny"], "" if m_dict1["Mostly Sunny"] == 1 else "s", (m_dict1["Mostly Sunny"] / num_days) * 100)],
-        ["Days partly cloudy", "%s day%s (%d%%)" % (m_dict1["Partly Cloudy"], "" if m_dict1["Partly Cloudy"] == 1 else "s", (m_dict1["Partly Cloudy"] / num_days) * 100)],
-        ["Days mostly cloudy", "%s day%s (%d%%)" % (m_dict1["Mostly Cloudy"], "" if m_dict1["Mostly Cloudy"] == 1 else "s", (m_dict1["Mostly Cloudy"] / num_days) * 100)],
-        ["Days cloudy", "%s day%s (%d%%)" % (m_dict1["Cloudy"], "" if m_dict1["Cloudy"] == 1 else "s", (m_dict1["Cloudy"] / num_days) * 100)],
-        ["Days with no clouds", "%s day%s (%d%%)" % (m_dict2["None"], "" if m_dict2["None"] == 1 else "s", (m_dict2["None"] / num_days) * 100)],
-        ["Days with unknown clouds", "%s day%s (%d%%)" % (m_dict2["Unknown"], "" if m_dict2["Unknown"] == 1 else "s", (m_dict2["Unknown"] / num_days) * 100)],
-        ["Days with cirrus", "%s day%s (%d%%)" % (m_dict2["Cirrus"], "" if m_dict2["Cirrus"] == 1 else "s", (m_dict2["Unknown"] / num_days) * 100)],
-        ["Days with cirrocumulus", "%s day%s (%d%%)" % (m_dict2["Cirrocumulus"], "" if m_dict2["Cirrocumulus"] == 1 else "s", (m_dict2["Cirrocumulus"] / num_days) * 100)],
-        ["Days with cirrostratos", "%s day%s (%d%%)" % (m_dict2["Cirrostratus"], "" if m_dict2["Cirrostratus"] == 1 else "s", (m_dict2["Cirrostratus"] / num_days) * 100)],
-        ["Days with cumulonimbus", "%s day%s (%d%%)" % (m_dict2["Cumulonimbus"], "" if m_dict2["Cumulonimbus"] == 1 else "s", (m_dict2["Cumulonimbus"] / num_days) * 100)],
-        ["Days with altocumulus", "%s day%s (%d%%)" % (m_dict2["Altocumulus"], "" if m_dict2["Altocumulus"] == 1 else "s", (m_dict2["Altocumulus"] / num_days) * 100)],
-        ["Days with altostratus", "%s day%s (%d%%)" % (m_dict2["Altostratus"], "" if m_dict2["Altostratus"] == 1 else "s", (m_dict2["Altostratus"] / num_days) * 100)],
-        ["Days with stratus", "%s day%s (%d%%)" % (m_dict2["Stratus"], "" if m_dict2["Stratus"] == 1 else "s", (m_dict2["Stratus"] / num_days) * 100)],
-        ["Days with cumulus", "%s day%s (%d%%)" % (m_dict2["Cumulus"], "" if m_dict2["Cumulus"] == 1 else "s", (m_dict2["Cumulus"] / num_days) * 100)],
-        ["Days with stratocumulus", "%s day%s (%d%%)" % (m_dict2["Stratocumulus"], "" if m_dict2["Stratocumulus"] == 1 else "s", (m_dict2["Stratocumulus"] / num_days) * 100)]
+        ["Days sunny", "%s day%s (%d%%)" %
+            (m_dict1["Sunny"], "" if m_dict1["Sunny"] == 1 else "s", (m_dict1["Sunny"] / num_days) * 100)],
+        ["Days mostly sunny", "%s day%s (%d%%)" %
+            (m_dict1["Mostly Sunny"], "" if m_dict1["Mostly Sunny"] == 1 else "s", (m_dict1["Mostly Sunny"] / num_days) * 100)],
+        ["Days partly cloudy", "%s day%s (%d%%)" %
+            (m_dict1["Partly Cloudy"], "" if m_dict1["Partly Cloudy"] == 1 else "s", (m_dict1["Partly Cloudy"] / num_days) * 100)],
+        ["Days mostly cloudy", "%s day%s (%d%%)" %
+            (m_dict1["Mostly Cloudy"], "" if m_dict1["Mostly Cloudy"] == 1 else "s", (m_dict1["Mostly Cloudy"] / num_days) * 100)],
+        ["Days cloudy", "%s day%s (%d%%)" %
+            (m_dict1["Cloudy"], "" if m_dict1["Cloudy"] == 1 else "s", (m_dict1["Cloudy"] / num_days) * 100)],
+        ["Days with no clouds", "%s day%s (%d%%)" %
+            (m_dict2["None"], "" if m_dict2["None"] == 1 else "s", (m_dict2["None"] / num_days) * 100)],
+        ["Days with unknown clouds", "%s day%s (%d%%)" %
+            (m_dict2["Unknown"], "" if m_dict2["Unknown"] == 1 else "s", (m_dict2["Unknown"] / num_days) * 100)],
+        ["Days with cirrus", "%s day%s (%d%%)" %
+            (m_dict2["Cirrus"], "" if m_dict2["Cirrus"] == 1 else "s", (m_dict2["Unknown"] / num_days) * 100)],
+        ["Days with cirrocumulus", "%s day%s (%d%%)" %
+            (m_dict2["Cirrocumulus"], "" if m_dict2["Cirrocumulus"] == 1 else "s", (m_dict2["Cirrocumulus"] / num_days) * 100)],
+        ["Days with cirrostratos", "%s day%s (%d%%)" %
+            (m_dict2["Cirrostratus"], "" if m_dict2["Cirrostratus"] == 1 else "s", (m_dict2["Cirrostratus"] / num_days) * 100)],
+        ["Days with cumulonimbus", "%s day%s (%d%%)" %
+            (m_dict2["Cumulonimbus"], "" if m_dict2["Cumulonimbus"] == 1 else "s", (m_dict2["Cumulonimbus"] / num_days) * 100)],
+        ["Days with altocumulus", "%s day%s (%d%%)" %
+            (m_dict2["Altocumulus"], "" if m_dict2["Altocumulus"] == 1 else "s", (m_dict2["Altocumulus"] / num_days) * 100)],
+        ["Days with altostratus", "%s day%s (%d%%)" %
+            (m_dict2["Altostratus"], "" if m_dict2["Altostratus"] == 1 else "s", (m_dict2["Altostratus"] / num_days) * 100)],
+        ["Days with stratus", "%s day%s (%d%%)" %
+            (m_dict2["Stratus"], "" if m_dict2["Stratus"] == 1 else "s", (m_dict2["Stratus"] / num_days) * 100)],
+        ["Days with cumulus", "%s day%s (%d%%)" %
+            (m_dict2["Cumulus"], "" if m_dict2["Cumulus"] == 1 else "s", (m_dict2["Cumulus"] / num_days) * 100)],
+        ["Days with stratocumulus", "%s day%s (%d%%)" %
+            (m_dict2["Stratocumulus"], "" if m_dict2["Stratocumulus"] == 1 else "s", (m_dict2["Stratocumulus"] / num_days) * 100)]
     ]
     
     return data2

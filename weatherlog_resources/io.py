@@ -13,24 +13,22 @@
 import os
 # Import glob for getting a list of the datasets.
 import glob
-# Import time for formatting times.
-import time
 # Import json for saving the configuration file.
 import json
 # Import datetime for getting the current time.
 import datetime
 # Import pickle for loading and saving the data.
-try:
-    import cPickle as pickle
-except ImportError:
-    import pickle
+import pickle
 
 
-def write_dataset(main_dir = "", name = "", filename = "", data = []):
+def write_dataset(main_dir="", name="", filename="", data=""):
     """Writes the data to the dataset file."""
 
     # Get the filename.
     filename = filename if filename != "" else "%s/datasets/%s/weather" % (main_dir, name)
+
+    if data == "":
+        data = []
 
     try:
         data_file = open(filename, "wb")
@@ -47,7 +45,7 @@ def write_dataset(main_dir = "", name = "", filename = "", data = []):
         return False
 
 
-def read_dataset(main_dir = "", name = "", filename = ""):
+def read_dataset(main_dir="", name="", filename=""):
     """Reads the data from the dataset file."""
 
     # Get the filename.
@@ -80,11 +78,9 @@ def write_blank_dataset(main_dir, name):
     
     except IOError as e:
         print("write_blank_dataset(): Error saving dataset file (IOError):\n%s" % e)
-        data = []
 
     except (TypeError, ValueError) as e:
         print("write_blank_dataset(): Error saving dataset file (TypeError or ValueError):\n%s" % e)
-        data = []
 
 
 def write_standard_file(filename, data):
@@ -99,13 +95,13 @@ def write_standard_file(filename, data):
         print("write_standard_file(): Error saving data file (IOError):\n%s" % e)
 
 
-def write_json_file(filename, data, indent = False, indent_amount = 4):
+def write_json_file(filename, data, indent=False, indent_amount=4):
     """Writes a JSON file."""
     
     try:
         data_file = open(filename, "w")
         if indent:
-            json.dump(data, data_file, indent = indent_amount)
+            json.dump(data, data_file, indent=indent_amount)
         else:
             json.dump(data, data_file)
         data_file.close()
@@ -117,7 +113,7 @@ def write_json_file(filename, data, indent = False, indent_amount = 4):
         print("write_json_file(): Error saving data file (TypeError or ValueError):\n%s" % e)
 
 
-def get_dataset_list(main_dir, last_dataset, exclude_current = True):
+def get_dataset_list(main_dir, last_dataset, exclude_current=True):
     """Gets the list of datasets."""
 
     # Remember the correct directory and switch to where the datasets are stored.
@@ -127,7 +123,7 @@ def get_dataset_list(main_dir, last_dataset, exclude_current = True):
     # Get the list of datasets and sort the list.
     datasets = glob.glob("*")
     if exclude_current:
-        datasets = list(set(datasets) - set([last_dataset]))
+        datasets = list(set(datasets) - {last_dataset})
     datasets.sort()
 
     # Get the creation and last modified dates.
@@ -166,7 +162,7 @@ def get_metadata(main_dir, last_dataset):
     return creation, modified
 
 
-def write_metadata(main_dir, last_dataset, creation = "", modified = "", now = False):
+def write_metadata(main_dir, last_dataset, creation="", modified="", now=False):
     """Writes the metadata file."""
     
     if now:
@@ -206,7 +202,11 @@ def write_restore_data(conf_dir, last_dataset, window_height, window_width):
 
     try:
         rest_file = open("%s/application_restore.json" % conf_dir, "w")
-        json.dump({"last_dataset": last_dataset, "window_height": window_height, "window_width": window_width}, rest_file)
+        json.dump({
+            "last_dataset": last_dataset,
+            "window_height": window_height,
+            "window_width": window_width
+        }, rest_file)
         rest_file.close()
 
     except IOError as e:

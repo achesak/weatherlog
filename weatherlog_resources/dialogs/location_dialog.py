@@ -57,7 +57,7 @@ class LocationDialog(Gtk.Dialog):
         
         # Connect 'Enter' key to the OK button.
         self.nam_ent.set_activates_default(True)
-        ok_btn = self.get_widget_for_response(response_id = Gtk.ResponseType.OK)
+        ok_btn = self.get_widget_for_response(response_id=Gtk.ResponseType.OK)
         ok_btn.set_can_default(True)
         ok_btn.grab_default()
         
