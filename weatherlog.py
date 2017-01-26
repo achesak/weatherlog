@@ -1732,6 +1732,18 @@ class WeatherLog(Gtk.Window):
         self.info_clou_list.clear()
         self.info_note_list.clear()
 
+        # Clear the existing chart data.
+        self.chart_temp_list.clear()
+        self.chart_chil_list.clear()
+        self.chart_prec_list.clear()
+        self.chart_wind_list.clear()
+        self.chart_humi_list.clear()
+        self.chart_airp_list.clear()
+        self.chart_visi_list.clear()
+
+        if len(self.data) == 0:
+            return
+
         # Get the info data.
         info_data = [
             info.general_info(self.data, self.units),
@@ -1767,15 +1779,6 @@ class WeatherLog(Gtk.Window):
             self.info_clou_list.append(i)
         for i in info_data[9]:
             self.info_note_list.append(i)
-
-        # Clear the existing chart data.
-        self.chart_temp_list.clear()
-        self.chart_chil_list.clear()
-        self.chart_prec_list.clear()
-        self.chart_wind_list.clear()
-        self.chart_humi_list.clear()
-        self.chart_airp_list.clear()
-        self.chart_visi_list.clear()
 
         # Get the chart data.
         chart_data = [
