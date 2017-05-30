@@ -1188,6 +1188,7 @@ class WeatherLog(Gtk.Window):
         self.config = launch.get_config(self.conf_dir)
         self.units = launch.get_units(self.config)
         self.options(True, update_only=True)
+        self.update_data()
 
     def switch_dataset(self, event):
         """Switches datasets."""
@@ -1259,6 +1260,7 @@ class WeatherLog(Gtk.Window):
         # Update the title.
         self.save()
         self.update_title()
+        self.update_data()
 
     def remove_dataset(self, event):
         """Removes a dataset."""
@@ -1461,6 +1463,7 @@ class WeatherLog(Gtk.Window):
         # Update the title.
         self.save()
         self.update_title()
+        self.update_data()
 
     def copy_data_dataset(self, event):
         """Copies or moves data to another dataset."""
