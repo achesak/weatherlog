@@ -1741,6 +1741,9 @@ class WeatherLog(Gtk.Window):
         self.chart_airp_list.clear()
         self.chart_visi_list.clear()
 
+        # Clear the existing graph data.
+        graph_builder.clear_graphs(self)
+
         if len(self.data) == 0:
             return
 
