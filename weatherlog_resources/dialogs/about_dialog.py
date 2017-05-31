@@ -27,8 +27,9 @@ class WeatherLogAboutDialog(Gtk.AboutDialog):
         self.set_program_name(title)
         self.set_logo(icon)
         self.set_version(version)
-        self.set_comments("WeatherLog is an application for keeping track of the weather\nand getting information about past trends.")
-        self.set_copyright("Copyright (c) 2013-2016 Adam Chesak")
+        self.set_comments("WeatherLog is an application for keeping track of the weather"
+                          "\nand getting information about past trends.")
+        self.set_copyright("Copyright (c) 2013-2017 Adam Chesak")
         self.set_authors(["Adam Chesak <achesak@yahoo.com>"])
         self.set_license(license_text)
         self.set_website("https://github.com/achesak/weatherlog")
