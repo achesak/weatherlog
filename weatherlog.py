@@ -66,7 +66,7 @@ import weatherlog_resources.convert as convert
 import weatherlog_resources.io as io
 import weatherlog_resources.export as export
 import weatherlog_resources.info as info
-import weatherlog_resources.charts as charts
+import weatherlog_resources.tables as tables
 import weatherlog_resources.graphs as graphs
 import weatherlog_resources.filter_data as filter_data
 import weatherlog_resources.get_weather as get_weather
@@ -75,7 +75,7 @@ import weatherlog_resources.commands as commands
 
 # Import UI builders.
 import weatherlog_resources.ui.info_builder as info_builder
-import weatherlog_resources.ui.chart_builder as chart_builder
+import weatherlog_resources.ui.table_builder as table_builder
 import weatherlog_resources.ui.graph_builder as graph_builder
 
 # Import dialogs.
@@ -85,7 +85,7 @@ from weatherlog_resources.dialogs.entry_dialog import GenericEntryDialog
 from weatherlog_resources.dialogs.date_selection_dialog import DateSelectionDialog
 from weatherlog_resources.dialogs.calendar_range_dialog import CalendarRangeDialog
 from weatherlog_resources.dialogs.info_dialog import InfoDialog
-from weatherlog_resources.dialogs.chart_dialog import ChartDialog
+from weatherlog_resources.dialogs.table_dialog import TableDialog
 from weatherlog_resources.dialogs.graph_dialog import GraphDialog
 from weatherlog_resources.dialogs.dataset_selection_dialog import DatasetSelectionDialog
 from weatherlog_resources.dialogs.dataset_add_select_dialog import DatasetAddSelectionDialog
@@ -157,7 +157,7 @@ class WeatherLog(Gtk.Window):
         self.tabs.set_tab_pos(Gtk.PositionType.TOP)
         self.tab_data_lbl = Gtk.Label("Data")
         self.tab_info_lbl = Gtk.Label("Info")
-        self.tab_chart_lbl = Gtk.Label("Charts")
+        self.tab_table_lbl = Gtk.Label("Tables")
         self.tab_graph_lbl = Gtk.Label("Graphs")
 
         # Create the main UI.
@@ -227,10 +227,10 @@ class WeatherLog(Gtk.Window):
              lambda x: self.data_range(InfoType.INFO)),
             ("info_selected", None, "Info for _Selected Dates...", None, None,
              lambda x: self.data_selected(InfoType.INFO)),
-            ("charts_range", None, "Charts i_n Range...", "<Control><Shift>c", None,
-             lambda x: self.data_range(InfoType.CHART)),
-            ("charts_selected", None, "Charts _for Selected Dates...", None, None,
-             lambda x: self.data_selected(InfoType.CHART)),
+            ("tables_range", None, "Tables i_n Range...", "<Control><Shift>c", None,
+             lambda x: self.data_range(InfoType.TABLE)),
+            ("tables_selected", None, "Tables _for Selected Dates...", None, None,
+             lambda x: self.data_selected(InfoType.TABLE)),
             ("graphs_range", None, "Gr_aphs in Range...", "<Control><Shift>g", None,
              lambda x: self.data_range(InfoType.GRAPH)),
             ("graphs_selected", None, "Grap_hs for Selected Dates...", None, None,
@@ -262,7 +262,7 @@ class WeatherLog(Gtk.Window):
 
         # Set up the tabs.
         info_builder.info_builder(self)
-        chart_builder.chart_builder(self)
+        table_builder.table_builder(self)
         graph_builder.graph_builder(self)
 
         # Build the UI.
@@ -284,7 +284,7 @@ class WeatherLog(Gtk.Window):
         # Add the tabs.
         self.tabs.append_page(self.data_frame, self.tab_data_lbl)
         self.tabs.append_page(self.info_frame, self.tab_info_lbl)
-        self.tabs.append_page(self.chart_frame, self.tab_chart_lbl)
+        self.tabs.append_page(self.table_frame, self.tab_table_lbl)
         self.tabs.append_page(self.graph_frame, self.tab_graph_lbl)
 
         # Bind the events.
@@ -617,8 +617,8 @@ class WeatherLog(Gtk.Window):
         # Determine the dialog titles.
         if mode == InfoType.INFO:
             title = "Info in Range - %s" % self.last_dataset
-        elif mode == InfoType.CHART:
-            title = "Charts in Range - %s" % self.last_dataset
+        elif mode == InfoType.TABLE:
+            title = "Tables in Range - %s" % self.last_dataset
         elif mode == InfoType.GRAPH:
             title = "Graphs in Range - %s" % self.last_dataset
         else:
@@ -673,8 +673,8 @@ class WeatherLog(Gtk.Window):
         # Pass the data to the appropriate dialog.
         if mode == InfoType.INFO:
             self.show_info_generic(data=data2)
-        elif mode == InfoType.CHART:
-            self.show_chart_generic(data=data2)
+        elif mode == InfoType.TABLE:
+            self.show_table_generic(data=data2)
         elif mode == InfoType.GRAPH:
             self.show_graph_generic(data=data2)
 
@@ -684,8 +684,8 @@ class WeatherLog(Gtk.Window):
         # Determine the dialog titles.
         if mode == InfoType.INFO:
             title = "Info for Selected Dates - %s" % self.last_dataset
-        elif mode == InfoType.CHART:
-            title = "Charts for Selected Dates - %s" % self.last_dataset
+        elif mode == InfoType.TABLE:
+            title = "Tables for Selected Dates - %s" % self.last_dataset
         elif mode == InfoType.GRAPH:
             title = "Graphs for Selected Dates - %s" % self.last_dataset
 
@@ -729,8 +729,8 @@ class WeatherLog(Gtk.Window):
         # Pass the data to the appropriate dialog.
         if mode == InfoType.INFO:
             self.show_info_generic(data=ndata)
-        elif mode == InfoType.CHART:
-            self.show_chart_generic(data=ndata)
+        elif mode == InfoType.TABLE:
+            self.show_table_generic(data=ndata)
         elif mode == InfoType.GRAPH:
             self.show_graph_generic(data=ndata)
 
@@ -778,45 +778,45 @@ class WeatherLog(Gtk.Window):
                                      ["Cloud Cover Info", ["Field", "Value"], data2[8]],
                                      ["Notes Info", ["Field", "Value"], data2[9]]], filename)
 
-    def show_chart_generic(self, data=None):
-        """Shows a chart about the data."""
+    def show_table_generic(self, data=None):
+        """Shows a table about the data."""
 
         if not data:
             data = self.data
 
         if len(data) == 0:
-            show_no_data_dialog(self, "Charts - %s" % self.last_dataset)
+            show_no_data_dialog(self, "Tables - %s" % self.last_dataset)
             return
 
-        # Get the chart data.
+        # Get the table data.
         data2 = [
-            charts.temp_chart(data, self.units),
-            charts.chil_chart(data, self.units),
-            charts.prec_chart(data, self.units),
-            charts.wind_chart(data, self.units),
-            charts.humi_chart(data, self.units),
-            charts.airp_chart(data, self.units),
-            charts.visi_chart(data, self.units)
+            tables.temp_table(data, self.units),
+            tables.chil_table(data, self.units),
+            tables.prec_table(data, self.units),
+            tables.wind_table(data, self.units),
+            tables.humi_table(data, self.units),
+            tables.airp_table(data, self.units),
+            tables.visi_table(data, self.units)
         ]
 
-        # Show the chart.
-        chart_dlg = ChartDialog(self, "Charts - %s" % self.last_dataset, data2)
-        response = chart_dlg.run()
-        chart_dlg.destroy()
+        # Show the table.
+        table_dlg = TableDialog(self, "Tables - %s" % self.last_dataset, data2)
+        response = table_dlg.run()
+        table_dlg.destroy()
 
         # Export the data:
         if response == DialogResponse.EXPORT:
-            response2, filename = show_export_dialog(self, "Export Charts - %s" % self.last_dataset)
+            response2, filename = show_export_dialog(self, "Export Tables - %s" % self.last_dataset)
             if response2 == Gtk.ResponseType.OK:
-                chart_columns = ["Day", "Value", "Average Difference", "Low Difference", "High Difference",
+                table_columns = ["Day", "Value", "Average Difference", "Low Difference", "High Difference",
                                  "Median Difference"]
-                export.html_generic([["Temperature Chart", chart_columns, data2[0]],
-                                     ["Wind Chill Chart", chart_columns, data2[1]],
-                                     ["Precipitation Chart", chart_columns, data2[2]],
-                                     ["Wind Chart", chart_columns, data2[3]],
-                                     ["Humidity Chart", chart_columns, data2[4]],
-                                     ["Air Pressure Chart", chart_columns, data2[5]],
-                                     ["Visibility Chart", chart_columns, data2[6]]], filename)
+                export.html_generic([["Temperature Table", table_columns, data2[0]],
+                                     ["Wind Chill Table", table_columns, data2[1]],
+                                     ["Precipitation Table", table_columns, data2[2]],
+                                     ["Wind Table", table_columns, data2[3]],
+                                     ["Humidity Table", table_columns, data2[4]],
+                                     ["Air Pressure Table", table_columns, data2[5]],
+                                     ["Visibility Table", table_columns, data2[6]]], filename)
 
     def show_graph_generic(self, data=None):
         """Shows graphs of the data."""
@@ -1716,7 +1716,7 @@ class WeatherLog(Gtk.Window):
             self.airp_col.set_title("Air Pressure (%s)" % self.units["airp"])
 
     def update_data(self):
-        """Updates the Info, Charts, and Graphs tabs."""
+        """Updates the Info, Tables, and Graphs tabs."""
 
         # Clear the existing info data.
         self.info_gen_list.clear()
@@ -1730,14 +1730,14 @@ class WeatherLog(Gtk.Window):
         self.info_clou_list.clear()
         self.info_note_list.clear()
 
-        # Clear the existing chart data.
-        self.chart_temp_list.clear()
-        self.chart_chil_list.clear()
-        self.chart_prec_list.clear()
-        self.chart_wind_list.clear()
-        self.chart_humi_list.clear()
-        self.chart_airp_list.clear()
-        self.chart_visi_list.clear()
+        # Clear the existing table data.
+        self.table_temp_list.clear()
+        self.table_chil_list.clear()
+        self.table_prec_list.clear()
+        self.table_wind_list.clear()
+        self.table_humi_list.clear()
+        self.table_airp_list.clear()
+        self.table_visi_list.clear()
 
         # Clear the existing graph data.
         graph_builder.clear_graphs(self)
@@ -1781,32 +1781,32 @@ class WeatherLog(Gtk.Window):
         for i in info_data[9]:
             self.info_note_list.append(i)
 
-        # Get the chart data.
-        chart_data = [
-            charts.temp_chart(self.data, self.units),
-            charts.chil_chart(self.data, self.units),
-            charts.prec_chart(self.data, self.units),
-            charts.wind_chart(self.data, self.units),
-            charts.humi_chart(self.data, self.units),
-            charts.airp_chart(self.data, self.units),
-            charts.visi_chart(self.data, self.units)
+        # Get the table data.
+        table_data = [
+            tables.temp_table(self.data, self.units),
+            tables.chil_table(self.data, self.units),
+            tables.prec_table(self.data, self.units),
+            tables.wind_table(self.data, self.units),
+            tables.humi_table(self.data, self.units),
+            tables.airp_table(self.data, self.units),
+            tables.visi_table(self.data, self.units)
         ]
 
-        # Add the chart data.
-        for i in chart_data[0]:
-            self.chart_temp_list.append(i)
-        for i in chart_data[1]:
-            self.chart_chil_list.append(i)
-        for i in chart_data[2]:
-            self.chart_prec_list.append(i)
-        for i in chart_data[3]:
-            self.chart_wind_list.append(i)
-        for i in chart_data[4]:
-            self.chart_humi_list.append(i)
-        for i in chart_data[5]:
-            self.chart_airp_list.append(i)
-        for i in chart_data[6]:
-            self.chart_visi_list.append(i)
+        # Add the table data.
+        for i in table_data[0]:
+            self.table_temp_list.append(i)
+        for i in table_data[1]:
+            self.table_chil_list.append(i)
+        for i in table_data[2]:
+            self.table_prec_list.append(i)
+        for i in table_data[3]:
+            self.table_wind_list.append(i)
+        for i in table_data[4]:
+            self.table_humi_list.append(i)
+        for i in table_data[5]:
+            self.table_airp_list.append(i)
+        for i in table_data[6]:
+            self.table_visi_list.append(i)
 
         # Get the graph data.
         graph_data = graphs.get_data(self.data)

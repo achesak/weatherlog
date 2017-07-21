@@ -25,8 +25,8 @@
       <menuitem action="info_range" />
       <menuitem action="info_selected" />
       <separator />
-      <menuitem action="charts_range" />
-      <menuitem action="charts_selected" />
+      <menuitem action="tables_range" />
+      <menuitem action="tables_selected" />
       <separator />
       <menuitem action="graphs_range" />
       <menuitem action="graphs_selected" />

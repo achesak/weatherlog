@@ -132,5 +132,5 @@ class CloudCoverageType:
 # Info types:
 class InfoType:
     INFO = 0
-    CHART = 1
+    TABLE = 1
     GRAPH = 2

@@ -3,8 +3,8 @@
 
 ################################################################################
 #
-# WeatherLog: dialogs/chart_dialog.py
-# This dialog shows the dataset charts.
+# WeatherLog: dialogs/table_dialog.py
+# This dialog shows the dataset tables.
 #
 ################################################################################
 
@@ -13,8 +13,8 @@
 from gi.repository import Gtk
 
 
-class ChartDialog(Gtk.Dialog):
-    """Shows the chart dialog."""
+class TableDialog(Gtk.Dialog):
+    """Shows the table dialog."""
     
     def __init__(self, parent, title, data):
         """Create the dialog."""
@@ -27,9 +27,9 @@ class ChartDialog(Gtk.Dialog):
         # Create the tab notebook.
         notebook = Gtk.Notebook()
         notebook.set_tab_pos(Gtk.PositionType.LEFT)
-        chart_box = self.get_content_area()
+        table_box = self.get_content_area()
         
-        # Tab 1: Temperature chart.
+        # Tab 1: Temperature table.
         temp_box = Gtk.Box()
         temp_box.set_hexpand(True)
         temp_box.set_vexpand(True)
@@ -58,7 +58,7 @@ class ChartDialog(Gtk.Dialog):
         self.temp_tree.append_column(temp_med_col)
         temp_box.pack_start(self.temp_tree, fill = True, expand = True, padding = 0)
         
-        # Tab 2: Wind Chill chart.
+        # Tab 2: Wind Chill table.
         chil_box = Gtk.Box()
         chil_box_lbl = Gtk.Label("Wind Chill")
         self.chil_list = Gtk.ListStore(str, str, str, str, str, str)
@@ -85,7 +85,7 @@ class ChartDialog(Gtk.Dialog):
         self.chil_tree.append_column(chil_med_col)
         chil_box.pack_start(self.chil_tree, fill = True, expand = True, padding = 0)
         
-        # Tab 3: Precipitation chart.
+        # Tab 3: Precipitation table.
         prec_box = Gtk.Box()
         prec_box_lbl = Gtk.Label("Precipitation")
         self.prec_list = Gtk.ListStore(str, str, str, str, str, str)
@@ -112,7 +112,7 @@ class ChartDialog(Gtk.Dialog):
         self.prec_tree.append_column(prec_med_col)
         prec_box.pack_start(self.prec_tree, fill = True, expand = True, padding = 0)
         
-        # Tab 4: Wind chart.
+        # Tab 4: Wind table.
         wind_box = Gtk.Box()
         wind_box_lbl = Gtk.Label("Wind")
         self.wind_list = Gtk.ListStore(str, str, str, str, str, str)
@@ -139,7 +139,7 @@ class ChartDialog(Gtk.Dialog):
         self.wind_tree.append_column(wind_med_col)
         wind_box.pack_start(self.wind_tree, fill = True, expand = True, padding = 0)
         
-        # Tab 5: Humidity chart.
+        # Tab 5: Humidity table.
         humi_box = Gtk.Box()
         humi_box_lbl = Gtk.Label("Humidity")
         self.humi_list = Gtk.ListStore(str, str, str, str, str, str)
@@ -166,7 +166,7 @@ class ChartDialog(Gtk.Dialog):
         self.humi_tree.append_column(humi_med_col)
         humi_box.pack_start(self.humi_tree, fill = True, expand = True, padding = 0)
         
-        # Tab 6: Air Pressure chart.
+        # Tab 6: Air Pressure table.
         airp_box = Gtk.Box()
         airp_box_lbl = Gtk.Label("Air Pressure")
         self.airp_list = Gtk.ListStore(str, str, str, str, str, str)
@@ -193,7 +193,7 @@ class ChartDialog(Gtk.Dialog):
         self.airp_tree.append_column(airp_med_col)
         airp_box.pack_start(self.airp_tree, fill = True, expand = True, padding = 0)
         
-        # Tab 7: Visibility chart.
+        # Tab 7: Visibility table.
         visi_box = Gtk.Box()
         visi_box_lbl = Gtk.Label("Visibility")
         self.visi_list = Gtk.ListStore(str, str, str, str, str, str)
@@ -225,7 +225,7 @@ class ChartDialog(Gtk.Dialog):
         scrolled_win.set_hexpand(True)
         scrolled_win.set_vexpand(True)
         scrolled_win.add(notebook)
-        chart_box.add(scrolled_win)
+        table_box.add(scrolled_win)
         
         # Add the tabs to the notebook.
         notebook.append_page(temp_box, temp_box_lbl)

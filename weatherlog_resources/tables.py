@@ -3,8 +3,8 @@
 
 ################################################################################
 #
-# WeatherLog: charts.py
-# This module calculates and organizes data for the Charts feature.
+# WeatherLog: tables.py
+# This module calculates and organizes data for the Tables feature.
 #
 ################################################################################
 
@@ -14,8 +14,8 @@ import weatherlog_resources.datasets as datasets
 import weatherlog_resources.calculations as calculations
 
 
-def temp_chart(data, units):
-    """"Gets the temperature chart data."""
+def temp_table(data, units):
+    """"Gets the temperature table data."""
     
     # Get the data.
     temp_data = datasets.convert_float(datasets.get_column(data, 1))
@@ -29,14 +29,14 @@ def temp_chart(data, units):
     for i in range(0, len(data)):
         
         temp = [data[i][0], "%.2f %s" % (temp_data[i], units["temp"])]
-        temp += build_chart(temp_data[i], temp_low, temp_high, temp_avg, temp_median, units["temp"])
+        temp += build_table(temp_data[i], temp_low, temp_high, temp_avg, temp_median, units["temp"])
         data2.append(temp)
     
     return data2
 
 
-def chil_chart(data, units):
-    """"Gets the wind chill chart data."""
+def chil_table(data, units):
+    """"Gets the wind chill table data."""
     
     # Get the data.
     chil_data = datasets.convert_float(datasets.get_column(data, 2))
@@ -50,14 +50,14 @@ def chil_chart(data, units):
     for i in range(0, len(data)):
         
         chil = [data[i][0], "%.2f %s" % (chil_data[i], units["temp"])]
-        chil += build_chart(chil_data[i], chil_low, chil_high, chil_avg, chil_median, units["temp"])
+        chil += build_table(chil_data[i], chil_low, chil_high, chil_avg, chil_median, units["temp"])
         data2.append(chil)
     
     return data2
 
 
-def prec_chart(data, units):
-    """"Gets the precipitation chart data."""
+def prec_table(data, units):
+    """"Gets the precipitation table data."""
     
     # Get the data.
     prec_data1, prec_data2 = datasets.split_list(datasets.get_column(data, 3))
@@ -73,14 +73,14 @@ def prec_chart(data, units):
     for i in range(0, len(data)):
         
         prec = [data[i][0], "%.2f %s" % (prec_data1[i], units["prec"])]
-        prec += build_chart(prec_data1[i], prec_low, prec_high, prec_avg, prec_median, units["prec"])
+        prec += build_table(prec_data1[i], prec_low, prec_high, prec_avg, prec_median, units["prec"])
         data2.append(prec)
     
     return data2
 
 
-def wind_chart(data, units):
-    """"Gets the wind chart data."""
+def wind_table(data, units):
+    """"Gets the wind table data."""
     
     # Get the data.
     wind_data1, wind_data2 = datasets.split_list(datasets.get_column(data, 4))
@@ -96,14 +96,14 @@ def wind_chart(data, units):
     for i in range(0, len(data)):
         
         wind = [data[i][0], "%.2f %s" % (wind_data1[i], units["wind"])]
-        wind += build_chart(wind_data1[i], wind_low, wind_high, wind_avg, wind_median, units["wind"])
+        wind += build_table(wind_data1[i], wind_low, wind_high, wind_avg, wind_median, units["wind"])
         data2.append(wind)
     
     return data2
 
 
-def humi_chart(data, units):
-    """"Gets the humidity chart data."""
+def humi_table(data, units):
+    """"Gets the humidity table data."""
     
     # Get the data.
     humi_data = datasets.convert_float(datasets.get_column(data, 5))
@@ -117,14 +117,14 @@ def humi_chart(data, units):
     for i in range(0, len(data)):
         
         humi = [data[i][0], "%.2f%%" % (humi_data[i])]
-        humi += build_chart(humi_data[i], humi_low, humi_high, humi_avg, humi_median, "%", unit_space=False)
+        humi += build_table(humi_data[i], humi_low, humi_high, humi_avg, humi_median, "%", unit_space=False)
         data2.append(humi)
     
     return data2
 
 
-def airp_chart(data, units):
-    """"Gets the air pressure chart data."""
+def airp_table(data, units):
+    """"Gets the air pressure table data."""
     
     # Get the data.
     airp_data1, airp_data2 = datasets.split_list(datasets.get_column(data, 6))
@@ -139,14 +139,14 @@ def airp_chart(data, units):
     for i in range(0, len(data)):
         
         airp = [data[i][0], "%.2f %s" % (airp_data1[i], units["airp"])]
-        airp += build_chart(airp_data1[i], airp_low, airp_high, airp_avg, airp_median, units["airp"])
+        airp += build_table(airp_data1[i], airp_low, airp_high, airp_avg, airp_median, units["airp"])
         data2.append(airp)
     
     return data2
 
 
-def visi_chart(data, units):
-    """"Gets the visibility chart data."""
+def visi_table(data, units):
+    """"Gets the visibility table data."""
     
     # Get the data.
     visi_data = datasets.convert_float(datasets.get_column(data, 7))
@@ -160,14 +160,14 @@ def visi_chart(data, units):
     for i in range(0, len(data)):
         
         visi = [data[i][0], "%.2f %s" % (visi_data[i], units["visi"])]
-        visi += build_chart(visi_data[i], visi_low, visi_high, visi_avg, visi_median, units["visi"])
+        visi += build_table(visi_data[i], visi_low, visi_high, visi_avg, visi_median, units["visi"])
         data2.append(visi)
     
     return data2
 
 
-def build_chart(value, min_val, max_val, avg_val, med_val, unit, unit_space=True):
-    """Builds a chart row."""
+def build_table(value, min_val, max_val, avg_val, med_val, unit, unit_space=True):
+    """Builds a table row."""
     
     row = []
     
