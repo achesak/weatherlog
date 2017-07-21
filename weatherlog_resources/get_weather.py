@@ -58,6 +58,7 @@ def get_weather(config, units, weather_codes, location, location_type):
     for cond in result["weather"]:
         conditions.append(weather_codes[int(cond["id"])])
     data1 = [
+        ["Location", "%s, %s" % (result["name"], result["sys"]["country"])],
         ["Condition", "\n".join(conditions)],
         ["Temperature", "%.1f %s" % (result["main"]["temp"], units["temp"])],
         ["Temperature (minimum)", "%.1f %s" % (result["main"]["temp_min"], units["temp"])],
@@ -72,42 +73,35 @@ def get_weather(config, units, weather_codes, location, location_type):
         ["Sunset", datetime.datetime.fromtimestamp(result["sys"]["sunset"]).strftime("%H:%M:%S")]
     ]
     data2 = [
-        ["Location", result["name"]],
-        ["Country", result["sys"]["country"]],
-        ["Latitude", str(result["coord"]["lat"])],
-        ["Longitude", str(result["coord"]["lon"])]
-    ]
-    data3 = [
     ]
     for i in range(0, len(forecast["list"])):
         fc = forecast["list"][i]
         conditions = []
         for cond in fc["weather"]:
             conditions.append(weather_codes[int(cond["id"])])
-        data3.append(["Date", datetime.datetime.fromtimestamp(fc["dt"]).strftime("%d/%m/%Y")])
-        data3.append(["Condition", "\n".join(conditions)])
-        data3.append(["Temperature", "%.1f %s" % (fc["temp"]["day"], units["temp"])])
-        data3.append(["Temperature (minimum)", "%.1f %s" % (fc["temp"]["min"], units["temp"])])
-        data3.append(["Temperature (maximum)", "%.1f %s" % (fc["temp"]["max"], units["temp"])])
-        data3.append(["Temperature (morning)", "%.1f %s" % (fc["temp"]["morn"], units["temp"])])
-        data3.append(["Temperature (evening)", "%.1f %s" % (fc["temp"]["eve"], units["temp"])])
-        data3.append(["Temperature (night)", "%.1f %s" % (fc["temp"]["night"], units["temp"])])
-        data3.append(["Wind speed", "%s %s" % (fc["speed"], units["wind"])])
-        data3.append(["Wind direction", degrees.degree_to_direction(int(fc["deg"]))])
-        data3.append(["Humidity", "%d%%" % fc["humidity"]])
-        data3.append(["Air pressure", "%.1f %s" % (fc["pressure"], units["airp"])])
-        data3.append(["Cloud cover", ["Sunny", "Mostly sunny", "Partly cloudy",
+        data2.append(["Date", datetime.datetime.fromtimestamp(fc["dt"]).strftime("%d/%m/%Y")])
+        data2.append(["Condition", "\n".join(conditions)])
+        data2.append(["Temperature", "%.1f %s" % (fc["temp"]["day"], units["temp"])])
+        data2.append(["Temperature (minimum)", "%.1f %s" % (fc["temp"]["min"], units["temp"])])
+        data2.append(["Temperature (maximum)", "%.1f %s" % (fc["temp"]["max"], units["temp"])])
+        data2.append(["Temperature (morning)", "%.1f %s" % (fc["temp"]["morn"], units["temp"])])
+        data2.append(["Temperature (evening)", "%.1f %s" % (fc["temp"]["eve"], units["temp"])])
+        data2.append(["Temperature (night)", "%.1f %s" % (fc["temp"]["night"], units["temp"])])
+        data2.append(["Wind speed", "%s %s" % (fc["speed"], units["wind"])])
+        data2.append(["Wind direction", degrees.degree_to_direction(int(fc["deg"]))])
+        data2.append(["Humidity", "%d%%" % fc["humidity"]])
+        data2.append(["Air pressure", "%.1f %s" % (fc["pressure"], units["airp"])])
+        data2.append(["Cloud cover", ["Sunny", "Mostly sunny", "Partly cloudy",
                                       "Mostly cloudy", "Cloudy"][clouds.percent_to_term(fc["clouds"])]])
         if "rain" in fc:
-            data3.append(["Precipitation (rain)", "%.1f %s" % (fc["rain"], units["prec"])])
+            data2.append(["Precipitation (rain)", "%.1f %s" % (fc["rain"], units["prec"])])
         if "snow" in fc:
-            data3.append(["Precipitation (snow)", "%.1f %s" % (fc["snow"], units["prec"])])
+            data2.append(["Precipitation (snow)", "%.1f %s" % (fc["snow"], units["prec"])])
         if i != len(forecast["list"]) - 1:
-            data3.append(["", ""])
+            data2.append(["", ""])
 
     data.append(data1)
     data.append(data2)
-    data.append(data3)
 
     # Get the prefill data.
     prefill_data = [

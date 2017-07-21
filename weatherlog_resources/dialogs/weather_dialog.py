@@ -56,25 +56,7 @@ class CurrentWeatherDialog(Gtk.Dialog):
         wea_win.set_vexpand(True)
         wea_win.add(wea_box)
         
-        # Tab 2: Location info.
-        loc_box = Gtk.Box()
-        loc_box_lbl = Gtk.Label("Location")
-        self.loc_list = Gtk.ListStore(str, str)
-        self.loc_tree = Gtk.TreeView(model=self.loc_list)
-        loc_field_text = Gtk.CellRendererText()
-        loc_field_col = Gtk.TreeViewColumn("Field", loc_field_text, text=0)
-        loc_field_col.set_min_width(150)
-        self.loc_tree.append_column(loc_field_col)
-        loc_value_text = Gtk.CellRendererText()
-        loc_value_col = Gtk.TreeViewColumn("Value", loc_value_text, text=1)
-        self.loc_tree.append_column(loc_value_col)
-        loc_box.pack_start(self.loc_tree, fill=True, expand=True, padding=0)
-        loc_win = Gtk.ScrolledWindow()
-        loc_win.set_hexpand(True)
-        loc_win.set_vexpand(True)
-        loc_win.add(loc_box)
-        
-        # Tab 3: Forecast info.
+        # Tab 2: Forecast info.
         for_box = Gtk.Box()
         for_box_lbl = Gtk.Label("Forecast")
         self.for_list = Gtk.ListStore(str, str)
@@ -94,7 +76,6 @@ class CurrentWeatherDialog(Gtk.Dialog):
         
         # Add the tabs to the notebook.
         notebook.append_page(wea_win, wea_box_lbl)
-        notebook.append_page(loc_win, loc_box_lbl)
         notebook.append_page(for_win, for_box_lbl)
         info_box.add(notebook)
         
@@ -102,8 +83,6 @@ class CurrentWeatherDialog(Gtk.Dialog):
         for i in data[0]:
             self.wea_list.append(i)
         for i in data[1]:
-            self.loc_list.append(i)
-        for i in data[2]:
             self.for_list.append(i)
         
         # Show the dialog.
