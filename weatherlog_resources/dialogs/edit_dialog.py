@@ -25,7 +25,7 @@ class EditDialog(Gtk.Dialog):
         
         # Determine the default units.
         unit = 0
-        if config["units"] == "imperial":
+        if units["wind"] == "mph":
             unit = 1
         
         Gtk.Dialog.__init__(self, "Edit %s - %s" % (date, dataset), parent, Gtk.DialogFlags.MODAL)
