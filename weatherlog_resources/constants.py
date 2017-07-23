@@ -26,6 +26,7 @@ class DialogResponse:
     RESET = 3
     EXPORT = 9
     ADD_DATA = 10
+    REMOVE = 15
     SELECT_ALL = 18
     REMOVE_ALL = 19
     IMPORT_ALL = 20

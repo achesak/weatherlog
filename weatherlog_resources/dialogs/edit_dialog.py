@@ -14,6 +14,7 @@ from gi.repository import Gtk
 
 # Import application modules.
 import weatherlog_resources.datasets as datasets
+from weatherlog_resources.constants import *
 
 
 class EditDialog(Gtk.Dialog):
@@ -30,6 +31,7 @@ class EditDialog(Gtk.Dialog):
         Gtk.Dialog.__init__(self, "Edit %s - %s" % (date, dataset), parent, Gtk.DialogFlags.MODAL)
         self.set_size_request(500, 600)
         self.add_button("Cancel", Gtk.ResponseType.CANCEL)
+        self.add_button("Remove", DialogResponse.REMOVE)
         self.add_button("OK", Gtk.ResponseType.OK)
 
         # Create the grids.

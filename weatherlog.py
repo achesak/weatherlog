@@ -431,15 +431,33 @@ class WeatherLog(Gtk.Window):
         visi = edit_dlg.visi_sbtn.get_value()
         note = edit_dlg.note_buffer.get_text(edit_dlg.note_buffer.get_start_iter(), edit_dlg.note_buffer.get_end_iter(),
                                              True).strip()
-
         temp_unit = edit_dlg.temp_unit.get_active_text()
         chil_unit = edit_dlg.chil_unit.get_active_text()
         prec_unit = edit_dlg.prec_unit.get_active_text()
         wind_unit = edit_dlg.wind_unit.get_active_text()
         visi_unit = edit_dlg.visi_unit.get_active_text()
-
         edit_dlg.destroy()
-        if response != Gtk.ResponseType.OK:
+
+        if response == Gtk.ResponseType.CANCEL:
+            return
+
+        # Remove the row if the user wants to.
+        if response == DialogResponse.REMOVE:
+            # Confirm that the user wants to delete the row.
+            if self.config["confirm_del"]:
+                response = show_question_dialog(self, "Remove Data - %s" % self.last_dataset,
+                                                "Are you sure you want to delete the data for %s? This action cannot be undone." % date)
+                if response != Gtk.ResponseType.OK:
+                    return
+
+            # Delete the selected dates.
+            del self.data[index]
+
+            # Update and save the data.
+            self.update_list()
+            self.update_title()
+            self.save()
+
             return
 
         # If the precipitation or wind are zero, set the appropriate type/direction to "None".
