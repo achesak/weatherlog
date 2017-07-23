@@ -1626,10 +1626,8 @@ class WeatherLog(Gtk.Window):
                 self.data[:] = []
                 self.data[:] = new_data[:]
 
-        # Add/remove the units from the column titles.
+        # Update the interface and save the data.
         self.update_columns()
-
-        # Update the title and save the data.
         self.update_title()
         self.update_list()
         self.save(from_options=True)
