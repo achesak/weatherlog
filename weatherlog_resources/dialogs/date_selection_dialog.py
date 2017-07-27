@@ -26,7 +26,7 @@ class DateSelectionDialog(Gtk.Dialog):
         
         # Create the frame.
         sel_frame = Gtk.Frame()
-        sel_frame.set_label("Select dates:")
+        sel_frame.set_label("Select date%s:" % ("s" if multi_select else ""))
         self.get_content_area().add(sel_frame)
         
         # Create the Date selection.
