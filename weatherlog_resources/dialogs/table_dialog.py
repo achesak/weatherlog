@@ -23,7 +23,7 @@ class TableDialog(Gtk.Dialog):
         """Create the dialog."""
 
         Gtk.Dialog.__init__(self, title, parent)
-        self.set_default_size(1000, 400)
+        self.set_default_size(1000, 500)
         self.add_button("Export", DialogResponse.EXPORT)
         self.add_button("Close", Gtk.ResponseType.CLOSE)
 
