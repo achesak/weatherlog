@@ -24,7 +24,7 @@ from weatherlog_resources.dialogs.misc_dialogs import *
 class DataSubsetSelectionDialog(Gtk.Window):
     """Shows the data subset selection dialog."""
 
-    def __init__(self, parent, dataset, data, config, units):
+    def __init__(self, dataset, data, config, units):
         """Create the dialog."""
 
         Gtk.Window.__init__(self)
@@ -73,7 +73,7 @@ class DataSubsetSelectionDialog(Gtk.Window):
         mode_grid.attach_next_to(self.mode_btn_none, self.mode_btn_one, Gtk.PositionType.BOTTOM, 1, 1)
         mode_frame.add(mode_grid)
         input_grid.add(mode_frame)
-        
+
         # Create the options.
         opt_frame = Gtk.Frame()
         opt_grid = Gtk.Grid()
@@ -101,8 +101,9 @@ class DataSubsetSelectionDialog(Gtk.Window):
         field_lbl.set_alignment(0, 0.5)
         cond_grid.add(field_lbl)
         self.field_com = Gtk.ComboBoxText()
-        for i in ["Temperature", "Wind Chill", "Precipitation Amount", "Precipitation Type", "Wind Speed", "Wind Direction",
-                  "Humidity", "Air Pressure", "Air Pressure Change", "Visibility", "Cloud Cover", "Cloud Type", "Notes"]:
+        for i in ["Temperature", "Wind Chill", "Precipitation Amount", "Precipitation Type", "Wind Speed",
+                  "Wind Direction", "Humidity", "Air Pressure", "Air Pressure Change", "Visibility", "Cloud Cover",
+                  "Cloud Type", "Notes"]:
             self.field_com.append_text(i)
         self.field_com.set_active(0)
         cond_grid.attach_next_to(self.field_com, field_lbl, Gtk.PositionType.RIGHT, 1, 1)
@@ -110,9 +111,10 @@ class DataSubsetSelectionDialog(Gtk.Window):
         cond_lbl.set_alignment(0, 0.5)
         cond_grid.attach_next_to(cond_lbl, field_lbl, Gtk.PositionType.BOTTOM, 1, 1)
         self.cond_com = Gtk.ComboBoxText()
-        for i in ["Equal To", "Not Equal To", "Greater Than", "Less Than", "Greater Than or Equal To", "Less Than or Equal To",
-                  "Between", "Between (Inclusive)", "Outside", "Outside (Inclusive)", "Starts With", "Does Not Start With",
-                  "Ends With", "Does Not End With", "Contains", "Does Not Contain"]:
+        for i in ["Equal To", "Not Equal To", "Greater Than", "Less Than", "Greater Than or Equal To",
+                  "Less Than or Equal To", "Between", "Between (Inclusive)", "Outside", "Outside (Inclusive)",
+                  "Starts With", "Does Not Start With", "Ends With", "Does Not End With", "Contains",
+                  "Does Not Contain"]:
             self.cond_com.append_text(i)
         self.cond_com.set_active(0)
         cond_grid.attach_next_to(self.cond_com, cond_lbl, Gtk.PositionType.RIGHT, 1, 1)
@@ -123,10 +125,10 @@ class DataSubsetSelectionDialog(Gtk.Window):
         cond_grid.attach_next_to(self.value_ent, value_lbl, Gtk.PositionType.RIGHT, 1, 1)
         cond_btn_box = Gtk.Box()
         cond_grid.attach_next_to(cond_btn_box, value_lbl, Gtk.PositionType.BOTTOM, 2, 1)
-        self.clear_btn = Gtk.Button(label = "Clear")
+        self.clear_btn = Gtk.Button(label="Clear")
         self.clear_btn.connect("clicked", self.clear_condition)
         cond_btn_box.pack_end(self.clear_btn, True, True, 0)
-        self.add_btn = Gtk.Button(label = "Add")
+        self.add_btn = Gtk.Button(label="Add")
         self.add_btn.connect("clicked", self.add_condition)
         cond_btn_box.pack_end(self.add_btn, True, True, 0)
         cond_frame.add(cond_grid)
@@ -134,16 +136,16 @@ class DataSubsetSelectionDialog(Gtk.Window):
 
         # Create the data conditions listbox.
         self.liststore = Gtk.ListStore(str, str, str)
-        self.treeview = Gtk.TreeView(model = self.liststore)
+        self.treeview = Gtk.TreeView(model=self.liststore)
         self.treeview.set_size_request(400, 300)
         field_text = Gtk.CellRendererText()
-        self.field_col = Gtk.TreeViewColumn("Field", field_text, text = 0)
+        self.field_col = Gtk.TreeViewColumn("Field", field_text, text=0)
         self.treeview.append_column(self.field_col)
         cond_text = Gtk.CellRendererText()
-        self.cond_col = Gtk.TreeViewColumn("Operator", cond_text, text = 1)
+        self.cond_col = Gtk.TreeViewColumn("Operator", cond_text, text=1)
         self.treeview.append_column(self.cond_col)
         value_text = Gtk.CellRendererText()
-        self.value_col = Gtk.TreeViewColumn("Value", value_text, text = 2)
+        self.value_col = Gtk.TreeViewColumn("Value", value_text, text=2)
         self.treeview.append_column(self.value_col)
         self.treeview.set_hexpand(True)
         self.treeview.set_vexpand(True)
@@ -153,23 +155,22 @@ class DataSubsetSelectionDialog(Gtk.Window):
 
         # Create the buttons.
         sel_box = Gtk.Box()
-        self.ok_btn = Gtk.Button(label = "View")
+        self.ok_btn = Gtk.Button(label="View")
         self.ok_btn.connect("clicked", self.view_subset)
         sel_box.pack_end(self.ok_btn, True, True, 0)
-        self.cancel_btn = Gtk.Button(label = "Close")
+        self.cancel_btn = Gtk.Button(label="Close")
         self.cancel_btn.connect("clicked", lambda x: self.destroy())
         sel_box.pack_end(self.cancel_btn, True, True, 0)
-        self.reset_btn = Gtk.Button(label = "Reset")
+        self.reset_btn = Gtk.Button(label="Reset")
         self.reset_btn.connect("clicked", self.reset_conditions)
         sel_box.pack_end(self.reset_btn, True, True, 0)
-        self.remove_btn = Gtk.Button(label = "Remove")
+        self.remove_btn = Gtk.Button(label="Remove")
         self.remove_btn.connect("clicked", self.remove_condition)
         sel_box.pack_end(self.remove_btn, True, True, 0)
         view_grid.attach_next_to(sel_box, self.treeview, Gtk.PositionType.BOTTOM, 1, 1)
 
         # Show the window.
         self.show_all()
-
 
     def treeview_keypress(self, widget, event):
         """Checks the treeview for keypress events."""
@@ -178,29 +179,29 @@ class DataSubsetSelectionDialog(Gtk.Window):
         if event.keyval == Gdk.KEY_Delete:
             self.remove_condition(True)
 
-
     def check_operator(self, field, operator):
         """Checks if the selected operator can be used with the selected field."""
 
         # If the column that is being compared is precipitation type, wind direction, air pressure change,
         # cloud cover, or cloud type, and the comparison is numerical, don't continue.
         if field == "Precipitation Type" or field == "Wind Direction" or field == "Air Pressure Change" or \
-           field == "Cloud Cover" or field == "Cloud Type" or field == "Notes":
+                        field == "Cloud Cover" or field == "Cloud Type" or field == "Notes":
             if operator != "Equal To" and operator != "Not Equal To" and operator != "Starts With" and \
-               operator != "Does Not Start With" and operator != "Ends With" and operator != "Does Not End With" and \
-               operator != "Contains" and operator != "Does Not Contain":
-                show_error_dialog(self, "Add Condition", "Invalid comparison: %s cannot use the \"%s\" operator." % (field, operator))
+                            operator != "Does Not Start With" and operator != "Ends With" and operator != "Does Not End With" and \
+                            operator != "Contains" and operator != "Does Not Contain":
+                show_error_dialog(self, "Add Condition",
+                                  "Invalid comparison: %s cannot use the \"%s\" operator." % (field, operator))
                 return True
         # If the column that is being compared is a numerical field and the
         # comparison is strictly non-numerical,
         # don't continue.
         else:
             if operator == "Starts With" or operator == "Does Not Start With" or operator == "Ends With" or \
-               operator == "Does Not End With" or operator == "Contains" or operator == "Does Not Contain":
-                show_error_dialog(self, "Add Condition", "Invalid comparison: %s cannot use the \"%s\" operator." % (field, operator))
+                            operator == "Does Not End With" or operator == "Contains" or operator == "Does Not Contain":
+                show_error_dialog(self, "Add Condition",
+                                  "Invalid comparison: %s cannot use the \"%s\" operator." % (field, operator))
                 return True
         return False
-
 
     def check_used(self, field):
         """Checks if the selected field has already been used."""
@@ -210,35 +211,35 @@ class DataSubsetSelectionDialog(Gtk.Window):
             return True
         return False
 
-
     def check_one(self, operator, value):
         """Checks if there is one value, if the operator requires that."""
 
-        if operator != "Between" and operator !=  "Between (Inclusive)" and operator != "Outside" and \
-           operator != "Outside (Inclusive)" and operator != "Equal To" and operator != "Not Equal To":
+        if operator != "Between" and operator != "Between (Inclusive)" and operator != "Outside" and \
+                        operator != "Outside (Inclusive)" and operator != "Equal To" and operator != "Not Equal To":
             if value.count(",") != 0:
-                show_error_dialog(self, "Add Condition", "The \"%s\" operator requires only one value to be specified." % operator)
+                show_error_dialog(self, "Add Condition",
+                                  "The \"%s\" operator requires only one value to be specified." % operator)
                 return True
         return False
-
 
     def check_two(self, operator, value):
         """Checks if there are two values, if the operator requires that."""
 
         if operator == "Between" or operator == "Between (Inclusive)" or operator == "Outside" or \
-           operator == "Outside (Inclusive)":
+                        operator == "Outside (Inclusive)":
             if value.count(",") != 1:
-                show_error_dialog(self, "Add Condition", "The \"%s\" operator requires two values to be specified, separated with a comma." % operator)
+                show_error_dialog(self, "Add Condition",
+                                  "The \"%s\" operator requires two values to be specified, separated with a comma." % operator)
                 return True
         return False
-
 
     def check_values(self, field, operator, value):
         """Checks that the values are in the correct format for the field."""
 
         # Temperature, wind chill, precipitation amount, wind speed, humidity, air pressure, visibility:
         # REQUIREMENT: only numerical
-        if field in ["Temperature", "Wind Chill", "Precipitation Amount", "Wind Speed", "Humidity", "Air Pressure", "Visibility"]:
+        if field in ["Temperature", "Wind Chill", "Precipitation Amount", "Wind Speed", "Humidity", "Air Pressure",
+                     "Visibility"]:
             value = [x.strip() for x in value.split(',')]
             for i in value:
                 try:
@@ -248,7 +249,6 @@ class DataSubsetSelectionDialog(Gtk.Window):
                     return True
         return False
 
-
     def clear_condition(self, widget):
         """Clears the input fields."""
 
@@ -257,12 +257,12 @@ class DataSubsetSelectionDialog(Gtk.Window):
         self.cond_com.set_active(0)
         self.value_ent.set_text("")
 
-
-    def reset_conditions(self, widget, confirm = True):
+    def reset_conditions(self, widget, confirm=True):
         """Resets all fields and clears all conditions."""
 
         # Ask the user to confirm.
-        if confirm and show_question_dialog(self, "Reset", "Are you sure you want to reset all conditions?") != Gtk.ResponseType.OK:
+        if confirm and show_question_dialog(self, "Reset",
+                                            "Are you sure you want to reset all conditions?") != Gtk.ResponseType.OK:
             return
 
         # Clear the fields.
@@ -277,7 +277,6 @@ class DataSubsetSelectionDialog(Gtk.Window):
         # Clear the data.
         self.conditions = []
 
-
     def add_condition(self, widget):
         """Shows the add condition dialog."""
 
@@ -287,8 +286,9 @@ class DataSubsetSelectionDialog(Gtk.Window):
         value = self.value_ent.get_text()
 
         # Validate the data, and add if it's acceptable.
-        if not self.check_operator(field, condition) and not self.check_used(field) and not self.check_two(condition, value) and \
-           not self.check_one(condition, value) and value.lstrip().rstrip() != "" and not self.check_values(field, condition, value):
+        if not self.check_operator(field, condition) and not self.check_used(field) and not \
+            self.check_two(condition, value) and not self.check_one(condition, value) and \
+            value.lstrip().rstrip() != "" and not self.check_values(field, condition, value):
             self.liststore.append([field, condition, value])
             self.conditions.append([field, condition, value])
 
@@ -296,7 +296,6 @@ class DataSubsetSelectionDialog(Gtk.Window):
             self.field_com.set_active(0)
             self.cond_com.set_active(0)
             self.value_ent.set_text("")
-
 
     def remove_condition(self, widget):
         """Removes the selected condition."""
@@ -319,7 +318,6 @@ class DataSubsetSelectionDialog(Gtk.Window):
         self.liststore.clear()
         for i in self.conditions:
             self.liststore.append(i)
-
 
     def view_subset(self, widget):
         """Filters the data and displays the subset."""
@@ -371,15 +369,17 @@ class DataSubsetSelectionDialog(Gtk.Window):
 
         # If there are no items that match the condition, don't show the main dialog.
         if len(filtered) == 0:
-            show_alert_dialog(self, "Data Subset Results - %s" % self.last_dataset, "No data matches the specified condition(s).")
+            show_alert_dialog(self, "Data Subset Results - %s" % self.last_dataset,
+                              "No data matches the specified condition(s).")
             return
 
         # If reset conditions is selected, clear them.
         if self.rsearch_chk.get_active():
-            self.reset_conditions(1, confirm = False)
+            self.reset_conditions(1, confirm=False)
 
         # Show the subset.
-        sub_dlg = DataSubsetDialog(self, "Data Subset Results - %s" % self.last_dataset, filtered, self.units, self.config)
+        sub_dlg = DataSubsetDialog(self, "Data Subset Results - %s" % self.last_dataset, filtered, self.units,
+                                   self.config)
         response = sub_dlg.run()
         sub_dlg.destroy()
 
@@ -389,10 +389,13 @@ class DataSubsetSelectionDialog(Gtk.Window):
             # Get the filename and export the info.
             response2, filename = show_export_dialog(self, "Export Data Subset Results - %s" % self.last_dataset)
             if response2 == Gtk.ResponseType.OK:
-                data_list = [["WeatherLog Data Subset Results - %s - %s to %s" % (self.last_dataset, (filtered[0][0] if len(filtered) != 0 else "None"), (filtered[len(filtered)-1][0] if len(filtered) != 0 else "None")),
-                               ["Date", "Temperature (%s)" % self.units["temp"], "Wind Chill (%s)" % self.units["temp"],
-                                "Precipitation (%s)" % self.units["prec"], "Wind (%s)" % self.units["wind"],
-                                "Humidity (%)", "Air Pressure (%s)" % self.units["airp"], "Visibility (%s)" % self.units["visi"],
-                                "Cloud Cover", "Notes"],
-                                filtered]]
+                data_list = [["WeatherLog Data Subset Results - %s - %s to %s" % (
+                    self.last_dataset, (filtered[0][0] if len(filtered) != 0 else "None"),
+                    (filtered[len(filtered) - 1][0] if len(filtered) != 0 else "None")),
+                              ["Date", "Temperature (%s)" % self.units["temp"], "Wind Chill (%s)" % self.units["temp"],
+                               "Precipitation (%s)" % self.units["prec"], "Wind (%s)" % self.units["wind"],
+                               "Humidity (%)", "Air Pressure (%s)" % self.units["airp"],
+                               "Visibility (%s)" % self.units["visi"],
+                               "Cloud Cover", "Notes"],
+                              filtered]]
                 export.html_generic(data_list, filename)

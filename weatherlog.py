@@ -898,7 +898,7 @@ class WeatherLog(Gtk.Window):
             return
 
         # Show the condition selection dialog.
-        sel_dlg = DataSubsetSelectionDialog(self, self.last_dataset, self.data, self.config, self.units)
+        sel_dlg = DataSubsetSelectionDialog(self.last_dataset, self.data, self.config, self.units)
 
     def import_data(self, event):
         """Imports data and merges it into the current list."""
