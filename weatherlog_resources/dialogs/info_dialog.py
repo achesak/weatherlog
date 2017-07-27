@@ -12,6 +12,9 @@
 # Import GTK for the dialog.
 from gi.repository import Gtk
 
+# Import application modules.
+from weatherlog_resources.constants import *
+
 
 class InfoDialog(Gtk.Dialog):
     """Shows the info dialog."""
@@ -20,8 +23,8 @@ class InfoDialog(Gtk.Dialog):
         """Create the dialog."""
 
         Gtk.Dialog.__init__(self, title, parent)
-        self.set_default_size(700, 400)
-        self.add_button("Export", 9)
+        self.set_default_size(1000, 400)
+        self.add_button("Export", DialogResponse.EXPORT)
         self.add_button("Close", Gtk.ResponseType.CLOSE)
 
         # Create the tab notebook.
@@ -36,6 +39,7 @@ class InfoDialog(Gtk.Dialog):
         self.gen_tree = Gtk.TreeView(model=self.gen_list)
         gen_cate_text = Gtk.CellRendererText()
         gen_cate_col = Gtk.TreeViewColumn("Field", gen_cate_text, text=0)
+        gen_cate_col.set_min_width(400)
         self.gen_tree.append_column(gen_cate_col)
         gen_value_text = Gtk.CellRendererText()
         gen_value_col = Gtk.TreeViewColumn("Value", gen_value_text, text=1)

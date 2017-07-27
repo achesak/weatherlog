@@ -12,6 +12,9 @@
 # Import GTK for the dialog.
 from gi.repository import Gtk
 
+# Import application modules.
+from weatherlog_resources.constants import *
+
 
 class TableDialog(Gtk.Dialog):
     """Shows the table dialog."""
@@ -21,7 +24,7 @@ class TableDialog(Gtk.Dialog):
 
         Gtk.Dialog.__init__(self, title, parent)
         self.set_default_size(1000, 400)
-        self.add_button("Export", 9)
+        self.add_button("Export", DialogResponse.EXPORT)
         self.add_button("Close", Gtk.ResponseType.CLOSE)
 
         # Create the tab notebook.
