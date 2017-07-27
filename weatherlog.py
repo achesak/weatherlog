@@ -277,7 +277,7 @@ class WeatherLog(Gtk.Window):
         self.treeview.connect("row-activated", self.activated_event)
 
     def delete_event(self, widget, event):
-        """Saves the last dataset and window size."""
+        """Saves the restore data."""
 
         width, height = self.get_size()
         io.write_restore_data(self.conf_dir, self.last_dataset, height, width)
