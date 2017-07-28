@@ -522,12 +522,12 @@ class WeatherLog(Gtk.Window):
 
         # Confirm that the user wants to delete the row.
         if self.config["confirm_del"]:
-            selected_dates = ""
+            selected_dates = "\n\nSelected date%s:" % ("s" if len(ndates) > 1 else "")
             for date in ndates:
-                selected_dates += date + "\n"
+                selected_dates += "\n" + date
             response = show_question_dialog(self, "Remove Data - %s" % self.last_dataset,
-                                            "Are you sure you want to delete the selected date%s? This action cannot be undone.\n\nSelected date%s:\n%s" % (
-                                                "s" if len(ndates) > 1 else "", "s" if len(ndates) > 1 else "", selected_dates))
+                                            "Are you sure you want to delete the selected date%s? This action cannot be undone.%s" % (
+                                                "s" if len(ndates) > 1 else "", selected_dates))
             if response != Gtk.ResponseType.OK:
                 return
 
