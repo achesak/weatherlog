@@ -526,8 +526,8 @@ class WeatherLog(Gtk.Window):
             for date in ndates:
                 selected_dates += date + "\n"
             response = show_question_dialog(self, "Remove Data - %s" % self.last_dataset,
-                                            "Are you sure you want to delete the selected date%s? This action cannot be undone.\n\nSelected dates:\n%s" % (
-                                                "s" if len(ndates) > 1 else "", selected_dates))
+                                            "Are you sure you want to delete the selected date%s? This action cannot be undone.\n\nSelected date%s:\n%s" % (
+                                                "s" if len(ndates) > 1 else "", "s" if len(ndates) > 1 else "", selected_dates))
             if response != Gtk.ResponseType.OK:
                 return
 
@@ -1143,17 +1143,13 @@ class WeatherLog(Gtk.Window):
 
         # Check the return response.
         if pastebin_response == PastebinExport.INVALID_KEY:
-            show_error_dialog(self, "Export to Pastebin - %s" % self.last_dataset,
-                              "Invalid API key. Please check the key entered in the Options window.")
+            show_error_dialog(self, "Export to Pastebin - %s" % self.last_dataset, "Invalid API key. Please check the key entered in the Options window.")
         elif pastebin_response == PastebinExport.ERROR:
-            show_error_dialog(self, "Export to Pastebin - %s" % self.last_dataset,
-                              "The data could not be uploaded to Pastebin:\n\n%s" % result)
+            show_error_dialog(self, "Export to Pastebin - %s" % self.last_dataset, "The data could not be uploaded to Pastebin:\n\n%s" % result)
         elif pastebin_response == PastebinExport.NO_CONSTANTS:
-            show_error_dialog(self, "Export to Pastebin - %s" % self.last_dataset,
-                              "Missing constants file. The data could not be uploaded to Pastebin.")
+            show_error_dialog(self, "Export to Pastebin - %s" % self.last_dataset, "Missing constants file. The data could not be uploaded to Pastebin.")
         elif pastebin_response == PastebinExport.SUCCESS:
-            response = show_alert_dialog(self, "Export to Pastebin - %s" % self.last_dataset,
-                                         "The data has been uploaded to Pastebin, and can be accessed at the following URL:\n\n%s\n\nPress \"OK\" to open the link in a web browser." % result,
+            response = show_alert_dialog(self, "Export to Pastebin - %s" % self.last_dataset, "The data has been uploaded to Pastebin, and can be accessed at the following URL:\n\n%s\n\nPress \"OK\" to open the link in a web browser." % result,
                                          show_cancel=True)
             if response == Gtk.ResponseType.OK:
                 webbrowser.open(result)
@@ -1251,11 +1247,12 @@ class WeatherLog(Gtk.Window):
         for i in treeiter:
             datasets_list.append(model[i][0])
 
+        datasets_list_string = "\n\nSelected dataset%s:" % ("" if len(datasets_list) == 1 else "s")
+        for dataset in datasets_list:
+            datasets_list_string += "\n" + dataset
+
         if self.config["confirm_del"]:
-            response = show_question_dialog(self, "Remove Datasets",
-                                            "Are you sure you want to remove the dataset" +
-                                            "%s? This action cannot be undone." %
-                                            ("" if len(datasets_list) == 1 else "s"))
+            response = show_question_dialog(self, "Remove Datasets", "Are you sure you want to remove the dataset%s? This action cannot be undone.%s" % ("" if len(datasets_list) == 1 else "s", datasets_list_string))
             if response != Gtk.ResponseType.OK:
                 return
 
