@@ -60,13 +60,13 @@ def get_weather(config, units, weather_codes, location, location_type):
     data1 = [
         ["Location", "%s, %s" % (result["name"], result["sys"]["country"])],
         ["Condition", "\n".join(conditions)],
-        ["Temperature", "%.1f %s" % (result["main"]["temp"], units["temp"])],
-        ["Temperature (minimum)", "%.1f %s" % (result["main"]["temp_min"], units["temp"])],
-        ["Temperature (maximum)", "%.1f %s" % (result["main"]["temp_max"], units["temp"])],
-        ["Wind speed", "%.1f %s" % (result["wind"]["speed"], units["wind"])],
+        ["Temperature", "%.2f %s" % (result["main"]["temp"], units["temp"])],
+        ["Temperature (minimum)", "%.2f %s" % (result["main"]["temp_min"], units["temp"])],
+        ["Temperature (maximum)", "%.2f %s" % (result["main"]["temp_max"], units["temp"])],
+        ["Wind speed", "%.2f %s" % (result["wind"]["speed"], units["wind"])],
         ["Wind direction", degrees.degree_to_direction(int(result["wind"]["deg"]))],
         ["Humidity", "%d%%" % result["main"]["humidity"]],
-        ["Air pressure", "%.1f %s" % (result["main"]["pressure"], units["airp"])],
+        ["Air pressure", "%.2f %s" % (result["main"]["pressure"], units["airp"])],
         ["Cloud cover", ["Sunny", "Mostly sunny", "Partly cloudy",
                          "Mostly cloudy", "Cloudy"][clouds.percent_to_term(result["clouds"]["all"])]],
         ["Sunrise", datetime.datetime.fromtimestamp(result["sys"]["sunrise"]).strftime("%H:%M:%S")],
@@ -81,16 +81,16 @@ def get_weather(config, units, weather_codes, location, location_type):
             conditions.append(weather_codes[int(cond["id"])])
         data2.append(["Date", datetime.datetime.fromtimestamp(fc["dt"]).strftime("%d/%m/%Y")])
         data2.append(["Condition", "\n".join(conditions)])
-        data2.append(["Temperature", "%.1f %s" % (fc["temp"]["day"], units["temp"])])
-        data2.append(["Temperature (minimum)", "%.1f %s" % (fc["temp"]["min"], units["temp"])])
-        data2.append(["Temperature (maximum)", "%.1f %s" % (fc["temp"]["max"], units["temp"])])
-        data2.append(["Temperature (morning)", "%.1f %s" % (fc["temp"]["morn"], units["temp"])])
-        data2.append(["Temperature (evening)", "%.1f %s" % (fc["temp"]["eve"], units["temp"])])
-        data2.append(["Temperature (night)", "%.1f %s" % (fc["temp"]["night"], units["temp"])])
+        data2.append(["Temperature", "%.2f %s" % (fc["temp"]["day"], units["temp"])])
+        data2.append(["Temperature (minimum)", "%.2f %s" % (fc["temp"]["min"], units["temp"])])
+        data2.append(["Temperature (maximum)", "%.2f %s" % (fc["temp"]["max"], units["temp"])])
+        data2.append(["Temperature (morning)", "%.2f %s" % (fc["temp"]["morn"], units["temp"])])
+        data2.append(["Temperature (evening)", "%.2f %s" % (fc["temp"]["eve"], units["temp"])])
+        data2.append(["Temperature (night)", "%.2f %s" % (fc["temp"]["night"], units["temp"])])
         data2.append(["Wind speed", "%s %s" % (fc["speed"], units["wind"])])
         data2.append(["Wind direction", degrees.degree_to_direction(int(fc["deg"]))])
         data2.append(["Humidity", "%d%%" % fc["humidity"]])
-        data2.append(["Air pressure", "%.1f %s" % (fc["pressure"], units["airp"])])
+        data2.append(["Air pressure", "%.2f %s" % (fc["pressure"], units["airp"])])
         data2.append(["Cloud cover", ["Sunny", "Mostly sunny", "Partly cloudy",
                                       "Mostly cloudy", "Cloudy"][clouds.percent_to_term(fc["clouds"])]])
         if "rain" in fc:
