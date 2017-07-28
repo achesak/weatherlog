@@ -190,7 +190,6 @@ class WeatherLog(Gtk.Window):
             ("add_new", Gtk.STOCK_ADD, "Add _New Data...", "<Control>n", "Add a new day to the list", self.add_new),
             ("edit", Gtk.STOCK_EDIT, "_Edit Data...", "<Control>e", None, self.edit),
             ("remove", Gtk.STOCK_REMOVE, "_Remove Data...", "<Control>r", "Remove a day from the list", self.remove),
-            ("clear_all", None, "Clear _All Data...", None, None, self.clear_all),
             ("get_current_here", None, "Get Current _Weather...", "<Control>w", None, lambda x: self.get_weather(True)),
             ("get_current_there", None, "Get Current Weather _For...", "<Control><Shift>w", None,
              lambda x: self.get_weather(False)),
@@ -1158,33 +1157,6 @@ class WeatherLog(Gtk.Window):
                                          show_cancel=True)
             if response == Gtk.ResponseType.OK:
                 webbrowser.open(result)
-
-    def clear_all(self, event):
-        """Clears all data."""
-
-        confirm_text = "Are you sure you want to clear all the data? This will delete all data in all datasets, and will also reset any changed options.\n\nThis action cannot be undone."
-
-        # Only show the confirmation dialog if the user wants that.
-        if self.config["confirm_del"]:
-            response = show_question_dialog(self, "Clear All Data", confirm_text)
-            if response != Gtk.ResponseType.OK:
-                return
-
-        # Clear the old data and reset the dataset name.
-        self.data[:] = []
-        self.liststore.clear()
-        self.last_dataset = "Main Dataset"
-
-        # Restore all files to their default states.
-        shutil.rmtree(self.main_dir)
-        shutil.rmtree(self.conf_dir)
-        launch.ensure_files_exist(self.main_dir, self.conf_dir)
-
-        # Set the default config.
-        self.config = launch.get_config(self.conf_dir)
-        self.units = launch.get_units(self.config)
-        self.options(True, update_only=True)
-        self.update_data()
 
     def switch_dataset(self, event):
         """Switches datasets."""
