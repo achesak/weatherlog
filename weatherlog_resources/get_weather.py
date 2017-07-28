@@ -67,8 +67,7 @@ def get_weather(config, units, weather_codes, location, location_type):
         ["Wind direction", degrees.degree_to_direction(int(result["wind"]["deg"]))],
         ["Humidity", "%d%%" % result["main"]["humidity"]],
         ["Air pressure", "%.2f %s" % (result["main"]["pressure"], units["airp"])],
-        ["Cloud cover", ["Sunny", "Mostly sunny", "Partly cloudy",
-                         "Mostly cloudy", "Cloudy"][clouds.percent_to_term(result["clouds"]["all"])]],
+        ["Cloud cover", ["Sunny", "Mostly sunny", "Partly cloudy", "Mostly cloudy", "Cloudy"][clouds.percent_to_term(result["clouds"]["all"])]],
         ["Sunrise", datetime.datetime.fromtimestamp(result["sys"]["sunrise"]).strftime("%-I:%M %p")],
         ["Sunset", datetime.datetime.fromtimestamp(result["sys"]["sunset"]).strftime("%-I:%M %p")]
     ]
@@ -91,8 +90,7 @@ def get_weather(config, units, weather_codes, location, location_type):
         data2.append(["Wind direction", degrees.degree_to_direction(int(fc["deg"]))])
         data2.append(["Humidity", "%d%%" % fc["humidity"]])
         data2.append(["Air pressure", "%.2f %s" % (fc["pressure"], units["airp"])])
-        data2.append(["Cloud cover", ["Sunny", "Mostly sunny", "Partly cloudy",
-                                      "Mostly cloudy", "Cloudy"][clouds.percent_to_term(fc["clouds"])]])
+        data2.append(["Cloud cover", ["Sunny", "Mostly sunny", "Partly cloudy", "Mostly cloudy", "Cloudy"][clouds.percent_to_term(fc["clouds"])]])
         if "rain" in fc:
             data2.append(["Precipitation (rain)", "%.1f %s" % (fc["rain"], units["prec"])])
         if "snow" in fc:
