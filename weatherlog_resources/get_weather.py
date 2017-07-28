@@ -69,8 +69,8 @@ def get_weather(config, units, weather_codes, location, location_type):
         ["Air pressure", "%.2f %s" % (result["main"]["pressure"], units["airp"])],
         ["Cloud cover", ["Sunny", "Mostly sunny", "Partly cloudy",
                          "Mostly cloudy", "Cloudy"][clouds.percent_to_term(result["clouds"]["all"])]],
-        ["Sunrise", datetime.datetime.fromtimestamp(result["sys"]["sunrise"]).strftime("%H:%M:%S")],
-        ["Sunset", datetime.datetime.fromtimestamp(result["sys"]["sunset"]).strftime("%H:%M:%S")]
+        ["Sunrise", datetime.datetime.fromtimestamp(result["sys"]["sunrise"]).strftime("%-I:%M %p")],
+        ["Sunset", datetime.datetime.fromtimestamp(result["sys"]["sunset"]).strftime("%-I:%M %p")]
     ]
     data2 = [
     ]
