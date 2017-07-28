@@ -253,25 +253,6 @@ def get_graph_data():
     return graph_data
 
 
-def get_strings():
-    """Gets the interface strings."""
-
-    try:
-        strings_file = open("weatherlog_resources/appdata/strings.json", "r")
-        strings_data = json.load(strings_file)
-        strings_file.close()
-
-    except IOError as e:
-        print("get_strings(): Error reading strings data file (IOError):\n%s" % e)
-        sys.exit()
-
-    except (ValueError, TypeError) as e:
-        print("get_strings(): Error reading strings data file (ValueError or TypeError):\n%s" % e)
-        sys.exit()
-
-    return strings_data
-
-
 def check_dependencies():
     """Checks if dependencies required by the application are installed."""
     

@@ -99,7 +99,6 @@ class WeatherLog(Gtk.Window):
         # Get the application's data, constants, and user data.
         self.version, self.title, self.menu_data, self.icon_small, self.icon_medium, self.default_width, \
             self.default_height, self.help_link = launch.get_ui_info()
-        self.strings = launch.get_strings()
         self.main_dir, self.conf_dir = launch.get_main_dir()
         self.config = launch.get_config(self.conf_dir)
         launch.ensure_files_exist(self.main_dir, self.conf_dir)
