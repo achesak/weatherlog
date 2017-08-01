@@ -36,6 +36,7 @@ class DateSelectionDialog(Gtk.Dialog):
         else:
             self.liststore = Gtk.ListStore(str)
         self.treeview = Gtk.TreeView(model=self.liststore)
+        self.treeview.set_headers_visible(False)
         if multi_select:
             self.treeview.get_selection().set_mode(Gtk.SelectionMode.MULTIPLE)
         date_text = Gtk.CellRendererText()
