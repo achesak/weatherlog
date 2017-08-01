@@ -273,6 +273,7 @@ class WeatherLog(Gtk.Window):
         self.connect("delete-event", self.delete_event)
         self.treeview.connect("button-press-event", self.context_event)
         self.treeview.connect("row-activated", self.activated_event)
+        self.treeview.connect("key-press-event", self.treeview_keypress)
 
     def delete_event(self, widget, event):
         """Saves the restore data."""
@@ -294,6 +295,21 @@ class WeatherLog(Gtk.Window):
         tm, ti = tree_sel.get_selected()
         date = tm.get_value(ti, 0)
         self.edit(None, date)
+
+    def treeview_keypress(self, widget, event):
+        """Checks the treeview for keypress events."""
+
+        # On 'Delete', remove selected row(s).
+        if event.keyval == Gdk.KEY_Delete:
+            try:
+                tree_sel = self.treeview.get_selection()
+                tm, ti = tree_sel.get_selected()
+                date = tm.get_value(ti, 0)
+
+                self.remove(event, date)
+
+            except TypeError:
+                pass
 
     def add_new(self, event, prefill_data=None):
         """Shows the dialog for input of new data."""
@@ -487,7 +503,7 @@ class WeatherLog(Gtk.Window):
         self.save()
         self.debug("edit", new_data)
 
-    def remove(self, event):
+    def remove(self, event, date=False):
         """Removes a row of data from the list."""
 
         # If there is no data, tell the user and don't show the date selection.
@@ -495,30 +511,36 @@ class WeatherLog(Gtk.Window):
             show_no_data_dialog(self, "Remove Data - %s" % self.last_dataset, message="There is no data to remove.")
             return
 
-        # Get the dates.
-        selected_dates = datasets.get_column_list(self.data, [0])
+        ndates = []
+        if not date:
 
-        # Get the dates to remove.
-        rem_dlg = DateSelectionDialog(self, "Remove Data - %s" % self.last_dataset, selected_dates,
-                                      buttons=[["Cancel", Gtk.ResponseType.CANCEL],
-                                               ["Remove All", DialogResponse.REMOVE_ALL], ["OK", Gtk.ResponseType.OK]])
-        response = rem_dlg.run()
-        model, treeiter = rem_dlg.treeview.get_selection().get_selected_rows()
-        rem_dlg.destroy()
+            # Get the dates.
+            selected_dates = datasets.get_column_list(self.data, [0])
 
-        if (response != DialogResponse.REMOVE_ALL) and (response != Gtk.ResponseType.OK or treeiter is None):
-            return
+            # Get the dates to remove.
+            rem_dlg = DateSelectionDialog(self, "Remove Data - %s" % self.last_dataset, selected_dates,
+                                          buttons=[["Cancel", Gtk.ResponseType.CANCEL],
+                                                   ["Remove All", DialogResponse.REMOVE_ALL], ["OK", Gtk.ResponseType.OK]])
+            response = rem_dlg.run()
+            model, treeiter = rem_dlg.treeview.get_selection().get_selected_rows()
+            rem_dlg.destroy()
 
-        # Get the dates.
-        if response == DialogResponse.REMOVE_ALL:
-            ndates = datasets.get_column(self.data, 0)
+            if (response != DialogResponse.REMOVE_ALL) and (response != Gtk.ResponseType.OK or treeiter is None):
+                return
+
+            # Get the dates.
+            if response == DialogResponse.REMOVE_ALL:
+                ndates = datasets.get_column(self.data, 0)
+            else:
+                ndates = []
+                for i in treeiter:
+                    ndates.append(model[i][0])
+
+            if len(ndates) == 0:
+                return
+
         else:
-            ndates = []
-            for i in treeiter:
-                ndates.append(model[i][0])
-
-        if len(ndates) == 0:
-            return
+            ndates.append(date)
 
         # Confirm that the user wants to delete the row.
         if self.config["confirm_del"]:
