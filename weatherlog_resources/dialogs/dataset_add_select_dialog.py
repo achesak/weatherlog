@@ -51,12 +51,15 @@ class DatasetAddSelectionDialog(Gtk.Dialog):
         self.treeview = Gtk.TreeView(model=self.liststore)
         pro_text = Gtk.CellRendererText()
         self.pro_col = Gtk.TreeViewColumn("Dataset", pro_text, text=0)
+        self.pro_col.set_expand(True)
         self.treeview.append_column(self.pro_col)
         cre_text = Gtk.CellRendererText()
-        self.cre_text = Gtk.TreeViewColumn("Creation Date", cre_text, text=1)
-        self.treeview.append_column(self.cre_text)
+        self.cre_col = Gtk.TreeViewColumn("Creation Date", cre_text, text=1)
+        self.cre_col.set_expand(True)
+        self.treeview.append_column(self.cre_col)
         mod_text = Gtk.CellRendererText()
         self.mod_col = Gtk.TreeViewColumn("Last Modified Date", mod_text, text=2)
+        self.mod_col.set_expand(True)
         self.treeview.append_column(self.mod_col)
 
         # Add the datasets.
