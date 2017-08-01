@@ -137,6 +137,7 @@ class DataSubsetSelectionDialog(Gtk.Window):
         # Create the data conditions listbox.
         self.liststore = Gtk.ListStore(str, str, str)
         self.treeview = Gtk.TreeView(model=self.liststore)
+        self.treeview.set_headers_visible(False)
         self.treeview.set_size_request(400, 300)
         field_text = Gtk.CellRendererText()
         self.field_col = Gtk.TreeViewColumn("Field", field_text, text=0)
