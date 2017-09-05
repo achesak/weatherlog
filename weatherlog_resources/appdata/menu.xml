@@ -1,68 +1,62 @@
 <ui>
-  <menubar name="menubar">
-    <menu action="weather_menu">
-      <menuitem action="add_new" />
-      <menuitem action="edit" />
-      <menuitem action="remove" />
-      <separator />
-      <menuitem action="get_current_here" />
-      <menuitem action="get_current_there" />
-      <separator />
-      <menuitem action="options" />
-      <separator />
-      <menuitem action="exit" />
-    </menu>
-    <menu action="file_menu">
-      <menuitem action="import" />
-      <menuitem action="import_dataset" />
-      <separator />
-      <menuitem action="export" />
-      <menuitem action="export_pastebin" />
-    </menu>
-    <menu action="data_menu">
-      <menuitem action="info_range" />
-      <menuitem action="info_selected" />
-      <separator />
-      <menuitem action="tables_range" />
-      <menuitem action="tables_selected" />
-      <separator />
-      <menuitem action="graphs_range" />
-      <menuitem action="graphs_selected" />
-      <separator />
-      <menuitem action="quick_search" />
-      <menuitem action="view_subset" />
-    </menu>
-    <menu action="datasets_menu">
-      <menuitem action="switch_dataset" />
-      <separator />
-      <menuitem action="add_dataset" />
-      <menuitem action="remove_dataset" />
-      <menuitem action="rename_dataset" />
-      <menuitem action="merge_datasets" />
-      <separator />
-      <menuitem action="copy_data_dataset" />
-    </menu>
-    <menu action="help_menu">
-      <menuitem action="about" />
-      <separator />
-      <menuitem action="help" />
-    </menu>
-  </menubar>
-  <toolbar name="toolbar">
-    <toolitem action="add_new" />
-    <toolitem action="edit" />
-    <toolitem action="remove" />
-    <separator />
-    <toolitem action="import" />
-    <toolitem action="export" />
-  </toolbar>
-  <popup name="context_menu">
-    <menuitem action="add_new" />
-    <menuitem action="edit" />
-    <menuitem action="remove" />
-    <separator />
-    <menuitem action="switch_dataset" />
-    <menuitem action="add_dataset" />
-    <menuitem action="remove_dataset" />
-  </popup>
+    <menubar name="menubar">
+        <menu action="weather_menu">
+        <menuitem action="add_new" />
+            <menuitem action="edit" />
+            <menuitem action="remove" />
+            <separator />
+            <menuitem action="get_current_here" />
+            <menuitem action="get_current_there" />
+            <separator />
+            <menuitem action="options" />
+            <separator />
+            <menuitem action="exit" />
+        </menu>
+        <menu action="file_menu">
+            <menuitem action="import" />
+            <menuitem action="import_dataset" />
+            <separator />
+            <menuitem action="export" />
+            <menuitem action="export_pastebin" />
+        </menu>
+        <menu action="data_menu">
+            <menuitem action="data_range" />
+            <menuitem action="data_selected" />
+            <separator />
+            <menuitem action="quick_search" />
+            <menuitem action="view_subset" />
+        </menu>
+        <menu action="datasets_menu">
+            <menuitem action="switch_dataset" />
+            <separator />
+            <menuitem action="add_dataset" />
+            <menuitem action="remove_dataset" />
+            <menuitem action="rename_dataset" />
+            <menuitem action="merge_datasets" />
+            <separator />
+            <menuitem action="copy_data_dataset" />
+        </menu>
+        <menu action="help_menu">
+            <menuitem action="about" />
+            <separator />
+            <menuitem action="help" />
+        </menu>
+    </menubar>
+    <toolbar name="toolbar">
+        <toolitem action="add_new" />
+        <toolitem action="edit" />
+        <toolitem action="remove" />
+        <separator />
+        <toolitem action="import" />
+        <toolitem action="export" />
+    </toolbar>
+    <popup name="context_menu">
+        <menuitem action="add_new" />
+        <menuitem action="edit" />
+        <menuitem action="remove" />
+        <separator />
+        <menuitem action="switch_dataset" />
+        <menuitem action="add_dataset" />
+        <menuitem action="remove_dataset" />
+    </popup>
 </ui>

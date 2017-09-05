@@ -12,6 +12,9 @@
 # Import GTK for the dialog.
 from gi.repository import Gtk
 
+# Import application modules.
+from weatherlog_resources.constants import *
+
 
 class CalendarRangeDialog(Gtk.Dialog):
     """Shows the calendar dialog for selection of a range of dates."""
@@ -21,7 +24,9 @@ class CalendarRangeDialog(Gtk.Dialog):
 
         Gtk.Dialog.__init__(self, title, parent, Gtk.DialogFlags.MODAL)
         self.add_button("Cancel", Gtk.ResponseType.CANCEL)
-        self.add_button("OK", Gtk.ResponseType.OK)
+        self.add_button("View Graphs", DialogResponse.VIEW_GRAPH)
+        self.add_button("View Tables", DialogResponse.VIEW_TABLE)
+        self.add_button("View Info", DialogResponse.VIEW_INFO)
 
         # Create the grid and frames.
         cal_box = self.get_content_area()
@@ -50,7 +55,7 @@ class CalendarRangeDialog(Gtk.Dialog):
             self.end_cal.select_day(day_end[0])
 
         # Connect 'Enter' key to the OK button.
-        ok_btn = self.get_widget_for_response(response_id=Gtk.ResponseType.OK)
+        ok_btn = self.get_widget_for_response(response_id=DialogResponse.VIEW_INFO)
         ok_btn.set_can_default(True)
         ok_btn.grab_default()
 

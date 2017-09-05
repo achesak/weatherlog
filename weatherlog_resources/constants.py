@@ -36,6 +36,9 @@ class DialogResponse:
     COPY_DATA = 35
     USE_NEW = 40
     USE_SELECTED = 41
+    VIEW_INFO = 50
+    VIEW_TABLE = 51
+    VIEW_GRAPH = 52
     EXPORT_JSON = 97
     EXPORT_CSV = 98
     EXPORT_HTML = 99

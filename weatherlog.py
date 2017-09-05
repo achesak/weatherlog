@@ -205,18 +205,8 @@ class WeatherLog(Gtk.Window):
         ])
         action_group.add_actions([
             ("data_menu", None, "_Data"),
-            ("info_range", None, "Info in _Range...", "<Control>i", None,
-             lambda x: self.data_range(InfoType.INFO)),
-            ("info_selected", None, "Info for _Selected Dates...", "<Control><Shift>i", None,
-             lambda x: self.data_selected(InfoType.INFO)),
-            ("tables_range", None, "Tables i_n Range...", "<Control>c", None,
-             lambda x: self.data_range(InfoType.TABLE)),
-            ("tables_selected", None, "Tables _for Selected Dates...", "<Control><Shift>c", None,
-             lambda x: self.data_selected(InfoType.TABLE)),
-            ("graphs_range", None, "Gr_aphs in Range...", "<Control>g", None,
-             lambda x: self.data_range(InfoType.GRAPH)),
-            ("graphs_selected", None, "Grap_hs for Selected Dates...", "<Control><Shift>g", None,
-             lambda x: self.data_selected(InfoType.GRAPH)),
+            ("data_range", None, "Data in _Range...", "<Control>i", None, lambda x: self.data_range()),
+            ("data_selected", None, "Data for _Selected Dates...", "<Control><Shift>i", None, lambda x: self.data_selected()),
             ("quick_search", None, "_Quick Search...", "<Control>d", None, self.quick_search),
             ("view_subset", None, "_Data Subset...", "<Control><Shift>d", None, self.select_data_subset),
         ])
@@ -633,21 +623,11 @@ class WeatherLog(Gtk.Window):
         elif response == DialogResponse.ADD_DATA:
             self.add_new(False, prefill_data)
 
-    def data_range(self, mode):
+    def data_range(self):
         """Gets the range for the data to display."""
 
-        # Determine the dialog titles.
-        if mode == InfoType.INFO:
-            title = "Info in Range - %s" % self.last_dataset
-        elif mode == InfoType.TABLE:
-            title = "Tables in Range - %s" % self.last_dataset
-        elif mode == InfoType.GRAPH:
-            title = "Graphs in Range - %s" % self.last_dataset
-        else:
-            title = "Data in Range - %s" % self.last_dataset
-
         if len(self.data) == 0:
-            show_no_data_dialog(self, title)
+            show_no_data_dialog(self, "Data in Range - %s" % self.last_dataset)
             return
 
         # Get the first and last entered dates.
@@ -656,7 +636,7 @@ class WeatherLog(Gtk.Window):
         datelist = dates.date_list_datetime(datasets.get_column(self.data, DatasetColumn.DATE))
 
         # Get the starting and ending dates.
-        cal_dlg = CalendarRangeDialog(self, title, day_start, day_end)
+        cal_dlg = CalendarRangeDialog(self, "Data in Range - %s" % self.last_dataset, day_start, day_end)
         response = cal_dlg.run()
         year1, month1, day1 = cal_dlg.start_cal.get_date()
         year2, month2, day2 = cal_dlg.end_cal.get_date()
@@ -665,7 +645,7 @@ class WeatherLog(Gtk.Window):
         cal_dlg.destroy()
 
         # If the user did not click OK, don't continue.
-        if response != Gtk.ResponseType.OK:
+        if response == Gtk.ResponseType.CANCEL:
             return
 
         # Get the indices.
@@ -676,43 +656,35 @@ class WeatherLog(Gtk.Window):
 
         # Check to make sure these dates are valid, and cancel the action if not.
         if start_index == DateValidation.INVALID:
-            show_error_dialog(self, title,
+            show_error_dialog(self, "Data in Range - %s" % self.last_dataset,
                               "%s is not a valid date.\n\nThis date is not present and is not before any other dates."
                               % date1)
             return
         if end_index == DateValidation.INVALID:
-            show_error_dialog(self, title,
+            show_error_dialog(self, "Data in Range - %s" % self.last_dataset,
                               "%s is not a valid date.\n\nThis date is not present and is not after any other dates."
                               % date2)
             return
         if end_index < start_index:
-            show_error_dialog(self, title, "The ending date must be after the starting date.")
+            show_error_dialog(self, "Data in Range - %s" % self.last_dataset, "The ending date must be after the starting date.")
             return
 
         # Get the new list.
         data2 = self.data[start_index:end_index + 1]
 
         # Pass the data to the appropriate dialog.
-        if mode == InfoType.INFO:
+        if response == DialogResponse.VIEW_INFO:
             self.show_info_generic(data=data2)
-        elif mode == InfoType.TABLE:
+        elif response == DialogResponse.VIEW_TABLE:
             self.show_table_generic(data=data2)
-        elif mode == InfoType.GRAPH:
+        elif response == DialogResponse.VIEW_GRAPH:
             self.show_graph_generic(data=data2)
 
-    def data_selected(self, mode):
+    def data_selected(self):
         """Gets the selected dates to for the data to display."""
 
-        # Determine the dialog titles.
-        if mode == InfoType.INFO:
-            title = "Info for Selected Dates - %s" % self.last_dataset
-        elif mode == InfoType.TABLE:
-            title = "Tables for Selected Dates - %s" % self.last_dataset
-        elif mode == InfoType.GRAPH:
-            title = "Graphs for Selected Dates - %s" % self.last_dataset
-
         if len(self.data) == 0:
-            show_no_data_dialog(self, title)
+            show_no_data_dialog(self, "Data for Selected Dates - %s" % self.last_dataset)
             return
 
         # Get the dates.
@@ -720,24 +692,22 @@ class WeatherLog(Gtk.Window):
         dates_list = datasets.get_column_list(self.data, [0])
 
         # Get the selected dates.
-        info_dlg = DateSelectionDialog(self, title, dates_list, buttons=[["Cancel", Gtk.ResponseType.CANCEL],
-                                                                         ["Select All", DialogResponse.SELECT_ALL],
-                                                                         ["OK", Gtk.ResponseType.OK]])
+        buttons = [["Cancel", Gtk.ResponseType.CANCEL],
+                   ["View Graphs", DialogResponse.VIEW_GRAPH],
+                   ["View Tables", DialogResponse.VIEW_TABLE],
+                   ["View Info", Gtk.ResponseType.OK]]
+        info_dlg = DateSelectionDialog(self, "Data for Selected Dates - %s" % self.last_dataset, dates_list, buttons=buttons)
         response = info_dlg.run()
         model, treeiter = info_dlg.treeview.get_selection().get_selected_rows()
         info_dlg.destroy()
 
-        # If the user clicked Select All, use all the dates.
-        if response == DialogResponse.SELECT_ALL:
-            ndates = datasets.get_column(dates_list, 0)
-
-        elif response != Gtk.ResponseType.OK or treeiter is None:
+        # If the user does not press OK, don't continue.
+        if response == Gtk.ResponseType.CANCEL or treeiter is None:
             return
 
         # Get the dates.
-        if len(ndates) == 0:
-            for i in treeiter:
-                ndates.append(model[i][0])
+        for i in treeiter:
+            ndates.append(model[i][0])
 
         # Get the data.
         ndata = []
@@ -749,11 +719,11 @@ class WeatherLog(Gtk.Window):
             return
 
         # Pass the data to the appropriate dialog.
-        if mode == InfoType.INFO:
+        if response == Gtk.ResponseType.OK:
             self.show_info_generic(data=ndata)
-        elif mode == InfoType.TABLE:
+        elif response == DialogResponse.VIEW_TABLE:
             self.show_table_generic(data=ndata)
-        elif mode == InfoType.GRAPH:
+        elif response == DialogResponse.VIEW_GRAPH:
             self.show_graph_generic(data=ndata)
 
     def show_info_generic(self, data=None):
