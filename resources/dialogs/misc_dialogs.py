@@ -13,7 +13,7 @@
 from gi.repository import Gtk
 
 # Import application modules
-from weatherlog_resources.constants import *
+from resources.constants import *
 
 __all__ = ["show_alert_dialog", "show_error_dialog", "show_question_dialog", "show_file_dialog",
            "show_export_dialog", "show_save_dialog", "show_no_data_dialog", "show_import_dialog"]

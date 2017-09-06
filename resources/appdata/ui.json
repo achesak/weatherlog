@@ -1,0 +1,13 @@
+{
+    "title": "WeatherLog",
+    "version": "4.14",
+    
+    "icon_small": "resources/images/icon_small.png",
+    "icon_medium": "resources/images/icon_med.png",
+    "icon_medium_about": "../images/icon_med.png",
+    
+    "default_width": 1400,
+    "default_height": 600,
+    
+    "help_link": "resources/help/WeatherLog_help.pdf"
+}

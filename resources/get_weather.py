@@ -20,10 +20,10 @@ except ImportError:
     from urllib.request import URLError
     
 # Import application modules.
-import weatherlog_resources.openweathermap.api as api
-import weatherlog_resources.degrees as degrees
-import weatherlog_resources.clouds as clouds
-from weatherlog_resources.constants import *
+import resources.openweathermap.api as api
+import resources.degrees as degrees
+import resources.clouds as clouds
+from resources.constants import *
 
 
 def get_weather(config, units, weather_codes, location, location_type):
@@ -118,7 +118,7 @@ def get_weather(config, units, weather_codes, location, location_type):
 def get_weather_image(code):
     """Gets the path to the image to display for the given code. Uses OpenWeatherLog codes."""
     
-    base_url = "weatherlog_resources/images/weather_icons/"
+    base_url = "resources/images/weather_icons/"
     img_url = "error.png"
     
     # Sunny:

@@ -21,8 +21,8 @@ except ImportError:
 import json
 
 # Import application modules.
-import weatherlog_resources.export as export
-from weatherlog_resources.constants import *
+import resources.export as export
+from resources.constants import *
 
 
 def upload_pastebin(data, name, mode, expires, exposure, units, config, title):
@@ -30,7 +30,7 @@ def upload_pastebin(data, name, mode, expires, exposure, units, config, title):
     
     # Load the constants file.
     try:
-        const_file = open("weatherlog_resources/appdata/pastebin.json", "r")
+        const_file = open("resources/appdata/pastebin.json", "r")
         const_data = json.load(const_file)
         expires_dict = const_data["expires"]
         exposure_dict = const_data["exposure"]

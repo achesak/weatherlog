@@ -5,9 +5,9 @@ WeatherLog is an application for keeping track of the weather and getting inform
 WeatherLog can organize weather data and present it in a clear, easy to understand manner. It can also show detailed information about
 patterns and overall info, as well as display graphs to visualize the data.
 
-![WeatherLog main UI](weatherlog_resources/help/images/main_dataset_example.png "Main view with example data")
+![WeatherLog main UI](resources/help/images/main_dataset_example.png "Main view with example data")
 
-![WeatherLog info UI](weatherlog_resources/help/images/general_info.png "Info window")
+![WeatherLog info UI](resources/help/images/general_info.png "Info window")
 
 # Using WeatherLog
 

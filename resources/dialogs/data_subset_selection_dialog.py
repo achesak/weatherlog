@@ -13,12 +13,12 @@
 from gi.repository import Gtk, Gdk
 
 # Import application modules.
-from weatherlog_resources.constants import *
-import weatherlog_resources.datasets as datasets
-import weatherlog_resources.filter_data as filter_data
-import weatherlog_resources.export as export
-from weatherlog_resources.dialogs.data_subset_dialog import DataSubsetDialog
-from weatherlog_resources.dialogs.misc_dialogs import *
+from resources.constants import *
+import resources.datasets as datasets
+import resources.filter_data as filter_data
+import resources.export as export
+from resources.dialogs.data_subset_dialog import DataSubsetDialog
+from resources.dialogs.misc_dialogs import *
 
 
 class DataSubsetSelectionDialog(Gtk.Window):

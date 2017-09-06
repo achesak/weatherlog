@@ -13,8 +13,8 @@
 from gi.repository import Gtk, Gdk
 
 # Import application modules.
-import weatherlog_resources.convert as convert
-from weatherlog_resources.constants import *
+import resources.convert as convert
+from resources.constants import *
 
 
 class OptionsDialog(Gtk.Dialog):

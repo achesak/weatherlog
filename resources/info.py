@@ -17,8 +17,8 @@ import datetime
 from collections import Counter
 
 # Import application modules.
-import weatherlog_resources.datasets as datasets
-import weatherlog_resources.calculations as calculations
+import resources.datasets as datasets
+import resources.calculations as calculations
 
 
 def general_info(data, units):

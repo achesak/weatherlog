@@ -41,48 +41,48 @@ except ImportError:
 sys.dont_write_bytecode = True
 
 # Import application modules.
-from weatherlog_resources.constants import *
-import weatherlog_resources.launch as launch
-import weatherlog_resources.datasets as datasets
-import weatherlog_resources.dates as dates
-import weatherlog_resources.validate as validate
-import weatherlog_resources.convert as convert
-import weatherlog_resources.io as io
-import weatherlog_resources.export as export
-import weatherlog_resources.info as info
-import weatherlog_resources.tables as tables
-import weatherlog_resources.graphs as graphs
-import weatherlog_resources.filter_data as filter_data
-import weatherlog_resources.get_weather as get_weather
-import weatherlog_resources.pastebin as pastebin
-import weatherlog_resources.commands as commands
+from resources.constants import *
+import resources.launch as launch
+import resources.datasets as datasets
+import resources.dates as dates
+import resources.validate as validate
+import resources.convert as convert
+import resources.io as io
+import resources.export as export
+import resources.info as info
+import resources.tables as tables
+import resources.graphs as graphs
+import resources.filter_data as filter_data
+import resources.get_weather as get_weather
+import resources.pastebin as pastebin
+import resources.commands as commands
 
 # Import UI builders.
-import weatherlog_resources.ui.info_builder as info_builder
-import weatherlog_resources.ui.table_builder as table_builder
-import weatherlog_resources.ui.graph_builder as graph_builder
+import resources.ui.info_builder as info_builder
+import resources.ui.table_builder as table_builder
+import resources.ui.graph_builder as graph_builder
 
 # Import dialogs.
-from weatherlog_resources.dialogs.add_dialog import AddNewDialog
-from weatherlog_resources.dialogs.edit_dialog import EditDialog
-from weatherlog_resources.dialogs.entry_dialog import GenericEntryDialog
-from weatherlog_resources.dialogs.date_selection_dialog import DateSelectionDialog
-from weatherlog_resources.dialogs.calendar_range_dialog import CalendarRangeDialog
-from weatherlog_resources.dialogs.info_dialog import InfoDialog
-from weatherlog_resources.dialogs.table_dialog import TableDialog
-from weatherlog_resources.dialogs.graph_dialog import GraphDialog
-from weatherlog_resources.dialogs.dataset_selection_dialog import DatasetSelectionDialog
-from weatherlog_resources.dialogs.dataset_add_select_dialog import DatasetAddSelectionDialog
-from weatherlog_resources.dialogs.quick_search_dialog import QuickSearchDialog
-from weatherlog_resources.dialogs.data_subset_selection_dialog import DataSubsetSelectionDialog
-from weatherlog_resources.dialogs.data_subset_dialog import DataSubsetDialog
-from weatherlog_resources.dialogs.import_selection_dialog import ImportSelectionDialog
-from weatherlog_resources.dialogs.export_pastebin_dialog import ExportPastebinDialog
-from weatherlog_resources.dialogs.weather_dialog import CurrentWeatherDialog
-from weatherlog_resources.dialogs.location_dialog import LocationDialog
-from weatherlog_resources.dialogs.options_dialog import OptionsDialog
-from weatherlog_resources.dialogs.about_dialog import WeatherLogAboutDialog
-from weatherlog_resources.dialogs.misc_dialogs import *
+from resources.dialogs.add_dialog import AddNewDialog
+from resources.dialogs.edit_dialog import EditDialog
+from resources.dialogs.entry_dialog import GenericEntryDialog
+from resources.dialogs.date_selection_dialog import DateSelectionDialog
+from resources.dialogs.calendar_range_dialog import CalendarRangeDialog
+from resources.dialogs.info_dialog import InfoDialog
+from resources.dialogs.table_dialog import TableDialog
+from resources.dialogs.graph_dialog import GraphDialog
+from resources.dialogs.dataset_selection_dialog import DatasetSelectionDialog
+from resources.dialogs.dataset_add_select_dialog import DatasetAddSelectionDialog
+from resources.dialogs.quick_search_dialog import QuickSearchDialog
+from resources.dialogs.data_subset_selection_dialog import DataSubsetSelectionDialog
+from resources.dialogs.data_subset_dialog import DataSubsetDialog
+from resources.dialogs.import_selection_dialog import ImportSelectionDialog
+from resources.dialogs.export_pastebin_dialog import ExportPastebinDialog
+from resources.dialogs.weather_dialog import CurrentWeatherDialog
+from resources.dialogs.location_dialog import LocationDialog
+from resources.dialogs.options_dialog import OptionsDialog
+from resources.dialogs.about_dialog import WeatherLogAboutDialog
+from resources.dialogs.misc_dialogs import *
 
 # Tell Python not to create bytecode files, as they mess with the git repo.
 # This line can be removed be the user, if desired.

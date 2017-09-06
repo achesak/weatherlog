@@ -17,8 +17,8 @@ except ImportError:
     date2num = None
 
 # Import application modules.
-import weatherlog_resources.datasets as datasets
-import weatherlog_resources.dates as dates
+import resources.datasets as datasets
+import resources.dates as dates
 
 
 def get_data(data):

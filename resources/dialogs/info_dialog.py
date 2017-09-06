@@ -13,7 +13,7 @@
 from gi.repository import Gtk
 
 # Import application modules.
-from weatherlog_resources.constants import *
+from resources.constants import *
 
 
 class InfoDialog(Gtk.Dialog):

@@ -10,8 +10,8 @@
 
 
 # Import application modules.
-from weatherlog_resources.openweathermap.constants import CloudCoverage
-from weatherlog_resources.constants import * 
+from resources.openweathermap.constants import CloudCoverage
+from resources.constants import *
 
 
 def percent_to_term(perc):

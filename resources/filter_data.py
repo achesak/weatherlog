@@ -13,7 +13,7 @@
 import datetime
 
 # Import application modules.
-import weatherlog_resources.datasets as datasets
+import resources.datasets as datasets
 
 
 # condition parameter is a list with the format:

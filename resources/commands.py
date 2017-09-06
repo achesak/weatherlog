@@ -15,7 +15,7 @@ import os
 import os.path
 
 # Import application modules.
-import weatherlog_resources.launch as launch
+import resources.launch as launch
 
 
 def purge():

@@ -21,9 +21,9 @@ import sys
 import pickle
     
 # Import application modules.
-from weatherlog_resources.openweathermap.codes import codes
-import weatherlog_resources.io as io
-import weatherlog_resources.datasets as datasets
+from resources.openweathermap.codes import codes
+import resources.io as io
+import resources.datasets as datasets
 
 
 def get_main_dir():
@@ -47,7 +47,7 @@ def get_ui_info():
     """Get the application's UI info."""
     
     try:
-        ui_file = open("weatherlog_resources/appdata/ui.json", "r")
+        ui_file = open("resources/appdata/ui.json", "r")
         ui_data = json.load(ui_file)
         ui_file.close()
     
@@ -60,7 +60,7 @@ def get_ui_info():
         sys.exit()
     
     try:
-        menu_file = open("weatherlog_resources/appdata/menu.xml", "r")
+        menu_file = open("resources/appdata/menu.xml", "r")
         menu_data = menu_file.read()
         menu_file.close()
     
@@ -112,7 +112,7 @@ def get_config(conf_dir, get_default=False):
     
     # Get the default configuration.
     try:
-        default_config_file = open("weatherlog_resources/appdata/default_config.json", "r")
+        default_config_file = open("resources/appdata/default_config.json", "r")
         default_config = json.load(default_config_file)
         default_config_file.close()
     
@@ -200,7 +200,7 @@ def get_units(config):
     """Gets the units."""
     
     try:
-        units_file = open("weatherlog_resources/appdata/units.json", "r")
+        units_file = open("resources/appdata/units.json", "r")
         units = json.load(units_file)
         units_file.close()
     
@@ -219,7 +219,7 @@ def get_pastebin_constants():
     """Gets the Pastebin constants."""
     
     try:
-        paste_file = open("weatherlog_resources/appdata/pastebin.json", "r")
+        paste_file = open("resources/appdata/pastebin.json", "r")
         paste_constants = json.load(paste_file)
         paste_file.close()
     
@@ -238,7 +238,7 @@ def get_graph_data():
     """Gets the graph line and hatch data."""
     
     try:
-        graph_file = open("weatherlog_resources/appdata/graphs.json", "r")
+        graph_file = open("resources/appdata/graphs.json", "r")
         graph_data = json.load(graph_file)
         graph_file.close()
     

@@ -17,8 +17,8 @@ import os.path
 import pickle
 
 # Import application modules.
-from weatherlog_resources.constants import *
-import weatherlog_resources.io as io
+from resources.constants import *
+import resources.io as io
 
 
 validate_dataset_strings = {

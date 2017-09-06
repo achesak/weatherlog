@@ -13,8 +13,8 @@
 from gi.repository import Gtk
 
 # Import application modules.
-import weatherlog_resources.datasets as datasets
-from weatherlog_resources.constants import *
+import resources.datasets as datasets
+from resources.constants import *
 
 
 class EditDialog(Gtk.Dialog):

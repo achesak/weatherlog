@@ -10,7 +10,7 @@
 
 
 # Import application modules.
-import weatherlog_resources.io as io
+import resources.io as io
 
 
 # Constants for use with the converting.

@@ -15,11 +15,11 @@ import time
 from gi.repository import Gtk
 
 # Import application modules.
-from weatherlog_resources.dialogs.misc_dialogs import *
-from weatherlog_resources.dialogs.calendar_dialog import CalendarDialog
-import weatherlog_resources.get_weather as get_weather
-import weatherlog_resources.degrees as degrees
-import weatherlog_resources.clouds as clouds
+from resources.dialogs.misc_dialogs import *
+from resources.dialogs.calendar_dialog import CalendarDialog
+import resources.get_weather as get_weather
+import resources.degrees as degrees
+import resources.clouds as clouds
 
 
 class AddNewDialog(Gtk.Dialog):
