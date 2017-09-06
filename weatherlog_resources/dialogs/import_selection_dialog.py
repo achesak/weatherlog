@@ -30,7 +30,7 @@ class ImportSelectionDialog(Gtk.Dialog):
 
         # Create the frame.
         sel_frame = Gtk.Frame()
-        sel_frame.set_label("Select dates to import: ")
+        sel_frame.set_label("Select dates to import")
         self.get_content_area().add(sel_frame)
 
         # Create the Date selection.

@@ -34,7 +34,7 @@ class DatasetAddSelectionDialog(Gtk.Dialog):
 
         # Create the creation frame.
         add_frame = Gtk.Frame()
-        add_frame.set_label("Create new dataset: ")
+        add_frame.set_label("Create new dataset")
         dat_grid.add(add_frame)
 
         # Create the creation entry.
@@ -43,7 +43,7 @@ class DatasetAddSelectionDialog(Gtk.Dialog):
 
         # Create the selection frame.
         sel_frame = Gtk.Frame()
-        sel_frame.set_label("Select existing dataset: ")
+        sel_frame.set_label("Select existing dataset")
         dat_grid.attach_next_to(sel_frame, add_frame, Gtk.PositionType.BOTTOM, 1, 1)
 
         # Create the Dataset, Creation Date, and Last Modified Date columns.

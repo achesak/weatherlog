@@ -27,7 +27,7 @@ class DateSelectionDialog(Gtk.Dialog):
 
         # Create the frame.
         sel_frame = Gtk.Frame()
-        sel_frame.set_label("Select date%s:" % ("s" if multi_select else ""))
+        sel_frame.set_label("Select date%s" % ("s" if multi_select else ""))
         self.get_content_area().add(sel_frame)
 
         # Create the Date selection.
@@ -36,7 +36,8 @@ class DateSelectionDialog(Gtk.Dialog):
         else:
             self.liststore = Gtk.ListStore(str)
         self.treeview = Gtk.TreeView(model=self.liststore)
-        self.treeview.set_headers_visible(False)
+        if not show_conflicts:
+            self.treeview.set_headers_visible(False)
         if multi_select:
             self.treeview.get_selection().set_mode(Gtk.SelectionMode.MULTIPLE)
         date_text = Gtk.CellRendererText()

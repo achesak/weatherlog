@@ -29,10 +29,7 @@ class DatasetSelectionDialog(Gtk.Dialog):
 
         # Create the frame.
         sel_frame = Gtk.Frame()
-        if select_mode == DatasetSelectionMode.SINGLE:
-            sel_frame.set_label("Select dataset:")
-        else:
-            sel_frame.set_label("Select datasets:")
+        sel_frame.set_label("Select dataset%s" % ("" if select_mode == DatasetSelectionMode.SINGLE else "s"))
         self.get_content_area().add(sel_frame)
 
         # Create the Dataset, Creation Date, and Last Modified Date columns.
