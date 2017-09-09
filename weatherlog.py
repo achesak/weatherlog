@@ -241,6 +241,7 @@ class WeatherLog(Gtk.Window):
         grid = Gtk.Grid()
         self.menubar = ui_manager.get_widget("/menubar")
         self.toolbar = ui_manager.get_widget("/toolbar")
+        self.toolbar.foreach(lambda x: x.set_focus_chain([]))
         self.context_menu = ui_manager.get_widget("/context_menu")
         self.data_frame = Gtk.ScrolledWindow()
         self.data_frame.set_hexpand(True)
