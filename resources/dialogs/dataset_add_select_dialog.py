@@ -14,19 +14,24 @@ from gi.repository import Gtk
 
 # Import application modules.
 from resources.constants import *
+import resources.validate as validate
+import resources.io as io
+from resources.dialogs.misc_dialogs import *
 
 
 class DatasetAddSelectionDialog(Gtk.Dialog):
     """Shows the dataset creation/selection dialog."""
 
-    def __init__(self, parent, title, datasets):
+    def __init__(self, parent, title, datasets, main_dir, last_dataset):
         """Create the dialog."""
 
         Gtk.Dialog.__init__(self, title, parent, Gtk.DialogFlags.MODAL)
         self.set_default_size(500, 300)
         self.add_button("Cancel", Gtk.ResponseType.CANCEL)
-        self.add_button("Create Dataset", DialogResponse.USE_NEW)
         self.add_button("Use Selected Dataset", DialogResponse.USE_SELECTED)
+
+        self.main_dir = main_dir
+        self.last_dataset = last_dataset
 
         # Set up the main grid.
         dat_grid = Gtk.Grid()
@@ -37,9 +42,14 @@ class DatasetAddSelectionDialog(Gtk.Dialog):
         add_frame.set_label("Create new dataset")
         dat_grid.add(add_frame)
 
-        # Create the creation entry.
+        # Create the creation entry and button.
+        add_box = Gtk.Box()
         self.add_ent = Gtk.Entry()
-        add_frame.add(self.add_ent)
+        add_frame.add(add_box)
+        self.add_btn = Gtk.Button(label="Create Dataset")
+        self.add_btn.set_margin_left(5)
+        add_box.pack_start(self.add_ent, True, True, 0)
+        add_box.pack_end(self.add_btn, False, False, 0)
 
         # Create the selection frame.
         sel_frame = Gtk.Frame()
@@ -73,6 +83,9 @@ class DatasetAddSelectionDialog(Gtk.Dialog):
         scrolled_win.add(self.treeview)
         sel_frame.add(scrolled_win)
 
+        # Connect the events.
+        self.add_btn.connect("clicked", self.create_dataset)
+
         # Connect 'Enter' key to the OK button.
         self.add_ent.set_activates_default(True)
         ok_btn = self.get_widget_for_response(response_id=DialogResponse.USE_SELECTED)
@@ -81,3 +94,25 @@ class DatasetAddSelectionDialog(Gtk.Dialog):
 
         # Show the dialog.
         self.show_all()
+
+    def create_dataset(self, event):
+        """Creates a new dataset."""
+
+        new_name = self.add_ent.get_text()
+
+        # Validate the name.
+        valid = validate.validate_dataset(self.main_dir, new_name)
+        if valid != DatasetValidation.VALID:
+            show_error_dialog(self, "Copy Data", validate.validate_dataset_name_strings[valid])
+            return
+
+        # Create the directory and file.
+        io.write_blank_dataset(self.main_dir, new_name)
+        io.write_metadata(self.main_dir, new_name, now=True)
+        io.write_dataset(main_dir=self.main_dir, name=new_name, data=[])
+
+        # Refresh the dataset list.
+        dataset_list = io.get_dataset_list(self.main_dir, self.last_dataset)
+        self.liststore.clear()
+        for i in dataset_list:
+            self.liststore.append(i)

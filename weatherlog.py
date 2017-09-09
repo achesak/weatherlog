@@ -1435,28 +1435,20 @@ class WeatherLog(Gtk.Window):
         dataset_list = io.get_dataset_list(self.main_dir, self.last_dataset)
 
         # Get the new name or selected dataset.
-        dat_dlg = DatasetAddSelectionDialog(self, "Copy Data", dataset_list)
+        dat_dlg = DatasetAddSelectionDialog(self, "Copy Data", dataset_list, self.main_dir, self.last_dataset)
         response1 = dat_dlg.run()
         new_name = dat_dlg.add_ent.get_text().lstrip().rstrip()
         model1, treeiter1 = dat_dlg.treeview.get_selection().get_selected()
         dat_dlg.destroy()
 
-        if response1 != DialogResponse.USE_NEW and response1 != DialogResponse.USE_SELECTED:
+        if response1 != DialogResponse.USE_SELECTED:
             return
 
         # Get the selected name.
-        if response1 == DialogResponse.USE_SELECTED:
-            try:
-                sel_name = model1[treeiter1][0]
-            except TypeError:
-                return
-
-        # Validate the entered name. If the name isn't valid, don't continue.
-        if response1 == DialogResponse.USE_NEW:
-            valid = validate.validate_dataset(self.main_dir, new_name)
-            if valid != DatasetValidation.VALID:
-                show_error_dialog(self, "Copy Data", validate.validate_dataset_name_strings[valid])
-                return
+        try:
+            sel_name = model1[treeiter1][0]
+        except TypeError:
+            return
 
         # Get the dates to move or copy.
         buttons = [["Cancel", Gtk.ResponseType.CANCEL], ["Move Data", DialogResponse.MOVE_DATA],
@@ -1488,47 +1480,32 @@ class WeatherLog(Gtk.Window):
             if self.data[i][DatasetColumn.DATE] in ndates:
                 ndata.append(self.data[i])
 
-        # If the user entered a new dataset name, create the dataset.
-        if response1 == DialogResponse.USE_NEW:
+        # If the user wants to move the data, delete the items in the current dataset.
+        if response2 == DialogResponse.MOVE_DATA:
+            self.data = [x for x in self.data if x[DatasetColumn.DATE] not in ndates]
 
-            # If the user wants to move the data, delete the items in the current dataset.
-            if response2 == DialogResponse.MOVE_DATA:
-                self.data = [x for x in self.data if x[DatasetColumn.DATE] not in ndates]
+        # Load the data.
+        data2 = io.read_dataset(main_dir=self.main_dir, name=sel_name)
 
-            # Create the directory and file.
-            io.write_blank_dataset(self.main_dir, new_name)
-            io.write_metadata(self.main_dir, new_name, now=True)
-            io.write_dataset(main_dir=self.main_dir, name=new_name, data=ndata)
+        # Filter the new data to make sure there are no duplicates.
+        new_data = []
+        date_col = datasets.get_column(data2, DatasetColumn.DATE)
+        for i in ndata:
 
-        # Otherwise, use the selected dataset:
-        elif response1 == DialogResponse.USE_SELECTED:
+            if i[DatasetColumn.DATE] not in date_col:
+                new_data.append(i)
 
-            # If the user wants to move the data, delete the items in the current dataset.
-            if response2 == DialogResponse.MOVE_DATA:
-                self.data = [x for x in self.data if x[DatasetColumn.DATE] not in ndates]
+        # Append and sort the data.
+        data2 += new_data
+        data2 = sorted(data2, key=lambda n: datetime.datetime.strptime(n[0], '%d/%m/%Y'))
 
-            # Load the data.
-            data2 = io.read_dataset(main_dir=self.main_dir, name=sel_name)
-
-            # Filter the new data to make sure there are no duplicates.
-            new_data = []
-            date_col = datasets.get_column(data2, DatasetColumn.DATE)
-            for i in ndata:
-
-                if i[DatasetColumn.DATE] not in date_col:
-                    new_data.append(i)
-
-            # Append and sort the data.
-            data2 += new_data
-            data2 = sorted(data2, key=lambda n: datetime.datetime.strptime(n[0], '%d/%m/%Y'))
-
-            # Save the data.
-            self.save()
-            io.write_dataset(main_dir=self.main_dir, name=sel_name, data=data2)
-            now = datetime.datetime.now()
-            modified = "%d/%d/%d" % (now.day, now.month, now.year)
-            creation, modified2 = io.get_metadata(self.main_dir, self.last_dataset)
-            io.write_metadata(self.main_dir, self.last_dataset, creation, modified)
+        # Save the data.
+        self.save()
+        io.write_dataset(main_dir=self.main_dir, name=sel_name, data=data2)
+        now = datetime.datetime.now()
+        modified = "%d/%d/%d" % (now.day, now.month, now.year)
+        creation, modified2 = io.get_metadata(self.main_dir, self.last_dataset)
+        io.write_metadata(self.main_dir, self.last_dataset, creation, modified)
 
         # Update the title and data.
         self.update_list()
