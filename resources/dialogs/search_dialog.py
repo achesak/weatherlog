@@ -3,7 +3,7 @@
 
 ################################################################################
 #
-# WeatherLog: dialogs/quick_search_dialog.py
+# WeatherLog: dialogs/search_dialog.py
 # This dialog allows the user to enter a basic search.
 #
 ################################################################################
@@ -13,13 +13,13 @@
 from gi.repository import Gtk
 
 
-class QuickSearchDialog(Gtk.Dialog):
-    """Shows the dialog for a quick search."""
+class SearchDialog(Gtk.Dialog):
+    """Shows the dialog for a search."""
     
     def __init__(self, parent, last_dataset, config):
         """Create the dialog."""
         
-        Gtk.Dialog.__init__(self, "Quick Search - %s" % last_dataset, parent, Gtk.DialogFlags.MODAL)
+        Gtk.Dialog.__init__(self, "Search - %s" % last_dataset, parent, Gtk.DialogFlags.MODAL)
         self.set_size_request(300, 0)
         self.add_button("Cancel", Gtk.ResponseType.CANCEL)
         self.add_button("OK", Gtk.ResponseType.OK)

@@ -73,7 +73,7 @@ from resources.dialogs.table_dialog import TableDialog
 from resources.dialogs.graph_dialog import GraphDialog
 from resources.dialogs.dataset_selection_dialog import DatasetSelectionDialog
 from resources.dialogs.dataset_add_select_dialog import DatasetAddSelectionDialog
-from resources.dialogs.quick_search_dialog import QuickSearchDialog
+from resources.dialogs.search_dialog import SearchDialog
 from resources.dialogs.data_subset_selection_dialog import DataSubsetSelectionDialog
 from resources.dialogs.data_subset_dialog import DataSubsetDialog
 from resources.dialogs.import_selection_dialog import ImportSelectionDialog
@@ -207,7 +207,7 @@ class WeatherLog(Gtk.Window):
             ("data_menu", None, "_Data"),
             ("data_range", None, "Data in _Range...", "<Control>i", None, lambda x: self.data_range()),
             ("data_selected", None, "Data for _Selected Dates...", "<Control><Shift>i", None, lambda x: self.data_selected()),
-            ("quick_search", None, "_Quick Search...", "<Control>f", None, self.quick_search),
+            ("search", None, "S_earch...", "<Control>f", None, self.search),
             ("view_subset", None, "_Data Subset...", "<Control><Shift>f", None, self.select_data_subset),
         ])
         action_group.add_actions([
@@ -835,15 +835,15 @@ class WeatherLog(Gtk.Window):
         response = graph_dlg.run()
         graph_dlg.destroy()
 
-    def quick_search(self, event):
+    def search(self, event):
         """Shows the quick search dialog."""
 
         if len(self.data) == 0:
-            show_no_data_dialog(self, "Quick Search - %s" % self.last_dataset)
+            show_no_data_dialog(self, "Search - %s" % self.last_dataset)
             return
 
         # Get the search term and options.
-        qui_dlg = QuickSearchDialog(self, self.last_dataset, self.config)
+        qui_dlg = SearchDialog(self, self.last_dataset, self.config)
         response = qui_dlg.run()
         search_term = qui_dlg.inp_ent.get_text()
         opt_insensitive = qui_dlg.case_chk.get_active()
@@ -856,20 +856,20 @@ class WeatherLog(Gtk.Window):
         filtered = filter_data.filter_quick(self.data, search_term, opt_insensitive)
 
         if len(filtered) == 0:
-            show_alert_dialog(self, "Quick Search Results - %s" % self.last_dataset,
+            show_alert_dialog(self, "Search Results - %s" % self.last_dataset,
                               "No data matches the specified search term.")
             return
 
-        sub_dlg = DataSubsetDialog(self, "Quick Search Results - %s" % self.last_dataset, filtered, self.units,
+        sub_dlg = DataSubsetDialog(self, "Search Results - %s" % self.last_dataset, filtered, self.units,
                                    self.config)
         response = sub_dlg.run()
         sub_dlg.destroy()
 
         # Export the data:
         if response == DialogResponse.EXPORT:
-            response2, filename = show_export_dialog(self, "Quick Search Results - %s" % self.last_dataset)
+            response2, filename = show_export_dialog(self, "Search Results - %s" % self.last_dataset)
             if response2 == Gtk.ResponseType.OK:
-                data_list = [["WeatherLog Quick Search Results - %s - %s to %s" % (
+                data_list = [["WeatherLog Search Results - %s - %s to %s" % (
                     self.last_dataset, (filtered[0][0] if len(filtered) != 0 else "None"),
                     (filtered[len(filtered) - 1][0] if len(filtered) != 0 else "None")),
                               ["Date", "Temperature (%s)" % self.units["temp"], "Wind Chill (%s)" % self.units["temp"],

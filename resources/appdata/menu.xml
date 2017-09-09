@@ -23,7 +23,7 @@
             <menuitem action="data_range" />
             <menuitem action="data_selected" />
             <separator />
-            <menuitem action="quick_search" />
+            <menuitem action="search" />
             <menuitem action="view_subset" />
         </menu>
         <menu action="datasets_menu">
