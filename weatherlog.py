@@ -207,8 +207,8 @@ class WeatherLog(Gtk.Window):
             ("data_menu", None, "_Data"),
             ("data_range", None, "Data in _Range...", "<Control>i", None, lambda x: self.data_range()),
             ("data_selected", None, "Data for _Selected Dates...", "<Control><Shift>i", None, lambda x: self.data_selected()),
-            ("quick_search", None, "_Quick Search...", "<Control>d", None, self.quick_search),
-            ("view_subset", None, "_Data Subset...", "<Control><Shift>d", None, self.select_data_subset),
+            ("quick_search", None, "_Quick Search...", "<Control>f", None, self.quick_search),
+            ("view_subset", None, "_Data Subset...", "<Control><Shift>f", None, self.select_data_subset),
         ])
         action_group.add_actions([
             ("datasets_menu", None, "Data_sets"),
