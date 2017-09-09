@@ -1003,7 +1003,7 @@ class WeatherLog(Gtk.Window):
             return
 
         # Get the new dataset name.
-        new_dlg = GenericEntryDialog(self, title="Import as New Dataset", message="Enter dataset name:")
+        new_dlg = GenericEntryDialog(self, title="Import as New Dataset", message="Enter dataset name")
         response = new_dlg.run()
         name = new_dlg.nam_ent.get_text().lstrip().rstrip()
         new_dlg.destroy()
@@ -1183,7 +1183,7 @@ class WeatherLog(Gtk.Window):
         """Adds a new dataset."""
 
         # Get the name for the new dataset.
-        new_dlg = GenericEntryDialog(self, title="Add Dataset", message="Enter dataset name:", filter_dataset_name=True)
+        new_dlg = GenericEntryDialog(self, title="Add Dataset", message="Enter dataset name", filter_dataset_name=True)
         response = new_dlg.run()
         name = new_dlg.nam_ent.get_text().lstrip().rstrip()
         new_dlg.destroy()
@@ -1294,7 +1294,7 @@ class WeatherLog(Gtk.Window):
         old_name = model[treeiter][0]
 
         # Get the new dataset name.
-        ren_dlg = GenericEntryDialog(self, title="Rename Dataset", message="Enter new name for \"%s\":" % old_name)
+        ren_dlg = GenericEntryDialog(self, title="Rename Dataset", message="Enter new name for \"%s\"" % old_name)
         response = ren_dlg.run()
         new_name = ren_dlg.nam_ent.get_text().lstrip().rstrip()
         ren_dlg.destroy()
@@ -1367,7 +1367,7 @@ class WeatherLog(Gtk.Window):
             datasets_list.append(model[i][0])
 
         # Get the name for the new dataset.
-        nam_dlg = GenericEntryDialog(self, title="Merge Datasets", message="Enter dataset name:",
+        nam_dlg = GenericEntryDialog(self, title="Merge Datasets", message="Enter dataset name",
                                      default_text=datasets_list[0])
         response = nam_dlg.run()
         merge_name = nam_dlg.nam_ent.get_text()
