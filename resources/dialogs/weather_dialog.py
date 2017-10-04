@@ -10,13 +10,13 @@
 
 
 # Import GTK for the dialog.
-from gi.repository import Gtk, Gio
+from gi.repository import Gtk
 
 # Import application modules.
 from resources.constants import *
 
 
-class CurrentWeatherDialog(Gtk.Dialog):
+class CurrentWeatherDialog(Gtk.Window):
     """Shows the current weather dialog."""
     
     def __init__(self, parent, title, data, location, image_path):
