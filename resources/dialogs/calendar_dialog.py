@@ -19,19 +19,19 @@ class CalendarDialog(Gtk.Dialog):
     def __init__(self, parent, title, label, day=None, month=None, year=None):
         """Create the dialog."""
 
-        Gtk.Dialog.__init__(self, title, parent, Gtk.DialogFlags.MODAL)
-        self.add_button("Cancel", Gtk.ResponseType.CANCEL)
+        Gtk.Dialog.__init__(self, title, parent, Gtk.DialogFlags.MODAL, use_header_bar=True)
         self.add_button("OK", Gtk.ResponseType.OK)
+
+        # Create the header bar.
+        header = self.get_header_bar()
+        header.set_title(title)
+        header.set_subtitle(label)
+        header.set_show_close_button(True)
 
         # Create the grid and widgets.
         info_box = self.get_content_area()
-        info_grid = Gtk.Grid()
-        info_box.add(info_grid)
-        info_lbl = Gtk.Label(label)
-        info_lbl.set_alignment(0, 0.5)
-        info_grid.add(info_lbl)
         self.info_cal = Gtk.Calendar()
-        info_grid.attach_next_to(self.info_cal, info_lbl, Gtk.PositionType.BOTTOM, 1, 1)
+        info_box.add(self.info_cal)
 
         # Set the default date.
         if day is not None:

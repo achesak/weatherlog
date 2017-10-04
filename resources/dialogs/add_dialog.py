@@ -45,6 +45,7 @@ class AddNewDialog(Gtk.Dialog):
         header = self.get_header_bar()
         header.set_title("Add New Data")
         header.set_subtitle(dataset)
+        header.set_show_close_button(True)
 
         # Create the grid.
         new_box = self.get_content_area()
@@ -287,7 +288,7 @@ class AddNewDialog(Gtk.Dialog):
         """Shows the date selection dialog."""
 
         # Show the dialog and get the date.
-        date_dlg = CalendarDialog(self, "Add New Data", "Select date: ")
+        date_dlg = CalendarDialog(self, "Add New Data", "Select date")
         date_dlg.run()
         year, month, day = date_dlg.info_cal.get_date()
 

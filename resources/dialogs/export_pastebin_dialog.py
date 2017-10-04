@@ -27,6 +27,7 @@ class ExportPastebinDialog(Gtk.Dialog):
         header = self.get_header_bar()
         header.set_title(title)
         header.set_subtitle(subtitle)
+        header.set_show_close_button(True)
         
         # Create the grid.
         nam_box = self.get_content_area()

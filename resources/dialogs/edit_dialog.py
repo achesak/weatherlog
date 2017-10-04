@@ -37,6 +37,7 @@ class EditDialog(Gtk.Dialog):
         header = self.get_header_bar()
         header.set_title("Edit %s" % date)
         header.set_subtitle(dataset)
+        header.set_show_close_button(True)
 
         # Create the grids.
         new_box = self.get_content_area()
