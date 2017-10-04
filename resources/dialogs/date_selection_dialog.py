@@ -16,19 +16,23 @@ from gi.repository import Gtk
 class DateSelectionDialog(Gtk.Dialog):
     """Shows the date selection dialog."""
 
-    def __init__(self, parent, title, dates, buttons=(("Cancel", Gtk.ResponseType.CANCEL), ("OK", Gtk.ResponseType.OK)),
+    def __init__(self, parent, title, subtitle, dates, buttons=None,
                  default_button=Gtk.ResponseType.OK, show_conflicts=False, multi_select=True):
         """Create the dialog."""
 
-        Gtk.Dialog.__init__(self, title, parent, Gtk.DialogFlags.MODAL)
-        self.set_default_size(300, 300)
-        for i in buttons:
-            self.add_button(i[0], i[1])
+        Gtk.Dialog.__init__(self, title, parent, Gtk.DialogFlags.MODAL, use_header_bar=True)
+        self.set_default_size(500, 200)
+        if buttons is None:
+            self.add_button("OK", Gtk.ResponseType.OK)
+        else:
+            for i in buttons:
+                self.add_button(i[0], i[1])
 
-        # Create the frame.
-        sel_frame = Gtk.Frame()
-        sel_frame.set_label("Select date%s" % ("s" if multi_select else ""))
-        self.get_content_area().add(sel_frame)
+        # Create the header bar.
+        header = self.get_header_bar()
+        header.set_title(title)
+        header.set_subtitle(subtitle)
+        header.set_show_close_button(True)
 
         # Create the Date selection.
         if show_conflicts:
@@ -55,7 +59,7 @@ class DateSelectionDialog(Gtk.Dialog):
         scrolled_win.set_vexpand(True)
         scrolled_win.set_hexpand(True)
         scrolled_win.add(self.treeview)
-        sel_frame.add(scrolled_win)
+        self.get_content_area().add(scrolled_win)
 
         # Add the dates.
         for i in dates:

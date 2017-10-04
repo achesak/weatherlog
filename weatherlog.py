@@ -443,8 +443,9 @@ class WeatherLog(Gtk.Window):
             except TypeError:
 
                 # If no date was selected, show the dialog to select one.
-                dat_dlg = DateSelectionDialog(self, "Edit Data - %s" % self.last_dataset,
-                                              selected_dates, multi_select=False)
+                dat_dlg = DateSelectionDialog(self, "Edit Data", self.last_dataset,
+                                              selected_dates, buttons=[["Edit", Gtk.ResponseType.OK]],
+                                              multi_select=False)
                 response = dat_dlg.run()
                 model, treeiter = dat_dlg.treeview.get_selection().get_selected()
                 dat_dlg.destroy()
@@ -549,23 +550,19 @@ class WeatherLog(Gtk.Window):
             selected_dates = datasets.get_column_list(self.data, [0])
 
             # Get the dates to remove.
-            rem_dlg = DateSelectionDialog(self, "Remove Data - %s" % self.last_dataset, selected_dates,
-                                          buttons=[["Cancel", Gtk.ResponseType.CANCEL],
-                                                   ["Remove All", DialogResponse.REMOVE_ALL], ["OK", Gtk.ResponseType.OK]])
+            rem_dlg = DateSelectionDialog(self, "Remove Data", self.last_dataset, selected_dates,
+                                          buttons=[["Remove", Gtk.ResponseType.OK]])
             response = rem_dlg.run()
             model, treeiter = rem_dlg.treeview.get_selection().get_selected_rows()
             rem_dlg.destroy()
 
-            if (response != DialogResponse.REMOVE_ALL) and (response != Gtk.ResponseType.OK or treeiter is None):
+            if response != Gtk.ResponseType.OK or treeiter is None:
                 return
 
             # Get the dates.
-            if response == DialogResponse.REMOVE_ALL:
-                ndates = datasets.get_column(self.data, 0)
-            else:
-                ndates = []
-                for i in treeiter:
-                    ndates.append(model[i][0])
+            ndates = []
+            for i in treeiter:
+                ndates.append(model[i][0])
 
             if len(ndates) == 0:
                 return
@@ -725,11 +722,10 @@ class WeatherLog(Gtk.Window):
         dates_list = datasets.get_column_list(self.data, [0])
 
         # Get the selected dates.
-        buttons = [["Cancel", Gtk.ResponseType.CANCEL],
-                   ["View Graphs", DialogResponse.VIEW_GRAPH],
+        buttons = [["View Graphs", DialogResponse.VIEW_GRAPH],
                    ["View Tables", DialogResponse.VIEW_TABLE],
                    ["View Info", Gtk.ResponseType.OK]]
-        info_dlg = DateSelectionDialog(self, "Data for Selected Dates - %s" % self.last_dataset, dates_list, buttons=buttons)
+        info_dlg = DateSelectionDialog(self, "Data for Selected Dates", self.last_dataset, dates_list, buttons=buttons)
         response = info_dlg.run()
         model, treeiter = info_dlg.treeview.get_selection().get_selected_rows()
         info_dlg.destroy()
@@ -1484,15 +1480,14 @@ class WeatherLog(Gtk.Window):
             return
 
         # Get the dates to move or copy.
-        buttons = [["Cancel", Gtk.ResponseType.CANCEL], ["Move Data", DialogResponse.MOVE_DATA],
-                   ["Copy Data", DialogResponse.COPY_DATA]]
+        buttons = [["Move Data", DialogResponse.MOVE_DATA], ["Copy Data", DialogResponse.COPY_DATA]]
         if response1 == DialogResponse.USE_NEW:
-            date_dlg = DateSelectionDialog(self, "Copy Data", dates_list, buttons, DialogResponse.COPY_DATA)
+            date_dlg = DateSelectionDialog(self, "Copy Data", "", dates_list, buttons, DialogResponse.COPY_DATA)
         else:
             conflicts = datasets.conflict_exists(
                 datasets.get_column(io.read_dataset(main_dir=self.main_dir, name=sel_name), 0),
                 datasets.get_column(self.data, 0))
-            date_dlg = DateSelectionDialog(self, "Copy Data", conflicts, buttons, DialogResponse.COPY_DATA,
+            date_dlg = DateSelectionDialog(self, "Copy Data", "", conflicts, buttons, DialogResponse.COPY_DATA,
                                            show_conflicts=True)
         response2 = date_dlg.run()
         model2, treeiter2 = date_dlg.treeview.get_selection().get_selected_rows()
