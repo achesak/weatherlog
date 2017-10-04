@@ -640,7 +640,7 @@ class WeatherLog(Gtk.Window):
 
         # Get the weather data.
         try:
-            city, data, prefill_data, code = get_weather.get_weather(self.config, self.units, self.weather_codes,
+            city, data, location, prefill_data, code = get_weather.get_weather(self.config, self.units, self.weather_codes,
                                                                      location, location_type)
             image_url = get_weather.get_weather_image(code)
         except (URLError, ValueError):
@@ -648,20 +648,12 @@ class WeatherLog(Gtk.Window):
             return
 
         # Show the current weather.
-        info_dlg = CurrentWeatherDialog(self, "Current Weather For %s" % city, data, image_url)
+        info_dlg = CurrentWeatherDialog(self, "Current Weather For %s" % city, data, location, image_url)
         response = info_dlg.run()
         info_dlg.destroy()
 
-        # Export the data:
-        if response == DialogResponse.EXPORT:
-            response2, filename = show_export_dialog(self, "Export Weather For %s" % city)
-            if response2 == Gtk.ResponseType.OK:
-                export.html_generic([["Weather", ["Field", "Value"], data[0]],
-                                     ["Location", ["Field", "Value"], data[1]],
-                                     ["Forecast", ["Field", "Value"], data[2]]], filename)
-
         # Add the data:
-        elif response == DialogResponse.ADD_DATA:
+        if response == DialogResponse.ADD_DATA:
             self.add_new(False, prefill_data)
 
     def data_range(self):

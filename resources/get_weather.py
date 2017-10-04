@@ -57,8 +57,8 @@ def get_weather(config, units, weather_codes, location, location_type):
     conditions = []
     for cond in result["weather"]:
         conditions.append(weather_codes[int(cond["id"])])
+    location_output = "%s, %s" % (result["name"], result["sys"]["country"])
     data1 = [
-        ["Location", "%s, %s" % (result["name"], result["sys"]["country"])],
         ["Condition", "\n".join(conditions)],
         ["Temperature", "%.2f %s" % (result["main"]["temp"], units["temp"])],
         ["Temperature (minimum)", "%.2f %s" % (result["main"]["temp_min"], units["temp"])],
@@ -112,7 +112,7 @@ def get_weather(config, units, weather_codes, location, location_type):
         int(result["clouds"]["all"])
     ]
 
-    return result["name"], data, prefill_data, result["weather"][0]["id"]
+    return result["name"], data, location_output, prefill_data, result["weather"][0]["id"]
 
 
 def get_weather_image(code):
