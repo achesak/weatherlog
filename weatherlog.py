@@ -1151,7 +1151,7 @@ class WeatherLog(Gtk.Window):
             return
 
         # Show the dialog and get the user's response.
-        pas_dlg = ExportPastebinDialog(self, "Export to Pastebin - %s" % self.last_dataset, self.config)
+        pas_dlg = ExportPastebinDialog(self, "Export to Pastebin", self.last_dataset, self.config)
         response = pas_dlg.run()
         name = pas_dlg.nam_ent.get_text()
         mode = pas_dlg.for_com.get_active_text().lower()
