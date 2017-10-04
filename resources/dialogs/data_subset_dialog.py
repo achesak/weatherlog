@@ -11,20 +11,29 @@
 
 # Import GTK for the dialog.
 from gi.repository import Gtk
+
 # Import copy for deep copying lsits.
 import copy
+
+# Import application modules.
+from resources.constants import *
 
 
 class DataSubsetDialog(Gtk.Dialog):
     """Shows the data subset dialog."""
 
-    def __init__(self, parent, title, data, units, config):
+    def __init__(self, parent, title, subtitle, data, units, config):
         """Create the dialog."""
 
-        Gtk.Dialog.__init__(self, title, parent)
+        Gtk.Dialog.__init__(self, title, parent, use_header_bar=True)
         self.set_default_size(1200, 500)
-        self.add_button("Export", 9)
-        self.add_button("Close", Gtk.ResponseType.CLOSE)
+        self.add_button("Export", DialogResponse.EXPORT)
+
+        # Create the header bar.
+        header = self.get_header_bar()
+        header.set_title(title)
+        header.set_subtitle(subtitle)
+        header.set_show_close_button(True)
 
         # Create the data columns.
         self.liststore = Gtk.ListStore(str, str, str, str, str, str, str, str, str, str)

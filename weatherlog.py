@@ -893,7 +893,7 @@ class WeatherLog(Gtk.Window):
                               "No data matches the specified search term.")
             return
 
-        sub_dlg = DataSubsetDialog(self, "Search Results - %s" % self.last_dataset, filtered, self.units,
+        sub_dlg = DataSubsetDialog(self, "Search Results", self.last_dataset, filtered, self.units,
                                    self.config)
         response = sub_dlg.run()
         sub_dlg.destroy()

@@ -386,7 +386,7 @@ class DataSubsetSelectionDialog(Gtk.Window):
             self.reset_conditions(1, confirm=False)
 
         # Show the subset.
-        sub_dlg = DataSubsetDialog(self, "Data Subset Results - %s" % self.last_dataset, filtered, self.units,
+        sub_dlg = DataSubsetDialog(self, "Data Subset Results", self.last_dataset, filtered, self.units,
                                    self.config)
         response = sub_dlg.run()
         sub_dlg.destroy()
