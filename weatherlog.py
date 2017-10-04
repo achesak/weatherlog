@@ -18,7 +18,7 @@
 # Import Gtk and Gdk for the interface.
 import gi
 gi.require_version("Gtk", "3.0")
-from gi.repository import Gtk, Gdk, GdkPixbuf
+from gi.repository import Gtk, Gdk, GdkPixbuf, Gio
 # Import webbrowser for opening the help in the user's browser.
 import webbrowser
 # Import datetime for date operations.
@@ -134,14 +134,14 @@ class WeatherLog(Gtk.Window):
         Gtk.Window.__init__(self, title=self.title)
         self.set_default_size(self.last_width, self.last_height)
         self.set_icon_from_file(self.icon_small)
+        self.set_title("WeatherLog")
 
-        # Create the tabs.
-        self.tabs = Gtk.Notebook()
-        self.tabs.set_tab_pos(Gtk.PositionType.TOP)
-        self.tab_data_lbl = Gtk.Label("Data")
-        self.tab_info_lbl = Gtk.Label("Info")
-        self.tab_table_lbl = Gtk.Label("Tables")
-        self.tab_graph_lbl = Gtk.Label("Graphs")
+        # Create the header bar.
+        self.header = Gtk.HeaderBar()
+        self.header.set_title("WeatherLog")
+        self.header.set_subtitle("Subheader")
+        self.header.set_show_close_button(True)
+        self.set_titlebar(self.header)
 
         # Create the main UI.
         self.liststore = Gtk.ListStore(str, str, str, str, str, str, str, str, str, str)
@@ -182,6 +182,12 @@ class WeatherLog(Gtk.Window):
         self.note_col = Gtk.TreeViewColumn("Notes", note_text, text=DatasetColumn.NOTES)
         self.treeview.append_column(self.note_col)
         self.update_columns()
+
+        # Create the data frame.
+        self.data_frame = Gtk.ScrolledWindow()
+        self.data_frame.set_hexpand(True)
+        self.data_frame.set_vexpand(True)
+        self.data_frame.add(self.treeview)
 
         # Create the menus.
         action_group = Gtk.ActionGroup("actions")
@@ -231,34 +237,68 @@ class WeatherLog(Gtk.Window):
         accel_group = ui_manager.get_accel_group()
         self.add_accel_group(accel_group)
         ui_manager.insert_action_group(action_group)
+        self.menubar = ui_manager.get_widget("/menubar")
+        self.context_menu = ui_manager.get_widget("/context_menu")
 
         # Set up the tabs.
         info_builder.info_builder(self)
         table_builder.table_builder(self)
         graph_builder.graph_builder(self)
 
+        # Create the stack.
+        self.stack = Gtk.Stack()
+        self.stack.set_hexpand(True)
+        self.stack.set_vexpand(True)
+        self.stack.set_transition_type(Gtk.StackTransitionType.SLIDE_LEFT_RIGHT)
+        self.stack_switcher = Gtk.StackSwitcher()
+        self.stack_switcher.set_stack(self.stack)
+        self.header.pack_start(self.stack_switcher)
+
+        # Create the header bar menus.
+        dataset_menu = Gio.Menu()
+        dataset_menu.append("Add Dataset", "add_new")
+
+        # Create the header bar buttons.
+        self.add_btn = Gtk.Button()
+        self.add_img = Gtk.Image.new_from_gicon(Gio.ThemedIcon(name="add"), Gtk.IconSize.BUTTON)
+        self.add_btn.add(self.add_img)
+        self.add_btn.set_tooltip_text("Add more data")
+        self.edit_btn = Gtk.Button()
+        self.edit_img = Gtk.Image.new_from_gicon(Gio.ThemedIcon(name="edit"), Gtk.IconSize.BUTTON)
+        self.edit_btn.add(self.edit_img)
+        self.edit_btn.set_tooltip_text("Edit existing data")
+        self.remove_btn = Gtk.Button()
+        self.remove_img = Gtk.Image.new_from_gicon(Gio.ThemedIcon(name="remove"), Gtk.IconSize.BUTTON)
+        self.remove_btn.add(self.remove_img)
+        self.remove_btn.set_tooltip_text("Remove data")
+        self.dataset_menubtn = Gtk.MenuButton(label="Datasets")
+        self.dataset_menubtn.set_menu_model(dataset_menu)
+
+        # Set up the header bar buttons.
+        self.header.pack_end(self.dataset_menubtn)
+        self.header.pack_end(Gtk.SeparatorToolItem())
+        self.header.pack_end(self.remove_btn)
+        self.header.pack_end(self.edit_btn)
+        self.header.pack_end(self.add_btn)
+
+        # Set up the stack.
+        self.stack.add_titled(self.data_frame, "data", "Data")
+        self.stack.add_titled(self.info_frame, "info", "Info")
+        self.stack.add_titled(self.table_frame, "tables", "Tables")
+        self.stack.add_titled(self.graph_frame, "graphs", "Graphs")
+
         # Build the UI.
         grid = Gtk.Grid()
-        self.menubar = ui_manager.get_widget("/menubar")
-        self.toolbar = ui_manager.get_widget("/toolbar")
-        self.toolbar.foreach(lambda x: x.set_focus_chain([]))
-        self.context_menu = ui_manager.get_widget("/context_menu")
-        self.data_frame = Gtk.ScrolledWindow()
-        self.data_frame.set_hexpand(True)
-        self.data_frame.set_vexpand(True)
-        self.data_frame.add(self.treeview)
         grid.add(self.menubar)
-        grid.attach_next_to(self.toolbar, self.menubar, Gtk.PositionType.BOTTOM, 1, 1)
-        grid.attach_next_to(self.tabs, self.toolbar, Gtk.PositionType.BOTTOM, 1, 1)
+        grid.attach_next_to(self.stack, self.menubar, Gtk.PositionType.BOTTOM, 1, 1)
         self.add(grid)
         self.treeview.grab_focus()
         self.show_all()
 
-        # Add the tabs.
-        self.tabs.append_page(self.data_frame, self.tab_data_lbl)
-        self.tabs.append_page(self.info_frame, self.tab_info_lbl)
-        self.tabs.append_page(self.table_frame, self.tab_table_lbl)
-        self.tabs.append_page(self.graph_frame, self.tab_graph_lbl)
+        # Bind the button events.
+        self.add_btn.connect("clicked", self.add_new)
+        self.edit_btn.connect("clicked", self.edit)
+        self.remove_btn.connect("clicked", self.remove)
 
         # Bind the events.
         self.connect("delete-event", self.delete_event)
@@ -1624,13 +1664,13 @@ class WeatherLog(Gtk.Window):
         """Updates the window title."""
 
         if self.config["show_dates"]:
-            new_title = "%s - %s - %s to %s" % (
-                self.title, self.last_dataset, (self.data[0][0] if len(self.data) != 0 else "None"),
+            new_title = "%s - %s to %s" % (
+                self.last_dataset, (self.data[0][0] if len(self.data) != 0 else "None"),
                 (self.data[len(self.data) - 1][0] if len(self.data) != 0 else "None"))
         else:
-            new_title = "%s - %s" % (self.title, self.last_dataset)
+            new_title = self.last_dataset
 
-        self.set_title(new_title)
+        self.header.set_subtitle(new_title)
         return new_title
 
     def update_columns(self):

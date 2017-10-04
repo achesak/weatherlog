@@ -42,14 +42,6 @@
             <menuitem action="help" />
         </menu>
     </menubar>
-    <toolbar name="toolbar">
-        <toolitem action="add_new" />
-        <toolitem action="edit" />
-        <toolitem action="remove" />
-        <separator />
-        <toolitem action="import" />
-        <toolitem action="export" />
-    </toolbar>
     <popup name="context_menu">
         <menuitem action="add_new" />
         <menuitem action="edit" />
