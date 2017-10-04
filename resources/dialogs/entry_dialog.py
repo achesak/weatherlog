@@ -22,18 +22,20 @@ class GenericEntryDialog(Gtk.Dialog):
         """Create the dialog."""
 
         Gtk.Dialog.__init__(self, title, parent, Gtk.DialogFlags.MODAL, use_header_bar=True)
-        self.set_size_request(300, 0)
+        self.set_size_request(400, 0)
         self.add_button("OK", Gtk.ResponseType.OK)
 
+        # Create the header bar.
+        header = self.get_header_bar()
+        header.set_show_close_button(True)
+        header.set_subtitle(message)
+
         # Create the frame.
-        nam_frame = Gtk.Frame()
-        nam_frame.set_label(message)
-        self.get_content_area().add(nam_frame)
 
         # Create the label and entry.
         self.nam_ent = Gtk.Entry()
         self.nam_ent.set_text(default_text)
-        nam_frame.add(self.nam_ent)
+        self.get_content_area().add(self.nam_ent)
 
         # Connect 'Enter' key to the OK button.
         self.nam_ent.set_activates_default(True)
