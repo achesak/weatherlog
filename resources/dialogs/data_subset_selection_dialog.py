@@ -111,7 +111,7 @@ class DataSubsetSelectionDialog(Gtk.Window):
         field_lbl.set_alignment(0, 0.5)
         cond_grid.add(field_lbl)
         self.field_com = Gtk.ComboBoxText()
-        for i in ["Temperature", "Wind Chill", "Precipitation Amount", "Precipitation Type", "Wind Speed",
+        for i in ["Date", "Temperature", "Wind Chill", "Precipitation Amount", "Precipitation Type", "Wind Speed",
                   "Wind Direction", "Humidity", "Air Pressure", "Air Pressure Change", "Visibility", "Cloud Cover",
                   "Cloud Type", "Notes"]:
             self.field_com.append_text(i)
@@ -192,32 +192,28 @@ class DataSubsetSelectionDialog(Gtk.Window):
 
         # If the column that is being compared is precipitation type, wind direction, air pressure change,
         # cloud cover, or cloud type, and the comparison is numerical, don't continue.
+        disallowed = False
         if field == "Precipitation Type" or field == "Wind Direction" or field == "Air Pressure Change" or \
                         field == "Cloud Cover" or field == "Cloud Type" or field == "Notes":
             if operator != "Equal To" and operator != "Not Equal To" and operator != "Starts With" and \
                             operator != "Does Not Start With" and operator != "Ends With" and operator != "Does Not End With" and \
                             operator != "Contains" and operator != "Does Not Contain":
-                show_error_dialog(self, "Add Condition",
-                                  "Invalid comparison: %s cannot use the \"%s\" operator." % (field, operator))
-                return True
+
+                disallowed = True
         # If the column that is being compared is a numerical field and the
         # comparison is strictly non-numerical,
         # don't continue.
         else:
             if operator == "Starts With" or operator == "Does Not Start With" or operator == "Ends With" or \
                             operator == "Does Not End With" or operator == "Contains" or operator == "Does Not Contain":
-                show_error_dialog(self, "Add Condition",
-                                  "Invalid comparison: %s cannot use the \"%s\" operator." % (field, operator))
-                return True
-        return False
+                disallowed = True
+        # If the column that is being compared is date, only allow equals and not equal to.
+        if field == "Date" and operator != "Equal To" and operator != "Not Equal To":
+            disallowed = True
 
-    def check_used(self, field):
-        """Checks if the selected field has already been used."""
-
-        if field in datasets.get_column(self.conditions, 0):
-            show_error_dialog(self, "Add Condition", "A condition for %s has already been entered." % field)
-            return True
-        return False
+        if disallowed:
+            show_error_dialog(self, "Add Condition", "Invalid comparison: %s cannot use the \"%s\" operator." % (field, operator))
+        return disallowed
 
     def check_one(self, operator, value):
         """Checks if there is one value, if the operator requires that."""

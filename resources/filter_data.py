@@ -28,7 +28,10 @@ def filter_data(data, condition, insensitive):
     string_compare = False
     col = []
     field = condition[0].lower()
-    if field == "temperature":
+    if field == "date":
+        col = datasets.get_column(data, 0)
+        string_compare = True
+    elif field == "temperature":
         col = datasets.convert_float(datasets.get_column(data, 1))
     elif field == "wind chill":
         col = datasets.convert_float(datasets.get_column(data, 2))
