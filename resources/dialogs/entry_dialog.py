@@ -21,9 +21,8 @@ class GenericEntryDialog(Gtk.Dialog):
     def __init__(self, parent, title, message="", default_text="", filter_dataset_name=False):
         """Create the dialog."""
 
-        Gtk.Dialog.__init__(self, title, parent, Gtk.DialogFlags.MODAL)
+        Gtk.Dialog.__init__(self, title, parent, Gtk.DialogFlags.MODAL, use_header_bar=True)
         self.set_size_request(300, 0)
-        self.add_button("Cancel", Gtk.ResponseType.CANCEL)
         self.add_button("OK", Gtk.ResponseType.OK)
 
         # Create the frame.
