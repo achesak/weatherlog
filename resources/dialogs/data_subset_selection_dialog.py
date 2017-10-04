@@ -294,7 +294,7 @@ class DataSubsetSelectionDialog(Gtk.Window):
         value = self.value_ent.get_text()
 
         # Validate the data, and add if it's acceptable.
-        if not self.check_operator(field, condition) and not self.check_used(field) and not \
+        if not self.check_operator(field, condition) and not \
             self.check_two(condition, value) and not self.check_one(condition, value) and \
             value.lstrip().rstrip() != "" and not self.check_values(field, condition, value):
             self.liststore.append([field, condition, value])
