@@ -212,7 +212,6 @@ class WeatherLog(Gtk.Window):
         action_group.add_actions([
             ("data_menu", None, "_Data"),
             ("data_range", None, "Data in _Range...", "<Control>i", None, lambda x: self.data_range()),
-            ("data_selected", None, "Data for _Selected Dates...", "<Control><Shift>i", None, lambda x: self.data_selected()),
             ("search", None, "S_earch...", "<Control>f", None, self.search),
             ("view_subset", None, "_Data Subset...", "<Control><Shift>f", None, self.select_data_subset),
         ])
@@ -709,51 +708,6 @@ class WeatherLog(Gtk.Window):
             self.show_table_generic(data=data2)
         elif response == DialogResponse.VIEW_GRAPH:
             self.show_graph_generic(data=data2)
-
-    def data_selected(self):
-        """Gets the selected dates to for the data to display."""
-
-        if len(self.data) == 0:
-            show_no_data_dialog(self, "Data for Selected Dates - %s" % self.last_dataset)
-            return
-
-        # Get the dates.
-        ndates = []
-        dates_list = datasets.get_column_list(self.data, [0])
-
-        # Get the selected dates.
-        buttons = [["View Graphs", DialogResponse.VIEW_GRAPH],
-                   ["View Tables", DialogResponse.VIEW_TABLE],
-                   ["View Info", Gtk.ResponseType.OK]]
-        info_dlg = DateSelectionDialog(self, "Data for Selected Dates", self.last_dataset, dates_list, buttons=buttons)
-        response = info_dlg.run()
-        model, treeiter = info_dlg.treeview.get_selection().get_selected_rows()
-        info_dlg.destroy()
-
-        # If the user does not press OK, don't continue.
-        if response == Gtk.ResponseType.CANCEL or treeiter is None:
-            return
-
-        # Get the dates.
-        for i in treeiter:
-            ndates.append(model[i][0])
-
-        # Get the data.
-        ndata = []
-        for i in range(0, len(self.data)):
-            if self.data[i][0] in ndates:
-                ndata.append(self.data[i])
-
-        if len(ndata) == 0:
-            return
-
-        # Pass the data to the appropriate dialog.
-        if response == Gtk.ResponseType.OK:
-            self.show_info_generic(data=ndata)
-        elif response == DialogResponse.VIEW_TABLE:
-            self.show_table_generic(data=ndata)
-        elif response == DialogResponse.VIEW_GRAPH:
-            self.show_graph_generic(data=ndata)
 
     def show_info_generic(self, data=None):
         """Shows info about the data."""

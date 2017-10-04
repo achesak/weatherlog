@@ -16,7 +16,7 @@ from gi.repository import Gtk
 from resources.constants import *
 
 
-class CurrentWeatherDialog(Gtk.Window):
+class CurrentWeatherDialog(Gtk.Dialog):
     """Shows the current weather dialog."""
     
     def __init__(self, parent, title, data, location, image_path):

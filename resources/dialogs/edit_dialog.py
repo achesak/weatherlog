@@ -30,7 +30,7 @@ class EditDialog(Gtk.Dialog):
 
         Gtk.Dialog.__init__(self, "Edit %s" % date, parent, Gtk.DialogFlags.MODAL, use_header_bar=True)
         self.set_size_request(500, 600)
-        self.add_button("Save Changes", Gtk.ResponseType.OK)
+        self.add_button("Save", Gtk.ResponseType.OK)
         self.add_button("Remove", DialogResponse.REMOVE)
 
         # Create the header bar.
