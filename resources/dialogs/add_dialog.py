@@ -37,10 +37,14 @@ class AddNewDialog(Gtk.Dialog):
         # Get the current date.
         date = time.strftime("%d/%m/%Y")
 
-        Gtk.Dialog.__init__(self, "Add New Data - %s" % dataset, parent, Gtk.DialogFlags.MODAL)
+        Gtk.Dialog.__init__(self, "Add New Data", parent, Gtk.DialogFlags.MODAL, use_header_bar=True)
         self.set_size_request(500, 600)
-        self.add_button("Cancel", Gtk.ResponseType.CANCEL)
-        self.add_button("OK", Gtk.ResponseType.OK)
+        self.add_button("Add Data", Gtk.ResponseType.OK)
+
+        # Create the header bar.
+        header = self.get_header_bar()
+        header.set_title("Add New Data")
+        header.set_subtitle(dataset)
 
         # Create the grid.
         new_box = self.get_content_area()
