@@ -28,7 +28,7 @@ class DataSubsetSelectionDialog(Gtk.Window):
         """Create the dialog."""
 
         Gtk.Window.__init__(self)
-        self.set_title("View Data Subset - %s" % dataset)
+        self.set_title("Data Subset")
         self.set_resizable(True)
         self.set_default_size(600, 300)
         self.conditions = []
@@ -36,6 +36,16 @@ class DataSubsetSelectionDialog(Gtk.Window):
         self.data = data
         self.config = config
         self.units = units
+
+        # Create the header bar.
+        header = Gtk.HeaderBar()
+        header.set_title("Data Subset")
+        header.set_subtitle(dataset)
+        header.set_show_close_button(True)
+        self.ok_btn = Gtk.Button(label="View")
+        self.ok_btn.connect("clicked", self.view_subset)
+        header.pack_end(self.ok_btn)
+        self.set_titlebar(header)
 
         # Create the grid.
         sel_grid = Gtk.Grid()
@@ -159,12 +169,6 @@ class DataSubsetSelectionDialog(Gtk.Window):
 
         # Create the buttons.
         sel_box = Gtk.Box()
-        self.ok_btn = Gtk.Button(label="View")
-        self.ok_btn.connect("clicked", self.view_subset)
-        sel_box.pack_end(self.ok_btn, True, True, 0)
-        self.cancel_btn = Gtk.Button(label="Close")
-        self.cancel_btn.connect("clicked", lambda x: self.destroy())
-        sel_box.pack_end(self.cancel_btn, True, True, 0)
         self.reset_btn = Gtk.Button(label="Reset")
         self.reset_btn.connect("clicked", self.reset_conditions)
         sel_box.pack_end(self.reset_btn, True, True, 0)
