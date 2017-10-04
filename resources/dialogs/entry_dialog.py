@@ -28,9 +28,8 @@ class GenericEntryDialog(Gtk.Dialog):
         # Create the header bar.
         header = self.get_header_bar()
         header.set_show_close_button(True)
+        header.set_title(title)
         header.set_subtitle(message)
-
-        # Create the frame.
 
         # Create the label and entry.
         self.nam_ent = Gtk.Entry()

@@ -19,10 +19,15 @@ class SearchDialog(Gtk.Dialog):
     def __init__(self, parent, last_dataset, config):
         """Create the dialog."""
         
-        Gtk.Dialog.__init__(self, "Search - %s" % last_dataset, parent, Gtk.DialogFlags.MODAL)
-        self.set_size_request(300, 0)
-        self.add_button("Cancel", Gtk.ResponseType.CANCEL)
-        self.add_button("OK", Gtk.ResponseType.OK)
+        Gtk.Dialog.__init__(self, "Search", parent, Gtk.DialogFlags.MODAL, use_header_bar=True)
+        self.set_size_request(400, 0)
+        self.add_button("Search", Gtk.ResponseType.OK)
+
+        # Create the header bar.
+        header = self.get_header_bar()
+        header.set_show_close_button(True)
+        header.set_title("Search")
+        header.set_subtitle(last_dataset)
         
         # Create the grid.
         qui_grid = Gtk.Grid()
