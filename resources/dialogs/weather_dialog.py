@@ -26,10 +26,7 @@ class CurrentWeatherDialog(Gtk.Dialog):
         self.set_default_size(600, 700)
 
         # Set the buttons.
-        add_btn = Gtk.Button()
-        add_img = Gtk.Image.new_from_gicon(Gio.ThemedIcon(name="add"), Gtk.IconSize.BUTTON)
-        add_btn.add(add_img)
-        add_btn.set_tooltip_text("Add more data")
+        add_btn = Gtk.Button(label="Add Data")
         self.add_action_widget(add_btn, DialogResponse.ADD_DATA)
 
         # Create the stack.
