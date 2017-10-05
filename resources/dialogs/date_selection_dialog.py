@@ -17,7 +17,7 @@ class DateSelectionDialog(Gtk.Dialog):
     """Shows the date selection dialog."""
 
     def __init__(self, parent, title, subtitle, dates, buttons=None,
-                 default_button=Gtk.ResponseType.OK, show_conflicts=False, multi_select=True):
+                 default_button=Gtk.ResponseType.OK, show_conflicts=False, multi_select=True, import_mode=False):
         """Create the dialog."""
 
         Gtk.Dialog.__init__(self, title, parent, Gtk.DialogFlags.MODAL, use_header_bar=True)
@@ -64,8 +64,15 @@ class DateSelectionDialog(Gtk.Dialog):
         self.get_content_area().add(scrolled_win)
 
         # Add the dates.
-        for i in dates:
-            self.liststore.append(i)
+        if import_mode:
+            for i in dates:
+                if show_conflicts:
+                    self.liststore.append(i)
+                else:
+                    self.liststore.append([i])
+        else:
+            for i in dates:
+                self.liststore.append(i)
 
         # Connect 'Enter' key to the OK button.
         ok_btn = self.get_widget_for_response(response_id=default_button)

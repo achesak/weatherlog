@@ -41,7 +41,6 @@ class DatasetAddSelectionDialog(Gtk.Dialog):
         dat_grid = Gtk.Grid()
         self.get_content_area().add(dat_grid)
 
-
         # Create the selection frame.
         sel_frame = Gtk.Frame()
         sel_frame.set_label("Select dataset")

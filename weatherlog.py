@@ -74,7 +74,6 @@ from resources.dialogs.dataset_add_select_dialog import DatasetAddSelectionDialo
 from resources.dialogs.search_dialog import SearchDialog
 from resources.dialogs.data_subset_selection_dialog import DataSubsetSelectionDialog
 from resources.dialogs.data_subset_dialog import DataSubsetDialog
-from resources.dialogs.import_selection_dialog import ImportSelectionDialog
 from resources.dialogs.export_pastebin_dialog import ExportPastebinDialog
 from resources.dialogs.weather_dialog import CurrentWeatherDialog
 from resources.dialogs.location_dialog import LocationDialog
@@ -846,7 +845,7 @@ class WeatherLog(Gtk.Window):
 
         # If the imported data is invalid, don't continue.
         try:
-            validate_error = validate.validate_dataset(self.main_dir, filename)
+            validate_error = validate.validate_data(filename)
         except:
             show_error_dialog(self, "Import - %s" % self.last_dataset,
                               "Error importing data. Is the data in the correct format?")
@@ -870,10 +869,8 @@ class WeatherLog(Gtk.Window):
         treeiter = None
         model = None
         if not self.config["import_all"]:
-            date_dlg = ImportSelectionDialog(self, "Import - %s" % self.last_dataset,
-                                             datasets.conflict_exists(datasets.get_column(self.data, 0),
-                                                                      datasets.get_column(data2, 0)),
-                                             show_conflicts=True)
+            buttons = [["Import", Gtk.ResponseType.OK], ["Import All", DialogResponse.IMPORT_ALL]]
+            date_dlg = DateSelectionDialog(self, "Import", self.last_dataset, datasets.conflict_exists(datasets.get_column(self.data, 0), datasets.get_column(data2, 0)), buttons=buttons, show_conflicts=True, import_mode=True)
             response3 = date_dlg.run()
             model, treeiter = date_dlg.treeview.get_selection().get_selected_rows()
             date_dlg.destroy()
@@ -881,13 +878,13 @@ class WeatherLog(Gtk.Window):
         else:
             response3 = DialogResponse.IMPORT_ALL
 
-        if response3 != DialogResponse.IMPORT_ALL and response3 != DialogResponse.IMPORT:
+        if response3 != DialogResponse.IMPORT_ALL and response3 != Gtk.ResponseType.OK:
             return
-        if response3 == DialogResponse.IMPORT and treeiter is None:
+        if response3 == Gtk.ResponseType.OK and treeiter is None:
             return
 
         # If the user selected certain dates, only import those.
-        if response3 == DialogResponse.IMPORT:
+        if response3 == Gtk.ResponseType.OK:
 
             # Get the dates.
             selected_dates = []
@@ -937,7 +934,12 @@ class WeatherLog(Gtk.Window):
             return
 
         # If the imported data is invalid, don't continue.
-        validate_error = validate.validate_data(filename)
+        try:
+            validate_error = validate.validate_data(filename)
+        except:
+            show_error_dialog(self, "Import - %s" % self.last_dataset,
+                              "Error importing data. Is the data in the correct format?")
+            return
         if validate_error != ImportValidation.VALID:
             show_error_dialog(self, "Import as New Dataset - %s" % self.last_dataset,
                               "The data in the selected file is not valid. %s" % validate.validate_dataset_strings[validate_error])
@@ -954,12 +956,7 @@ class WeatherLog(Gtk.Window):
 
         # Validate the name. If it contains a non-alphanumeric character or is just space,
         # show a dialog and cancel the action.
-        try:
-            valid = validate.validate_dataset(self.main_dir, filename)
-            return
-        except:
-            show_error_dialog(self, "Import - %s" % self.last_dataset,
-                              "Error importing data. Is the data in the correct format?")
+        valid = validate.validate_dataset(self.main_dir, name)
         if valid != DatasetValidation.VALID:
             show_error_dialog(self, "Import as New Dataset - %s" % self.last_dataset,
                               validate.validate_dataset_name_strings[valid])
@@ -969,7 +966,8 @@ class WeatherLog(Gtk.Window):
 
         # Ask the user what dates they want to import.
         if not self.config["import_all"]:
-            date_dlg = ImportSelectionDialog(self, "Import as New Dataset - %s" % name, datasets.get_column(ndata, 0))
+            buttons = [["Import", Gtk.ResponseType.OK], ["Import All", DialogResponse.IMPORT_ALL]]
+            date_dlg = DateSelectionDialog(self, "Import as New Dataset", name, datasets.get_column(ndata, 0), buttons=buttons, import_mode=True)
             response = date_dlg.run()
             model, treeiter = date_dlg.treeview.get_selection().get_selected_rows()
             date_dlg.destroy()
@@ -977,9 +975,9 @@ class WeatherLog(Gtk.Window):
         else:
             response = DialogResponse.IMPORT_ALL
 
-        if response != DialogResponse.IMPORT_ALL and response != DialogResponse.IMPORT:
+        if response != DialogResponse.IMPORT_ALL and response != Gtk.ResponseType.OK:
             return
-        if response == DialogResponse.IMPORT and treeiter is None:
+        if response == Gtk.ResponseType.OK and treeiter is None:
             return
 
         # Create the dataset directory and file.
@@ -992,7 +990,7 @@ class WeatherLog(Gtk.Window):
         self.liststore.clear()
 
         # If the user selected certain dates, only import those.
-        if response == DialogResponse.IMPORT:
+        if response == Gtk.ResponseType.OK:
 
             # Get the dates.
             dates_list = []
@@ -1004,7 +1002,7 @@ class WeatherLog(Gtk.Window):
                     self.data.append(i)
 
         # If the user pressed Import All, import all of the data.
-        elif response == DialogResponse.IMPORT_ALL:
+        elif response == Gtk.ResponseType.OKL:
             self.data = ndata[:]
 
         # Update and save the data.
