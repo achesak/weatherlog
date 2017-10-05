@@ -222,8 +222,7 @@ class WeatherLog(Gtk.Window):
         ])
         action_group.add_actions([
             ("help_menu", None, "_Help"),
-            ("about", Gtk.STOCK_ABOUT, "_About...", "<Shift>F1", None, self.show_about),
-            ("help", Gtk.STOCK_HELP, "_Help...", None, None, self.show_help)
+            ("about", Gtk.STOCK_ABOUT, "_About...", "F1", None, self.show_about),
         ])
 
         # Set up the menus.

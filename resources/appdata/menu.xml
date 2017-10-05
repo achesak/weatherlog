@@ -36,8 +36,6 @@
         </menu>
         <menu action="help_menu">
             <menuitem action="about" />
-            <separator />
-            <menuitem action="help" />
         </menu>
     </menubar>
     <popup name="context_menu">
