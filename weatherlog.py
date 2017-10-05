@@ -91,6 +91,12 @@ class WeatherLog(Gtk.Application):
         """Initializes the application."""
 
         super(WeatherLog, self).__init__(*args, application_id="com.achesak.weatherlog", **kwargs)
+        self.window = None
+
+    def do_startup(self):
+        """Application startup."""
+
+        Gtk.Application.do_startup(self)
 
         # Get the application's data, constants, and user data.
         self.version, self.title, self.menu_data, self.icon_small, self.icon_medium, self.default_width, \
@@ -110,17 +116,26 @@ class WeatherLog(Gtk.Application):
         self.pastebin_constants = launch.get_pastebin_constants()
         self.graph_data = launch.get_graph_data()
 
+    def do_activate(self):
+        """Application activate."""
+
+        if not self.window:
+            self.window = Gtk.ApplicationWindow(application=self, title="WeatherLog")
+
         # Create the user interface.
         self.create_interface()
 
         # If the dataset could not be found, tell the user and save as the default dataset.
         if not self.dataset_exists:
-            show_alert_dialog(self.window, self.title, "The dataset \"%s\" could not be found and was not loaded." % self.original_dataset)
+            show_alert_dialog(self.window, self.title,
+                              "The dataset \"%s\" could not be found and was not loaded." % self.original_dataset)
             self.save()
 
         # Add the data.
         self.update_list()
         self.update_title()
+
+        self.window.present()
 
     def create_interface(self):
         """Creates the user interface."""
@@ -1662,9 +1677,10 @@ class WeatherLog(Gtk.Application):
 if __name__ == "__main__" and len(sys.argv) == 1:
 
     win = WeatherLog()
-    win.window.connect("delete-event", win.exit)
-    win.window.show_all()
-    Gtk.main()
+    win.run()
+    #win.window.connect("delete-event", win.exit)
+    #win.window.show_all()
+    #Gtk.main()
 
 # Commands:
 elif __name__ == "__main__" and len(sys.argv) == 2:
