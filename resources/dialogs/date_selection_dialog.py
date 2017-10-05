@@ -46,12 +46,14 @@ class DateSelectionDialog(Gtk.Dialog):
             self.treeview.get_selection().set_mode(Gtk.SelectionMode.MULTIPLE)
         date_text = Gtk.CellRendererText()
         self.date_col = Gtk.TreeViewColumn("Date", date_text, text=0)
+        self.date_col.set_expand(True)
         self.treeview.append_column(self.date_col)
 
         # Show the Conflict column, if required.
         if show_conflicts:
             conf_text = Gtk.CellRendererText()
             self.conf_col = Gtk.TreeViewColumn("Conflict", conf_text, text=1)
+            self.conf_col.set_expand(True)
             self.treeview.append_column(self.conf_col)
 
         # Display the UI.

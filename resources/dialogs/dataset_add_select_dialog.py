@@ -25,36 +25,27 @@ class DatasetAddSelectionDialog(Gtk.Dialog):
     def __init__(self, parent, title, datasets, main_dir, last_dataset):
         """Create the dialog."""
 
-        Gtk.Dialog.__init__(self, title, parent, Gtk.DialogFlags.MODAL)
+        Gtk.Dialog.__init__(self, title, parent, Gtk.DialogFlags.MODAL, use_header_bar=True)
         self.set_default_size(500, 300)
-        self.add_button("Cancel", Gtk.ResponseType.CANCEL)
-        self.add_button("Use Selected Dataset", DialogResponse.USE_SELECTED)
+        self.add_button("Select Dataset", DialogResponse.USE_SELECTED)
 
         self.main_dir = main_dir
         self.last_dataset = last_dataset
+
+        # Create the header bar.
+        header = self.get_header_bar()
+        header.set_title(title)
+        header.set_show_close_button(True)
 
         # Set up the main grid.
         dat_grid = Gtk.Grid()
         self.get_content_area().add(dat_grid)
 
-        # Create the creation frame.
-        add_frame = Gtk.Frame()
-        add_frame.set_label("Create new dataset")
-        dat_grid.add(add_frame)
-
-        # Create the creation entry and button.
-        add_box = Gtk.Box()
-        self.add_ent = Gtk.Entry()
-        add_frame.add(add_box)
-        self.add_btn = Gtk.Button(label="Create Dataset")
-        self.add_btn.set_margin_left(5)
-        add_box.pack_start(self.add_ent, True, True, 0)
-        add_box.pack_end(self.add_btn, False, False, 0)
 
         # Create the selection frame.
         sel_frame = Gtk.Frame()
-        sel_frame.set_label("Select existing dataset")
-        dat_grid.attach_next_to(sel_frame, add_frame, Gtk.PositionType.BOTTOM, 1, 1)
+        sel_frame.set_label("Select dataset")
+        dat_grid.add(sel_frame)
 
         # Create the Dataset, Creation Date, and Last Modified Date columns.
         self.liststore = Gtk.ListStore(str, str, str)
@@ -71,6 +62,20 @@ class DatasetAddSelectionDialog(Gtk.Dialog):
         self.mod_col = Gtk.TreeViewColumn("Last Modified Date", mod_text, text=2)
         self.mod_col.set_expand(True)
         self.treeview.append_column(self.mod_col)
+
+        # Create the creation frame.
+        add_frame = Gtk.Frame()
+        add_frame.set_label("Create new dataset")
+        dat_grid.attach_next_to(add_frame, sel_frame, Gtk.PositionType.BOTTOM, 1, 1)
+
+        # Create the creation entry and button.
+        add_box = Gtk.Box()
+        self.add_ent = Gtk.Entry()
+        add_frame.add(add_box)
+        self.add_btn = Gtk.Button(label="Create Dataset")
+        self.add_btn.set_margin_left(5)
+        add_box.pack_start(self.add_ent, True, True, 0)
+        add_box.pack_end(self.add_btn, False, False, 0)
 
         # Add the datasets.
         for i in datasets:

@@ -1396,7 +1396,7 @@ class WeatherLog(Gtk.Window):
             return
 
         # Get the dates to move or copy.
-        buttons = [["Move Data", DialogResponse.MOVE_DATA], ["Copy Data", DialogResponse.COPY_DATA]]
+        buttons = [["Move", DialogResponse.MOVE_DATA], ["Copy", DialogResponse.COPY_DATA]]
         if response1 == DialogResponse.USE_NEW:
             date_dlg = DateSelectionDialog(self, "Copy Data", "", dates_list, buttons, DialogResponse.COPY_DATA)
         else:
