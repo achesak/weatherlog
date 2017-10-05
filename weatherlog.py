@@ -204,7 +204,6 @@ class WeatherLog(Gtk.Window):
         action_group.add_actions([
             ("data_menu", None, "_Data"),
             ("data_range", None, "Data in _Range...", "<Control>i", None, lambda x: self.data_range()),
-            ("search", None, "S_earch...", "<Control>f", None, self.search),
             ("view_subset", None, "_Data Subset...", "<Control><Shift>f", None, self.select_data_subset),
         ])
         action_group.add_actions([

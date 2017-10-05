@@ -21,7 +21,6 @@
         <menu action="data_menu">
             <menuitem action="data_range" />
             <separator />
-            <menuitem action="search" />
             <menuitem action="view_subset" />
         </menu>
         <menu action="datasets_menu">
