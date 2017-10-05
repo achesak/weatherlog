@@ -31,7 +31,6 @@
             <menuitem action="add_dataset" />
             <menuitem action="remove_dataset" />
             <menuitem action="rename_dataset" />
-            <menuitem action="merge_datasets" />
             <separator />
             <menuitem action="copy_data_dataset" />
         </menu>

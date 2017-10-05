@@ -218,7 +218,6 @@ class WeatherLog(Gtk.Window):
             ("add_dataset", None, "_Add Dataset...", "<Control><Shift>n", None, self.add_dataset),
             ("remove_dataset", None, "_Remove Datasets...", "<Control><Shift>r", None, self.remove_dataset),
             ("rename_dataset", None, "Re_name Dataset...", None, None, self.rename_dataset),
-            ("merge_datasets", None, "_Merge Datasets...", None, None, self.merge_datasets),
             ("copy_data_dataset", None, "_Copy Data...", None, None, self.copy_data_dataset)
         ])
         action_group.add_actions([
@@ -1283,87 +1282,6 @@ class WeatherLog(Gtk.Window):
 
         # Update the title.
         self.update_title()
-
-    def merge_datasets(self, event):
-        """Merges two datasets."""
-
-        # Get the list of datasets.
-        datasets_list = io.get_dataset_list(self.main_dir, self.last_dataset, exclude_current=False)
-
-        if len(datasets_list) == 0 or len(datasets_list) == 1:
-            show_alert_dialog(self, "Merge Datasets", "There are no other datasets.")
-            return
-
-        # Get the datasets to merge.
-        mer_dlg = DatasetSelectionDialog(self, "Merge Datasets", datasets_list,
-                                         select_mode=DatasetSelectionMode.MULTIPLE)
-        response = mer_dlg.run()
-        model, treeiter = mer_dlg.treeview.get_selection().get_selected_rows()
-        mer_dlg.destroy()
-
-        if response != Gtk.ResponseType.OK or treeiter is None:
-            return
-
-        # Get the datasets.
-        datasets_list = []
-        for i in treeiter:
-            datasets_list.append(model[i][0])
-
-        # Get the name for the new dataset.
-        nam_dlg = GenericEntryDialog(self, title="Merge Datasets", message="Enter dataset name",
-                                     default_text=datasets_list[0])
-        response = nam_dlg.run()
-        merge_name = nam_dlg.nam_ent.get_text()
-        nam_dlg.destroy()
-
-        if response != Gtk.ResponseType.OK:
-            return
-
-        # Validate the name. If the name isn't valid, don't continue.
-        valid = validate.validate_dataset(self.main_dir, merge_name)
-        if valid != DatasetValidation.VALID and valid != DatasetValidation.IN_USE:
-            show_error_dialog(self, "Merge Datasets", validate.validate_dataset_name_strings[valid])
-            return
-
-        # If the name is already in use, ask the user is they want to delete the old dataset.
-        elif valid == DatasetValidation.IN_USE:
-            del_old = show_question_dialog(self, "Merge Datasets",
-                                           "%s\n\nWould you like to delete the existing dataset?" %
-                                           validate.validate_dataset_name_strings[valid])
-            if del_old != Gtk.ResponseType.OK:
-                return
-
-            shutil.rmtree("%s/datasets/%s" % (self.main_dir, merge_name))
-
-        # Build the new data list.
-        new_data = io.read_dataset(main_dir=self.main_dir, name=datasets_list[0])
-        for i in range(1, len(datasets_list)):
-
-            # Read the data and merge the dates in if they do not already appear.
-            date_col = datasets.get_column(new_data, DatasetColumn.DATE)
-            merge_data = io.read_dataset(main_dir=self.main_dir, name=datasets_list[i])
-            for row in merge_data:
-                if row[DatasetColumn.DATE] not in date_col:
-                    new_data.append(row)
-
-        # Sort and update the data.
-        self.data = new_data[:]
-        self.data = sorted(self.data, key=lambda x: datetime.datetime.strptime(x[0], "%d/%m/%Y"))
-        self.update_list()
-
-        # Delete the old dataset files.
-        for dataset in datasets_list:
-            shutil.rmtree("%s/datasets/%s" % (self.main_dir, dataset))
-
-        # Create the new dataset directory and metadata.
-        io.write_blank_dataset(self.main_dir, merge_name)
-        io.write_metadata(self.main_dir, merge_name, now=True)
-        self.last_dataset = merge_name
-
-        # Update the title.
-        self.save()
-        self.update_title()
-        self.update_data()
 
     def copy_data_dataset(self, event):
         """Copies or moves data to another dataset."""
