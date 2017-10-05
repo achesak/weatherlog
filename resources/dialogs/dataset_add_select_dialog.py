@@ -89,12 +89,7 @@ class DatasetAddSelectionDialog(Gtk.Dialog):
 
         # Connect the events.
         self.add_btn.connect("clicked", self.create_dataset)
-
-        # Connect 'Enter' key to the OK button.
-        self.add_ent.set_activates_default(True)
-        ok_btn = self.get_widget_for_response(response_id=DialogResponse.USE_SELECTED)
-        ok_btn.set_can_default(True)
-        ok_btn.grab_default()
+        self.add_ent.connect("activate", self.create_dataset)
 
         # Show the dialog.
         self.show_all()
