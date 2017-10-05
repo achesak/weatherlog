@@ -19,14 +19,17 @@ from resources.constants import *
 class CalendarRangeDialog(Gtk.Dialog):
     """Shows the calendar dialog for selection of a range of dates."""
 
-    def __init__(self, parent, title, day_start=(), day_end=()):
+    def __init__(self, parent, title, subtitle, day_start=(), day_end=()):
         """Create the dialog."""
 
-        Gtk.Dialog.__init__(self, title, parent, Gtk.DialogFlags.MODAL)
-        self.add_button("Cancel", Gtk.ResponseType.CANCEL)
-        self.add_button("View Graphs", DialogResponse.VIEW_GRAPH)
-        self.add_button("View Tables", DialogResponse.VIEW_TABLE)
-        self.add_button("View Info", DialogResponse.VIEW_INFO)
+        Gtk.Dialog.__init__(self, title, parent, Gtk.DialogFlags.MODAL, use_header_bar=True)
+        self.add_button("View", DialogResponse.VIEW_INFO)
+
+        # Create the header bar.
+        header = self.get_header_bar()
+        header.set_title(title)
+        header.set_subtitle(subtitle)
+        header.set_show_close_button(True)
 
         # Create the grid and frames.
         cal_box = self.get_content_area()

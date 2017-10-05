@@ -69,8 +69,6 @@ from resources.dialogs.entry_dialog import GenericEntryDialog
 from resources.dialogs.date_selection_dialog import DateSelectionDialog
 from resources.dialogs.calendar_range_dialog import CalendarRangeDialog
 from resources.dialogs.info_dialog import InfoDialog
-from resources.dialogs.table_dialog import TableDialog
-from resources.dialogs.graph_dialog import GraphDialog
 from resources.dialogs.dataset_selection_dialog import DatasetSelectionDialog
 from resources.dialogs.dataset_add_select_dialog import DatasetAddSelectionDialog
 from resources.dialogs.search_dialog import SearchDialog
@@ -665,7 +663,7 @@ class WeatherLog(Gtk.Window):
         datelist = dates.date_list_datetime(datasets.get_column(self.data, DatasetColumn.DATE))
 
         # Get the starting and ending dates.
-        cal_dlg = CalendarRangeDialog(self, "Data in Range - %s" % self.last_dataset, day_start, day_end)
+        cal_dlg = CalendarRangeDialog(self, "Data in Range", self.last_dataset, day_start, day_end)
         response = cal_dlg.run()
         year1, month1, day1 = cal_dlg.start_cal.get_date()
         year2, month2, day2 = cal_dlg.end_cal.get_date()
@@ -701,13 +699,7 @@ class WeatherLog(Gtk.Window):
         # Get the new list.
         data2 = self.data[start_index:end_index + 1]
 
-        # Pass the data to the appropriate dialog.
-        if response == DialogResponse.VIEW_INFO:
-            self.show_info_generic(data=data2)
-        elif response == DialogResponse.VIEW_TABLE:
-            self.show_table_generic(data=data2)
-        elif response == DialogResponse.VIEW_GRAPH:
-            self.show_graph_generic(data=data2)
+        self.show_info_generic(data=data2)
 
     def show_info_generic(self, data=None):
         """Shows info about the data."""
@@ -719,8 +711,14 @@ class WeatherLog(Gtk.Window):
             show_no_data_dialog(self, "Info - %s" % self.last_dataset)
             return
 
+        # If matplotlib isn't installed, don't continue.
+        if not self.matplotlib_installed:
+            show_alert_dialog(self, "Graphs - %s" % self.last_dataset,
+                              "The matplotlib library must be installed to view graphs.\n\nIn most Linux distributions this module can be found using a package manager. Source code and Windows downloads can also be found at http://matplotlib.org/")
+            return
+
         # Get the info.
-        data2 = [
+        info_data = [
             info.general_info(data, self.units),
             info.temp_info(data, self.units),
             info.chil_info(data, self.units),
@@ -732,39 +730,7 @@ class WeatherLog(Gtk.Window):
             info.clou_info(data, self.units),
             info.note_info(data, self.units)
         ]
-
-        # Show the info.
-        info_dlg = InfoDialog(self, "Info - %s" % self.last_dataset, data2)
-        response = info_dlg.run()
-        info_dlg.destroy()
-
-        # Export the data:
-        if response == DialogResponse.EXPORT:
-            response2, filename = show_export_dialog(self, "Export Info - %s" % self.last_dataset)
-            if response2 == Gtk.ResponseType.OK:
-                export.html_generic([["General Info", ["Field", "Value"], data2[0]],
-                                     ["Temperature Info", ["Field", "Value"], data2[1]],
-                                     ["Wind Chill Info", ["Field", "Value"], data2[2]],
-                                     ["Precipitation Info", ["Field", "Value"], data2[3]],
-                                     ["Wind Info", ["Field", "Value"], data2[4]],
-                                     ["Humidity Info", ["Field", "Value"], data2[5]],
-                                     ["Air Pressure Info", ["Field", "Value"], data2[6]],
-                                     ["Visibility Info", ["Field", "Value"], data2[7]],
-                                     ["Cloud Cover Info", ["Field", "Value"], data2[8]],
-                                     ["Notes Info", ["Field", "Value"], data2[9]]], filename)
-
-    def show_table_generic(self, data=None):
-        """Shows a table about the data."""
-
-        if not data:
-            data = self.data
-
-        if len(data) == 0:
-            show_no_data_dialog(self, "Tables - %s" % self.last_dataset)
-            return
-
-        # Get the table data.
-        data2 = [
+        table_data = [
             tables.temp_table(data, self.units),
             tables.chil_table(data, self.units),
             tables.prec_table(data, self.units),
@@ -773,50 +739,39 @@ class WeatherLog(Gtk.Window):
             tables.airp_table(data, self.units),
             tables.visi_table(data, self.units)
         ]
+        graph_data = graphs.get_data(data)
 
-        # Show the table.
-        table_dlg = TableDialog(self, "Tables - %s" % self.last_dataset, data2)
-        response = table_dlg.run()
-        table_dlg.destroy()
+        # Show the info.
+        info_dlg = InfoDialog(self, "Info", self.last_dataset, info_data, table_data, graph_data, self.config, self.graph_data)
+        response = info_dlg.run()
+        info_dlg.destroy()
 
         # Export the data:
         if response == DialogResponse.EXPORT:
+            response2, filename = show_export_dialog(self, "Export Info - %s" % self.last_dataset)
+            if response2 == Gtk.ResponseType.OK:
+                export.html_generic([["General Info", ["Field", "Value"], info_data[0]],
+                                     ["Temperature Info", ["Field", "Value"], info_data[1]],
+                                     ["Wind Chill Info", ["Field", "Value"], info_data[2]],
+                                     ["Precipitation Info", ["Field", "Value"], info_data[3]],
+                                     ["Wind Info", ["Field", "Value"], info_data[4]],
+                                     ["Humidity Info", ["Field", "Value"], info_data[5]],
+                                     ["Air Pressure Info", ["Field", "Value"], info_data[6]],
+                                     ["Visibility Info", ["Field", "Value"], info_data[7]],
+                                     ["Cloud Cover Info", ["Field", "Value"], info_data[8]],
+                                     ["Notes Info", ["Field", "Value"], info_data[9]]], filename)
+                
             response2, filename = show_export_dialog(self, "Export Tables - %s" % self.last_dataset)
             if response2 == Gtk.ResponseType.OK:
                 table_columns = ["Day", "Value", "Average Difference", "Low Difference", "High Difference",
                                  "Median Difference"]
-                export.html_generic([["Temperature Table", table_columns, data2[0]],
-                                     ["Wind Chill Table", table_columns, data2[1]],
-                                     ["Precipitation Table", table_columns, data2[2]],
-                                     ["Wind Table", table_columns, data2[3]],
-                                     ["Humidity Table", table_columns, data2[4]],
-                                     ["Air Pressure Table", table_columns, data2[5]],
-                                     ["Visibility Table", table_columns, data2[6]]], filename)
-
-    def show_graph_generic(self, data=None):
-        """Shows graphs of the data."""
-
-        if not data:
-            data = self.data
-
-        if len(data) == 0:
-            show_no_data_dialog(self, "Graphs - %s" % self.last_dataset)
-            return
-
-        # If matplotlib isn't installed, don't continue.
-        if not self.matplotlib_installed:
-            show_alert_dialog(self, "Graphs - %s" % self.last_dataset,
-                              "The matplotlib library must be installed to view graphs.\n\nIn most Linux distributions this module can be found using a package manager. Source code and Windows downloads can also be found at http://matplotlib.org/")
-            return
-
-        # Get the data for the graphs.
-        data2 = graphs.get_data(data)
-
-        # Show the graph.
-        graph_dlg = GraphDialog(self, "Graphs - %s" % self.last_dataset, data2, self.last_dataset, self.config,
-                                self.graph_data)
-        response = graph_dlg.run()
-        graph_dlg.destroy()
+                export.html_generic([["Temperature Table", table_columns, table_data[0]],
+                                     ["Wind Chill Table", table_columns, table_data[1]],
+                                     ["Precipitation Table", table_columns, table_data[2]],
+                                     ["Wind Table", table_columns, table_data[3]],
+                                     ["Humidity Table", table_columns, table_data[4]],
+                                     ["Air Pressure Table", table_columns, table_data[5]],
+                                     ["Visibility Table", table_columns, table_data[6]]], filename)
 
     def search(self, event):
         """Shows the quick search dialog."""

@@ -37,6 +37,7 @@ class LocationDialog(Gtk.Dialog):
 
         # Create the frame and location entry.
         self.nam_ent = Gtk.Entry()
+        self.nam_ent.set_placeholder_text("Location")
         self.nam_ent.set_hexpand(True)
         loc_grid.add(self.nam_ent)
         
