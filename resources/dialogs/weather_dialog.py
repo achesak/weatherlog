@@ -176,10 +176,8 @@ class CurrentWeatherDialog(Gtk.Dialog):
                                                                      location, location_type)
             image_url = get_weather.get_weather_image(code)
         except (URLError, ValueError):
-            data = [[], []]
-            location = "No location specified"
-            image_url = "resources/images/weather_icons/error.png"
-            show_error_dialog(self, "Get Current Weather", "Cannot get current weather; no internet connection.")
+            show_error_dialog(self, "Get Current Weather", "Cannot get current weather; no internet connection or invalid location.")
+            return
 
         # Add the data.
         self.wea_list.clear()
@@ -191,5 +189,3 @@ class CurrentWeatherDialog(Gtk.Dialog):
 
         self.wea_loc_lbl.set_markup("<big>" + location + "</big>")
         self.wea_img.set_from_file(image_url)
-
-        return data, location, image_url
