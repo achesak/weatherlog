@@ -158,6 +158,7 @@ class CurrentWeatherDialog(Gtk.Dialog):
 
         # Bind the events.
         self.nam_btn.connect("clicked", lambda x: self.get_weather())
+        self.nam_ent.connect("activate", lambda x: self.get_weather())
         
         # Show the dialog.
         self.show_all()
