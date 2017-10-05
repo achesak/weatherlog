@@ -23,10 +23,14 @@ class OptionsDialog(Gtk.Dialog):
     def __init__(self, parent, config):
         """Create the dialog."""
         
-        Gtk.Dialog.__init__(self, "Options", parent, Gtk.DialogFlags.MODAL)
+        Gtk.Dialog.__init__(self, "Options", parent, Gtk.DialogFlags.MODAL, use_header_bar=True)
+        self.add_button("Save", Gtk.ResponseType.OK)
         self.add_button("Reset", DialogResponse.RESET)
-        self.add_button("Cancel", Gtk.ResponseType.CANCEL)
-        self.add_button("OK", Gtk.ResponseType.OK)
+
+        # Create the header bar.
+        header = self.get_header_bar()
+        header.set_title("Options")
+        header.set_show_close_button(True)
         
         # Create the tab notebook.
         notebook = Gtk.Notebook()
