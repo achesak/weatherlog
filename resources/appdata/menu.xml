@@ -5,8 +5,7 @@
             <menuitem action="edit" />
             <menuitem action="remove" />
             <separator />
-            <menuitem action="get_current_here" />
-            <menuitem action="get_current_there" />
+            <menuitem action="get_weather" />
             <separator />
             <menuitem action="options" />
             <separator />

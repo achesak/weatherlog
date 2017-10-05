@@ -53,7 +53,6 @@ import resources.info as info
 import resources.tables as tables
 import resources.graphs as graphs
 import resources.filter_data as filter_data
-import resources.get_weather as get_weather
 import resources.pastebin as pastebin
 import resources.commands as commands
 
@@ -76,7 +75,6 @@ from resources.dialogs.data_subset_selection_dialog import DataSubsetSelectionDi
 from resources.dialogs.data_subset_dialog import DataSubsetDialog
 from resources.dialogs.export_pastebin_dialog import ExportPastebinDialog
 from resources.dialogs.weather_dialog import CurrentWeatherDialog
-from resources.dialogs.location_dialog import LocationDialog
 from resources.dialogs.options_dialog import OptionsDialog
 from resources.dialogs.about_dialog import WeatherLogAboutDialog
 from resources.dialogs.misc_dialogs import *
@@ -193,9 +191,7 @@ class WeatherLog(Gtk.Window):
             ("add_new", Gtk.STOCK_ADD, "Add _New Data...", "<Control>n", "Add a new day to the list", self.add_new),
             ("edit", Gtk.STOCK_EDIT, "_Edit Data...", "<Control>e", None, self.edit),
             ("remove", Gtk.STOCK_REMOVE, "_Remove Data...", "<Control>r", "Remove a day from the list", self.remove),
-            ("get_current_here", None, "Get Current _Weather...", "<Control>w", None, lambda x: self.get_weather(True)),
-            ("get_current_there", None, "Get Current Weather _For...", "<Control><Shift>w", None,
-             lambda x: self.get_weather(False)),
+            ("get_weather", None, "Get Current _Weather...", "<Control>w", None, lambda x: self.get_weather()),
             ("options", None, "_Options...", "F2", None, self.options),
             ("exit", Gtk.STOCK_QUIT, "_Quit", None, "Close the application", lambda x: self.exit())
         ])
@@ -597,7 +593,7 @@ class WeatherLog(Gtk.Window):
         self.update_title()
         self.save()
 
-    def get_weather(self, here):
+    def get_weather(self):
         """Gets the current weather."""
 
         # Check if the API key is set.
@@ -605,59 +601,10 @@ class WeatherLog(Gtk.Window):
             show_error_dialog(self, "Get Weather", "No API key. Please check the key entered in the Options window.")
             return
 
-        location = ""
-        location_type = self.config["location_type"]
-
-        if not here:
-
-            # Get the location.
-            loc_dlg = LocationDialog(self, self.config)
-            response = loc_dlg.run()
-            location = loc_dlg.nam_ent.get_text().lstrip().rstrip()
-            location_type = "city" if loc_dlg.use_city_rbtn.get_active() else "zip"
-            loc_dlg.destroy()
-
-            if response != Gtk.ResponseType.OK:
-                return
-
-        # If getting the weather for the current location, make sure this location has been specified.
-        if here:
-            if self.config["location_type"] == "city" and self.config["city"]:
-                location = self.config["city"]
-                location_type = "city"
-            elif self.config["location_type"] == "zip" and self.config["zipcode"]:
-                location = self.config["zipcode"]
-                location_type = "zip"
-
-        if not location:
-
-            # Get the location.
-            loc_dlg = LocationDialog(self, self.config)
-            response = loc_dlg.run()
-            location = loc_dlg.nam_ent.get_text().lstrip().rstrip()
-            location_type = "city" if loc_dlg.use_city_rbtn.get_active() else "zip"
-            loc_dlg.destroy()
-
-            if response != Gtk.ResponseType.OK:
-                return
-
-        # Get the weather data.
-        try:
-            city, data, location, prefill_data, code = get_weather.get_weather(self.config, self.units, self.weather_codes,
-                                                                     location, location_type)
-            image_url = get_weather.get_weather_image(code)
-        except (URLError, ValueError):
-            show_error_dialog(self, "Get Current Weather", "Cannot get current weather; no internet connection.")
-            return
-
-        # Show the current weather.
-        info_dlg = CurrentWeatherDialog(self, "Current Weather For %s" % city, data, location, image_url)
+        # Show the weather.
+        info_dlg = CurrentWeatherDialog(self, "Current Weather", self.config, self.units, self.weather_codes)
         response = info_dlg.run()
         info_dlg.destroy()
-
-        # Add the data:
-        if response == DialogResponse.ADD_DATA:
-            self.add_new(False, prefill_data)
 
     def data_range(self):
         """Gets the range for the data to display."""
