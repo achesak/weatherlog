@@ -70,7 +70,6 @@ from resources.dialogs.calendar_range_dialog import CalendarRangeDialog
 from resources.dialogs.info_dialog import InfoDialog
 from resources.dialogs.dataset_selection_dialog import DatasetSelectionDialog
 from resources.dialogs.dataset_add_select_dialog import DatasetAddSelectionDialog
-from resources.dialogs.search_dialog import SearchDialog
 from resources.dialogs.data_subset_selection_dialog import DataSubsetSelectionDialog
 from resources.dialogs.data_subset_dialog import DataSubsetDialog
 from resources.dialogs.export_pastebin_dialog import ExportPastebinDialog
@@ -246,7 +245,6 @@ class WeatherLog(Gtk.Window):
 
         # Create the header bar menus
         info_menu = Gio.Menu()
-        info_menu.append("Search", "search")
         info_menu.append("Data Subset", "subset")
         info_menu.append("Info in Range", "info_range")
 
@@ -271,9 +269,19 @@ class WeatherLog(Gtk.Window):
 
         # Create the header bar buttons: info button
         self.info_btn = Gtk.MenuButton()
-        info_img = Gtk.Image.new_from_gicon(Gio.ThemedIcon(name="find"), Gtk.IconSize.BUTTON)
+        info_img = Gtk.Image.new_from_gicon(Gio.ThemedIcon(name="info"), Gtk.IconSize.BUTTON)
         self.info_btn.add(info_img)
         self.info_btn.set_menu_model(info_menu)
+
+        # Create the header bar buttons: search button
+        search_btn_box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL)
+        Gtk.StyleContext.add_class(search_btn_box.get_style_context(), "linked")
+        self.search_ent = Gtk.SearchEntry()
+        self.search_btn = Gtk.Button()
+        search_img = Gtk.Image.new_from_gicon(Gio.ThemedIcon(name="search"), Gtk.IconSize.BUTTON)
+        self.search_btn.add(search_img)
+        search_btn_box.add(self.search_ent)
+        search_btn_box.add(self.search_btn)
 
         # Create the header bar buttons: dataset button
         self.dataset_menubtn = Gtk.Button(label="Datasets")
@@ -281,6 +289,7 @@ class WeatherLog(Gtk.Window):
         # Set up the header bar buttons.
         self.header.pack_end(self.dataset_menubtn)
         self.header.pack_end(self.info_btn)
+        self.header.pack_end(search_btn_box)
         self.header.pack_end(data_btn_box)
 
         # Set up the stack.
@@ -301,6 +310,8 @@ class WeatherLog(Gtk.Window):
         self.add_btn.connect("clicked", self.add_new)
         self.edit_btn.connect("clicked", self.edit)
         self.remove_btn.connect("clicked", self.remove)
+        self.search_ent.connect("activate", self.search)
+        self.search_btn.connect("clicked", self.search)
 
         # Bind the events.
         self.connect("delete-event", self.delete_event)
@@ -732,22 +743,13 @@ class WeatherLog(Gtk.Window):
     def search(self, event):
         """Shows the quick search dialog."""
 
-        if len(self.data) == 0:
-            show_no_data_dialog(self, "Search - %s" % self.last_dataset)
-            return
-
-        # Get the search term and options.
-        qui_dlg = SearchDialog(self, self.last_dataset, self.config)
-        response = qui_dlg.run()
-        search_term = qui_dlg.inp_ent.get_text()
-        opt_insensitive = qui_dlg.case_chk.get_active()
-        qui_dlg.destroy()
-
-        if response != Gtk.ResponseType.OK or search_term.strip() == "":
+        # Get the search term.
+        search_term = self.search_ent.get_text().lstrip().rstrip()
+        if not search_term:
             return
 
         # Filter and display the data.
-        filtered = filter_data.filter_quick(self.data, search_term, opt_insensitive)
+        filtered = filter_data.filter_quick(self.data, search_term, self.config["default_case_insensitive"])
 
         if len(filtered) == 0:
             show_alert_dialog(self, "Search Results - %s" % self.last_dataset,

@@ -3,7 +3,7 @@
 
 ################################################################################
 #
-# WeatherLog: dialogs/search_dialog.py
+# WeatherLog: dialogs/add_dialog.py
 # This dialog enters a new row of data.
 #
 ################################################################################
