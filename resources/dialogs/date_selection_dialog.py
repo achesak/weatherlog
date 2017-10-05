@@ -22,6 +22,7 @@ class DateSelectionDialog(Gtk.Dialog):
 
         Gtk.Dialog.__init__(self, title, parent, Gtk.DialogFlags.MODAL, use_header_bar=True)
         self.set_default_size(500, 200)
+        self.add_button("Cancel", Gtk.ResponseType.CANCEL)
         if buttons is None:
             self.add_button("OK", Gtk.ResponseType.OK)
         else:
@@ -32,7 +33,6 @@ class DateSelectionDialog(Gtk.Dialog):
         header = self.get_header_bar()
         header.set_title(title)
         header.set_subtitle(subtitle)
-        header.set_show_close_button(True)
 
         # Create the Date selection.
         if show_conflicts:

@@ -248,32 +248,44 @@ class WeatherLog(Gtk.Window):
         self.stack_switcher.set_stack(self.stack)
         self.header.pack_start(self.stack_switcher)
 
-        # Create the header bar menus.
-        dataset_menu = Gio.Menu()
-        dataset_menu.append("Add Dataset", "add_new")
+        # Create the header bar menus
+        info_menu = Gio.Menu()
+        info_menu.append("Search", "search")
+        info_menu.append("Data Subset", "subset")
+        info_menu.append("Info in Range", "info_range")
 
-        # Create the header bar buttons.
+        # Create the header bar buttons: data buttons
+        data_btn_box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL)
+        Gtk.StyleContext.add_class(data_btn_box.get_style_context(), "linked")
         self.add_btn = Gtk.Button()
-        self.add_img = Gtk.Image.new_from_gicon(Gio.ThemedIcon(name="add"), Gtk.IconSize.BUTTON)
-        self.add_btn.add(self.add_img)
+        add_img = Gtk.Image.new_from_gicon(Gio.ThemedIcon(name="add"), Gtk.IconSize.BUTTON)
+        self.add_btn.add(add_img)
         self.add_btn.set_tooltip_text("Add more data")
         self.edit_btn = Gtk.Button()
-        self.edit_img = Gtk.Image.new_from_gicon(Gio.ThemedIcon(name="edit"), Gtk.IconSize.BUTTON)
-        self.edit_btn.add(self.edit_img)
+        edit_img = Gtk.Image.new_from_gicon(Gio.ThemedIcon(name="edit"), Gtk.IconSize.BUTTON)
+        self.edit_btn.add(edit_img)
         self.edit_btn.set_tooltip_text("Edit existing data")
         self.remove_btn = Gtk.Button()
-        self.remove_img = Gtk.Image.new_from_gicon(Gio.ThemedIcon(name="remove"), Gtk.IconSize.BUTTON)
-        self.remove_btn.add(self.remove_img)
+        remove_img = Gtk.Image.new_from_gicon(Gio.ThemedIcon(name="remove"), Gtk.IconSize.BUTTON)
+        self.remove_btn.add(remove_img)
         self.remove_btn.set_tooltip_text("Remove data")
-        self.dataset_menubtn = Gtk.MenuButton(label="Datasets")
-        self.dataset_menubtn.set_menu_model(dataset_menu)
+        data_btn_box.add(self.add_btn)
+        data_btn_box.add(self.edit_btn)
+        data_btn_box.add(self.remove_btn)
+
+        # Create the header bar buttons: info button
+        self.info_btn = Gtk.MenuButton()
+        info_img = Gtk.Image.new_from_gicon(Gio.ThemedIcon(name="find"), Gtk.IconSize.BUTTON)
+        self.info_btn.add(info_img)
+        self.info_btn.set_menu_model(info_menu)
+
+        # Create the header bar buttons: dataset button
+        self.dataset_menubtn = Gtk.Button(label="Datasets")
 
         # Set up the header bar buttons.
         self.header.pack_end(self.dataset_menubtn)
-        self.header.pack_end(Gtk.SeparatorToolItem())
-        self.header.pack_end(self.remove_btn)
-        self.header.pack_end(self.edit_btn)
-        self.header.pack_end(self.add_btn)
+        self.header.pack_end(self.info_btn)
+        self.header.pack_end(data_btn_box)
 
         # Set up the stack.
         self.stack.add_titled(self.data_frame, "data", "Data")

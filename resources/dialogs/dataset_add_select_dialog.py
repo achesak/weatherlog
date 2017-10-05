@@ -27,6 +27,7 @@ class DatasetAddSelectionDialog(Gtk.Dialog):
 
         Gtk.Dialog.__init__(self, title, parent, Gtk.DialogFlags.MODAL, use_header_bar=True)
         self.set_default_size(500, 300)
+        self.add_button("Cancel", Gtk.ResponseType.CANCEL)
         self.add_button("Select Dataset", DialogResponse.USE_SELECTED)
 
         self.main_dir = main_dir
@@ -35,7 +36,6 @@ class DatasetAddSelectionDialog(Gtk.Dialog):
         # Create the header bar.
         header = self.get_header_bar()
         header.set_title(title)
-        header.set_show_close_button(True)
 
         # Set up the main grid.
         dat_grid = Gtk.Grid()

@@ -30,6 +30,7 @@ class EditDialog(Gtk.Dialog):
 
         Gtk.Dialog.__init__(self, "Edit %s" % date, parent, Gtk.DialogFlags.MODAL, use_header_bar=True)
         self.set_size_request(500, 600)
+        self.add_button("Cancel", Gtk.ResponseType.CANCEL)
         self.add_button("Save", Gtk.ResponseType.OK)
         self.add_button("Remove", DialogResponse.REMOVE)
 
@@ -37,7 +38,6 @@ class EditDialog(Gtk.Dialog):
         header = self.get_header_bar()
         header.set_title("Edit %s" % date)
         header.set_subtitle(dataset)
-        header.set_show_close_button(True)
 
         # Create the grids.
         new_box = self.get_content_area()

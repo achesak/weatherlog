@@ -19,7 +19,7 @@ class WeatherLogAboutDialog(Gtk.AboutDialog):
     def __init__(self, parent, title, version, icon, license_text):
         """Create the dialog."""
         
-        Gtk.AboutDialog.__init__(self, parent)
+        Gtk.AboutDialog.__init__(self, transient_for=parent)
         self.set_transient_for(parent)
         
         # Set the details.

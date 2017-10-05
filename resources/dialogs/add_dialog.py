@@ -39,13 +39,13 @@ class AddNewDialog(Gtk.Dialog):
 
         Gtk.Dialog.__init__(self, "Add New Data", parent, Gtk.DialogFlags.MODAL, use_header_bar=True)
         self.set_size_request(500, 600)
+        self.add_button("Cancel", Gtk.ResponseType.CANCEL)
         self.add_button("Add Data", Gtk.ResponseType.OK)
 
         # Create the header bar.
         header = self.get_header_bar()
         header.set_title("Add New Data")
         header.set_subtitle(dataset)
-        header.set_show_close_button(True)
 
         # Create the grid.
         new_box = self.get_content_area()

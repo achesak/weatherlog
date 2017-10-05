@@ -23,13 +23,13 @@ class CalendarRangeDialog(Gtk.Dialog):
         """Create the dialog."""
 
         Gtk.Dialog.__init__(self, title, parent, Gtk.DialogFlags.MODAL, use_header_bar=True)
+        self.add_button("Cancel", Gtk.ResponseType.CANCEL)
         self.add_button("View", DialogResponse.VIEW_INFO)
 
         # Create the header bar.
         header = self.get_header_bar()
         header.set_title(title)
         header.set_subtitle(subtitle)
-        header.set_show_close_button(True)
 
         # Create the grid and frames.
         cal_box = self.get_content_area()

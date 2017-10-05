@@ -21,13 +21,13 @@ class LocationDialog(Gtk.Dialog):
         
         Gtk.Dialog.__init__(self, "Get Current Weather", parent, Gtk.DialogFlags.MODAL, use_header_bar=True)
         self.set_size_request(400, 0)
+        self.add_button("Cancel", Gtk.ResponseType.CANCEL)
         self.add_button("OK", Gtk.ResponseType.OK)
 
         # Create the header bar.
         header = self.get_header_bar()
         header.set_title("Get Current Weather")
         header.set_subtitle("Enter location")
-        header.set_show_close_button(True)
         
         # Create the grid.
         loc_grid = Gtk.Grid()
