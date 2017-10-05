@@ -277,6 +277,7 @@ class WeatherLog(Gtk.Window):
         search_btn_box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL)
         Gtk.StyleContext.add_class(search_btn_box.get_style_context(), "linked")
         self.search_ent = Gtk.SearchEntry()
+        self.search_ent.set_placeholder_text("Search")
         self.search_btn = Gtk.Button()
         search_img = Gtk.Image.new_from_gicon(Gio.ThemedIcon(name="search"), Gtk.IconSize.BUTTON)
         self.search_btn.add(search_img)

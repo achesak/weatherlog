@@ -7,7 +7,7 @@
     "icon_medium_about": "../images/icon_med.png",
     
     "default_width": 1400,
-    "default_height": 600,
+    "default_height": 800,
     
     "help_link": "resources/help/WeatherLog_help.pdf"
 }
