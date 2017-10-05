@@ -672,7 +672,7 @@ class WeatherLog(Gtk.Window):
         cal_dlg.destroy()
 
         # If the user did not click OK, don't continue.
-        if response == Gtk.ResponseType.CANCEL:
+        if response != Gtk.ResponseType.OK:
             return
 
         # Get the indices.
