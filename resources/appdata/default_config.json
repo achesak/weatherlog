@@ -19,7 +19,7 @@
     "pastebin_format": "JSON",
     "pastebin_expires": "N",
     "pastebin_exposure": 0,
-    "default_case_insensitive": false,
+    "default_case_insensitive": true,
     "openweathermap": "90310936256969827ebcd5cabcc0a14c",
     "city": "",
     "zipcode": "",
