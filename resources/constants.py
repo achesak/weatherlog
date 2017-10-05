@@ -46,13 +46,13 @@ class DialogResponse:
 
 # Import validation values:
 class ImportValidation:
-    VALID = 1
-    NOT_LIST = 0
-    NOT_SUBLIST = -1
-    INCORRECT_LENGTH = -2
-    NOT_STRING = -3
-    CANNOT_UNPICKLE = -4
-    NO_DATA = -5
+    VALID = 0
+    NOT_LIST = 1
+    NOT_SUBLIST = 2
+    INCORRECT_LENGTH = 3
+    NOT_STRING = 4
+    CANNOT_UNPICKLE = 5
+    NO_DATA = 6
 
 
 # Date validation values:

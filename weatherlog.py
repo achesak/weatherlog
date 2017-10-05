@@ -845,11 +845,15 @@ class WeatherLog(Gtk.Window):
             return
 
         # If the imported data is invalid, don't continue.
-        validate_error = validate.validate_data(filename)
+        try:
+            validate_error = validate.validate_dataset(self.main_dir, filename)
+        except:
+            show_error_dialog(self, "Import - %s" % self.last_dataset,
+                              "Error importing data. Is the data in the correct format?")
+            return
         if validate_error != ImportValidation.VALID:
             show_error_dialog(self, "Import - %s" % self.last_dataset,
-                              "The data in the selected file is not valid. %s" % validate.validate_dataset_strings[
-                                  validate_error])
+                              "The data in the selected file is not valid. %s" % validate.validate_dataset_strings[validate_error])
             return
 
         # Confirm that the user wants to overwrite the data, if the current dataset isn't blank.
@@ -936,8 +940,7 @@ class WeatherLog(Gtk.Window):
         validate_error = validate.validate_data(filename)
         if validate_error != ImportValidation.VALID:
             show_error_dialog(self, "Import as New Dataset - %s" % self.last_dataset,
-                              "The data in the selected file is not valid. %s" % validate.validate_dataset_strings[
-                                  validate_error])
+                              "The data in the selected file is not valid. %s" % validate.validate_dataset_strings[validate_error])
             return
 
         # Get the new dataset name.
@@ -951,13 +954,17 @@ class WeatherLog(Gtk.Window):
 
         # Validate the name. If it contains a non-alphanumeric character or is just space,
         # show a dialog and cancel the action.
-        valid = validate.validate_dataset(self.main_dir, name)
+        try:
+            valid = validate.validate_dataset(self.main_dir, filename)
+            return
+        except:
+            show_error_dialog(self, "Import - %s" % self.last_dataset,
+                              "Error importing data. Is the data in the correct format?")
         if valid != DatasetValidation.VALID:
             show_error_dialog(self, "Import as New Dataset - %s" % self.last_dataset,
                               validate.validate_dataset_name_strings[valid])
             return
 
-        # Read the data.
         ndata = io.read_dataset(filename=filename)
 
         # Ask the user what dates they want to import.

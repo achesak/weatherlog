@@ -21,15 +21,15 @@ from resources.constants import *
 import resources.io as io
 
 
-validate_dataset_strings = {
-    ImportValidation.VALID: "No error, this should never display.",
-    ImportValidation.NOT_LIST: "Data is not a list.",
-    ImportValidation.NOT_SUBLIST: "One or more items in the data are not lists.",
-    ImportValidation.INCORRECT_LENGTH: "One or more lists do not have the correct length.",
-    ImportValidation.NOT_STRING: "One or more data fields are not strings.",
-    ImportValidation.CANNOT_UNPICKLE: "The file is not in the correct format.",
-    ImportValidation.NO_DATA: "The file contains no data."
-}
+validate_dataset_strings = [
+    "No error, this should never display.",
+    "Data is not a list.",
+    "One or more items in the data are not lists.",
+    "One or more lists do not have the correct length.",
+    "One or more data fields are not strings.",
+    "The file is not in the correct format.",
+    "The file contains no data."
+]
 
 validate_dataset_name_strings = {
     DatasetValidation.VALID: "No error, this should never display.",
