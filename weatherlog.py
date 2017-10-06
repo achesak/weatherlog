@@ -116,6 +116,26 @@ class WeatherLog(Gtk.Application):
         self.pastebin_constants = launch.get_pastebin_constants()
         self.graph_data = launch.get_graph_data()
 
+        # Build the app menu.
+        action = Gio.SimpleAction.new("weather", None)
+        action.connect("activate", lambda x, y: self.get_weather())
+        self.add_action(action)
+        action = Gio.SimpleAction.new("subset", None)
+        action.connect("activate", lambda x, y: self.select_data_subset())
+        self.add_action(action)
+        action = Gio.SimpleAction.new("range", None)
+        action.connect("activate", lambda x, y: self.data_range())
+        self.add_action(action)
+        action = Gio.SimpleAction.new("options", None)
+        action.connect("activate", lambda x, y: self.options())
+        self.add_action(action)
+        action = Gio.SimpleAction.new("about", None)
+        action.connect("activate", lambda x, y: self.show_about())
+        self.add_action(action)
+        action = Gio.SimpleAction.new("quit", None)
+        action.connect("activate", lambda x, y: self.exit(x, y))
+        self.add_action(action)
+
         builder = Gtk.Builder.new_from_string(self.menu_data, -1)
         self.set_app_menu(builder.get_object("app-menu"))
 
@@ -794,7 +814,7 @@ class WeatherLog(Gtk.Application):
                               filtered]]
                 export.html_generic(data_list, filename)
 
-    def select_data_subset(self, event):
+    def select_data_subset(self):
         """Shows the data selection dialog."""
 
         if len(self.data) == 0:
@@ -1349,63 +1369,62 @@ class WeatherLog(Gtk.Application):
         self.update_list()
         self.update_title()
 
-    def options(self, event, update_only=False):
+    def options(self):
         """Shows the Options dialog."""
 
         current_units = self.config["units"]
 
         # Get the new options.
-        if not update_only:
-            opt_dlg = OptionsDialog(self.window, self.config)
-            response = opt_dlg.run()
-            new_config = self.config
-            new_config["pre-fill"] = opt_dlg.pre_chk.get_active()
-            new_config["restore"] = opt_dlg.win_chk.get_active()
-            new_config["units"] = opt_dlg.unit_com.get_active_text().lower()
-            new_config["show_dates"] = opt_dlg.date_chk.get_active()
-            new_config["show_units"] = opt_dlg.unit_chk.get_active()
-            new_config["confirm_del"] = opt_dlg.del_chk.get_active()
-            new_config["show_pre-fill"] = opt_dlg.pdl_chk.get_active()
-            new_config["confirm_exit"] = opt_dlg.cex_chk.get_active()
-            new_config["import_all"] = opt_dlg.imp_chk.get_active()
-            new_config["truncate_notes"] = opt_dlg.trun_chk.get_active()
-            new_config["graph_color"] = convert.rgba_to_hex(opt_dlg.graph_color_btn.get_rgba())[0:7]
-            new_config["line_width"] = opt_dlg.width_sbtn.get_value()
-            new_config["line_style"] = opt_dlg.line_com.get_active_text()
-            new_config["hatch_style"] = opt_dlg.hatch_com.get_active_text()
-            new_config["pastebin"] = opt_dlg.pname_ent.get_text()
-            new_config["pastebin_format"] = opt_dlg.pform_com.get_active_text()
-            new_config["pastebin_expires"] = self.pastebin_constants["expires"][opt_dlg.pexpi_com.get_active_text()]
-            new_config["pastebin_exposure"] = self.pastebin_constants["exposure"][opt_dlg.pexpo_com.get_active_text()]
-            new_config["default_case_insensitive"] = opt_dlg.case_chk.get_active()
-            new_config["zipcode"] = opt_dlg.zip_ent.get_text()
-            new_config["city"] = opt_dlg.cit_ent.get_text()
-            new_config["country"] = opt_dlg.cnt_ent.get_text()
-            new_config["location_type"] = "city" if opt_dlg.use_city_rbtn.get_active() else "zip"
-            new_config["openweathermap"] = opt_dlg.owm_ent.get_text()
-            new_config["forecast_period"] = opt_dlg.fcast_sbtn.get_value()
-            new_config["default_selection_mode"] = opt_dlg.smode_com.get_active_text()
-            new_config["json_indent"] = opt_dlg.ind_chk.get_active()
-            new_config["json_indent_amount"] = int(opt_dlg.iamt_sbtn.get_value())
-            new_config["reset_search"] = opt_dlg.rsearch_chk.get_active()
-            opt_dlg.destroy()
+        opt_dlg = OptionsDialog(self.window, self.config)
+        response = opt_dlg.run()
+        new_config = self.config
+        new_config["pre-fill"] = opt_dlg.pre_chk.get_active()
+        new_config["restore"] = opt_dlg.win_chk.get_active()
+        new_config["units"] = opt_dlg.unit_com.get_active_text().lower()
+        new_config["show_dates"] = opt_dlg.date_chk.get_active()
+        new_config["show_units"] = opt_dlg.unit_chk.get_active()
+        new_config["confirm_del"] = opt_dlg.del_chk.get_active()
+        new_config["show_pre-fill"] = opt_dlg.pdl_chk.get_active()
+        new_config["confirm_exit"] = opt_dlg.cex_chk.get_active()
+        new_config["import_all"] = opt_dlg.imp_chk.get_active()
+        new_config["truncate_notes"] = opt_dlg.trun_chk.get_active()
+        new_config["graph_color"] = convert.rgba_to_hex(opt_dlg.graph_color_btn.get_rgba())[0:7]
+        new_config["line_width"] = opt_dlg.width_sbtn.get_value()
+        new_config["line_style"] = opt_dlg.line_com.get_active_text()
+        new_config["hatch_style"] = opt_dlg.hatch_com.get_active_text()
+        new_config["pastebin"] = opt_dlg.pname_ent.get_text()
+        new_config["pastebin_format"] = opt_dlg.pform_com.get_active_text()
+        new_config["pastebin_expires"] = self.pastebin_constants["expires"][opt_dlg.pexpi_com.get_active_text()]
+        new_config["pastebin_exposure"] = self.pastebin_constants["exposure"][opt_dlg.pexpo_com.get_active_text()]
+        new_config["default_case_insensitive"] = opt_dlg.case_chk.get_active()
+        new_config["zipcode"] = opt_dlg.zip_ent.get_text()
+        new_config["city"] = opt_dlg.cit_ent.get_text()
+        new_config["country"] = opt_dlg.cnt_ent.get_text()
+        new_config["location_type"] = "city" if opt_dlg.use_city_rbtn.get_active() else "zip"
+        new_config["openweathermap"] = opt_dlg.owm_ent.get_text()
+        new_config["forecast_period"] = opt_dlg.fcast_sbtn.get_value()
+        new_config["default_selection_mode"] = opt_dlg.smode_com.get_active_text()
+        new_config["json_indent"] = opt_dlg.ind_chk.get_active()
+        new_config["json_indent_amount"] = int(opt_dlg.iamt_sbtn.get_value())
+        new_config["reset_search"] = opt_dlg.rsearch_chk.get_active()
+        opt_dlg.destroy()
 
-            # If the user did not press OK or Reset, don't continue.
-            if response != Gtk.ResponseType.OK and response != DialogResponse.RESET:
+        # If the user did not press OK or Reset, don't continue.
+        if response != Gtk.ResponseType.OK and response != DialogResponse.RESET:
+            return
+
+        # If the user pressed Reset, set all options to default.
+        if response == DialogResponse.RESET:
+
+            reset = show_question_dialog(opt_dlg, "Options",
+                                         "Are you sure you want to reset the options to the default values?")
+            if reset == Gtk.ResponseType.CANCEL:
                 return
 
-            # If the user pressed Reset, set all options to default.
-            if response == DialogResponse.RESET:
+            self.config = launch.get_config(self.conf_dir, get_default=True)
 
-                reset = show_question_dialog(opt_dlg, "Options",
-                                             "Are you sure you want to reset the options to the default values?")
-                if reset == Gtk.ResponseType.CANCEL:
-                    return
-
-                self.config = launch.get_config(self.conf_dir, get_default=True)
-
-            else:
-                self.config = new_config
+        else:
+            self.config = new_config
 
         # Configure the units.
         self.units = launch.get_units(self.config)
@@ -1424,6 +1443,28 @@ class WeatherLog(Gtk.Application):
         self.update_title()
         self.update_list()
         self.save(from_options=True)
+
+    def show_about(self):
+        """Shows the About dialog."""
+
+        # Load the icon.
+        img_file = open(self.icon_medium, "rb")
+        img_bin = img_file.read()
+        img_file.close()
+        loader = GdkPixbuf.PixbufLoader.new_with_type("png")
+        loader.write(img_bin)
+        loader.close()
+        pixbuf = loader.get_pixbuf()
+
+        # Read the license
+        license_file = open("LICENSE.md", "r")
+        license_text = license_file.read()
+        license_file.close()
+
+        # Show the dialog.
+        about_dlg = WeatherLogAboutDialog(self.window, self.title, self.version, pixbuf, license_text)
+        about_dlg.run()
+        about_dlg.destroy()
 
     def save(self, from_options=False):
         """Saves the data."""
@@ -1635,33 +1676,6 @@ class WeatherLog(Gtk.Application):
             print("Dataset - main dir - conf dir: %s - %s - %s" % (self.last_dataset, self.main_dir, self.conf_dir))
             print("Caller function: %s" % caller)
             print("Data: %s" % data)
-
-    def show_about(self, event):
-        """Shows the About dialog."""
-
-        # Load the icon.
-        img_file = open(self.icon_medium, "rb")
-        img_bin = img_file.read()
-        img_file.close()
-        loader = GdkPixbuf.PixbufLoader.new_with_type("png")
-        loader.write(img_bin)
-        loader.close()
-        pixbuf = loader.get_pixbuf()
-
-        # Read the license
-        license_file = open("LICENSE.md", "r")
-        license_text = license_file.read()
-        license_file.close()
-
-        # Show the dialog.
-        about_dlg = WeatherLogAboutDialog(self.window, self.title, self.version, pixbuf, license_text)
-        about_dlg.run()
-        about_dlg.destroy()
-
-    def show_help(self, event):
-        """Shows the help in a web browser."""
-
-        webbrowser.open_new(self.help_link)
 
     def exit(self, x=False, y=False):
         """Closes the application."""

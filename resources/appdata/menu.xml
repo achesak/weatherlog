@@ -29,6 +29,8 @@
                 <attribute name="action">app.about</attribute>
                 <attribute name="label" translatable="yes">_About</attribute>
             </item>
+        </section>
+        <section>
             <item>
                 <attribute name="action">app.quit</attribute>
                 <attribute name="label" translatable="yes">_Quit</attribute>
