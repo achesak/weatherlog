@@ -222,51 +222,6 @@ class WeatherLog(Gtk.Application):
         self.data_frame.set_vexpand(True)
         self.data_frame.add(self.treeview)
 
-        # # Create the menus.
-        # action_group = Gtk.ActionGroup("actions")
-        # action_group.add_actions([
-        #     ("weather_menu", None, "_Weather"),
-        #     ("add_new", Gtk.STOCK_ADD, "Add _New Data...", "<Control>n", "Add a new day to the list", self.add_new),
-        #     ("edit", Gtk.STOCK_EDIT, "_Edit Data...", "<Control>e", None, self.edit),
-        #     ("remove", Gtk.STOCK_REMOVE, "_Remove Data...", "<Control>r", "Remove a day from the list", self.remove),
-        #     ("get_weather", None, "Get Current _Weather...", "<Control>w", None, lambda x: self.get_weather()),
-        #     ("options", None, "_Options...", "F2", None, self.options),
-        #     ("exit", Gtk.STOCK_QUIT, "_Quit", None, "Close the application", lambda x: self.exit())
-        # ])
-        # action_group.add_actions([
-        #     ("file_menu", None, "_File"),
-        #     ("import", Gtk.STOCK_OPEN, "_Import...", None, "Import data from a file", self.import_data),
-        #     ("import_dataset", None, "Import as _New Dataset...", None, None, self.import_new_dataset),
-        #     ("export", Gtk.STOCK_SAVE, "_Export...", None, "Export data to a file", self.export_file),
-        #     ("export_pastebin", None, "Export to _Pastebin...", None, None, self.export_pastebin)
-        # ])
-        # action_group.add_actions([
-        #     ("data_menu", None, "_Data"),
-        #     ("data_range", None, "Data in _Range...", "<Control>i", None, lambda x: self.data_range()),
-        #     ("view_subset", None, "_Data Subset...", "<Control><Shift>f", None, self.select_data_subset),
-        # ])
-        # action_group.add_actions([
-        #     ("datasets_menu", None, "Data_sets"),
-        #     ("switch_dataset", None, "_Switch Dataset...", "<Control><Shift>s", None, self.switch_dataset),
-        #     ("add_dataset", None, "_Add Dataset...", "<Control><Shift>n", None, self.add_dataset),
-        #     ("remove_dataset", None, "_Remove Datasets...", "<Control><Shift>r", None, self.remove_dataset),
-        #     ("rename_dataset", None, "Re_name Dataset...", None, None, self.rename_dataset),
-        #     ("copy_data_dataset", None, "_Copy Data...", None, None, self.copy_data_dataset)
-        # ])
-        # action_group.add_actions([
-        #     ("help_menu", None, "_Help"),
-        #     ("about", Gtk.STOCK_ABOUT, "_About...", "F1", None, self.show_about),
-        # ])
-        #
-        # # Set up the menus.
-        # ui_manager = Gtk.UIManager()
-        # ui_manager.add_ui_from_string(self.menu_data)
-        # accel_group = ui_manager.get_accel_group()
-        # self.add_accel_group(accel_group)
-        # ui_manager.insert_action_group(action_group)
-        # self.menubar = ui_manager.get_widget("/menubar")
-        # self.context_menu = ui_manager.get_widget("/context_menu")
-
         # Set up the tabs.
         info_builder.info_builder(self)
         table_builder.table_builder(self)
@@ -1417,8 +1372,8 @@ class WeatherLog(Gtk.Application):
         # If the user pressed Reset, set all options to default.
         if response == DialogResponse.RESET:
 
-            reset = show_question_dialog(opt_dlg, "Options",
-                                         "Are you sure you want to reset the options to the default values?")
+            reset = show_question_dialog(opt_dlg, "Preferences",
+                                         "Are you sure you want to reset the preferences to the default values?")
             if reset == Gtk.ResponseType.CANCEL:
                 return
 
@@ -1430,7 +1385,7 @@ class WeatherLog(Gtk.Application):
         # Configure the units.
         self.units = launch.get_units(self.config)
         if current_units != self.config["units"]:
-            response = show_question_dialog(self.window, "Options",
+            response = show_question_dialog(self.window, "Preferences",
                                             "The units have changed from %s to %s.\n\nWould you like to convert the current data to the new units?" % (
                                                 current_units, self.config["units"]))
             if response == Gtk.ResponseType.OK:
