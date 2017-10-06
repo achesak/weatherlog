@@ -4,25 +4,24 @@
     <menu id="app-menu">
         <section>
             <item>
-                <attribute name="action">win.change_label</attribute>
-                <attribute name="target">String 1</attribute>
-                <attribute name="label" translatable="yes">String 1</attribute>
-            </item>
-            <item>
-                <attribute name="action">win.change_label</attribute>
-                <attribute name="target">String 2</attribute>
-                <attribute name="label" translatable="yes">String 2</attribute>
-            </item>
-            <item>
-                <attribute name="action">win.change_label</attribute>
-                <attribute name="target">String 3</attribute>
-                <attribute name="label" translatable="yes">String 3</attribute>
+                <attribute name="action">app.weather</attribute>
+                <attribute name="label" translatable="yes">Get Weather</attribute>
             </item>
         </section>
         <section>
             <item>
-                <attribute name="action">win.maximize</attribute>
-                <attribute name="label" translatable="yes">Maximize</attribute>
+                <attribute name="action">app.subset</attribute>
+                <attribute name="label" translatable="yes">Data Subset</attribute>
+            </item>
+            <item>
+                <attribute name="action">app.range</attribute>
+                <attribute name="label" translatable="yes">Info in Range</attribute>
+            </item>
+        </section>
+        <section>
+            <item>
+                <attribute name="action">app.options</attribute>
+                <attribute name="label" translatable="yes">Options</attribute>
             </item>
         </section>
         <section>
@@ -38,52 +37,3 @@
         </section>
     </menu>
 </interface>
-
-<!--<ui>
-    <menubar name="menubar">
-        <menu action="weather_menu">
-        <menuitem action="add_new" />
-            <menuitem action="edit" />
-            <menuitem action="remove" />
-            <separator />
-            <menuitem action="get_weather" />
-            <separator />
-            <menuitem action="options" />
-            <separator />
-            <menuitem action="exit" />
-        </menu>
-        <menu action="file_menu">
-            <menuitem action="import" />
-            <menuitem action="import_dataset" />
-            <separator />
-            <menuitem action="export" />
-            <menuitem action="export_pastebin" />
-        </menu>
-        <menu action="data_menu">
-            <menuitem action="data_range" />
-            <separator />
-            <menuitem action="view_subset" />
-        </menu>
-        <menu action="datasets_menu">
-            <menuitem action="switch_dataset" />
-            <separator />
-            <menuitem action="add_dataset" />
-            <menuitem action="remove_dataset" />
-            <menuitem action="rename_dataset" />
-            <separator />
-            <menuitem action="copy_data_dataset" />
-        </menu>
-        <menu action="help_menu">
-            <menuitem action="about" />
-        </menu>
-    </menubar>
-    <popup name="context_menu">
-        <menuitem action="add_new" />
-        <menuitem action="edit" />
-        <menuitem action="remove" />
-        <separator />
-        <menuitem action="switch_dataset" />
-        <menuitem action="add_dataset" />
-        <menuitem action="remove_dataset" />
-    </popup>
-</ui>-->

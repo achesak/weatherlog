@@ -116,6 +116,9 @@ class WeatherLog(Gtk.Application):
         self.pastebin_constants = launch.get_pastebin_constants()
         self.graph_data = launch.get_graph_data()
 
+        builder = Gtk.Builder.new_from_string(self.menu_data, -1)
+        self.set_app_menu(builder.get_object("app-menu"))
+
     def do_activate(self):
         """Application activate."""
 
@@ -136,6 +139,7 @@ class WeatherLog(Gtk.Application):
         self.update_title()
 
         self.window.present()
+        self.window.show_all()
 
     def create_interface(self):
         """Creates the user interface."""
@@ -319,7 +323,6 @@ class WeatherLog(Gtk.Application):
         grid.add(self.stack)
         self.window.add(grid)
         self.treeview.grab_focus()
-        self.window.show_all()
 
         # Bind the button events.
         self.add_btn.connect("clicked", self.add_new)
@@ -339,6 +342,7 @@ class WeatherLog(Gtk.Application):
 
         width, height = self.window.get_size()
         io.write_restore_data(self.conf_dir, self.last_dataset, height, width)
+        self.exit()
 
     def context_event(self, widget, event):
         """Opens the context menu."""
@@ -760,7 +764,7 @@ class WeatherLog(Gtk.Application):
 
         # Get the search term.
         search_term = self.search_ent.get_text().lstrip().rstrip()
-        if not search_term:
+        if not search_term or len(self.data) == 0:
             return
 
         # Filter and display the data.
@@ -1670,17 +1674,13 @@ class WeatherLog(Gtk.Application):
                 return
 
         self.save()
-        Gtk.main_quit()
-
+        self.quit()
 
 # Show the window and start the application.
 if __name__ == "__main__" and len(sys.argv) == 1:
 
     win = WeatherLog()
     win.run()
-    #win.window.connect("delete-event", win.exit)
-    #win.window.show_all()
-    #Gtk.main()
 
 # Commands:
 elif __name__ == "__main__" and len(sys.argv) == 2:
