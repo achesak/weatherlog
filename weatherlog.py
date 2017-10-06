@@ -145,7 +145,6 @@ class WeatherLog(Gtk.Application):
         """Creates the user interface."""
 
         # Create the window.
-        self.window = Gtk.ApplicationWindow()
         self.window.set_default_size(self.last_width, self.last_height)
         self.window.set_icon_from_file(self.icon_small)
         self.window.set_title("WeatherLog")
