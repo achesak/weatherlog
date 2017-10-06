@@ -359,7 +359,8 @@ class WeatherLog(Gtk.Application):
     def delete_event(self, widget, event):
         """Saves the restore data."""
 
-        width, height = self.window.get_size()
+        # width, height = self.window.get_size()
+        width, height = 1500, 800
         io.write_restore_data(self.conf_dir, self.last_dataset, height, width)
         self.exit()
 
