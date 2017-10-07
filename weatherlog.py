@@ -186,7 +186,6 @@ class WeatherLog(Gtk.Application):
         # Create the header bar.
         self.header = Gtk.HeaderBar()
         self.header.set_title("WeatherLog")
-        self.header.set_subtitle("Subheader")
         self.header.set_show_close_button(True)
         self.window.set_titlebar(self.header)
 
@@ -1469,9 +1468,10 @@ class WeatherLog(Gtk.Application):
         """Updates the window title."""
 
         if self.config["show_dates"]:
-            new_title = "%s - %s to %s" % (
-                self.last_dataset, (self.data[0][0] if len(self.data) != 0 else "None"),
-                (self.data[len(self.data) - 1][0] if len(self.data) != 0 else "None"))
+            if len(self.data) != 0:
+                new_title = "%s - %s to %s" % (self.last_dataset, self.data[0][0], self.data[-1][0])
+            else:
+                new_title = "%s - No data" % self.last_dataset
         else:
             new_title = self.last_dataset
 

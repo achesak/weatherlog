@@ -280,7 +280,7 @@ class AddNewDialog(Gtk.Dialog):
 
         # Show the dialog saying data has been prefilled.
         if show_prefill_dlg and prefill and (user_location or user_zipcode) and station:
-            show_alert_dialog(self, "Add New Data - %s" % dataset,
+            show_alert_dialog(self, "Add New Data",
                               "Some fields have been automatically filled using data from OpenWeatherMap." +
                               "\n\nLocation is set to %s." % station)
 
