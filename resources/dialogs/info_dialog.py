@@ -16,16 +16,9 @@ from gi.repository import Gtk
 from resources.constants import *
 
 # Import matplotlib for graphing.
-try:
-    from matplotlib.figure import Figure
-    from matplotlib.dates import date2num
-    from matplotlib.ticker import MaxNLocator
-    from matplotlib.backends.backend_gtk3agg import FigureCanvasGTK3Agg as FigureCanvas
-except ImportError:
-    Figure = None
-    date2num = None
-    MaxNLocator = None
-    FigureCanvas = None
+from matplotlib.figure import Figure
+from matplotlib.ticker import MaxNLocator
+from matplotlib.backends.backend_gtk3agg import FigureCanvasGTK3Agg as FigureCanvas
 
 
 class InfoDialog(Gtk.Dialog):

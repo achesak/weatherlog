@@ -251,13 +251,3 @@ def get_graph_data():
         sys.exit()
     
     return graph_data
-
-
-def check_dependencies():
-    """Checks if dependencies required by the application are installed."""
-    
-    try:
-        import matplotlib
-        return True
-    except ImportError:
-        return False

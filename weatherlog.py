@@ -105,8 +105,6 @@ class WeatherLog(Gtk.Application):
         self.config = launch.get_config(self.conf_dir)
         launch.ensure_files_exist(self.main_dir, self.conf_dir)
 
-        self.matplotlib_installed = launch.check_dependencies()
-
         self.last_dataset, self.original_dataset, self.dataset_exists, self.last_width, self.last_height = \
             launch.get_restore_data(self.main_dir, self.conf_dir, self.config, self.default_width, self.default_height)
         self.units = launch.get_units(self.config)
@@ -680,12 +678,6 @@ class WeatherLog(Gtk.Application):
             show_no_data_dialog(self.window, "Info - %s" % self.last_dataset)
             return
 
-        # If matplotlib isn't installed, don't continue.
-        if not self.matplotlib_installed:
-            show_alert_dialog(self.window, "Graphs - %s" % self.last_dataset,
-                              "The matplotlib library must be installed to view graphs.\n\nIn most Linux distributions this module can be found using a package manager. Source code and Windows downloads can also be found at http://matplotlib.org/")
-            return
-
         # Get the info.
         info_data = [
             info.general_info(data, self.units),
@@ -711,7 +703,7 @@ class WeatherLog(Gtk.Application):
         graph_data = graphs.get_data(data)
 
         # Show the info.
-        info_dlg = InfoDialog(self.window, "Info", self.last_dataset, info_data, table_data, graph_data, self.config, self.graph_data)
+        info_dlg = InfoDialog(self.window, "Data", self.last_dataset, info_data, table_data, graph_data, self.config, self.graph_data)
         response = info_dlg.run()
         info_dlg.destroy()
 
