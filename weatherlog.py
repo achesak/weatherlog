@@ -135,6 +135,22 @@ class WeatherLog(Gtk.Application):
         action = Gio.SimpleAction.new("quit", None)
         action.connect("activate", lambda x, y: self.exit(x, y))
         self.add_action(action)
+        action = Gio.SimpleAction.new("add", None)
+        action.connect("activate", lambda x, y: self.add_new(x))
+        self.add_action(action)
+        action = Gio.SimpleAction.new("edit", None)
+        action.connect("activate", lambda x, y: self.edit(x))
+        self.add_action(action)
+        action = Gio.SimpleAction.new("remove", None)
+        action.connect("activate", lambda x, y: self.remove(x))
+        self.add_action(action)
+        action = Gio.SimpleAction.new("search", None)
+        action.connect("activate", lambda x, y: self.focus_search())
+        self.add_action(action)
+
+        self.set_accels_for_action("app.add", ["<Primary>n"])
+        self.set_accels_for_action("app.remove", ["<Primary>r"])
+        self.set_accels_for_action("app.search", ["<Primary>f"])
 
         builder = Gtk.Builder.new_from_string(self.menu_data, -1)
         self.set_app_menu(builder.get_object("app-menu"))
@@ -236,18 +252,13 @@ class WeatherLog(Gtk.Application):
         self.stack_switcher.set_stack(self.stack)
         self.header.pack_start(self.stack_switcher)
 
-        # Create the header bar menus
-        info_menu = Gio.Menu()
-        info_menu.append("Data Subset", "subset")
-        info_menu.append("Info in Range", "info_range")
-
         # Create the header bar buttons: data buttons
         data_btn_box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL)
         Gtk.StyleContext.add_class(data_btn_box.get_style_context(), "linked")
         self.add_btn = Gtk.Button()
         add_img = Gtk.Image.new_from_gicon(Gio.ThemedIcon(name="add"), Gtk.IconSize.BUTTON)
         self.add_btn.add(add_img)
-        self.add_btn.set_tooltip_text("Add more data")
+        self.add_btn.set_tooltip_text("Add more data (Control-N)")
         self.edit_btn = Gtk.Button()
         edit_img = Gtk.Image.new_from_gicon(Gio.ThemedIcon(name="edit"), Gtk.IconSize.BUTTON)
         self.edit_btn.add(edit_img)
@@ -255,16 +266,10 @@ class WeatherLog(Gtk.Application):
         self.remove_btn = Gtk.Button()
         remove_img = Gtk.Image.new_from_gicon(Gio.ThemedIcon(name="remove"), Gtk.IconSize.BUTTON)
         self.remove_btn.add(remove_img)
-        self.remove_btn.set_tooltip_text("Remove data")
+        self.remove_btn.set_tooltip_text("Remove data (Control-R)")
         data_btn_box.add(self.add_btn)
         data_btn_box.add(self.edit_btn)
         data_btn_box.add(self.remove_btn)
-
-        # Create the header bar buttons: info button
-        self.info_btn = Gtk.MenuButton()
-        info_img = Gtk.Image.new_from_gicon(Gio.ThemedIcon(name="info"), Gtk.IconSize.BUTTON)
-        self.info_btn.add(info_img)
-        self.info_btn.set_menu_model(info_menu)
 
         # Create the header bar buttons: search button
         search_btn_box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL)
@@ -274,6 +279,7 @@ class WeatherLog(Gtk.Application):
         self.search_btn = Gtk.Button()
         search_img = Gtk.Image.new_from_gicon(Gio.ThemedIcon(name="search"), Gtk.IconSize.BUTTON)
         self.search_btn.add(search_img)
+        self.search_btn.set_tooltip_text("Search for data (Control-F)")
         search_btn_box.add(self.search_ent)
         search_btn_box.add(self.search_btn)
 
@@ -282,7 +288,6 @@ class WeatherLog(Gtk.Application):
 
         # Set up the header bar buttons.
         self.header.pack_end(self.dataset_menubtn)
-        self.header.pack_end(self.info_btn)
         self.header.pack_end(search_btn_box)
         self.header.pack_end(data_btn_box)
 
@@ -348,6 +353,11 @@ class WeatherLog(Gtk.Application):
 
             except TypeError:
                 pass
+
+    def focus_search(self):
+        """Focuses on the search entry."""
+
+        self.search_ent.grab_focus()
 
     def add_new(self, event, prefill_data=None):
         """Shows the dialog for input of new data."""
