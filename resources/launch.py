@@ -63,13 +63,26 @@ def get_ui_info():
         menu_file = open("resources/appdata/menu.xml", "r")
         menu_data = menu_file.read()
         menu_file.close()
-    
+
     except IOError as e:
         print("get_ui_info(): Error reading menu file (IOError):\n%s" % e)
         sys.exit()
-    
+
     except (TypeError, ValueError) as e:
         print("get_ui_info(): Error reading menu file (TypeError or ValueError):\n%s" % e)
+        sys.exit()
+
+    try:
+        style_file = open("resources/appdata/style.css", "r")
+        style_data = style_file.read()
+        style_file.close()
+
+    except IOError as e:
+        print("get_ui_info(): Error reading style file (IOError):\n%s" % e)
+        sys.exit()
+
+    except (TypeError, ValueError) as e:
+        print("get_ui_info(): Error reading style file (TypeError or ValueError):\n%s" % e)
         sys.exit()
     
     version = ui_data["version"]
@@ -79,7 +92,7 @@ def get_ui_info():
     default_width = ui_data["default_width"]
     default_height = ui_data["default_height"]
     help_link = ui_data["help_link"]
-    return version, title, menu_data, icon_small, icon_medium, default_width, default_height, help_link
+    return version, title, menu_data, style_data, icon_small, icon_medium, default_width, default_height, help_link
 
 
 def get_weather_codes():

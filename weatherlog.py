@@ -99,7 +99,7 @@ class WeatherLog(Gtk.Application):
         Gtk.Application.do_startup(self)
 
         # Get the application's data, constants, and user data.
-        self.version, self.title, self.menu_data, self.icon_small, self.icon_medium, self.default_width, \
+        self.version, self.title, self.menu_data, self.style_data, self.icon_small, self.icon_medium, self.default_width, \
             self.default_height, self.help_link = launch.get_ui_info()
         self.main_dir, self.conf_dir = launch.get_main_dir()
         self.config = launch.get_config(self.conf_dir)
@@ -313,6 +313,13 @@ class WeatherLog(Gtk.Application):
         self.treeview.connect("button-press-event", self.context_event)
         self.treeview.connect("row-activated", self.activated_event)
         self.treeview.connect("key-press-event", self.treeview_keypress)
+        self.search_ent.connect("changed", self.update_search_style)
+
+        # Create the CSS provider.
+        self.style_provider = Gtk.CssProvider()
+        self.style_context = Gtk.StyleContext()
+        self.style_context.add_provider_for_screen(Gdk.Screen.get_default(), self.style_provider, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION)
+        self.style_provider.load_from_data(self.style_data)
 
     def delete_event(self, widget, event):
         """Saves the restore data."""
@@ -356,6 +363,11 @@ class WeatherLog(Gtk.Application):
         """Focuses on the search entry."""
 
         self.search_ent.grab_focus()
+
+    def update_search_style(self, event):
+        """Clears the 'not found' search styling."""
+
+        self.search_ent.get_style_context().remove_class("search-not-found")
 
     def add_new(self, event, prefill_data=None):
         """Shows the dialog for input of new data."""
@@ -738,9 +750,9 @@ class WeatherLog(Gtk.Application):
         # Filter and display the data.
         filtered = filter_data.filter_quick(self.data, search_term, self.config["default_case_insensitive"])
 
+        # If nothing found, set the background color of the entry to red.
         if len(filtered) == 0:
-            show_alert_dialog(self.window, "Search Results",
-                              "No data matches the specified search term.")
+            self.search_ent.get_style_context().add_class("search-not-found")
             return
 
         sub_dlg = DataSubsetDialog(self.window, "Search Results", self.last_dataset, filtered, self.units,
