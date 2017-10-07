@@ -150,13 +150,13 @@ class WeatherLog(Gtk.Application):
 
         # Build the non-menu actions.
         action = Gio.SimpleAction.new("add", None)
-        action.connect("activate", lambda x, y: self.add_new(x))
+        action.connect("activate", lambda x, y: self.add_new())
         self.add_action(action)
         action = Gio.SimpleAction.new("edit", None)
-        action.connect("activate", lambda x, y: self.edit(x))
+        action.connect("activate", lambda x, y: self.edit())
         self.add_action(action)
         action = Gio.SimpleAction.new("remove", None)
-        action.connect("activate", lambda x, y: self.remove(x))
+        action.connect("activate", lambda x, y: self.remove())
         self.add_action(action)
         action = Gio.SimpleAction.new("search", None)
         action.connect("activate", lambda x, y: self.focus_search())
@@ -317,11 +317,11 @@ class WeatherLog(Gtk.Application):
         self.treeview.grab_focus()
 
         # Bind the button events.
-        self.add_btn.connect("clicked", self.add_new)
-        self.edit_btn.connect("clicked", self.edit)
-        self.remove_btn.connect("clicked", self.remove)
-        self.search_ent.connect("activate", self.search)
-        self.search_btn.connect("clicked", self.search)
+        self.add_btn.connect("clicked", lambda x: self.add_new())
+        self.edit_btn.connect("clicked", lambda x: self.edit())
+        self.remove_btn.connect("clicked", lambda x: self.remove())
+        self.search_ent.connect("activate", lambda x: self.search())
+        self.search_btn.connect("clicked", lambda x: self.search())
 
         # Bind the events.
         self.window.connect("delete-event", self.delete_event)
@@ -357,7 +357,7 @@ class WeatherLog(Gtk.Application):
         tree_sel = self.treeview.get_selection()
         tm, ti = tree_sel.get_selected()
         date = tm.get_value(ti, 0)
-        self.edit(None, date)
+        self.edit(date)
 
     def treeview_keypress(self, widget, event):
         """Checks the treeview for keypress events."""
@@ -369,7 +369,7 @@ class WeatherLog(Gtk.Application):
                 tm, ti = tree_sel.get_selected()
                 date = tm.get_value(ti, 0)
 
-                self.remove(event, date)
+                self.remove(date)
 
             except TypeError:
                 pass
@@ -384,7 +384,7 @@ class WeatherLog(Gtk.Application):
 
         self.search_ent.get_style_context().remove_class("search-not-found")
 
-    def add_new(self, event, prefill_data=None):
+    def add_new(self, prefill_data=None):
         """Shows the dialog for input of new data."""
 
         if prefill_data is None:
@@ -463,7 +463,7 @@ class WeatherLog(Gtk.Application):
         self.save()
         self.debug("add_new", new_data)
 
-    def edit(self, event, edit_date=None):
+    def edit(self, edit_date=None):
         """Edits a row of data."""
 
         # If there is no data don't show the date selection.
@@ -576,7 +576,7 @@ class WeatherLog(Gtk.Application):
         self.save()
         self.debug("edit", new_data)
 
-    def remove(self, event, date=False):
+    def remove(self, date=None):
         """Removes a row of data from the list."""
 
         # If there is no data don't show the date selection.
@@ -754,8 +754,8 @@ class WeatherLog(Gtk.Application):
                                      ["Air Pressure Table", table_columns, table_data[5]],
                                      ["Visibility Table", table_columns, table_data[6]]], filename)
 
-    def search(self, event):
-        """Shows the quick search dialog."""
+    def search(self):
+        """Searches for data."""
 
         # Get the search term.
         search_term = self.search_ent.get_text().lstrip().rstrip()
