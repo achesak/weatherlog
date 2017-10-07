@@ -133,6 +133,22 @@ class WeatherLog(Gtk.Application):
         action = Gio.SimpleAction.new("quit", None)
         action.connect("activate", lambda x, y: self.exit(x, y))
         self.add_action(action)
+
+        # Build the file submenu.
+        action = Gio.SimpleAction.new("import", None)
+        action.connect("activate", lambda x, y: self.import_data())
+        self.add_action(action)
+        action = Gio.SimpleAction.new("import_dataset", None)
+        action.connect("activate", lambda x, y: self.import_new_dataset())
+        self.add_action(action)
+        action = Gio.SimpleAction.new("export", None)
+        action.connect("activate", lambda x, y: self.export_file())
+        self.add_action(action)
+        action = Gio.SimpleAction.new("export_pastebin", None)
+        action.connect("activate", lambda x, y: self.export_pastebin())
+        self.add_action(action)
+
+        # Build the non-menu actions.
         action = Gio.SimpleAction.new("add", None)
         action.connect("activate", lambda x, y: self.add_new(x))
         self.add_action(action)
@@ -784,7 +800,7 @@ class WeatherLog(Gtk.Application):
         # Show the condition selection dialog.
         sel_dlg = DataSubsetSelectionDialog(self.last_dataset, self.data, self.config, self.units)
 
-    def import_data(self, event):
+    def import_data(self):
         """Imports data and merges it into the current list."""
 
         # Get the filename.
@@ -881,7 +897,7 @@ class WeatherLog(Gtk.Application):
         self.update_title()
         self.save()
 
-    def import_new_dataset(self, event):
+    def import_new_dataset(self):
         """Imports data from a file and inserts it in a new dataset."""
 
         # Get the filename.
@@ -967,7 +983,7 @@ class WeatherLog(Gtk.Application):
         self.update_title()
         self.save()
 
-    def export_file(self, event):
+    def export_file(self):
         """Exports the data to a file."""
 
         if len(self.data) == 0:
@@ -1004,7 +1020,7 @@ class WeatherLog(Gtk.Application):
                           self.data]]
             export.html_generic(data_list, filename)
 
-    def export_pastebin(self, event):
+    def export_pastebin(self):
         """Exports the data to Pastebin."""
 
         if len(self.data) == 0:
