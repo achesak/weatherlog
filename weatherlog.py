@@ -441,9 +441,8 @@ class WeatherLog(Gtk.Application):
     def edit(self, event, edit_date=None):
         """Edits a row of data."""
 
-        # If there is no data, tell the user and don't show the date selection.
+        # If there is no data don't show the date selection.
         if len(self.data) == 0:
-            show_no_data_dialog(self.window, "Edit Data - %s" % self.last_dataset, message="There is no data to edit.")
             return
 
         # Get the selected date.
@@ -555,9 +554,8 @@ class WeatherLog(Gtk.Application):
     def remove(self, event, date=False):
         """Removes a row of data from the list."""
 
-        # If there is no data, tell the user and don't show the date selection.
+        # If there is no data don't show the date selection.
         if len(self.data) == 0:
-            show_no_data_dialog(self.window, "Remove Data - %s" % self.last_dataset, message="There is no data to remove.")
             return
 
         ndates = []
@@ -1461,6 +1459,12 @@ class WeatherLog(Gtk.Application):
         self.liststore.clear()
         for i in new_data:
             self.liststore.append(i)
+
+        # Update the button interactivity.
+        btns_active = len(self.data) != 0
+        self.edit_btn.set_sensitive(btns_active)
+        self.remove_btn.set_sensitive(btns_active)
+        self.search_btn.set_sensitive(btns_active)
 
         self.update_data()
 
