@@ -35,6 +35,7 @@ class CalendarRangeDialog(Gtk.Dialog):
         cal_box = self.get_content_area()
         cal_grid = Gtk.Grid()
         cal_grid.set_column_spacing(5)
+        cal_grid.set_border_width(5)
         cal_box.add(cal_grid)
         cal_start_frame = Gtk.Frame()
         cal_start_frame.set_label("Starting date")
