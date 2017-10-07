@@ -505,7 +505,7 @@ class WeatherLog(Gtk.Application):
         if response == DialogResponse.REMOVE:
             # Confirm that the user wants to delete the row.
             if self.config["confirm_del"]:
-                response = show_question_dialog(self.window, "Remove Data - %s" % self.last_dataset,
+                response = show_question_dialog(self.window, "Remove Data",
                                                 "Are you sure you want to delete the data for %s? This action cannot be undone." % date)
                 if response != Gtk.ResponseType.OK:
                     return
@@ -588,7 +588,7 @@ class WeatherLog(Gtk.Application):
             selected_dates = "\n\nSelected date%s:" % ("s" if len(ndates) > 1 else "")
             for date in ndates:
                 selected_dates += "\n" + date
-            response = show_question_dialog(self.window, "Remove Data - %s" % self.last_dataset,
+            response = show_question_dialog(self.window, "Remove Data",
                                             "Are you sure you want to delete the selected date%s? This action cannot be undone.%s" % (
                                                 "s" if len(ndates) > 1 else "", selected_dates))
             if response != Gtk.ResponseType.OK:
@@ -621,7 +621,7 @@ class WeatherLog(Gtk.Application):
         """Gets the range for the data to display."""
 
         if len(self.data) == 0:
-            show_no_data_dialog(self.window, "Data in Range - %s" % self.last_dataset)
+            show_no_data_dialog(self.window, "Data in Range")
             return
 
         # Get the first and last entered dates.
@@ -650,17 +650,17 @@ class WeatherLog(Gtk.Application):
 
         # Check to make sure these dates are valid, and cancel the action if not.
         if start_index == DateValidation.INVALID:
-            show_error_dialog(self.window, "Data in Range - %s" % self.last_dataset,
+            show_error_dialog(self.window, "Data in Range",
                               "%s is not a valid date.\n\nThis date is not present and is not before any other dates."
                               % date1)
             return
         if end_index == DateValidation.INVALID:
-            show_error_dialog(self.window, "Data in Range - %s" % self.last_dataset,
+            show_error_dialog(self.window, "Data in Range",
                               "%s is not a valid date.\n\nThis date is not present and is not after any other dates."
                               % date2)
             return
         if end_index < start_index:
-            show_error_dialog(self.window, "Data in Range - %s" % self.last_dataset, "The ending date must be after the starting date.")
+            show_error_dialog(self.window, "Data in Range", "The ending date must be after the starting date.")
             return
 
         # Get the new list.
@@ -670,13 +670,6 @@ class WeatherLog(Gtk.Application):
 
     def show_info_generic(self, data=None):
         """Shows info about the data."""
-
-        if not data:
-            data = self.data
-
-        if len(data) == 0:
-            show_no_data_dialog(self.window, "Info - %s" % self.last_dataset)
-            return
 
         # Get the info.
         info_data = [
@@ -709,7 +702,7 @@ class WeatherLog(Gtk.Application):
 
         # Export the data:
         if response == DialogResponse.EXPORT:
-            response2, filename = show_export_dialog(self.window, "Export Info - %s" % self.last_dataset)
+            response2, filename = show_export_dialog(self.window, "Export Info")
             if response2 == Gtk.ResponseType.OK:
                 export.html_generic([["General Info", ["Field", "Value"], info_data[0]],
                                      ["Temperature Info", ["Field", "Value"], info_data[1]],
@@ -722,7 +715,7 @@ class WeatherLog(Gtk.Application):
                                      ["Cloud Cover Info", ["Field", "Value"], info_data[8]],
                                      ["Notes Info", ["Field", "Value"], info_data[9]]], filename)
                 
-            response2, filename = show_export_dialog(self.window, "Export Tables - %s" % self.last_dataset)
+            response2, filename = show_export_dialog(self.window, "Export Tables")
             if response2 == Gtk.ResponseType.OK:
                 table_columns = ["Day", "Value", "Average Difference", "Low Difference", "High Difference",
                                  "Median Difference"]
@@ -746,7 +739,7 @@ class WeatherLog(Gtk.Application):
         filtered = filter_data.filter_quick(self.data, search_term, self.config["default_case_insensitive"])
 
         if len(filtered) == 0:
-            show_alert_dialog(self.window, "Search Results - %s" % self.last_dataset,
+            show_alert_dialog(self.window, "Search Results",
                               "No data matches the specified search term.")
             return
 
@@ -757,7 +750,7 @@ class WeatherLog(Gtk.Application):
 
         # Export the data:
         if response == DialogResponse.EXPORT:
-            response2, filename = show_export_dialog(self.window, "Search Results - %s" % self.last_dataset)
+            response2, filename = show_export_dialog(self.window, "Search Results")
             if response2 == Gtk.ResponseType.OK:
                 data_list = [["WeatherLog Search Results - %s - %s to %s" % (
                     self.last_dataset, (filtered[0][0] if len(filtered) != 0 else "None"),
@@ -774,7 +767,7 @@ class WeatherLog(Gtk.Application):
         """Shows the data selection dialog."""
 
         if len(self.data) == 0:
-            show_no_data_dialog(self.window, "View Data Subset - %s" % self.last_dataset)
+            show_no_data_dialog(self.window, "View Data Subset")
             return
 
         # Show the condition selection dialog.
@@ -784,7 +777,7 @@ class WeatherLog(Gtk.Application):
         """Imports data and merges it into the current list."""
 
         # Get the filename.
-        response, filename = show_import_dialog(self.window, "Import - %s" % self.last_dataset)
+        response, filename = show_import_dialog(self.window, "Import")
 
         if response != Gtk.ResponseType.OK and response != DialogResponse.IMPORT_OVERWRITE:
             return
@@ -793,24 +786,24 @@ class WeatherLog(Gtk.Application):
         # to be clicked when no filename has been entered, causing an error. Check to make sure
         # there was a filename to work around this.
         if (response == DialogResponse.IMPORT_OVERWRITE) and (not filename or not os.path.isfile(filename)):
-            show_error_dialog(self.window, "Import - %s" % self.last_dataset, "No filename entered.")
+            show_error_dialog(self.window, "Import", "No filename entered.")
             return
 
         # If the imported data is invalid, don't continue.
         try:
             validate_error = validate.validate_data(filename)
         except:
-            show_error_dialog(self.window, "Import - %s" % self.last_dataset,
+            show_error_dialog(self.window, "Import",
                               "Error importing data. Is the data in the correct format?")
             return
         if validate_error != ImportValidation.VALID:
-            show_error_dialog(self.window, "Import - %s" % self.last_dataset,
+            show_error_dialog(self.window, "Import",
                               "The data in the selected file is not valid. %s" % validate.validate_dataset_strings[validate_error])
             return
 
         # Confirm that the user wants to overwrite the data, if the current dataset isn't blank.
         if response == DialogResponse.IMPORT_OVERWRITE and len(self.data) > 0:
-            response2 = show_question_dialog(self.window, "Import - %s" % self.last_dataset,
+            response2 = show_question_dialog(self.window, "Import",
                                              "Are you sure you want to import the data?\n\nAll current data will be overwritten.")
             if response2 != Gtk.ResponseType.OK:
                 return
@@ -881,7 +874,7 @@ class WeatherLog(Gtk.Application):
         """Imports data from a file and inserts it in a new dataset."""
 
         # Get the filename.
-        response, filename = show_file_dialog(self.window, "Import as New Dataset - %s" % self.last_dataset)
+        response, filename = show_file_dialog(self.window, "Import as New Dataset")
 
         if response != Gtk.ResponseType.OK:
             return
@@ -890,11 +883,11 @@ class WeatherLog(Gtk.Application):
         try:
             validate_error = validate.validate_data(filename)
         except:
-            show_error_dialog(self.window, "Import - %s" % self.last_dataset,
+            show_error_dialog(self.window, "Import",
                               "Error importing data. Is the data in the correct format?")
             return
         if validate_error != ImportValidation.VALID:
-            show_error_dialog(self.window, "Import as New Dataset - %s" % self.last_dataset,
+            show_error_dialog(self.window, "Import as New Dataset",
                               "The data in the selected file is not valid. %s" % validate.validate_dataset_strings[validate_error])
             return
 
@@ -911,7 +904,7 @@ class WeatherLog(Gtk.Application):
         # show a dialog and cancel the action.
         valid = validate.validate_dataset(self.main_dir, name)
         if valid != DatasetValidation.VALID:
-            show_error_dialog(self.window, "Import as New Dataset - %s" % self.last_dataset,
+            show_error_dialog(self.window, "Import as New Dataset",
                               validate.validate_dataset_name_strings[valid])
             return
 
@@ -967,11 +960,11 @@ class WeatherLog(Gtk.Application):
         """Exports the data to a file."""
 
         if len(self.data) == 0:
-            show_no_data_dialog(self.window, "Export - %s" % self.last_dataset, message="There is no data to export.")
+            show_no_data_dialog(self.window, "Export", message="There is no data to export.")
             return
 
         # Get the filename.
-        response, filename = show_save_dialog(self.window, "Export - %s" % self.last_dataset)
+        response, filename = show_save_dialog(self.window, "Export")
 
         if response != Gtk.ResponseType.OK and response != DialogResponse.EXPORT_CSV and response != DialogResponse.EXPORT_HTML and response != DialogResponse.EXPORT_JSON:
             return
@@ -980,7 +973,7 @@ class WeatherLog(Gtk.Application):
         # to be clicked when no filename has been entered, causing an error. Check to make sure
         # there was a filename to work around this.
         if (response == DialogResponse.EXPORT_CSV or response == DialogResponse.EXPORT_HTML or response == DialogResponse.EXPORT_JSON) and not filename:
-            show_error_dialog(self.window, "Export - %s" % self.last_dataset, "No filename entered.")
+            show_error_dialog(self.window, "Export", "No filename entered.")
             return
 
         # Export the data.
@@ -1004,12 +997,12 @@ class WeatherLog(Gtk.Application):
         """Exports the data to Pastebin."""
 
         if len(self.data) == 0:
-            show_no_data_dialog(self.window, "Export to Pastebin - %s" % self.last_dataset,
+            show_no_data_dialog(self.window, "Export to Pastebin",
                                 message="There is no data to export.")
             return
 
         if len(self.config["pastebin"].lstrip().rstrip()) == 0:
-            show_error_dialog(self.window, "Export to Pastebin - %s" % self.last_dataset,
+            show_error_dialog(self.window, "Export to Pastebin",
                               "No API key. Please check the key entered in the Options window.")
             return
 
@@ -1031,13 +1024,13 @@ class WeatherLog(Gtk.Application):
 
         # Check the return response.
         if pastebin_response == PastebinExport.INVALID_KEY:
-            show_error_dialog(self.window, "Export to Pastebin - %s" % self.last_dataset, "Invalid API key. Please check the key entered in the Options window.")
+            show_error_dialog(self.window, "Export to Pastebin", "Invalid API key. Please check the key entered in the Options window.")
         elif pastebin_response == PastebinExport.ERROR:
-            show_error_dialog(self.window, "Export to Pastebin - %s" % self.last_dataset, "The data could not be uploaded to Pastebin:\n\n%s" % result)
+            show_error_dialog(self.window, "Export to Pastebin", "The data could not be uploaded to Pastebin:\n\n%s" % result)
         elif pastebin_response == PastebinExport.NO_CONSTANTS:
-            show_error_dialog(self.window, "Export to Pastebin - %s" % self.last_dataset, "Missing constants file. The data could not be uploaded to Pastebin.")
+            show_error_dialog(self.window, "Export to Pastebin", "Missing constants file. The data could not be uploaded to Pastebin.")
         elif pastebin_response == PastebinExport.SUCCESS:
-            response = show_alert_dialog(self.window, "Export to Pastebin - %s" % self.last_dataset, "The data has been uploaded to Pastebin, and can be accessed at the following URL:\n\n%s\n\nPress \"OK\" to open the link in a web browser." % result,
+            response = show_alert_dialog(self.window, "Export to Pastebin", "The data has been uploaded to Pastebin, and can be accessed at the following URL:\n\n%s\n\nPress \"OK\" to open the link in a web browser." % result,
                                          show_cancel=True)
             if response == Gtk.ResponseType.OK:
                 webbrowser.open(result)
