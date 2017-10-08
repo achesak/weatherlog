@@ -284,24 +284,17 @@ class WeatherLog(Gtk.Application):
         data_btn_box.add(self.edit_btn)
         data_btn_box.add(self.remove_btn)
 
-        # Create the header bar buttons: search button
-        search_btn_box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL)
-        Gtk.StyleContext.add_class(search_btn_box.get_style_context(), "linked")
+        # Create the header bar buttons: search entry
         self.search_ent = Gtk.SearchEntry()
         self.search_ent.set_placeholder_text("Search")
-        self.search_btn = Gtk.Button()
-        search_img = Gtk.Image.new_from_gicon(Gio.ThemedIcon(name="search"), Gtk.IconSize.BUTTON)
-        self.search_btn.add(search_img)
-        self.search_btn.set_tooltip_text("Search for data (Control-F)")
-        search_btn_box.add(self.search_ent)
-        search_btn_box.add(self.search_btn)
+        self.search_ent.set_tooltip_text("Search for data (Control-F)")
 
         # Create the header bar buttons: dataset button
-        self.dataset_menubtn = Gtk.Button(label="Datasets")
+        self.dataset_btn = Gtk.Button(label="Datasets")
 
         # Set up the header bar buttons.
-        self.header.pack_end(self.dataset_menubtn)
-        self.header.pack_end(search_btn_box)
+        self.header.pack_end(self.dataset_btn)
+        self.header.pack_end(self.search_ent)
         self.header.pack_end(data_btn_box)
 
         # Set up the stack.
@@ -321,7 +314,6 @@ class WeatherLog(Gtk.Application):
         self.edit_btn.connect("clicked", lambda x: self.edit())
         self.remove_btn.connect("clicked", lambda x: self.remove())
         self.search_ent.connect("activate", lambda x: self.search())
-        self.search_btn.connect("clicked", lambda x: self.search())
 
         # Bind the events.
         self.window.connect("delete-event", self.delete_event)
@@ -1476,7 +1468,6 @@ class WeatherLog(Gtk.Application):
         btns_active = len(self.data) != 0
         self.edit_btn.set_sensitive(btns_active)
         self.remove_btn.set_sensitive(btns_active)
-        self.search_btn.set_sensitive(btns_active)
 
         self.update_data()
 
