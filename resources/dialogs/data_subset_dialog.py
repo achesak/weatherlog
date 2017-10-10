@@ -27,13 +27,13 @@ class DataSubsetDialog(Gtk.Dialog):
 
         Gtk.Dialog.__init__(self, title, parent, use_header_bar=True)
         self.set_default_size(1200, 500)
+        self.add_button("Cancel", Gtk.ResponseType.CANCEL)
         self.add_button("Export", DialogResponse.EXPORT)
 
         # Create the header bar.
         header = self.get_header_bar()
         header.set_title(title)
         header.set_subtitle(subtitle)
-        header.set_show_close_button(True)
 
         # Create the data columns.
         self.liststore = Gtk.ListStore(str, str, str, str, str, str, str, str, str, str)
