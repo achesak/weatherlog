@@ -1352,8 +1352,6 @@ class WeatherLog(Gtk.Application):
         new_config["show_dates"] = opt_dlg.date_chk.get_active()
         new_config["show_units"] = opt_dlg.unit_chk.get_active()
         new_config["confirm_del"] = opt_dlg.del_chk.get_active()
-        new_config["show_pre-fill"] = opt_dlg.pdl_chk.get_active()
-        new_config["confirm_exit"] = opt_dlg.cex_chk.get_active()
         new_config["import_all"] = opt_dlg.imp_chk.get_active()
         new_config["truncate_notes"] = opt_dlg.trun_chk.get_active()
         new_config["graph_color"] = convert.rgba_to_hex(opt_dlg.graph_color_btn.get_rgba())[0:7]

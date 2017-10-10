@@ -197,23 +197,11 @@ class OptionsDialog(Gtk.Dialog):
         self.unit_chk.set_active(config["show_units"])
         int_grid.attach_next_to(self.unit_chk, self.date_chk, Gtk.PositionType.BOTTOM, 2, 1)
         
-        # Create the show pre-fill dialog checkbox.
-        self.pdl_chk = Gtk.CheckButton("Show data filling window")
-        self.pdl_chk.set_tooltip_text("Show a notification window when data fields have been automatically filled.")
-        self.pdl_chk.set_active(config["show_pre-fill"])
-        int_grid.attach_next_to(self.pdl_chk, self.unit_chk, Gtk.PositionType.BOTTOM, 2, 1)
-        
-        # Create the confirm exit checkbox.
-        self.cex_chk = Gtk.CheckButton("Confirm application close")
-        self.cex_chk.set_tooltip_text("Show a confirmation window when closing the application.")
-        self.cex_chk.set_active(config["confirm_exit"])
-        int_grid.attach_next_to(self.cex_chk, self.pdl_chk, Gtk.PositionType.BOTTOM, 2, 1)
-        
         # Create the truncate notes checkbox.
         self.trun_chk = Gtk.CheckButton("Truncate notes")
         self.trun_chk.set_tooltip_text("Display the Notes field in a truncated form for long entries.")
         self.trun_chk.set_active(config["truncate_notes"])
-        int_grid.attach_next_to(self.trun_chk, self.cex_chk, Gtk.PositionType.BOTTOM, 2, 1)
+        int_grid.attach_next_to(self.trun_chk, self.unit_chk, Gtk.PositionType.BOTTOM, 2, 1)
         
         # Create the Search tab.
         search_grid = Gtk.Grid()
