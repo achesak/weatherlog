@@ -53,12 +53,17 @@ class AddNewDialog(Gtk.Dialog):
         new_grid.set_column_spacing(5)
         new_grid.set_row_spacing(5)
         new_grid.set_border_width(5)
-        new_box.add(new_grid)
+        new_box.pack_end(new_grid, True, True, 0)
+        new_box.set_spacing(5)
+
+        # Info bar
+        self.info_bar = Gtk.InfoBar()
+        self.info_bar.set_message_type(Gtk.MessageType.INFO)
 
         # Date entry
         date_lbl = Gtk.Label("Date: ")
         date_lbl.set_alignment(0, 0.5)
-        new_grid.add(date_lbl)
+        new_grid.attach(date_lbl, 0, 1, 1, 1)
         self.date_ent = Gtk.Entry()
         self.date_ent.set_text(date)
         self.date_ent.set_editable(False)
@@ -270,6 +275,13 @@ class AddNewDialog(Gtk.Dialog):
                 self.humi_sbtn.set_value(data["humi"])
                 self.airp_sbtn.set_value(data["airp"])
                 self.clou_com.set_active(clouds.percent_to_term(data["clou"]))
+
+        # Show the dialog saying data has been prefilled.
+        if prefill and (user_location or user_zipcode) and station:
+            info_lbl = Gtk.Label("Some data has been automatically retrieved." +
+                              "\nLocation is set to %s." % station)
+            self.info_bar.get_content_area().add(info_lbl)
+            new_box.pack_start(self.info_bar, True, True, 0)
 
         # Connect 'Enter' key to the OK button.
         ok_btn = self.get_widget_for_response(response_id=Gtk.ResponseType.OK)
