@@ -346,7 +346,7 @@ class DataSubsetSelectionDialog(Gtk.Window):
 
         # If there are no conditions, don't continue.
         if len(conditions) == 0:
-            show_alert_dialog(self, "Data Subset Results - %s" % self.last_dataset, "No conditions entered.")
+            show_alert_dialog(self, "Data Subset Results", "No conditions entered.")
             return
 
         # Loop through the conditions and filter the data.
@@ -377,8 +377,8 @@ class DataSubsetSelectionDialog(Gtk.Window):
 
         # If there are no items that match the condition, don't show the main dialog.
         if len(filtered) == 0:
-            show_alert_dialog(self, "Data Subset Results - %s" % self.last_dataset,
-                              "No data matches the specified condition(s).")
+            show_alert_dialog(self, "Data Subset Results",
+                              "No data matches the specified condition%s." % ("s" if len(conditions) != 1 else ""))
             return
 
         # If reset conditions is selected, clear them.
@@ -395,7 +395,7 @@ class DataSubsetSelectionDialog(Gtk.Window):
         if response == DialogResponse.EXPORT:
 
             # Get the filename and export the info.
-            response2, filename = show_export_dialog(self, "Export Data Subset Results - %s" % self.last_dataset)
+            response2, filename = show_export_dialog(self, "Export Data Subset Results")
             if response2 == Gtk.ResponseType.OK:
                 data_list = [["WeatherLog Data Subset Results - %s - %s to %s" % (
                     self.last_dataset, (filtered[0][0] if len(filtered) != 0 else "None"),
