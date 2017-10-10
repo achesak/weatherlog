@@ -29,6 +29,8 @@ class DateSelectionDialog(Gtk.Dialog):
             for i in buttons:
                 self.add_button(i[0], i[1])
 
+        self.default_button = default_button
+
         # Create the header bar.
         header = self.get_header_bar()
         header.set_title(title)
@@ -79,5 +81,13 @@ class DateSelectionDialog(Gtk.Dialog):
         ok_btn.set_can_default(True)
         ok_btn.grab_default()
 
+        # Bind the events.
+        self.treeview.connect("row-activated", self.activated_event)
+
         # Show the dialog.
         self.show_all()
+
+    def activated_event(self, widget, treepath, column):
+        """Opens the edit dialog on double click."""
+
+        self.response(self.default_button)
