@@ -1652,12 +1652,6 @@ class WeatherLog(Gtk.Application):
     def exit(self, x=False, y=False):
         """Closes the application."""
 
-        # Confirm that the user wants to exit, if needed.
-        if self.config["confirm_exit"]:
-            response = show_question_dialog(self.window, "Quit", "Are you sure you want to close WeatherLog?")
-            if response != Gtk.ResponseType.OK:
-                return
-
         self.save()
         self.quit()
 
