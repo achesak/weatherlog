@@ -762,7 +762,7 @@ class WeatherLog(Gtk.Application):
             self.search_ent.get_style_context().add_class("search-not-found")
             return
 
-        sub_dlg = DataSubsetDialog(self.window, "Search Results", self.last_dataset, filtered, self.units,
+        sub_dlg = DataSubsetDialog(self.window, "Search", "Search results for \"%s\"" % search_term, filtered, self.units,
                                    self.config)
         response = sub_dlg.run()
         sub_dlg.destroy()
