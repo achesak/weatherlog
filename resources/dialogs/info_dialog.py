@@ -106,9 +106,9 @@ class InfoDialog(Gtk.Dialog):
         info_notebook.set_tab_pos(Gtk.PositionType.LEFT)
         self.info_notebook = info_notebook
 
-        # Tab 1: General info.
+        # Tab 1: Overview info.
         gen_box = Gtk.Box()
-        gen_box_lbl = Gtk.Label("General")
+        gen_box_lbl = Gtk.Label("Overview")
         self.info_gen_list = Gtk.ListStore(str, str)
         self.info_gen_tree = Gtk.TreeView(model=self.info_gen_list)
         gen_cate_text = Gtk.CellRendererText()
