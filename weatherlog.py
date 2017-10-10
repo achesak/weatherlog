@@ -723,28 +723,28 @@ class WeatherLog(Gtk.Application):
         if response == DialogResponse.EXPORT:
             response2, filename = show_export_dialog(self.window, "Export Info")
             if response2 == Gtk.ResponseType.OK:
-                export.html_generic([["General Info", ["Field", "Value"], info_data[0]],
-                                     ["Temperature Info", ["Field", "Value"], info_data[1]],
-                                     ["Wind Chill Info", ["Field", "Value"], info_data[2]],
-                                     ["Precipitation Info", ["Field", "Value"], info_data[3]],
-                                     ["Wind Info", ["Field", "Value"], info_data[4]],
-                                     ["Humidity Info", ["Field", "Value"], info_data[5]],
-                                     ["Air Pressure Info", ["Field", "Value"], info_data[6]],
-                                     ["Visibility Info", ["Field", "Value"], info_data[7]],
-                                     ["Cloud Cover Info", ["Field", "Value"], info_data[8]],
-                                     ["Notes Info", ["Field", "Value"], info_data[9]]], filename)
+                export.html_generic([["Overview", ["Field", "Value"], info_data[0]],
+                                     ["Temperature", ["Field", "Value"], info_data[1]],
+                                     ["Wind Chill", ["Field", "Value"], info_data[2]],
+                                     ["Precipitation", ["Field", "Value"], info_data[3]],
+                                     ["Wind", ["Field", "Value"], info_data[4]],
+                                     ["Humidity", ["Field", "Value"], info_data[5]],
+                                     ["Air Pressure", ["Field", "Value"], info_data[6]],
+                                     ["Visibility", ["Field", "Value"], info_data[7]],
+                                     ["Cloud Cover", ["Field", "Value"], info_data[8]],
+                                     ["Notes", ["Field", "Value"], info_data[9]]], filename)
                 
             response2, filename = show_export_dialog(self.window, "Export Tables")
             if response2 == Gtk.ResponseType.OK:
                 table_columns = ["Day", "Value", "Average Difference", "Low Difference", "High Difference",
                                  "Median Difference"]
-                export.html_generic([["Temperature Table", table_columns, table_data[0]],
-                                     ["Wind Chill Table", table_columns, table_data[1]],
-                                     ["Precipitation Table", table_columns, table_data[2]],
-                                     ["Wind Table", table_columns, table_data[3]],
-                                     ["Humidity Table", table_columns, table_data[4]],
-                                     ["Air Pressure Table", table_columns, table_data[5]],
-                                     ["Visibility Table", table_columns, table_data[6]]], filename)
+                export.html_generic([["Temperature", table_columns, table_data[0]],
+                                     ["Wind Chill", table_columns, table_data[1]],
+                                     ["Precipitation", table_columns, table_data[2]],
+                                     ["Wind", table_columns, table_data[3]],
+                                     ["Humidity", table_columns, table_data[4]],
+                                     ["Air Pressure", table_columns, table_data[5]],
+                                     ["Visibility", table_columns, table_data[6]]], filename)
 
     def search(self):
         """Searches for data."""
