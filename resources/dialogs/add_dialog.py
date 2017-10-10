@@ -25,7 +25,7 @@ import resources.clouds as clouds
 class AddNewDialog(Gtk.Dialog):
     """Shows the "Add New" dialog."""
 
-    def __init__(self, parent, dataset, user_location, user_zipcode, prefill, show_prefill_dlg, units, config,
+    def __init__(self, parent, dataset, user_location, user_zipcode, prefill, units, config,
                  prefill_data=()):
         """Create the dialog."""
 
@@ -259,7 +259,7 @@ class AddNewDialog(Gtk.Dialog):
 
             if not station:
                 error_message = data if isinstance(data, str) else data["error"]
-                show_error_dialog(self, "Add New Data - %s" % dataset, "Error:\n\n%s" % error_message)
+                show_error_dialog(self, "Add New Data", "Error:\n\n%s" % error_message)
             else:
                 self.temp_sbtn.set_value(data["temp"])
                 self.chil_sbtn.set_value(data["chil"])
@@ -278,12 +278,6 @@ class AddNewDialog(Gtk.Dialog):
 
         # Show the dialog.
         self.show_all()
-
-        # Show the dialog saying data has been prefilled.
-        if show_prefill_dlg and prefill and (user_location or user_zipcode) and station:
-            show_alert_dialog(self, "Add New Data",
-                              "Some fields have been automatically filled using data from OpenWeatherMap." +
-                              "\n\nLocation is set to %s." % station)
 
     def select_date(self):
         """Shows the date selection dialog."""
