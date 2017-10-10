@@ -250,6 +250,7 @@ def filter_quick(data, search_term, case_insensitive):
     filtered = []
     
     # Convert the case of the data if needed.
+    search_term = search_term.lower()
     if case_insensitive:
         new_data = []
         for row in data:
