@@ -42,8 +42,9 @@ class EditDialog(Gtk.Dialog):
         # Create the grids.
         new_box = self.get_content_area()
         new_grid = Gtk.Grid()
-        new_grid.set_column_spacing(3)
-        new_grid.set_row_spacing(3)
+        new_grid.set_column_spacing(5)
+        new_grid.set_row_spacing(5)
+        new_grid.set_border_width(5)
         new_box.add(new_grid)
 
         # Temperature entry
