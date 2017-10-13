@@ -134,20 +134,6 @@ class WeatherLog(Gtk.Application):
         action.connect("activate", lambda x, y: self.exit(x, y))
         self.add_action(action)
 
-        # Build the file submenu.
-        action = Gio.SimpleAction.new("import", None)
-        action.connect("activate", lambda x, y: self.import_data())
-        self.add_action(action)
-        action = Gio.SimpleAction.new("import_dataset", None)
-        action.connect("activate", lambda x, y: self.import_new_dataset())
-        self.add_action(action)
-        action = Gio.SimpleAction.new("export", None)
-        action.connect("activate", lambda x, y: self.export_file())
-        self.add_action(action)
-        action = Gio.SimpleAction.new("export_pastebin", None)
-        action.connect("activate", lambda x, y: self.export_pastebin())
-        self.add_action(action)
-
         # Build the non-menu actions.
         action = Gio.SimpleAction.new("add", None)
         action.connect("activate", lambda x, y: self.add_new())
@@ -161,10 +147,18 @@ class WeatherLog(Gtk.Application):
         action = Gio.SimpleAction.new("search", None)
         action.connect("activate", lambda x, y: self.focus_search())
         self.add_action(action)
+        action = Gio.SimpleAction.new("import", None)
+        action.connect("activate", lambda x, y: self.import_data())
+        self.add_action(action)
+        action = Gio.SimpleAction.new("export", None)
+        action.connect("activate", lambda x, y: self.export_file())
+        self.add_action(action)
 
         self.set_accels_for_action("app.add", ["<Primary>n"])
         self.set_accels_for_action("app.remove", ["<Primary>r"])
         self.set_accels_for_action("app.search", ["<Primary>f"])
+        self.set_accels_for_action("app.import", ["<Primary>o"])
+        self.set_accels_for_action("app.export", ["<Primary>s"])
 
         builder = Gtk.Builder.new_from_string(self.menu_data, -1)
         self.set_app_menu(builder.get_object("app-menu"))
@@ -201,7 +195,6 @@ class WeatherLog(Gtk.Application):
 
         # Create the header bar.
         self.header = Gtk.HeaderBar()
-        self.header.set_title("WeatherLog")
         self.header.set_show_close_button(True)
         self.window.set_titlebar(self.header)
 
@@ -263,7 +256,7 @@ class WeatherLog(Gtk.Application):
         self.stack.set_transition_type(Gtk.StackTransitionType.SLIDE_LEFT_RIGHT)
         self.stack_switcher = Gtk.StackSwitcher()
         self.stack_switcher.set_stack(self.stack)
-        self.header.pack_start(self.stack_switcher)
+        self.header.set_custom_title(self.stack_switcher)
 
         # Create the header bar buttons: data buttons
         data_btn_box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL)
@@ -292,10 +285,31 @@ class WeatherLog(Gtk.Application):
         # Create the header bar buttons: dataset button
         self.dataset_btn = Gtk.Button(label="Datasets")
 
+        # Create the header bar buttons: file menu button
+        self.file_btn = Gtk.MenuButton()
+        file_img = Gtk.Image.new_from_gicon(Gio.ThemedIcon(name="document-open"), Gtk.IconSize.BUTTON)
+        self.file_btn.add(file_img)
+        file_menu = Gtk.Menu()
+        self.file_btn.set_popup(file_menu)
+        action = Gtk.MenuItem("Import")
+        action.connect("activate", lambda x: self.import_data())
+        file_menu.append(action)
+        action = Gtk.MenuItem("Import as New Dataset")
+        action.connect("activate", lambda x: self.import_new_dataset())
+        file_menu.append(action)
+        action = Gtk.MenuItem("Export")
+        action.connect("activate", lambda x: self.export_file())
+        file_menu.append(action)
+        action = Gtk.MenuItem("Export to Pastebin")
+        action.connect("activate", lambda x: self.export_pastebin())
+        file_menu.append(action)
+        file_menu.show_all()
+
         # Set up the header bar buttons.
+        self.header.pack_start(data_btn_box)
+        self.header.pack_start(self.search_ent)
+        self.header.pack_end(self.file_btn)
         self.header.pack_end(self.dataset_btn)
-        self.header.pack_end(self.search_ent)
-        self.header.pack_end(data_btn_box)
 
         # Set up the stack.
         self.stack.add_titled(self.data_frame, "data", "Data")
@@ -304,9 +318,7 @@ class WeatherLog(Gtk.Application):
         self.stack.add_titled(self.graph_frame, "graphs", "Graphs")
 
         # Build the UI.
-        grid = Gtk.Grid()
-        grid.add(self.stack)
-        self.window.add(grid)
+        self.window.add(self.stack)
         self.treeview.grab_focus()
 
         # Bind the button events.
@@ -1472,16 +1484,7 @@ class WeatherLog(Gtk.Application):
     def update_title(self):
         """Updates the window title."""
 
-        if self.config["show_dates"]:
-            if len(self.data) != 0:
-                new_title = "%s - %s to %s" % (self.last_dataset, self.data[0][0], self.data[-1][0])
-            else:
-                new_title = "%s - No data" % self.last_dataset
-        else:
-            new_title = self.last_dataset
-
-        self.header.set_subtitle(new_title)
-        return new_title
+        self.dataset_btn.set_label(self.last_dataset)
 
     def update_columns(self):
         """Updates the list column titles."""

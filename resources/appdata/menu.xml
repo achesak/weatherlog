@@ -19,33 +19,6 @@
             </item>
         </section>
         <section>
-            <submenu>
-                <attribute name="label" translatable="yes">_File</attribute>
-                <section>
-                    <item>
-                        <attribute name="action">app.import</attribute>
-                        <attribute name="label" translatable="yes">Import</attribute>
-                        <attribute name="accel">&lt;Primary&gt;o</attribute>
-                    </item>
-                    <item>
-                        <attribute name="action">app.import_dataset</attribute>
-                        <attribute name="label" translatable="yes">Import as New Dataset</attribute>
-                    </item>
-                </section>
-                <section>
-                    <item>
-                        <attribute name="action">app.export</attribute>
-                        <attribute name="label" translatable="yes">Export</attribute>
-                        <attribute name="accel">&lt;Primary&gt;s</attribute>
-                    </item>
-                    <item>
-                        <attribute name="action">app.export_pastebin</attribute>
-                        <attribute name="label" translatable="yes">Export to Pastebin</attribute>
-                    </item>
-                </section>
-            </submenu>
-        </section>
-        <section>
             <item>
                 <attribute name="action">app.options</attribute>
                 <attribute name="label" translatable="yes">_Preferences</attribute>
