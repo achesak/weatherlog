@@ -344,6 +344,9 @@ class OptionsDialog(Gtk.Dialog):
         notebook.append_page(gen_grid, gen_grid_lbl)
         notebook.append_page(int_grid, int_grid_lbl)
         notebook.append_page(other_grid, other_grid_lbl)
+        notebook.child_set_property(gen_grid, "tab-expand", True)
+        notebook.child_set_property(int_grid, "tab-expand", True)
+        notebook.child_set_property(other_grid, "tab-expand", True)
         
         # Connect 'Enter' key to the OK button.
         ok_btn = self.get_widget_for_response(response_id=Gtk.ResponseType.OK)
