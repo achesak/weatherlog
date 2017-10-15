@@ -1360,7 +1360,7 @@ class WeatherLog(Gtk.Application):
         self.update_title()
 
     def options(self):
-        """Shows the Options dialog."""
+        """Shows the Preferences dialog."""
 
         current_units = self.config["units"]
 
@@ -1371,7 +1371,6 @@ class WeatherLog(Gtk.Application):
         new_config["pre-fill"] = opt_dlg.pre_chk.get_active()
         new_config["restore"] = opt_dlg.win_chk.get_active()
         new_config["units"] = opt_dlg.unit_com.get_active_text().lower()
-        new_config["show_dates"] = opt_dlg.date_chk.get_active()
         new_config["show_units"] = opt_dlg.unit_chk.get_active()
         new_config["confirm_del"] = opt_dlg.del_chk.get_active()
         new_config["import_all"] = opt_dlg.imp_chk.get_active()
@@ -1392,8 +1391,6 @@ class WeatherLog(Gtk.Application):
         new_config["openweathermap"] = opt_dlg.owm_ent.get_text()
         new_config["forecast_period"] = opt_dlg.fcast_sbtn.get_value()
         new_config["default_selection_mode"] = opt_dlg.smode_com.get_active_text()
-        new_config["json_indent"] = opt_dlg.ind_chk.get_active()
-        new_config["json_indent_amount"] = int(opt_dlg.iamt_sbtn.get_value())
         new_config["reset_search"] = opt_dlg.rsearch_chk.get_active()
         opt_dlg.destroy()
 
