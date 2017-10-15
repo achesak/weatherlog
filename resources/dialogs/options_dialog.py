@@ -160,7 +160,7 @@ class OptionsDialog(Gtk.Dialog):
         int_grid.set_vexpand(True)
         int_grid.set_column_spacing(10)
         int_grid.set_row_spacing(5)
-        int_grid.set_border_width(5)
+        int_grid.set_border_width(10)
         int_grid_lbl = Gtk.Label("Interface")
         
         # Create the Restore window size checkbox.
