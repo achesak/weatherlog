@@ -32,8 +32,9 @@ class ExportPastebinDialog(Gtk.Dialog):
         # Create the grid.
         nam_box = self.get_content_area()
         nam_grid = Gtk.Grid()
-        nam_grid.set_column_spacing(3)
-        nam_grid.set_row_spacing(3)
+        nam_grid.set_column_spacing(5)
+        nam_grid.set_row_spacing(5)
+        nam_grid.set_border_width(5)
         nam_box.add(nam_grid)
         
         # Create the labels and entries.

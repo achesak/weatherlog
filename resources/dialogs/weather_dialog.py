@@ -45,7 +45,7 @@ class CurrentWeatherDialog(Gtk.Dialog):
         # Create the location entry grid.
         loc_frame = Gtk.Frame()
         loc_frame.set_label("Location")
-        loc_frame.set_border_width(5)
+        loc_frame.set_border_width(10)
         loc_grid = Gtk.Grid()
         loc_grid.set_column_spacing(5)
         loc_grid.set_row_spacing(5)
