@@ -119,25 +119,12 @@ class OptionsDialog(Gtk.Dialog):
         self.cnt_ent.set_text(config["country"])
         gen_grid.attach_next_to(self.cnt_ent, cnt_lbl, Gtk.PositionType.RIGHT, 1, 1)
 
-        # Create the forecast period spinbutton.
-        fcast_lbl = Gtk.Label("Forecast period: ")
-        fcast_lbl.set_tooltip_text("Number of days for which to display a forecast.")
-        fcast_lbl.set_alignment(0, 0.5)
-        fcast_lbl.set_margin_left(20)
-        gen_grid.attach_next_to(fcast_lbl, cnt_lbl, Gtk.PositionType.BOTTOM, 1, 1)
-        fcast_adj = Gtk.Adjustment(lower=1, upper=16, step_increment=1)
-        self.fcast_sbtn = Gtk.SpinButton(digits=0, adjustment=fcast_adj)
-        self.fcast_sbtn.set_numeric(False)
-        self.fcast_sbtn.set_value(config["forecast_period"])
-        self.fcast_sbtn.set_hexpand(True)
-        gen_grid.attach_next_to(self.fcast_sbtn, fcast_lbl, Gtk.PositionType.RIGHT, 1, 1)
-
         # Create the search header label.
         gen_search_lbl = Gtk.Label()
         gen_search_lbl.set_markup("<b>Search</b>")
         gen_search_lbl.set_alignment(0, 0.5)
         gen_search_lbl.set_margin_top(10)
-        gen_grid.attach_next_to(gen_search_lbl, fcast_lbl, Gtk.PositionType.BOTTOM, 2, 1)
+        gen_grid.attach_next_to(gen_search_lbl, cnt_lbl, Gtk.PositionType.BOTTOM, 2, 1)
 
         # Create the default case insensitive checkbox.
         self.case_chk = Gtk.CheckButton("Case insensitive")

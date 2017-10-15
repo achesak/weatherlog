@@ -1389,7 +1389,6 @@ class WeatherLog(Gtk.Application):
         new_config["country"] = opt_dlg.cnt_ent.get_text()
         new_config["location_type"] = "city" if opt_dlg.use_city_rbtn.get_active() else "zip"
         new_config["openweathermap"] = opt_dlg.owm_ent.get_text()
-        new_config["forecast_period"] = opt_dlg.fcast_sbtn.get_value()
         new_config["default_selection_mode"] = opt_dlg.smode_com.get_active_text()
         new_config["reset_search"] = opt_dlg.rsearch_chk.get_active()
         opt_dlg.destroy()
