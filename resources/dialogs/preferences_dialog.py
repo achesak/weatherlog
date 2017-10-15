@@ -3,7 +3,7 @@
 
 ################################################################################
 #
-# WeatherLog: dialogs/options_dialog.py
+# WeatherLog: dialogs/preferences_dialog.py
 # This dialog shows and alters the application configuration.
 #
 ################################################################################
@@ -17,8 +17,8 @@ import resources.convert as convert
 from resources.constants import *
 
 
-class OptionsDialog(Gtk.Dialog):
-    """Shows the "Options" dialog."""
+class PreferencesDialog(Gtk.Dialog):
+    """Shows the preferences dialog."""
     
     def __init__(self, parent, config):
         """Create the dialog."""

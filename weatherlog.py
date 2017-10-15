@@ -74,7 +74,7 @@ from resources.dialogs.data_subset_selection_dialog import DataSubsetSelectionDi
 from resources.dialogs.data_subset_dialog import DataSubsetDialog
 from resources.dialogs.export_pastebin_dialog import ExportPastebinDialog
 from resources.dialogs.weather_dialog import CurrentWeatherDialog
-from resources.dialogs.options_dialog import OptionsDialog
+from resources.dialogs.preferences_dialog import PreferencesDialog
 from resources.dialogs.about_dialog import WeatherLogAboutDialog
 from resources.dialogs.misc_dialogs import *
 
@@ -1365,7 +1365,7 @@ class WeatherLog(Gtk.Application):
         current_units = self.config["units"]
 
         # Get the new options.
-        opt_dlg = OptionsDialog(self.window, self.config)
+        opt_dlg = PreferencesDialog(self.window, self.config)
         response = opt_dlg.run()
         new_config = self.config
         new_config["pre-fill"] = opt_dlg.pre_chk.get_active()
