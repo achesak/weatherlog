@@ -30,7 +30,7 @@ class CurrentWeatherDialog(Gtk.Dialog):
         """Create the dialog."""
         
         Gtk.Dialog.__init__(self, title, parent, Gtk.DialogFlags.MODAL, use_header_bar=True)
-        self.set_default_size(600, 700)
+        self.set_default_size(600, 750)
 
         self.config = config
         self.units = units
@@ -188,5 +188,5 @@ class CurrentWeatherDialog(Gtk.Dialog):
         for i in data[1]:
             self.for_list.append(i)
 
-        self.wea_loc_lbl.set_markup("<big>" + location + "</big>")
+        self.wea_loc_lbl.set_markup("<big><big>" + location + "</big></big>")
         self.wea_img.set_from_file(image_url)
