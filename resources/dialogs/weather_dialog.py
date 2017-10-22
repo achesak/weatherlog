@@ -117,11 +117,11 @@ class CurrentWeatherDialog(Gtk.Dialog):
         wea_value_col = Gtk.TreeViewColumn("Value", wea_value_text, text=1)
         wea_value_col.set_expand(True)
         self.wea_tree.append_column(wea_value_col)
-        wea_box.pack_end(self.wea_tree, True, True, 0)
         wea_win = Gtk.ScrolledWindow()
         wea_win.set_hexpand(True)
         wea_win.set_vexpand(True)
-        wea_win.add(wea_box)
+        wea_win.add(self.wea_tree)
+        wea_box.pack_end(wea_win, True, True, 0)
         
         # Tab 2: Forecast info.
         for_box = Gtk.Box()
@@ -149,7 +149,7 @@ class CurrentWeatherDialog(Gtk.Dialog):
         header.set_custom_title(stack_switcher)
 
         # Set up the stack.
-        stack.add_titled(wea_win, "weather", "Weather")
+        stack.add_titled(wea_box, "weather", "Weather")
         stack.add_titled(for_win, "forecast", "Forecast")
 
         # Get the data
