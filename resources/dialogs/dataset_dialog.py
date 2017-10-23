@@ -3,8 +3,8 @@
 
 ################################################################################
 #
-# WeatherLog: dialogs/dataset_add_select_dialog.py
-# This dialog creates or selects datasets.
+# WeatherLog: dialogs/dataset_dialog.py
+# This dialog handles dataset management.
 #
 ################################################################################
 
