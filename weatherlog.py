@@ -23,8 +23,6 @@ from gi.repository import Gtk, Gdk, GdkPixbuf, Gio
 import webbrowser
 # Import datetime for date operations.
 import datetime
-# Import modules for working with directories.
-import shutil
 import os
 import os.path
 # Import sys for closing the application.
@@ -69,7 +67,6 @@ from resources.dialogs.date_selection_dialog import DateSelectionDialog
 from resources.dialogs.calendar_range_dialog import CalendarRangeDialog
 from resources.dialogs.info_dialog import InfoDialog
 from resources.dialogs.dataset_dialog import DatasetDialog
-from resources.dialogs.dataset_selection_dialog import DatasetSelectionDialog
 from resources.dialogs.dataset_add_select_dialog import DatasetAddSelectionDialog
 from resources.dialogs.data_subset_selection_dialog import DataSubsetSelectionDialog
 from resources.dialogs.data_subset_dialog import DataSubsetDialog
@@ -1081,43 +1078,17 @@ class WeatherLog(Gtk.Application):
     def manage_datasets(self):
         """Opens the dataset management dialog."""
 
-        if len(self.data) == 0:
-            show_no_data_dialog(self.window, "Copy Data", message="There is no data to copy.")
-            return
-
-        # Get the dates and datasets.
-        dates_list = datasets.get_column_list(self.data, [0])
-        dates2 = datasets.get_column(self.data, 0)
-        dataset_list = io.get_dataset_list(self.main_dir, self.last_dataset)
-
-        # Get the new name or selected dataset.
-        dat_dlg = DatasetDialog(self.window, dataset_list, self.main_dir, self.last_dataset)
-        response1 = dat_dlg.run()
-        new_name = dat_dlg.add_ent.get_text().lstrip().rstrip()
-        model1, treeiter1 = dat_dlg.treeview.get_selection().get_selected()
+        # Show the dataset dialog.
+        dat_dlg = DatasetDialog(self.window, self.main_dir, self.last_dataset, self.config)
+        response = dat_dlg.run()
         dat_dlg.destroy()
 
-    def switch_dataset(self, event):
-        """Switches datasets."""
-
-        # Get the list of datasets.
-        datasets_list = io.get_dataset_list(self.main_dir, self.last_dataset)
-
-        if len(datasets_list) == 0:
-            show_alert_dialog(self.window, "Switch Dataset", "There are no other datasets.")
+        # Get the dataset name.
+        name = dat_dlg.switch_name
+        if name is None:
             return
 
-        # Get the dataset to switch to.
-        swi_dlg = DatasetSelectionDialog(self.window, "Switch Dataset", datasets_list)
-        response = swi_dlg.run()
-        model, treeiter = swi_dlg.treeview.get_selection().get_selected()
-        swi_dlg.destroy()
-
-        if response != Gtk.ResponseType.OK or treeiter is None:
-            return
-
-        # Get the dataset name and clear the old data.
-        name = model[treeiter][0]
+        # Clear the old data.
         self.data[:] = []
         self.liststore.clear()
 
@@ -1129,168 +1100,6 @@ class WeatherLog(Gtk.Application):
         self.update_list()
         self.update_title()
         self.save()
-
-    def add_dataset(self, event):
-        """Adds a new dataset."""
-
-        # Get the name for the new dataset.
-        new_dlg = GenericEntryDialog(self.window, title="Add Dataset", message="Enter dataset name", filter_dataset_name=True)
-        response = new_dlg.run()
-        name = new_dlg.nam_ent.get_text().lstrip().rstrip()
-        new_dlg.destroy()
-
-        if response != Gtk.ResponseType.OK:
-            return
-
-        # Validate the name. If the name isn't valid, don't continue.
-        valid = validate.validate_dataset(self.main_dir, name)
-        if valid != DatasetValidation.VALID and valid != DatasetValidation.IN_USE:
-            show_error_dialog(self.window, "Add Dataset", validate.validate_dataset_name_strings[valid])
-            return
-
-        # If the name is already in use, ask the user is they want to delete the old dataset.
-        elif valid == DatasetValidation.IN_USE:
-            del_old = show_question_dialog(self.window, "Add Dataset", "%s\n\nWould you like to delete the existing dataset?" %
-                                           validate.validate_dataset_name_strings[valid])
-            if del_old != Gtk.ResponseType.OK:
-                return
-
-            shutil.rmtree("%s/datasets/%s" % (self.main_dir, name))
-
-        # Create the new dataset and clear the old data.
-        io.write_blank_dataset(self.main_dir, name)
-        io.write_metadata(self.main_dir, name, now=True)
-        self.last_dataset = name
-        self.data[:] = []
-        self.liststore.clear()
-
-        # Update the title.
-        self.save()
-        self.update_title()
-        self.update_data()
-
-    def remove_dataset(self, event):
-        """Removes a dataset."""
-
-        # Get the list of datasets.
-        starting_datasets = io.get_dataset_list(self.main_dir, self.last_dataset, exclude_current=False)
-
-        # Get the datasets to remove.
-        rem_dlg = DatasetSelectionDialog(self.window, "Remove Datasets", starting_datasets,
-                                         select_mode=DatasetSelectionMode.MULTIPLE)
-        response = rem_dlg.run()
-        model, treeiter = rem_dlg.treeview.get_selection().get_selected_rows()
-        rem_dlg.destroy()
-
-        if response != Gtk.ResponseType.OK or treeiter is None:
-            return
-
-        # Get the datasets.
-        datasets_list = []
-        for i in treeiter:
-            datasets_list.append(model[i][0])
-
-        datasets_list_string = "\n\nSelected dataset%s:" % ("" if len(datasets_list) == 1 else "s")
-        for dataset in datasets_list:
-            datasets_list_string += "\n" + dataset
-
-        if self.config["confirm_del"]:
-            response = show_question_dialog(self.window, "Remove Datasets", "Are you sure you want to remove the dataset%s? This action cannot be undone.%s" % ("" if len(datasets_list) == 1 else "s", datasets_list_string))
-            if response != Gtk.ResponseType.OK:
-                return
-
-        # Delete the selected datasets.
-        for name in datasets_list:
-            shutil.rmtree("%s/datasets/%s" % (self.main_dir, name))
-
-        # If the user deleted all the datasets, create a new one.
-        if len(datasets_list) == len(starting_datasets):
-            self.last_dataset = "Main Dataset"
-            self.data = io.read_dataset(main_dir=self.main_dir, name=self.last_dataset)
-            io.write_metadata(self.main_dir, self.last_dataset, now=True)
-
-        # If the user did not delete all the datasets but deleted the current one, switch to the "first" of the rest:
-        elif self.last_dataset in datasets_list:
-
-            dataset_list = io.get_dataset_list(self.main_dir, self.last_dataset, exclude_current=False)
-            if "Main Dataset" in datasets.get_column(dataset_list, 0):
-                new_dataset = "Main Dataset"
-            else:
-                new_dataset = dataset_list[0][0]
-
-            self.data = io.read_dataset(main_dir=self.main_dir, name=new_dataset)
-            self.last_dataset = new_dataset
-
-        # Update the title and save the data.
-        self.update_list()
-        self.update_title()
-        self.save()
-
-    def rename_dataset(self, event):
-        """Renames a dataset."""
-
-        # Get the list of datasets.
-        datasets_list = io.get_dataset_list(self.main_dir, self.last_dataset, exclude_current=False)
-
-        # Get the dataset to rename.
-        rds_dlg = DatasetSelectionDialog(self.window, "Rename Dataset", datasets_list)
-        response = rds_dlg.run()
-        model, treeiter = rds_dlg.treeview.get_selection().get_selected()
-        rds_dlg.destroy()
-
-        if response != Gtk.ResponseType.OK or treeiter is None:
-            return
-
-        # Get the dataset name.
-        old_name = model[treeiter][0]
-
-        # Get the new dataset name.
-        ren_dlg = GenericEntryDialog(self.window, title="Rename Dataset", message="Enter new name for \"%s\"" % old_name)
-        response = ren_dlg.run()
-        new_name = ren_dlg.nam_ent.get_text().lstrip().rstrip()
-        ren_dlg.destroy()
-
-        if response != Gtk.ResponseType.OK:
-            return
-
-        if new_name == old_name:
-            show_error_dialog(self.window, "Rename Dataset", "The new name is the same as the old name.")
-            return
-
-        # Validate the name. If the name isn't valid, don't continue.
-        valid = validate.validate_dataset(self.main_dir, new_name)
-        if valid != DatasetValidation.VALID and valid != DatasetValidation.IN_USE:
-            show_error_dialog(self.window, "Rename Dataset", validate.validate_dataset_name_strings[valid])
-            return
-
-        # If the name is already in use, ask the user is they want to delete the old dataset.
-        elif valid == DatasetValidation.IN_USE:
-            del_old = show_question_dialog(self.window, "Rename Dataset",
-                                           "%s\n\nWould you like to delete the existing dataset?" %
-                                           validate.validate_dataset_name_strings[valid])
-            if del_old != Gtk.ResponseType.OK:
-                return
-
-            shutil.rmtree("%s/datasets/%s" % (self.main_dir, new_name))
-
-        # Rename the directory.
-        os.rename("%s/datasets/%s" % (self.main_dir, old_name), "%s/datasets/%s" % (self.main_dir, new_name))
-        now = datetime.datetime.now()
-        modified = "%d/%d/%d" % (now.day, now.month, now.year)
-        creation, modified2 = io.get_metadata(self.main_dir, new_name)
-        io.write_metadata(self.main_dir, new_name, creation, modified)
-
-        # If the renamed dataset is the open one, switch to the renamed dataset:
-        if old_name == self.last_dataset:
-            self.data[:] = []
-            self.liststore.clear()
-
-            self.data = io.read_dataset(main_dir=self.main_dir, name=new_name)
-            self.last_dataset = new_name
-            self.update_list()
-
-        # Update the title.
-        self.update_title()
 
     def copy_data_dataset(self, event):
         """Copies or moves data to another dataset."""
