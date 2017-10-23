@@ -68,6 +68,7 @@ from resources.dialogs.entry_dialog import GenericEntryDialog
 from resources.dialogs.date_selection_dialog import DateSelectionDialog
 from resources.dialogs.calendar_range_dialog import CalendarRangeDialog
 from resources.dialogs.info_dialog import InfoDialog
+from resources.dialogs.dataset_dialog import DatasetDialog
 from resources.dialogs.dataset_selection_dialog import DatasetSelectionDialog
 from resources.dialogs.dataset_add_select_dialog import DatasetAddSelectionDialog
 from resources.dialogs.data_subset_selection_dialog import DataSubsetSelectionDialog
@@ -272,15 +273,15 @@ class WeatherLog(Gtk.Application):
         data_btn_box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL)
         Gtk.StyleContext.add_class(data_btn_box.get_style_context(), "linked")
         self.add_btn = Gtk.Button()
-        add_img = Gtk.Image.new_from_gicon(Gio.ThemedIcon(name="add"), Gtk.IconSize.BUTTON)
+        add_img = Gtk.Image.new_from_gicon(Gio.ThemedIcon(name="list-add-symbolic"), Gtk.IconSize.BUTTON)
         self.add_btn.add(add_img)
         self.add_btn.set_tooltip_text("Add more data (Control-N)")
         self.edit_btn = Gtk.Button()
-        edit_img = Gtk.Image.new_from_gicon(Gio.ThemedIcon(name="edit"), Gtk.IconSize.BUTTON)
+        edit_img = Gtk.Image.new_from_gicon(Gio.ThemedIcon(name="edit-symbolic"), Gtk.IconSize.BUTTON)
         self.edit_btn.add(edit_img)
-        self.edit_btn.set_tooltip_text("Edit existing data")
+        self.edit_btn.set_tooltip_text("Edit data")
         self.remove_btn = Gtk.Button()
-        remove_img = Gtk.Image.new_from_gicon(Gio.ThemedIcon(name="remove"), Gtk.IconSize.BUTTON)
+        remove_img = Gtk.Image.new_from_gicon(Gio.ThemedIcon(name="list-remove-symbolic"), Gtk.IconSize.BUTTON)
         self.remove_btn.add(remove_img)
         self.remove_btn.set_tooltip_text("Remove data (Control-R)")
         data_btn_box.add(self.add_btn)
@@ -297,7 +298,7 @@ class WeatherLog(Gtk.Application):
 
         # Create the header bar buttons: file menu button
         self.file_btn = Gtk.MenuButton()
-        file_img = Gtk.Image.new_from_gicon(Gio.ThemedIcon(name="document-open"), Gtk.IconSize.BUTTON)
+        file_img = Gtk.Image.new_from_gicon(Gio.ThemedIcon(name="document-open-symbolic"), Gtk.IconSize.BUTTON)
         self.file_btn.add(file_img)
         file_menu = Gtk.Menu()
         self.file_btn.set_popup(file_menu)
@@ -336,6 +337,7 @@ class WeatherLog(Gtk.Application):
         self.edit_btn.connect("clicked", lambda x: self.edit())
         self.remove_btn.connect("clicked", lambda x: self.remove())
         self.search_ent.connect("activate", lambda x: self.search())
+        self.dataset_btn.connect("clicked", lambda x: self.manage_datasets())
 
         # Bind the events.
         self.window.connect("delete-event", self.delete_event)
@@ -1075,6 +1077,25 @@ class WeatherLog(Gtk.Application):
                                          show_cancel=True)
             if response == Gtk.ResponseType.OK:
                 webbrowser.open(result)
+
+    def manage_datasets(self):
+        """Opens the dataset management dialog."""
+
+        if len(self.data) == 0:
+            show_no_data_dialog(self.window, "Copy Data", message="There is no data to copy.")
+            return
+
+        # Get the dates and datasets.
+        dates_list = datasets.get_column_list(self.data, [0])
+        dates2 = datasets.get_column(self.data, 0)
+        dataset_list = io.get_dataset_list(self.main_dir, self.last_dataset)
+
+        # Get the new name or selected dataset.
+        dat_dlg = DatasetDialog(self.window, dataset_list, self.main_dir, self.last_dataset)
+        response1 = dat_dlg.run()
+        new_name = dat_dlg.add_ent.get_text().lstrip().rstrip()
+        model1, treeiter1 = dat_dlg.treeview.get_selection().get_selected()
+        dat_dlg.destroy()
 
     def switch_dataset(self, event):
         """Switches datasets."""
