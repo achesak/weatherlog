@@ -97,8 +97,8 @@ class WeatherLog(Gtk.Application):
         Gtk.Application.do_startup(self)
 
         # Get the application's data, constants, and user data.
-        self.version, self.title, self.menu_data, self.style_data, self.icon_small, self.icon_medium, self.default_width, \
-            self.default_height, self.help_link = launch.get_ui_info()
+        self.version, self.title, self.menu_data, self.file_menu_data, self.style_data, self.icon_small, \
+            self.icon_medium, self.default_width, self.default_height, self.help_link = launch.get_ui_info()
         self.main_dir, self.conf_dir = launch.get_main_dir()
         self.config = launch.get_config(self.conf_dir)
         launch.ensure_files_exist(self.main_dir, self.conf_dir)
@@ -148,8 +148,14 @@ class WeatherLog(Gtk.Application):
         action = Gio.SimpleAction.new("import", None)
         action.connect("activate", lambda x, y: self.import_data())
         self.add_action(action)
+        action = Gio.SimpleAction.new("import_new_dataset", None)
+        action.connect("activate", lambda x, y: self.import_new_dataset())
+        self.add_action(action)
         action = Gio.SimpleAction.new("export", None)
         action.connect("activate", lambda x, y: self.export_file())
+        self.add_action(action)
+        action = Gio.SimpleAction.new("export_pastebin", None)
+        action.connect("activate", lambda x, y: self.export_pastebin())
         self.add_action(action)
 
         self.set_accels_for_action("app.add", ["<Primary>n"])
@@ -297,21 +303,10 @@ class WeatherLog(Gtk.Application):
         self.file_btn = Gtk.MenuButton()
         file_img = Gtk.Image.new_from_gicon(Gio.ThemedIcon(name="document-open-symbolic"), Gtk.IconSize.BUTTON)
         self.file_btn.add(file_img)
-        file_menu = Gtk.Menu()
-        self.file_btn.set_popup(file_menu)
-        action = Gtk.MenuItem("Import")
-        action.connect("activate", lambda x: self.import_data())
-        file_menu.append(action)
-        action = Gtk.MenuItem("Import as New Dataset")
-        action.connect("activate", lambda x: self.import_new_dataset())
-        file_menu.append(action)
-        action = Gtk.MenuItem("Export")
-        action.connect("activate", lambda x: self.export_file())
-        file_menu.append(action)
-        action = Gtk.MenuItem("Export to Pastebin")
-        action.connect("activate", lambda x: self.export_pastebin())
-        file_menu.append(action)
-        file_menu.show_all()
+        file_builder = Gtk.Builder.new_from_string(self.file_menu_data, -1)
+        file_menu = file_builder.get_object("file-menu")
+        self.file_popover = Gtk.Popover.new_from_model(self.file_btn, file_menu)
+        self.file_btn.set_popover(self.file_popover)
 
         # Set up the header bar buttons.
         self.header.pack_start(data_btn_box)

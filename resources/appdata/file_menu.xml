@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<interface>
+  <menu id="file-menu">
+    <section>
+        <item>
+            <attribute name="label">Import</attribute>
+            <attribute name="action">app.import</attribute>
+        </item>
+        <item>
+            <attribute name="label">Import as New Dataset</attribute>
+            <attribute name="action">app.import_new_dataset</attribute>
+        </item>
+        <item>
+            <attribute name="label">Export</attribute>
+            <attribute name="action">app.export</attribute>
+        </item>
+        <item>
+            <attribute name="label">Export to Pastebin</attribute>
+            <attribute name="action">app.export_pastebin</attribute>
+        </item>
+    </section>
+  </menu>
+</interface>
