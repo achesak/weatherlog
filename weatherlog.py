@@ -123,7 +123,7 @@ class WeatherLog(Gtk.Application):
         action.connect("activate", lambda x, y: self.data_range())
         self.add_action(action)
         action = Gio.SimpleAction.new("options", None)
-        action.connect("activate", lambda x, y: self.options())
+        action.connect("activate", lambda x, y: self.preferences())
         self.add_action(action)
         action = Gio.SimpleAction.new("about", None)
         action.connect("activate", lambda x, y: self.show_about())
@@ -1183,7 +1183,7 @@ class WeatherLog(Gtk.Application):
         self.update_list()
         self.update_title()
 
-    def options(self):
+    def preferences(self):
         """Shows the Preferences dialog."""
 
         current_units = self.config["units"]
@@ -1250,7 +1250,7 @@ class WeatherLog(Gtk.Application):
         self.update_columns()
         self.update_title()
         self.update_list()
-        self.save(from_options=True)
+        self.save()
 
     def show_about(self):
         """Shows the About dialog."""
@@ -1274,19 +1274,17 @@ class WeatherLog(Gtk.Application):
         about_dlg.run()
         about_dlg.destroy()
 
-    def save(self, from_options=False):
+    def save(self):
         """Saves the data."""
 
-        # If saving the options, don't write all the dataset data.
-        if not from_options:
-            # Save the current dataset.
-            io.write_dataset(self.main_dir, self.last_dataset, data=self.data)
+        # Save the current dataset.
+        io.write_dataset(self.main_dir, self.last_dataset, data=self.data)
 
-            # Save the creation and last modified dates.
-            now = datetime.datetime.now()
-            modified = "%d/%d/%d" % (now.day, now.month, now.year)
-            creation, modified2 = io.get_metadata(self.main_dir, self.last_dataset)
-            io.write_metadata(self.main_dir, self.last_dataset, creation, modified)
+        # Save the creation and last modified dates.
+        now = datetime.datetime.now()
+        modified = "%d/%d/%d" % (now.day, now.month, now.year)
+        creation, modified2 = io.get_metadata(self.main_dir, self.last_dataset)
+        io.write_metadata(self.main_dir, self.last_dataset, creation, modified)
 
         # Save the configuration.
         io.write_config(self.conf_dir, self.config)
